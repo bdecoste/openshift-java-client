@@ -19,7 +19,11 @@ import com.openshift.express.internal.client.httpclient.HttpClientException;
  */
 public interface IHttpClient {
 
-	public static final int RESPONSE_CODE_OK = 200;
+	public static final int STATUS_OK = 200;
+	public static final int STATUS_INTERNAL_SERVER_ERROR = 200;
+	public static final int STATUS_BAD_REQUEST = 400;
+	public static final int STATUS_UNAUTHORIZED = 401;
+	public static final int STATUS_NOT_FOUND = 404;
 	
 	public static final String USER_AGENT = "User-Agent"; //$NON-NLS-1$
 

@@ -103,13 +103,13 @@ public class UrlConnectionHttpClient implements IHttpClient {
 			int responseCode = connection.getResponseCode();
 			String errorMessage = StreamUtils.readToString(connection.getErrorStream());
 			switch (responseCode) {
-			case 500:
+			case STATUS_INTERNAL_SERVER_ERROR:
 				return new InternalServerErrorException(errorMessage, ioe);
-			case 400:
+			case STATUS_BAD_REQUEST:
 				return new BadRequestException(errorMessage, ioe);
-			case 401:
+			case STATUS_UNAUTHORIZED:
 				return new UnauthorizedException(errorMessage, ioe);
-			case 404:
+			case STATUS_NOT_FOUND:
 				return new NotFoundException(errorMessage, ioe);
 			default:
 				return new HttpClientException(errorMessage, ioe);
