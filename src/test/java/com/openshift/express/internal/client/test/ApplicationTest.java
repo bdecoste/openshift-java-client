@@ -54,6 +54,7 @@ import com.openshift.express.internal.client.response.unmarshalling.ApplicationR
 import com.openshift.express.internal.client.response.unmarshalling.ApplicationStatusResponseUnmarshaller;
 import com.openshift.express.internal.client.response.unmarshalling.JsonSanitizer;
 import com.openshift.express.internal.client.test.fakes.ApplicationResponseFake;
+import com.openshift.express.internal.client.test.fakes.NoopHttpClientFake;
 import com.openshift.express.internal.client.test.fakes.NoopOpenShiftServiceFake;
 import com.openshift.express.internal.client.test.fakes.TestUser;
 import com.openshift.express.internal.client.test.fakes.UserFake;
@@ -245,7 +246,7 @@ public class ApplicationTest {
 
 				protected IHttpClient createHttpClient(final String id, final String url, final boolean verifyHostnames)
 						throws MalformedURLException {
-					return new IHttpClient() {
+					return new NoopHttpClientFake() {
 
 						public String post(String data) throws HttpClientException {
 							String quotaReachedMessage = "{"
@@ -269,10 +270,6 @@ public class ApplicationTest {
 									+ "	\"api_c\":[\"placeholder\"]"
 									+ "}";
 							throw new HttpClientException(quotaReachedMessage);
-						}
-
-						public String get() throws HttpClientException {
-							throw new UnsupportedOperationException();
 						}
 					};
 				}

@@ -107,15 +107,39 @@ public class StreamUtils {
 		}
 	}
 
+	public static void quietlyClose(OutputStream outputStream) {
+		try {
+			close(outputStream);
+		} catch (IOException e) {
+			// ignore
+		}
+	}
+
 	public static void close(Reader reader) throws IOException {
 		if (reader != null) {
 			reader.close();
 		}
 	}
 
+	public static void quietlyClose(Reader reader) {
+		try {
+			close(reader);
+		} catch (IOException e) {
+			// ignore
+		}
+	}
+
 	public static void close(Writer writer) throws IOException {
 		if (writer != null) {
 			writer.close();
+		}
+	}
+
+	public static void quietlyClose(Writer writer) {
+		try {
+			close(writer);
+		} catch (IOException e) {
+			// ignore
 		}
 	}
 

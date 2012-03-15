@@ -15,7 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class StreamUtils {
+/**
+ * @author Andre Dietisheim
+ */
+public class FileUtils {
 
 	public static void writeTo(String data, String path) throws IOException {
 		writeTo(data, new File(path));

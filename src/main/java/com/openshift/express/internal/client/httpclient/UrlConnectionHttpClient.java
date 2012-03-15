@@ -40,6 +40,11 @@ import com.openshift.express.internal.client.utils.StreamUtils;
  */
 public class UrlConnectionHttpClient implements IHttpClient {
 
+	private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
+	private static final String HTTP_METHOD_PUT = "PUT";
+	private static final String HTTP_METHOD_POST = "POST";
+	private static final String HTTP_METHOD_DELETE = "DELETE";
+
 	private static final String PROPERTY_CONTENT_TYPE = "Content-Type";
 	private static final int DEFAULT_CONNECT_TIMEOUT = 10 * 1024;
 	private static final int DEFAULT_READ_TIMEOUT = 60 * 1024;
@@ -61,25 +66,6 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		this.doSSLChecks = verifyHostNames;
 	}
 
-	public String post(String data) throws HttpClientException, SocketTimeoutException {
-		HttpURLConnection connection = null;
-		try {
-			connection = createConnection(userAgent, url);
-			connection.setDoOutput(true);
-			StreamUtils.writeTo(data.getBytes(), connection.getOutputStream());
-			return StreamUtils.readToString(connection.getInputStream());
-		} catch (FileNotFoundException e) {
-			throw new NotFoundException(
-					MessageFormat.format("Could not find resource {0}", url.toString()), e);
-		} catch (IOException e) {
-			throw createException(e, connection);
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
-		}
-	}
-
 	public String get() throws HttpClientException, SocketTimeoutException {
 		HttpURLConnection connection = null;
 		try {
@@ -91,9 +77,46 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		} catch (IOException e) {
 			throw createException(e, connection);
 		} finally {
-			if (connection != null) {
-				connection.disconnect();
+			disconnect(connection);
+		}
+	}
+	
+	public String put(String data) throws HttpClientException, SocketTimeoutException {
+		return write(data, HTTP_METHOD_PUT);
+	}
+
+	public String post(String data) throws HttpClientException, SocketTimeoutException {
+		return write(data, HTTP_METHOD_POST);
+	}
+
+	public String delete() throws HttpClientException, SocketTimeoutException {
+		return write(null, HTTP_METHOD_DELETE);
+	}
+
+	protected String write(String data, String requestMethod) throws SocketTimeoutException, HttpClientException {
+		HttpURLConnection connection = null;
+		try {
+			connection = createConnection(userAgent, url);
+			connection.setRequestMethod(requestMethod);
+			connection.setDoOutput(true);
+			if (data != null) {
+				StreamUtils.writeTo(data.getBytes(), connection.getOutputStream());
 			}
+			return StreamUtils.readToString(connection.getInputStream());
+		} catch (FileNotFoundException e) {
+			throw new NotFoundException(
+					MessageFormat.format("Could not find resource {0}", url.toString()), e);
+		} catch (IOException e) {
+			throw createException(e, connection);
+		} finally {
+			disconnect(connection);
+		}
+		
+	}
+	
+	private void disconnect(HttpURLConnection connection) {
+		if (connection != null) {
+			connection.disconnect();
 		}
 	}
 
@@ -123,21 +146,25 @@ public class UrlConnectionHttpClient implements IHttpClient {
 
 	private HttpURLConnection createConnection(String userAgent, URL url) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		setupSSLChecks(url, connection);
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setAllowUserInteraction(false);
+		setConnectTimeout(connection);
+		setReadTimeout(connection);
+		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, APPLICATION_FORM_URLENCODED);
+		connection.setInstanceFollowRedirects(true);
+		connection.setRequestProperty(USER_AGENT, userAgent);
+		return connection;
+	}
+
+	private void setupSSLChecks(URL url, HttpURLConnection connection) {
 		if (isHttps(url)
 				&& !doSSLChecks) {
 			HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
 			httpsConnection.setHostnameVerifier(new NoopHostnameVerifier());
 			setPermissiveSSLSocketFactory(httpsConnection);
 		}
-		connection.setUseCaches(false);
-		connection.setDoInput(true);
-		connection.setAllowUserInteraction(false);
-		setConnectTimeout(connection);
-		setReadTimeout(connection);
-		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, "application/x-www-form-urlencoded");
-		connection.setInstanceFollowRedirects(true);
-		connection.setRequestProperty(USER_AGENT, userAgent);
-		return connection;
 	}
 
 	private void setConnectTimeout(URLConnection connection) {

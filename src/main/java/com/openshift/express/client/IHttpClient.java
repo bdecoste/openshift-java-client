@@ -27,7 +27,13 @@ public interface IHttpClient {
 	
 	public static final String USER_AGENT = "User-Agent"; //$NON-NLS-1$
 
+	public String get() throws HttpClientException, SocketTimeoutException;
+
 	public String post(String data) throws HttpClientException, SocketTimeoutException;
 
-	public String get() throws HttpClientException, SocketTimeoutException;
+	public String put(String data) throws HttpClientException, SocketTimeoutException;
+	
+	public String delete() throws HttpClientException, SocketTimeoutException;
+
+
 }

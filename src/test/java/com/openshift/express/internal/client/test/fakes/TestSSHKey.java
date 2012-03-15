@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.client.SSHKeyPair;
-import com.openshift.express.internal.client.test.utils.StreamUtils;
+import com.openshift.express.internal.client.test.utils.FileUtils;
 
 /**
  * @author André Dietisheim
@@ -52,10 +52,10 @@ public class TestSSHKey {
 
 	public static SSHKeyPair create() throws IOException, OpenShiftException {
 		File privateKeyFile = File.createTempFile(createRandomString(), null);
-		StreamUtils.writeTo(privateKey, privateKeyFile);
+		FileUtils.writeTo(privateKey, privateKeyFile);
 
 		File publicKeyFile = File.createTempFile(createRandomString(), null);
-		StreamUtils.writeTo(publicKey, publicKeyFile);
+		FileUtils.writeTo(publicKey, publicKeyFile);
 		
 		return SSHKeyPair.load(privateKeyFile.getAbsolutePath(), publicKeyFile.getAbsolutePath());
 	}
