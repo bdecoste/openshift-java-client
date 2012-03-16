@@ -45,7 +45,7 @@ public class HttpClientTest {
 		serverFake.start();
 		this.httpClient = new UrlConnectionHttpClientBuilder()
 				.setUserAgent("com.openshift.express.client.test")
-				.setUrl(new URL(serverFake.getUrl()));
+				.client();
 	}
 
 	@After
@@ -54,29 +54,29 @@ public class HttpClientTest {
 	}
 
 	@Test
-	public void canGet() throws SocketTimeoutException, HttpClientException {
-		String response = httpClient.get();
+	public void canGet() throws SocketTimeoutException, HttpClientException, MalformedURLException {
+		String response = httpClient.get(new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("GET"));
 	}
 
 	@Test
-	public void canPost() throws SocketTimeoutException, HttpClientException {
-		String response = httpClient.post("dummy");
+	public void canPost() throws SocketTimeoutException, HttpClientException, MalformedURLException {
+		String response = httpClient.post("dummy", new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("POST"));
 	}
 
 	@Test
-	public void canPut() throws SocketTimeoutException, HttpClientException {
-		String response = httpClient.put("dummy");
+	public void canPut() throws SocketTimeoutException, HttpClientException, MalformedURLException {
+		String response = httpClient.put("dummy", new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("PUT"));
 	}
 
 	@Test
-	public void canDelete() throws SocketTimeoutException, HttpClientException {
-		String response = httpClient.delete();
+	public void canDelete() throws SocketTimeoutException, HttpClientException, MalformedURLException {
+		String response = httpClient.delete(new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("DELETE"));
 	}
@@ -88,9 +88,9 @@ public class HttpClientTest {
 		IHttpClient httpClient = new UrlConnectionHttpClientBuilder()
 				.setUserAgent("com.openshift.express.client.test")
 				.setCredentials(username, password)
-				.setUrl(new URL(serverFake.getUrl()));
+				.client();
 
-		String response = httpClient.get();
+		String response = httpClient.get(new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		Matcher matcher = AUTHORIZATION_PATTERN.matcher(response);
 		assertTrue(matcher.find());
@@ -104,9 +104,9 @@ public class HttpClientTest {
 	public void canAcceptJson() throws SocketTimeoutException, HttpClientException, MalformedURLException {
 		IHttpClient httpClient = new UrlConnectionHttpClientBuilder()
 				.setUserAgent("com.openshift.express.client.test")
-				.setUrl(new URL(serverFake.getUrl()));
+				.client();
 
-		String response = httpClient.get();
+		String response = httpClient.get(new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.indexOf(ACCEPT_APPLICATION_JSON) > 0);
 	}

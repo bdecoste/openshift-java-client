@@ -11,6 +11,7 @@
 package com.openshift.express.internal.client.test.fakes;
 
 import java.net.SocketTimeoutException;
+import java.net.URL;
 
 import com.openshift.express.client.IHttpClient;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
@@ -19,19 +20,19 @@ import com.openshift.express.internal.client.httpclient.HttpClientException;
  * @author Andre Dietisheim
  */
 public class NoopHttpClientFake implements IHttpClient {
-	public String post(String data) throws HttpClientException {
+	public String post(String data, URL url) throws HttpClientException {
 		throw new UnsupportedOperationException();
 	}
 
-	public String get() throws HttpClientException {
+	public String get(URL url) throws HttpClientException {
 		throw new UnsupportedOperationException();
 	}
 
-	public String put(String data) throws HttpClientException, SocketTimeoutException {
+	public String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
 		throw new UnsupportedOperationException();
 	}
 
-	public String delete() throws HttpClientException, SocketTimeoutException {
+	public String delete(URL url) throws HttpClientException, SocketTimeoutException {
 		throw new UnsupportedOperationException();
 	}
 

@@ -15,7 +15,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import com.openshift.express.internal.client.httpclient.HttpClientException;
-import com.openshift.express.internal.client.httpclient.IHttpClientBuilder;
 
 /**
  * @author Andre Dietisheim
@@ -29,8 +28,8 @@ public interface IHttpClientRequest {
 		}
 
 		@Override
-		public String execute(IHttpClientBuilder builder) throws SocketTimeoutException, HttpClientException, MalformedURLException {
-			return builder.setUrl(url).get();
+		public String execute(IHttpClient client) throws SocketTimeoutException, HttpClientException, MalformedURLException {
+			return client.get(url);
 		}
 	}
 
@@ -41,8 +40,8 @@ public interface IHttpClientRequest {
 		}
 
 		@Override
-		public String execute(IHttpClientBuilder builder) throws SocketTimeoutException, HttpClientException, MalformedURLException {
-			return builder.setUrl(url).post(data);
+		public String execute(IHttpClient client) throws SocketTimeoutException, HttpClientException, MalformedURLException {
+			return client.post(data, url);
 		}
 	}
 
@@ -53,8 +52,8 @@ public interface IHttpClientRequest {
 		}
 
 		@Override
-		public String execute(IHttpClientBuilder builder) throws SocketTimeoutException, HttpClientException, MalformedURLException {
-			return builder.setUrl(url).put(data);
+		public String execute(IHttpClient client) throws SocketTimeoutException, HttpClientException, MalformedURLException {
+			return client.put(data, url);
 		}
 	}
 
@@ -65,8 +64,8 @@ public interface IHttpClientRequest {
 		}
 
 		@Override
-		public String execute(IHttpClientBuilder builder) throws SocketTimeoutException, HttpClientException, MalformedURLException {
-			return builder.setUrl(url).post(data);
+		public String execute(IHttpClient client) throws SocketTimeoutException, HttpClientException, MalformedURLException {
+			return client.post(data, url);
 		}
 	}
 
@@ -79,14 +78,14 @@ public interface IHttpClientRequest {
 			this.url = url;
 		}
 
-		public abstract String execute(IHttpClientBuilder builder) throws SocketTimeoutException, HttpClientException, MalformedURLException;
+		public abstract String execute(IHttpClient client) throws SocketTimeoutException, HttpClientException, MalformedURLException;
 		
 		public URL getUrl() {
 			return url;
 		}
 	}
 
-	public String execute(IHttpClientBuilder builder) throws SocketTimeoutException, HttpClientException, MalformedURLException;
+	public String execute(IHttpClient client) throws SocketTimeoutException, HttpClientException, MalformedURLException;
 
 	public URL getUrl();
 }

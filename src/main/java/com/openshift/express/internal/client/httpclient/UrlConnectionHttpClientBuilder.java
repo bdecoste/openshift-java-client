@@ -13,7 +13,6 @@ package com.openshift.express.internal.client.httpclient;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -40,36 +39,33 @@ import com.openshift.express.internal.client.utils.StreamUtils;
 /**
  * @author André Dietisheim
  */
-public class UrlConnectionHttpClientBuilder implements IHttpClientBuilder {
+public class UrlConnectionHttpClientBuilder {
 
 	private String userAgent;
 	private boolean sslChecks = false;
 	private String username;
 	private String password;
 
-	public IHttpClientBuilder setUserAgent(String userAgent) {
+	public UrlConnectionHttpClientBuilder setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
 		return this;
 	}
 	
-	public IHttpClientBuilder setSSLChecks(boolean check) {
+	public UrlConnectionHttpClientBuilder setSSLChecks(boolean check) {
 		this.sslChecks = check;
 		return this;
 	}
 	
-	public IHttpClientBuilder setCredentials(String username, String password) {
+	public UrlConnectionHttpClientBuilder setCredentials(String username, String password) {
 		this.username = username;
 		this.password = password;
 		return this;
 	}
 	
-	public IHttpClient setUrl(URL url) {
-		return new UrlConnectionHttpClient(username, password, userAgent, sslChecks, url);
+	public IHttpClient client() {
+		return new UrlConnectionHttpClient(username, password, userAgent, sslChecks);
 	}
-	
-	public IHttpClient setUrl(String url) throws MalformedURLException {
-		return setUrl(new URL(url));
-	}
+
 
 	private class UrlConnectionHttpClient implements IHttpClient {
 
@@ -94,17 +90,15 @@ public class UrlConnectionHttpClientBuilder implements IHttpClientBuilder {
 		private boolean sslChecks;
 		private String username;
 		private String password;
-		private URL url;
 		
-		public UrlConnectionHttpClient(String username, String password, String userAgent, boolean sslChecks, URL url) {
+		public UrlConnectionHttpClient(String username, String password, String userAgent, boolean sslChecks) {
 			this.username = username;
 			this.password = password;
 			this.userAgent = userAgent;
 			this.sslChecks = sslChecks;
-			this.url = url;
 		}
 
-		public String get() throws HttpClientException, SocketTimeoutException {
+		public String get(URL url) throws HttpClientException, SocketTimeoutException {
 			HttpURLConnection connection = null;
 			try {
 				connection = createConnection(username, password, userAgent, url);
@@ -119,19 +113,19 @@ public class UrlConnectionHttpClientBuilder implements IHttpClientBuilder {
 			}
 		}
 
-		public String put(String data) throws HttpClientException, SocketTimeoutException {
-			return write(data, HTTP_METHOD_PUT);
+		public String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
+			return write(data, HTTP_METHOD_PUT, url);
 		}
 
-		public String post(String data) throws HttpClientException, SocketTimeoutException {
-			return write(data, HTTP_METHOD_POST);
+		public String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
+			return write(data, HTTP_METHOD_POST, url);
 		}
 
-		public String delete() throws HttpClientException, SocketTimeoutException {
-			return write(null, HTTP_METHOD_DELETE);
+		public String delete(URL url) throws HttpClientException, SocketTimeoutException {
+			return write(null, HTTP_METHOD_DELETE, url);
 		}
 				
-		protected String write(String data, String requestMethod) throws SocketTimeoutException, HttpClientException {
+		protected String write(String data, String requestMethod, URL url) throws SocketTimeoutException, HttpClientException {
 			HttpURLConnection connection = null;
 			try {
 				connection = createConnection(username, password, userAgent, url);

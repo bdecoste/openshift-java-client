@@ -23,7 +23,6 @@ import com.openshift.express.client.IHttpClientRequest.GetRequest;
 import com.openshift.express.client.utils.HostUtils;
 import com.openshift.express.internal.client.UserInfo;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
-import com.openshift.express.internal.client.httpclient.IHttpClientBuilder;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
 import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
@@ -91,8 +90,7 @@ public class OpenShiftService implements IOpenShiftService {
 	}
 
 	public DomainsDTO getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException {
-		IHttpClientBuilder builder = createClientBuilder(user);
-		String response = sendRequest(new GetRequest(getResourceUrl(url)), builder, "");
+		String response = sendRequest(new GetRequest(getResourceUrl(url)), createClient(user), "");
 		return DTOFactory.get(response, DomainsDTO.class);
 	}
 
@@ -142,11 +140,11 @@ public class OpenShiftService implements IOpenShiftService {
 		}
 	}
 
-	private String sendRequest(final IHttpClientRequest request, IHttpClientBuilder builder, String errorMessage)
+	private String sendRequest(final IHttpClientRequest request, IHttpClient client, String errorMessage)
 			throws OpenShiftException {
 		String url = request.getUrl().toString();
 		try {
-			return request.execute(builder);
+			return request.execute(client);
 		} catch (MalformedURLException e) {
 			throw new OpenShiftException(e, errorMessage);
 		} catch (UnauthorizedException e) {
@@ -182,11 +180,12 @@ public class OpenShiftService implements IOpenShiftService {
 		return version;
 	}
 
-	private IHttpClientBuilder createClientBuilder(IUser user) {
+	private IHttpClient createClient(IUser user) {
 		return new UrlConnectionHttpClientBuilder()
 				.setCredentials(user.getRhlogin(), user.getPassword())
 				.setUserAgent(MessageFormat.format(USERAGENT_FORMAT, getVersion(), id))
-				.setSSLChecks(doSSLChecks);
+				.setSSLChecks(doSSLChecks)
+				.client();
 	}
 
 	public boolean isValid(IUser user) throws OpenShiftException {

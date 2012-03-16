@@ -11,6 +11,7 @@
 package com.openshift.express.client;
 
 import java.net.SocketTimeoutException;
+import java.net.URL;
 
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 
@@ -18,7 +19,7 @@ import com.openshift.express.internal.client.httpclient.HttpClientException;
  * @author André Dietisheim
  */
 public interface IHttpClient {
-	
+
 	public static final int STATUS_OK = 200;
 	public static final int STATUS_INTERNAL_SERVER_ERROR = 200;
 	public static final int STATUS_BAD_REQUEST = 400;
@@ -27,14 +28,14 @@ public interface IHttpClient {
 
 	public static final char SPACE = ' ';
 	public static final char COLON = ':';
-	
+
 	public static final String USER_AGENT = "User-Agent"; //$NON-NLS-1$
 
-	public String get() throws HttpClientException, SocketTimeoutException;
+	public String get(URL url) throws HttpClientException, SocketTimeoutException;
 
-	public String post(String data) throws HttpClientException, SocketTimeoutException;
+	public String post(String data, URL url) throws HttpClientException, SocketTimeoutException;
 
-	public String put(String data) throws HttpClientException, SocketTimeoutException;
+	public String put(String data, URL url) throws HttpClientException, SocketTimeoutException;
 
-	public String delete() throws HttpClientException, SocketTimeoutException;
+	public String delete(URL url) throws HttpClientException, SocketTimeoutException;
 }
