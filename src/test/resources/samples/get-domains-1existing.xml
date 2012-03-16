@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <data>
+    <domain>
+      <links>
+        <link>
+          <rel>Delete domain</rel>
+          <required-params/>
+          <optional-params>
+            <optional-param>
+              <description>Force delete domain.  i.e. delete any applications under this domain</description>
+              <type>boolean</type>
+              <default-value>false</default-value>
+              <name>force</name>
+              <valid-options>true or false</valid-options>
+            </optional-param>
+          </optional-params>
+          <href>/domains/xcoulon</href>
+          <method>DELETE</method>
+        </link>
+        <link>
+          <rel>List applications</rel>
+          <required-params/>
+          <optional-params/>
+          <href>/domains/xcoulon/applications</href>
+          <method>GET</method>
+        </link>
+        <link>
+          <rel>Create new application</rel>
+          <required-params>
+            <param>
+              <description>Name of the application</description>
+              <type>string</type>
+              <name>name</name>
+              <valid-options/>
+            </param>
+            <param>
+              <description>UUID of the application template</description>
+              <type>string</type>
+              <name>template</name>
+              <valid-options/>
+            </param>
+          </required-params>
+          <optional-params/>
+          <href>/domains/xcoulon/applications</href>
+          <method>POST</method>
+        </link>
+        <link>
+          <rel>Create new domain</rel>
+          <required-params>
+            <param>
+              <description>Name of the domain</description>
+              <type>string</type>
+              <name>namespace</name>
+              <valid-options/>
+            </param>
+          </required-params>
+          <optional-params/>
+          <href>/domains</href>
+          <method>POST</method>
+        </link>
+        <link>
+          <rel>Create new application</rel>
+          <required-params>
+            <param>
+              <description>Name of the application</description>
+              <type>string</type>
+              <name>name</name>
+              <valid-options/>
+            </param>
+            <param>
+              <description>framework-type, e.g: php-5.3</description>
+              <type>string</type>
+              <name>cartridge</name>
+              <valid-options>
+                <valid-option>raw-0.1</valid-option>
+                <valid-option>php-5.3</valid-option>
+                <valid-option>jenkins-1.4</valid-option>
+                <valid-option>jbossas-7</valid-option>
+                <valid-option>nodejs-0.6</valid-option>
+                <valid-option>python-2.6</valid-option>
+                <valid-option>perl-5.10</valid-option>
+                <valid-option>ruby-1.8</valid-option>
+              </valid-options>
+            </param>
+          </required-params>
+          <optional-params/>
+          <href>/domains/xcoulon/applications</href>
+          <method>POST</method>
+        </link>
+        <link>
+          <rel>Get domain</rel>
+          <required-params/>
+          <optional-params/>
+          <href>/domains/xcoulon</href>
+          <method>GET</method>
+        </link>
+        <link>
+          <rel>Update domain</rel>
+          <required-params>
+            <param>
+              <description>Name of the domain</description>
+              <type>string</type>
+              <name>namespace</name>
+              <valid-options/>
+            </param>
+          </required-params>
+          <optional-params/>
+          <href>/domains/xcoulon</href>
+          <method>PUT</method>
+        </link>
+      </links>
+      <namespace>xcoulon</namespace>
+    </domain>
+  </data>
+  <type>domains</type>
+  <status>ok</status>
+  <messages/>
+  <version>1.0</version>
+</response>

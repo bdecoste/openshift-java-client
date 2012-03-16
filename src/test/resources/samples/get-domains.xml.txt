@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <type>domains</type>
+  <data>
+    <domain>
+      <namespace>1329997507457</namespace>
+      <links>
+        <link>
+          <method>DELETE</method>
+          <href>/domains/1329997507457</href>
+          <required-params/>
+          <optional-params>
+            <optional-param>
+              <type>boolean</type>
+              <name>force</name>
+              <default-value>false</default-value>
+              <description>Force delete domain.  i.e. delete any applications under this domain</description>
+              <valid-options>true or false</valid-options>
+            </optional-param>
+          </optional-params>
+          <rel>Delete domain</rel>
+        </link>
+        <link>
+          <method>POST</method>
+          <href>/domains</href>
+          <required-params>
+            <param>
+              <type>string</type>
+              <name>namespace</name>
+              <description>Name of the domain</description>
+              <valid-options/>
+            </param>
+          </required-params>
+          <optional-params/>
+          <rel>Create new domain</rel>
+        </link>
+        <link>
+          <method>POST</method>
+          <href>/domains/1329997507457/applications</href>
+          <required-params>
+            <param>
+              <type>string</type>
+              <name>name</name>
+              <description>Name of the application</description>
+              <valid-options/>
+            </param>
+            <param>
+              <type>string</type>
+              <name>cartridge</name>
+              <description>framework-type, e.g: php-5.3</description>
+              <valid-options>
+                <valid-option>jbossas-7</valid-option>
+                <valid-option>python-2.6</valid-option>
+                <valid-option>jenkins-1.4</valid-option>
+                <valid-option>ruby-1.8</valid-option>
+                <valid-option>raw-0.1</valid-option>
+                <valid-option>php-5.3</valid-option>
+                <valid-option>perl-5.10</valid-option>
+              </valid-options>
+            </param>
+          </required-params>
+          <optional-params/>
+          <rel>Create new application</rel>
+        </link>
+        <link>
+          <method>GET</method>
+          <href>/domains/1329997507457/applications</href>
+          <required-params/>
+          <optional-params/>
+          <rel>List applications</rel>
+        </link>
+        <link>
+          <method>POST</method>
+          <href>/domains/1329997507457/applications</href>
+          <required-params>
+            <param>
+              <type>string</type>
+              <name>name</name>
+              <description>Name of the application</description>
+              <valid-options/>
+            </param>
+            <param>
+              <type>string</type>
+              <name>template</name>
+              <description>UUID of the application template</description>
+              <valid-options/>
+            </param>
+          </required-params>
+          <optional-params/>
+          <rel>Create new application</rel>
+        </link>
+        <link>
+          <method>GET</method>
+          <href>/domains/1329997507457</href>
+          <required-params/>
+          <optional-params/>
+          <rel>Get domain</rel>
+        </link>
+        <link>
+          <method>PUT</method>
+          <href>/domains/1329997507457</href>
+          <required-params>
+            <param>
+              <type>string</type>
+              <name>namespace</name>
+              <description>Name of the domain</description>
+              <valid-options/>
+            </param>
+          </required-params>
+          <optional-params/>
+          <rel>Update domain</rel>
+        </link>
+      </links>
+    </domain>
+  </data>
+  <messages/>
+  <status>ok</status>
+  <version>1.0</version>
+</response>
