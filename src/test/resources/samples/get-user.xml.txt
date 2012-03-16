@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <type>user</type>
+  <user>
+    <links>
+      <link>
+        <method>POST</method>
+        <href>/user/keys</href>
+        <required-params>
+          <param>
+            <type>string</type>
+            <name>name</name>
+            <description>Name of the application</description>
+            <valid-options/>
+          </param>
+          <param>
+            <type>string</type>
+            <name>type</name>
+            <description>Type of Key</description>
+            <valid-options>
+              <valid-option>ssh-rsa</valid-option>
+              <valid-option>ssh-dss</valid-option>
+            </valid-options>
+          </param>
+          <param>
+            <type>string</type>
+            <name>content</name>
+            <description>The key portion of an rsa key (excluding ssh-rsa and comment)</description>
+            <valid-options/>
+          </param>
+        </required-params>
+        <optional-params/>
+        <rel>Add new SSH key</rel>
+      </link>
+      <link>
+        <method>GET</method>
+        <href>/user/keys</href>
+        <required-params/>
+        <optional-params/>
+        <rel>Get SSH keys</rel>
+      </link>
+      <link>
+        <method>GET</method>
+        <href>/user</href>
+        <required-params/>
+        <optional-params/>
+        <rel>Get user information</rel>
+      </link>
+    </links>
+    <login>adietish@redhat.com</login>
+  </user>
+  <messages/>
+  <status>ok</status>
+  <version>1.0</version>
+</response>
