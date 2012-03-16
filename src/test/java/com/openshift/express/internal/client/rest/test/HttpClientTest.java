@@ -32,6 +32,8 @@ import com.openshift.express.internal.client.test.fakes.ServerFake;
 
 public class HttpClientTest {
 
+	private static final String ACCEPT_APPLICATION_JSON = "Accept: application/json";
+
 	private static final Pattern AUTHORIZATION_PATTERN = Pattern.compile("Authorization: Basic ([^\n]*)");
 
 	private ServerFake serverFake;
@@ -93,4 +95,15 @@ public class HttpClientTest {
 		String cleartextCredentials = new String(Base64Coder.decode(credentials));
 		assertEquals(username + ":" + password, cleartextCredentials);
 	}
+
+	@Test
+	public void canAcceptJson() throws SocketTimeoutException, HttpClientException, MalformedURLException {
+		IHttpClient httpClient = new UrlConnectionHttpClient(
+				"com.openshift.express.client.test", new URL(serverFake.getUrl()), false);
+
+		String response = httpClient.get();
+		assertNotNull(response);
+		assertTrue(response.indexOf(ACCEPT_APPLICATION_JSON) > 0);
+	}
+
 }

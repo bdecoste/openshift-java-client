@@ -46,10 +46,12 @@ public class UrlConnectionHttpClient implements IHttpClient {
 	private static final String HTTP_METHOD_DELETE = "DELETE";
 
 	private static final String PROPERTY_CONTENT_TYPE = "Content-Type";
+	private static final String CONTENT_TYPE_APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	private static final String PROPERTY_AUTHORIZATION = "Authorization";
-	private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	private static final String AUTHORIZATION_BASIC = "Basic";
-
+	private static final String PROPERTY_ACCEPT = "Accept";
+	private static final String ACCEPT_APPLICATION_JSON = "application/json";
+	
 	private static final int DEFAULT_CONNECT_TIMEOUT = 10 * 1024;
 	private static final int DEFAULT_READ_TIMEOUT = 60 * 1024;
 	private static final String SYSPROP_OPENSHIFT_CONNECT_TIMEOUT = "com.openshift.express.httpclient.timeout";
@@ -169,9 +171,10 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		connection.setAllowUserInteraction(false);
 		setConnectTimeout(connection);
 		setReadTimeout(connection);
-		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, APPLICATION_FORM_URLENCODED);
 		connection.setInstanceFollowRedirects(true);
+		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM_URLENCODED);
 		connection.setRequestProperty(USER_AGENT, userAgent);
+		connection.setRequestProperty(PROPERTY_ACCEPT, ACCEPT_APPLICATION_JSON);
 		return connection;
 	}
 
