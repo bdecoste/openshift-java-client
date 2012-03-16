@@ -15,17 +15,19 @@ import java.util.List;
 /**
  * @author Xavier Coulon
  */
-public class OperationParam {
+public class LinkParam {
 
 	private final String name;
 	private final String type;
 	private final String description;
+	private final String defaultValue;
 	private final List<String> validOptions;
-
-	public OperationParam(final String name, final String type, final String description,
+	
+	public LinkParam(final String name, final String type, final String defaultValue, final String description,
 			final List<String> validOptions) {
 		this.name = name;
 		this.type = type;
+		this.defaultValue = defaultValue;
 		this.description = description;
 		this.validOptions = validOptions;
 	}
@@ -42,6 +44,13 @@ public class OperationParam {
 	 */
 	public final String getType() {
 		return type;
+	}
+
+	/**
+	 * @return the defaultValue
+	 */
+	public String getDefaultValue() {
+		return defaultValue;
 	}
 
 	/**

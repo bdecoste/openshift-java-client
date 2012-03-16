@@ -12,15 +12,18 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
 
 import java.util.List;
 
+/**
+ * @author Xavier Coulon
+ */
 public class DomainsDTO {
 	
 	private final List<DomainDTO> domains;
 	
-	private final List<Operation> operations;
+	private final List<Link> links;
 	
-	public DomainsDTO(final List<DomainDTO> domains, final List<Operation> operations) {
+	public DomainsDTO(final List<DomainDTO> domains, final List<Link> links) {
 		this.domains = domains;
-		this.operations = operations;
+		this.links = links;
 	}
 
 	/**
@@ -33,8 +36,8 @@ public class DomainsDTO {
 	/**
 	 * @return the operations
 	 */
-	public List<Operation> getOperations() {
-		return operations;
+	public List<Link> getLinks() {
+		return links;
 	}
 
 }

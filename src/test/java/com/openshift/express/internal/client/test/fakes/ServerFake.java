@@ -121,6 +121,7 @@ public class ServerFake {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
+				// we should not close the connection, let the client close the connection
 				StreamUtils.quietlyClose(outputStream);
 			}
 		}

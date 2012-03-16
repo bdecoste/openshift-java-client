@@ -27,7 +27,7 @@ import org.junit.Test;
 import com.openshift.express.client.IHttpClient;
 import com.openshift.express.client.utils.Base64Coder;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
-import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClient;
+import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 import com.openshift.express.internal.client.test.fakes.ServerFake;
 
 public class HttpClientTest {
@@ -43,7 +43,9 @@ public class HttpClientTest {
 	public void setUp() throws MalformedURLException {
 		this.serverFake = new ServerFake();
 		serverFake.start();
-		this.httpClient = new UrlConnectionHttpClient("com.openshift.express.client.test", new URL(serverFake.getUrl()));
+		this.httpClient = new UrlConnectionHttpClientBuilder()
+				.setUserAgent("com.openshift.express.client.test")
+				.setUrl(new URL(serverFake.getUrl()));
 	}
 
 	@After
@@ -83,8 +85,10 @@ public class HttpClientTest {
 	public void canAddAuthorization() throws SocketTimeoutException, HttpClientException, MalformedURLException {
 		String username = "andre.dietisheim@redhat.com";
 		String password = "dummyPassword";
-		IHttpClient httpClient = new UrlConnectionHttpClient(
-				username, password, "com.openshift.express.client.test", new URL(serverFake.getUrl()), false);
+		IHttpClient httpClient = new UrlConnectionHttpClientBuilder()
+				.setUserAgent("com.openshift.express.client.test")
+				.setCredentials(username, password)
+				.setUrl(new URL(serverFake.getUrl()));
 
 		String response = httpClient.get();
 		assertNotNull(response);
@@ -98,8 +102,9 @@ public class HttpClientTest {
 
 	@Test
 	public void canAcceptJson() throws SocketTimeoutException, HttpClientException, MalformedURLException {
-		IHttpClient httpClient = new UrlConnectionHttpClient(
-				"com.openshift.express.client.test", new URL(serverFake.getUrl()), false);
+		IHttpClient httpClient = new UrlConnectionHttpClientBuilder()
+				.setUserAgent("com.openshift.express.client.test")
+				.setUrl(new URL(serverFake.getUrl()));
 
 		String response = httpClient.get();
 		assertNotNull(response);
