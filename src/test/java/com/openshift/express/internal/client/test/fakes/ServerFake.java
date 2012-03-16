@@ -30,6 +30,8 @@ import java.text.MessageFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.openshift.express.internal.client.utils.StreamUtils;
+
 /**
  * @author André Dietisheim
  */
@@ -115,13 +117,12 @@ public class ServerFake {
 				outputStream = socket.getOutputStream();
 				outputStream.write(response.getBytes());
 				outputStream.flush();
-				// we should not close the connection, let the client close the connection
-				//socket.close();
+				socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
 				// we should not close the connection, let the client close the connection
-				//StreamUtils.quietlyClose(outputStream);
+				StreamUtils.quietlyClose(outputStream);
 			}
 		}
 

@@ -35,5 +35,4 @@ public interface IHttpClient {
 	
 	public String delete() throws HttpClientException, SocketTimeoutException;
 
-
 }
