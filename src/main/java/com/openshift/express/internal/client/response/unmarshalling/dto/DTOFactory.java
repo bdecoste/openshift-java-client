@@ -22,7 +22,7 @@ import com.openshift.express.internal.client.utils.IOpenShiftJsonConstants;
 /**
  * @author Xavier Coulon
  */
-public class ObjectFactory {
+public class DTOFactory {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T get(String content, Class<T> clazz) throws OpenShiftException {

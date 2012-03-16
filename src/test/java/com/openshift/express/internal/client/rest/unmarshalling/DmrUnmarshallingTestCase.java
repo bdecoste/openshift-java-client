@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.DomainsDTO;
-import com.openshift.express.internal.client.response.unmarshalling.dto.ObjectFactory;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DTOFactory;
 
 public class DmrUnmarshallingTestCase {
 
@@ -26,7 +26,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-domains-1existing.json");
 		assertNotNull(content);
 		// operation
-		DomainsDTO domains = ObjectFactory.get(content, DomainsDTO.class);
+		DomainsDTO domains = DTOFactory.get(content, DomainsDTO.class);
 		// verifications
 		assertNotNull(domains);
 		assertThat(domains.getDomains()).isNotEmpty();
