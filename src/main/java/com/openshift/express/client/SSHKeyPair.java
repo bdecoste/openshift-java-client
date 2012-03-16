@@ -13,7 +13,7 @@ package com.openshift.express.client;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
-import com.openshift.express.client.utils.Base64Encoder;
+import com.openshift.express.client.utils.Base64Coder;
 
 /**
  * @author André Dietisheim
@@ -95,7 +95,7 @@ public class SSHKeyPair implements ISSHPublicKey {
 	}
 
 	public String getPublicKey() throws OpenShiftException {
-		return new String(Base64Encoder.encode(keyPair.getPublicKeyBlob()));
+		return new String(Base64Coder.encode(keyPair.getPublicKeyBlob()));
 	}
 
 	public String getPrivateKeyPath() {

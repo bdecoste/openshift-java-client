@@ -150,6 +150,7 @@ public class ServerFake {
 					break;
 				}
 				writer.write(line);
+				writer.write('\n');
 			}
 			return writer.toString();
 		}

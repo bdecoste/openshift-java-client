@@ -33,6 +33,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import com.openshift.express.client.IHttpClient;
+import com.openshift.express.client.utils.Base64Coder;
 import com.openshift.express.internal.client.utils.StreamUtils;
 
 /**
@@ -40,27 +41,41 @@ import com.openshift.express.internal.client.utils.StreamUtils;
  */
 public class UrlConnectionHttpClient implements IHttpClient {
 
-	private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	private static final String HTTP_METHOD_PUT = "PUT";
 	private static final String HTTP_METHOD_POST = "POST";
 	private static final String HTTP_METHOD_DELETE = "DELETE";
 
 	private static final String PROPERTY_CONTENT_TYPE = "Content-Type";
+	private static final String PROPERTY_AUTHORIZATION = "Authorization";
+	private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
+	private static final String AUTHORIZATION_BASIC = "Basic";
+
 	private static final int DEFAULT_CONNECT_TIMEOUT = 10 * 1024;
 	private static final int DEFAULT_READ_TIMEOUT = 60 * 1024;
 	private static final String SYSPROP_OPENSHIFT_CONNECT_TIMEOUT = "com.openshift.express.httpclient.timeout";
 	private static final String SYSPROP_DEFAULT_CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
 	private static final String SYSPROP_DEFAULT_READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
-	
+
+	private static final char SPACE = ' ';
+	private static final char COLON = ':';
+
 	private URL url;
 	private String userAgent;
 	private boolean doSSLChecks;
+	private String username;
+	private String password;
 
 	public UrlConnectionHttpClient(String userAgent, URL url) {
 		this(userAgent, url, false);
 	}
 
 	public UrlConnectionHttpClient(String userAgent, URL url, boolean verifyHostNames) {
+		this(null, null, userAgent, url, verifyHostNames);
+	}
+
+	public UrlConnectionHttpClient(String username, String password, String userAgent, URL url, boolean verifyHostNames) {
+		this.username = username;
+		this.password = password;
 		this.userAgent = userAgent;
 		this.url = url;
 		this.doSSLChecks = verifyHostNames;
@@ -69,7 +84,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 	public String get() throws HttpClientException, SocketTimeoutException {
 		HttpURLConnection connection = null;
 		try {
-			connection = createConnection(userAgent, url);
+			connection = createConnection(username, password, userAgent, url);
 			return StreamUtils.readToString(connection.getInputStream());
 		} catch (FileNotFoundException e) {
 			throw new NotFoundException(
@@ -80,7 +95,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 			disconnect(connection);
 		}
 	}
-	
+
 	public String put(String data) throws HttpClientException, SocketTimeoutException {
 		return write(data, HTTP_METHOD_PUT);
 	}
@@ -96,7 +111,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 	protected String write(String data, String requestMethod) throws SocketTimeoutException, HttpClientException {
 		HttpURLConnection connection = null;
 		try {
-			connection = createConnection(userAgent, url);
+			connection = createConnection(username, password, userAgent, url);
 			connection.setRequestMethod(requestMethod);
 			connection.setDoOutput(true);
 			if (data != null) {
@@ -111,9 +126,9 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		} finally {
 			disconnect(connection);
 		}
-		
+
 	}
-	
+
 	private void disconnect(HttpURLConnection connection) {
 		if (connection != null) {
 			connection.disconnect();
@@ -144,9 +159,11 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		}
 	}
 
-	private HttpURLConnection createConnection(String userAgent, URL url) throws IOException {
+	private HttpURLConnection createConnection(String username, String password, String userAgent, URL url)
+			throws IOException {
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		setupSSLChecks(url, connection);
+		setupAuthorisation(username, password, connection);
 		connection.setUseCaches(false);
 		connection.setDoInput(true);
 		connection.setAllowUserInteraction(false);
@@ -156,6 +173,17 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		connection.setInstanceFollowRedirects(true);
 		connection.setRequestProperty(USER_AGENT, userAgent);
 		return connection;
+	}
+
+	private void setupAuthorisation(String username, String password, HttpURLConnection connection) {
+		if (username == null) {
+			return;
+		}
+
+		String credentials = Base64Coder.encodeString(
+				new StringBuilder().append(username).append(COLON).append(password).toString());
+		connection.setRequestProperty(PROPERTY_AUTHORIZATION,
+				new StringBuilder().append(AUTHORIZATION_BASIC).append(SPACE).append(credentials).toString());
 	}
 
 	private void setupSSLChecks(URL url, HttpURLConnection connection) {
@@ -193,11 +221,11 @@ public class UrlConnectionHttpClient implements IHttpClient {
 			return -1;
 		}
 	}
-	
+
 	private boolean isHttps(URL url) {
 		return "https".equals(url.getProtocol());
 	}
-	
+
 	/**
 	 * Sets a trust manager that will always trust.
 	 * <p>
