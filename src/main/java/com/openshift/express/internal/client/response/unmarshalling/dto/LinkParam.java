@@ -1,7 +1,20 @@
+/******************************************************************************* 
+ * Copyright (c) 2012 Red Hat, Inc. 
+ * Distributed under license by Red Hat, Inc. All rights reserved. 
+ * This program is made available under the terms of the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors: 
+ * Red Hat, Inc. - initial API and implementation 
+ ******************************************************************************/
 package com.openshift.express.internal.client.response.unmarshalling.dto;
 
 import java.util.List;
 
+/**
+ * @author Xavier Coulon
+ */
 public class OperationParam {
 
 	private final String name;
@@ -20,28 +33,28 @@ public class OperationParam {
 	/**
 	 * @return the name
 	 */
-	protected final String getName() {
+	public final String getName() {
 		return name;
 	}
 
 	/**
 	 * @return the type
 	 */
-	protected final String getType() {
+	public final String getType() {
 		return type;
 	}
 
 	/**
 	 * @return the description
 	 */
-	protected final String getDescription() {
+	public final String getDescription() {
 		return description;
 	}
 
 	/**
 	 * @return the validOptions
 	 */
-	protected final List<String> getValidOptions() {
+	public final List<String> getValidOptions() {
 		return validOptions;
 	}
 }

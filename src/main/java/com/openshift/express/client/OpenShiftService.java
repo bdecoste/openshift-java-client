@@ -28,7 +28,7 @@ import com.openshift.express.internal.client.UserInfo;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
-import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClient;
+import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 import com.openshift.express.internal.client.request.AbstractDomainRequest;
 import com.openshift.express.internal.client.request.ApplicationAction;
 import com.openshift.express.internal.client.request.ApplicationRequest;
@@ -67,7 +67,7 @@ public class OpenShiftService implements IOpenShiftService {
 	private static final String SYSPROPERTY_PROXY_PORT = "proxyPort";
 	private static final String SYSPROPERTY_PROXY_HOST = "proxyHost";
 	private static final String SYSPROPERTY_PROXY_SET = "proxySet";
-	
+
 	// TODO extract to properties file
 	private static final String USERAGENT_FORMAT = "Java OpenShift/{0} ({1})";
 	private static final long APPLICATION_WAIT_DELAY = 2;
@@ -75,7 +75,7 @@ public class OpenShiftService implements IOpenShiftService {
 	private String baseUrl;
 	private String id;
 	private boolean doSSLChecks = false;
-	
+
 	protected static String version = null;
 
 	public OpenShiftService(String id, String baseUrl) {
@@ -165,9 +165,9 @@ public class OpenShiftService implements IOpenShiftService {
 	}
 
 	public void destroyDomain(final String name, final IUser user) throws OpenShiftException {
-	    requestDomainAction(new DestroyDomainRequest(name, user.getSshKey(), user.getRhlogin()), user);
+		requestDomainAction(new DestroyDomainRequest(name, user.getSshKey(), user.getRhlogin()), user);
 	}
-	
+
 	public IDomain changeDomain(final String newName, final ISSHPublicKey sshKey, final IUser user)
 			throws OpenShiftException {
 		return requestDomainAction(new ChangeDomainRequest(newName, sshKey, user.getRhlogin(), true), user);
@@ -190,95 +190,95 @@ public class OpenShiftService implements IOpenShiftService {
 			throws OpenShiftException {
 		return createApplication(name, cartridge, user, null);
 	}
-	
+
 	public IJBossASApplication createJBossASApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IJBossASApplication)createApplication(name, new JBossCartridge(this, user), user, null);
+		return (IJBossASApplication) createApplication(name, new JBossCartridge(this, user), user, null);
 	}
-	
+
 	public IJBossASApplication createJBossASApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IJBossASApplication)createApplication(name, new JBossCartridge(this, user), user, size);
+		return (IJBossASApplication) createApplication(name, new JBossCartridge(this, user), user, size);
 	}
-	
+
 	public IRubyApplication createRubyApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IRubyApplication)createApplication(name, new RubyCartridge(this, user), user, null);
+		return (IRubyApplication) createApplication(name, new RubyCartridge(this, user), user, null);
 	}
-	
+
 	public IRubyApplication createRubyApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IRubyApplication)createApplication(name, new RubyCartridge(this, user), user, size);
+		return (IRubyApplication) createApplication(name, new RubyCartridge(this, user), user, size);
 	}
-	
+
 	public IPythonApplication createPythonApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IPythonApplication)createApplication(name, new PythonCartridge(this, user), user, null);
+		return (IPythonApplication) createApplication(name, new PythonCartridge(this, user), user, null);
 	}
-	
+
 	public IPythonApplication createPythonApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IPythonApplication)createApplication(name, new PythonCartridge(this, user), user, size);
+		return (IPythonApplication) createApplication(name, new PythonCartridge(this, user), user, size);
 	}
-	
+
 	public IPHPApplication createPHPApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IPHPApplication)createApplication(name, new PHPCartridge(this, user), user, null);
+		return (IPHPApplication) createApplication(name, new PHPCartridge(this, user), user, null);
 	}
-	
+
 	public IPHPApplication createPHPApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IPHPApplication)createApplication(name, new PHPCartridge(this, user), user, size);
+		return (IPHPApplication) createApplication(name, new PHPCartridge(this, user), user, size);
 	}
 
 	public IPerlApplication createPerlApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IPerlApplication)createApplication(name, new PerlCartridge(this, user), user, null);
+		return (IPerlApplication) createApplication(name, new PerlCartridge(this, user), user, null);
 	}
-	
+
 	public IPerlApplication createPerlApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IPerlApplication)createApplication(name, new PerlCartridge(this, user), user, size);
+		return (IPerlApplication) createApplication(name, new PerlCartridge(this, user), user, size);
 	}
-	
+
 	public IJenkinsApplication createJenkinsApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IJenkinsApplication)createApplication(name, new JenkinsCartridge(this, user), user, null);
+		return (IJenkinsApplication) createApplication(name, new JenkinsCartridge(this, user), user, null);
 	}
-	
+
 	public IJenkinsApplication createJenkinsApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IJenkinsApplication)createApplication(name, new JenkinsCartridge(this, user), user, size);
+		return (IJenkinsApplication) createApplication(name, new JenkinsCartridge(this, user), user, size);
 	}
-	
+
 	public INodeJSApplication createNodeJSApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (INodeJSApplication)createApplication(name, new NodeJSCartridge(this, user), user, null);
+		return (INodeJSApplication) createApplication(name, new NodeJSCartridge(this, user), user, null);
 	}
-	
+
 	public INodeJSApplication createNodeJSApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (INodeJSApplication)createApplication(name, new NodeJSCartridge(this, user), user, size);
+		return (INodeJSApplication) createApplication(name, new NodeJSCartridge(this, user), user, size);
 	}
-	
+
 	public IHAProxyApplication createHAProxyApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IHAProxyApplication)createApplication(name, new HAProxyCartridge(this, user), user, null);
+		return (IHAProxyApplication) createApplication(name, new HAProxyCartridge(this, user), user, null);
 	}
-	
+
 	public IHAProxyApplication createHAProxyApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IHAProxyApplication)createApplication(name, new HAProxyCartridge(this, user), user, size);
+		return (IHAProxyApplication) createApplication(name, new HAProxyCartridge(this, user), user, size);
 	}
-	
+
 	public IRawApplication createRawApplication(final String name, final IUser user)
 			throws OpenShiftException {
-		return (IRawApplication)createApplication(name, new RawCartridge(this, user), user, null);
+		return (IRawApplication) createApplication(name, new RawCartridge(this, user), user, null);
 	}
-	
+
 	public IRawApplication createRawApplication(final String name, final IUser user, final String size)
 			throws OpenShiftException {
-		return (IRawApplication)createApplication(name, new RawCartridge(this, user), user, size);
+		return (IRawApplication) createApplication(name, new RawCartridge(this, user), user, size);
 	}
 
 	public IApplication createApplication(final String name, final ICartridge cartridge, final IUser user,
@@ -297,7 +297,8 @@ public class OpenShiftService implements IOpenShiftService {
 
 		for (int i = 0; i < name.length(); ++i) {
 			if (!Character.isLetterOrDigit(name.charAt(i))) {
-				throw new InvalidNameOpenShiftException("Application name \"{0}\" contains non-alphanumeric characters.", name);
+				throw new InvalidNameOpenShiftException(
+						"Application name \"{0}\" contains non-alphanumeric characters.", name);
 			}
 		}
 	}
@@ -307,7 +308,8 @@ public class OpenShiftService implements IOpenShiftService {
 
 		for (int i = 0; i < name.length(); ++i) {
 			if (!Character.isLetterOrDigit(name.charAt(i))) {
-				throw new InvalidNameOpenShiftException("Domain name \"{0}\" contains non-alphanumeric characters", name);
+				throw new InvalidNameOpenShiftException("Domain name \"{0}\" contains non-alphanumeric characters",
+						name);
 			}
 		}
 	}
@@ -384,7 +386,6 @@ public class OpenShiftService implements IOpenShiftService {
 			((ChannelExec) channel).setErrStream(System.err);
 			InputStream in = channel.getInputStream();
 
-			
 			String logLocation = cartridge.getLogLocation();
 
 			String command =
@@ -456,7 +457,7 @@ public class OpenShiftService implements IOpenShiftService {
 					// not available yet
 				}
 			}
-			
+
 			return response.startsWith(expectedResponse);
 		} catch (InterruptedException e) {
 			return false;
@@ -523,7 +524,7 @@ public class OpenShiftService implements IOpenShiftService {
 			throw new InvalidCredentialsOpenShiftException(url, e);
 		} catch (NotFoundException e) {
 			throw new NotFoundOpenShiftException(url, e);
-		} catch(SocketTimeoutException e) {
+		} catch (SocketTimeoutException e) {
 			throw new OpenShiftEndpointException(url, e, errorMessage);
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(url, e, createNakedResponse(e.getMessage()), errorMessage);
@@ -533,15 +534,17 @@ public class OpenShiftService implements IOpenShiftService {
 	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
 		return new NakedResponseUnmarshaller().unmarshall(response);
 	}
-	
+
 	protected IHttpClient createHttpClient(final String id, final String url, final boolean verifyHostnames)
 			throws MalformedURLException {
-		String userAgent = MessageFormat.format(USERAGENT_FORMAT, getVersion(), id);
-		return new UrlConnectionHttpClient(userAgent, new URL(url), verifyHostnames);
+		return new UrlConnectionHttpClientBuilder()
+				.setUserAgent(MessageFormat.format(USERAGENT_FORMAT, getVersion(), id))
+				.setSSLChecks(verifyHostnames)
+				.setUrl(new URL(url));
 	}
-	
+
 	public static String getVersion() {
-		if (version == null){
+		if (version == null) {
 			InputStream is = null;
 			try {
 				Properties props = new Properties();
@@ -554,7 +557,7 @@ public class OpenShiftService implements IOpenShiftService {
 				StreamUtils.quietlyClose(is);
 			}
 		}
-		
+
 		return version;
 	}
 
