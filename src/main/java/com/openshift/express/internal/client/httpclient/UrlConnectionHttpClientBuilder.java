@@ -13,6 +13,7 @@ package com.openshift.express.internal.client.httpclient;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -39,24 +40,24 @@ import com.openshift.express.internal.client.utils.StreamUtils;
 /**
  * @author André Dietisheim
  */
-public class UrlConnectionHttpClientBuilder {
+public class UrlConnectionHttpClientBuilder implements IHttpClientBuilder {
 
 	private String userAgent;
 	private boolean sslChecks = false;
 	private String username;
 	private String password;
 
-	public UrlConnectionHttpClientBuilder setUserAgent(String userAgent) {
+	public IHttpClientBuilder setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
 		return this;
 	}
 	
-	public UrlConnectionHttpClientBuilder setSSLChecks(boolean check) {
+	public IHttpClientBuilder setSSLChecks(boolean check) {
 		this.sslChecks = check;
 		return this;
 	}
 	
-	public UrlConnectionHttpClientBuilder setCredentials(String username, String password) {
+	public IHttpClientBuilder setCredentials(String username, String password) {
 		this.username = username;
 		this.password = password;
 		return this;
@@ -66,6 +67,10 @@ public class UrlConnectionHttpClientBuilder {
 		return new UrlConnectionHttpClient(username, password, userAgent, sslChecks, url);
 	}
 	
+	public IHttpClient setUrl(String url) throws MalformedURLException {
+		return setUrl(new URL(url));
+	}
+
 	private class UrlConnectionHttpClient implements IHttpClient {
 
 		private static final String HTTP_METHOD_PUT = "PUT";
@@ -84,9 +89,6 @@ public class UrlConnectionHttpClientBuilder {
 		private static final String SYSPROP_OPENSHIFT_CONNECT_TIMEOUT = "com.openshift.express.httpclient.timeout";
 		private static final String SYSPROP_DEFAULT_CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
 		private static final String SYSPROP_DEFAULT_READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
-
-		private static final char SPACE = ' ';
-		private static final char COLON = ':';
 
 		private String userAgent;
 		private boolean sslChecks;
@@ -128,7 +130,7 @@ public class UrlConnectionHttpClientBuilder {
 		public String delete() throws HttpClientException, SocketTimeoutException {
 			return write(null, HTTP_METHOD_DELETE);
 		}
-
+				
 		protected String write(String data, String requestMethod) throws SocketTimeoutException, HttpClientException {
 			HttpURLConnection connection = null;
 			try {

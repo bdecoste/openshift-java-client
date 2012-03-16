@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.openshift.express.internal.client.ApplicationInfo;
 import com.openshift.express.internal.client.UserInfo;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DomainsDTO;
 
 /**
  * @author André Dietisheim
@@ -26,7 +27,7 @@ public interface IOpenShiftService {
 	/**
 	 * The path (url path addition) to the service
 	 */
-	public static final String SERVICE_PATH = "/broker";
+	public static final String SERVICE_PATH = "/broker/rest";
 
 	/**
 	 * Returns the url at which the service is reachable.
@@ -50,6 +51,7 @@ public interface IOpenShiftService {
 	 * @throws OpenShiftException
 	 * @throws MalformedURLException
 	 */
+	@Deprecated
 	public boolean isValid(IUser user) throws OpenShiftException;
 
 	/**
@@ -63,6 +65,7 @@ public interface IOpenShiftService {
 	 * 
 	 * @see IUser
 	 */
+	@Deprecated
 	public List<ICartridge> getCartridges(IUser user) throws OpenShiftException;
 	/**
 	 * Lists all cartridges that may be embedded into applications.
@@ -75,6 +78,7 @@ public interface IOpenShiftService {
 	 * @see #addEmbeddedCartridge(IApplication, IEmbeddableCartridge,
 	 *      IUser)
 	 */
+	@Deprecated
 	public List<IEmbeddableCartridge> getEmbeddableCartridges(IUser user) throws OpenShiftException;
 
 	/**
@@ -94,33 +98,43 @@ public interface IOpenShiftService {
 	 * @see IUser
 	 * @see IApplication
 	 */
+	@Deprecated
 	public IApplication createApplication(String name, ICartridge cartridge, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IJBossASApplication createJBossASApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IRubyApplication createRubyApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IPythonApplication createPythonApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IPerlApplication createPerlApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IPHPApplication createPHPApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IJenkinsApplication createJenkinsApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public INodeJSApplication createNodeJSApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IHAProxyApplication createHAProxyApplication(String name, IUser user)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IRawApplication createRawApplication(String name, IUser user)
 			throws OpenShiftException;
 	
@@ -143,33 +157,43 @@ public interface IOpenShiftService {
 	 * @see IUser
 	 * @see IApplication
 	 */
+	@Deprecated
 	public IApplication createApplication(String name, ICartridge cartridge, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IJBossASApplication createJBossASApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IRubyApplication createRubyApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IPythonApplication createPythonApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IPerlApplication createPerlApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IPHPApplication createPHPApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IJenkinsApplication createJenkinsApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public INodeJSApplication createNodeJSApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IHAProxyApplication createHAProxyApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 	
+	@Deprecated
 	public IRawApplication createRawApplication(String name, IUser user, String nodeProfile)
 			throws OpenShiftException;
 
@@ -189,6 +213,7 @@ public interface IOpenShiftService {
 	 * @see ICartridge
 	 * @see IUser
 	 */
+	@Deprecated
 	public void destroyApplication(String name, ICartridge cartridge, IUser user) throws OpenShiftException;
 
 	/**
@@ -209,6 +234,7 @@ public interface IOpenShiftService {
 	 * @see IUser
 	 * @see IApplication
 	 */
+	@Deprecated
 	public IApplication startApplication(String name, ICartridge cartridge, IUser user)
 			throws OpenShiftException;
 
@@ -229,6 +255,7 @@ public interface IOpenShiftService {
 	 * @see IUser
 	 * @see IApplication
 	 */
+	@Deprecated
 	public IApplication restartApplication(String name, ICartridge cartridge, IUser user)
 			throws OpenShiftException;
 
@@ -250,9 +277,9 @@ public interface IOpenShiftService {
 	 * @see IUser
 	 * @see IApplication
 	 */
+	@Deprecated
 	public IApplication stopApplication(String name, ICartridge cartridge, IUser user) throws OpenShiftException;
 
-	
 	/**
 	 * Trigger a thread dump for the application with the given name and cartridge for the given
 	 * user account. 
@@ -270,6 +297,7 @@ public interface IOpenShiftService {
 	 * @see IUser
 	 * @see IApplication
 	 */
+	@Deprecated
 	public IApplication threadDumpApplication(String name, ICartridge cartridge, IUser user)
 			throws OpenShiftException;
 	
@@ -287,6 +315,7 @@ public interface IOpenShiftService {
 	 *             the open shift exception
 	 * @see #getEmbeddableCartridges(IUser)
 	 */
+	@Deprecated
 	public IEmbeddableCartridge addEmbeddedCartridge(String applicationName, IEmbeddableCartridge cartridge,
 			IUser user)
 			throws OpenShiftException;
@@ -302,6 +331,7 @@ public interface IOpenShiftService {
 	 * @throws OpenShiftException occurrs if the cartridge could not be removed
 	 * @see #getEmbeddableCartridges(IUser)
 	 */
+	@Deprecated
 	public void removeEmbeddedCartridge(String applicationName, IEmbeddableCartridge cartridge,
 			IUser user) throws OpenShiftException;
 
@@ -323,6 +353,7 @@ public interface IOpenShiftService {
 	 * @see ICartridge
 	 * @see IUser
 	 */
+	@Deprecated
 	public String getStatus(String name, ICartridge cartridge, IUser user) throws OpenShiftException;
 	
 	/**
@@ -344,9 +375,12 @@ public interface IOpenShiftService {
 	 * @see ICartridge
 	 * @see IUser
 	 */
+	@Deprecated
 	public String getStatus(String name, ICartridge cartridge, IUser user, String logFile, int numLines) throws OpenShiftException;
 
 
+	public DomainsDTO getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException;
+	
 	/**
 	 * Changes the current domain (namespace) to the given name.
 	 * 
@@ -365,6 +399,7 @@ public interface IOpenShiftService {
 	 * @see ISSHPublicKey
 	 * @see IDomain
 	 */
+	@Deprecated
 	public IDomain changeDomain(String name, ISSHPublicKey sshKey, IUser user) throws OpenShiftException;
 
 	/**
@@ -387,6 +422,7 @@ public interface IOpenShiftService {
 	 * @see ISSHPublicKey
 	 * @see IDomain
 	 */
+	@Deprecated
 	public IDomain createDomain(String name, ISSHPublicKey sshKey, IUser user) throws OpenShiftException;
 
 	/**
@@ -402,6 +438,7 @@ public interface IOpenShiftService {
 	 * 
 	 * @see IUser
 	 */
+	@Deprecated
 	public void destroyDomain(String name, IUser user) throws OpenShiftException;
 	
 	
@@ -417,6 +454,7 @@ public interface IOpenShiftService {
 	 * @see IUserInfo
 	 * @see ApplicationInfo
 	 */
+	@Deprecated
 	public UserInfo getUserInfo(IUser user) throws OpenShiftException;
 	
 	/**
@@ -431,8 +469,10 @@ public interface IOpenShiftService {
 	 *             the open shift exception
 	 * @see IApplication#getApplicationUrl()
 	 */
+	@Deprecated
 	public boolean waitForApplication(String applicationHealthCheckUrl, long timeout, String expectedResponse) throws OpenShiftException;
 	
+	@Deprecated
 	public boolean waitForHostResolves(String url, long timeout) throws OpenShiftException;
 	
 	/**

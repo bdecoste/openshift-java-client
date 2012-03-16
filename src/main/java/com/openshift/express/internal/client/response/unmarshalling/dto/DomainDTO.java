@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.internal.client.response.unmarshalling.dto;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author Xavier Coulon
@@ -18,24 +18,24 @@ import java.util.List;
 public class DomainDTO {
 
 	private final String namespace;
-	private final List<Operation> operations;
+	private final Map<String, Link> links;
 	
-	public DomainDTO(final String namespace, final List<Operation> operations) {
+	public DomainDTO(final String namespace, final Map<String, Link> links) {
 		this.namespace = namespace;
-		this.operations = operations;
+		this.links = links;
 	}
 
 	/**
 	 * @return the namespace
 	 */
-	protected final String getNamespace() {
+	public final String getNamespace() {
 		return namespace;
 	}
 
 	/**
 	 * @return the operations
 	 */
-	protected final List<Operation> getOperations() {
-		return operations;
+	public final Map<String, Link> getLinks() {
+		return links;
 	}
 }

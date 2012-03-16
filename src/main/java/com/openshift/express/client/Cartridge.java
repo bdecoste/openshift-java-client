@@ -92,16 +92,17 @@ public class Cartridge implements ICartridge {
 	}
 	
 	protected String getCartridgeName(String cartridgeType) throws OpenShiftException {
-		List<ICartridge> cartridges = service.getCartridges(user);
-		
-		Iterator<ICartridge> i = cartridges.iterator();
-		while (i.hasNext()){
-			ICartridge cartridge = i.next();
-			if (cartridge.getName().contains(cartridgeType))
-				return cartridge.getName();
-		}
-		
-		throw new OpenShiftException("No cartridge found for type " + cartridgeType);
+		throw new UnsupportedOperationException();
+//		List<ICartridge> cartridges = service.getCartridges(user);
+//		
+//		Iterator<ICartridge> i = cartridges.iterator();
+//		while (i.hasNext()){
+//			ICartridge cartridge = i.next();
+//			if (cartridge.getName().contains(cartridgeType))
+//				return cartridge.getName();
+//		}
+//		
+//		throw new OpenShiftException("No cartridge found for type " + cartridgeType);
 	}
 
 }

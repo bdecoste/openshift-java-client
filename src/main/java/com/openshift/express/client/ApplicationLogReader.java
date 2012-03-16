@@ -84,20 +84,21 @@ public class ApplicationLogReader extends Reader {
 	}
 
 	protected String requestStatus() throws InterruptedException, OpenShiftException {
-		String status = null;
-		while (status == null) {
-			if (logFile != null)
-				status = service.getStatus(application.getName(), application.getCartridge(), user, logFile, 100);
-			else
-				status = service.getStatus(application.getName(), application.getCartridge(), user);
-			if (isSameStatus(currentStatus, status)) {
-				Thread.sleep(STATUS_REQUEST_DELAY);
-				status = null;
-				continue;
-			}
-		}
-		this.currentStatus = status;
-		return status;
+		throw new UnsupportedOperationException();
+//		String status = null;
+//		while (status == null) {
+//			if (logFile != null)
+//				status = service.getStatus(application.getName(), application.getCartridge(), user, logFile, 100);
+//			else
+//				status = service.getStatus(application.getName(), application.getCartridge(), user);
+//			if (isSameStatus(currentStatus, status)) {
+//				Thread.sleep(STATUS_REQUEST_DELAY);
+//				status = null;
+//				continue;
+//			}
+//		}
+//		this.currentStatus = status;
+//		return status;
 	} 
 
 	private boolean isSameStatus(String thisStatus, String otherStatus) {

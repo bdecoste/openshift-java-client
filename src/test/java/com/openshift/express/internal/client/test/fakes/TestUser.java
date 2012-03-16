@@ -17,7 +17,6 @@ import com.openshift.express.client.IApplication;
 import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.client.User;
-import com.openshift.express.client.configuration.OpenShiftConfiguration;
 import com.openshift.express.internal.client.test.utils.ApplicationUtils;
 
 /**

@@ -15,17 +15,17 @@ import java.util.List;
 /**
  * @author Xavier Coulon
  */
-public class Operation {
+public class Link {
 
 	private final String rel;
 	private final String href;
 	private final String httpMethod;
-	private final List<OperationParam> requiredParams;
-	private final List<OperationParam> optionalParams;
+	private final List<LinkParam> requiredParams;
+	private final List<LinkParam> optionalParams;
 	
-	public Operation(final String rel, final String href, final String httpMethod,
-			final List<OperationParam> requiredParams,
-			final List<OperationParam> optionalParams) {
+	public Link(final String rel, final String href, final String httpMethod,
+			final List<LinkParam> requiredParams,
+			final List<LinkParam> optionalParams) {
 		this.rel = rel;
 		this.href = href;
 		this.httpMethod = httpMethod;
@@ -36,35 +36,35 @@ public class Operation {
 	/**
 	 * @return the rel
 	 */
-	protected final String getRel() {
+	public final String getRel() {
 		return rel;
 	}
 
 	/**
 	 * @return the href
 	 */
-	protected final String getHref() {
+	public final String getHref() {
 		return href;
 	}
 
 	/**
 	 * @return the httpMethod
 	 */
-	protected final String getHttpMethod() {
+	public final String getHttpMethod() {
 		return httpMethod;
 	}
 
 	/**
 	 * @return the requiredParams
 	 */
-	protected final List<OperationParam> getRequiredParams() {
+	public final List<LinkParam> getRequiredParams() {
 		return requiredParams;
 	}
 
 	/**
 	 * @return the optionalParams
 	 */
-	protected final List<OperationParam> getOptionalParams() {
+	public final List<LinkParam> getOptionalParams() {
 		return optionalParams;
 	}
 

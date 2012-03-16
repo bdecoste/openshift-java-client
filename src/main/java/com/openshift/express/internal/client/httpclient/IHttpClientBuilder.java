@@ -8,36 +8,25 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.express.internal.client.response.unmarshalling.dto;
+package com.openshift.express.internal.client.httpclient;
 
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import com.openshift.express.client.IHttpClient;
 
 /**
- * @author Xavier Coulon
+ * @author Andre Dietisheim
  */
-public class DomainsDTO {
-	
-	private final List<DomainDTO> domains;
-	
-	private final List<Link> links;
-	
-	public DomainsDTO(final List<DomainDTO> domains, final List<Link> links) {
-		this.domains = domains;
-		this.links = links;
-	}
+public interface IHttpClientBuilder {
 
-	/**
-	 * @return the domains
-	 */
-	public List<DomainDTO> getDomains() {
-		return domains;
-	}
+	public IHttpClientBuilder setUserAgent(String userAgent);
 
-	/**
-	 * @return the operations
-	 */
-	public List<Link> getLinks() {
-		return links;
-	}
+	public IHttpClientBuilder setSSLChecks(boolean check);
 
+	public IHttpClientBuilder setCredentials(String username, String password);
+
+	public IHttpClient setUrl(URL url);
+
+	public IHttpClient setUrl(String url) throws MalformedURLException;
 }
