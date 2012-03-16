@@ -11,6 +11,7 @@
 package com.openshift.express.internal.client.response.unmarshalling.dto;
 
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DATA;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAINS;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_MESSAGES;
@@ -35,15 +36,18 @@ import com.openshift.express.client.OpenShiftException;
 public class DTOFactory {
 
 	@SuppressWarnings("unchecked")
-	public static <T> T get(String content, Class<T> clazz) throws OpenShiftException {
+	public static <T> T get(final String content, final Class<T> clazz) throws OpenShiftException {
 		ModelNode node = getModelNode(content);
 		if (clazz.isAssignableFrom(DomainsDTO.class)) {
 			return (T) createDomainsDTO(node);
 		}
+		if (clazz.isAssignableFrom(DomainDTO.class)) {
+			return (T) createDomainDTO(node);
+		}
 		return null;
 	}
 
-	private static ModelNode getModelNode(String content) throws OpenShiftException {
+	private static ModelNode getModelNode(final String content) throws OpenShiftException {
 		final ModelNode node = ModelNode.fromJSONString(content);
 		if (!node.isDefined()) {
 			throw new OpenShiftException("Failed to read response.");
@@ -60,36 +64,51 @@ public class DTOFactory {
 		return STATUS_OK.equals(node.get(PROPERTY_STATUS).asString());
 	}
 
-	private static DomainsDTO createDomainsDTO(ModelNode rootNode) throws OpenShiftException {
+	private static DomainsDTO createDomainsDTO(final ModelNode rootNode) throws OpenShiftException {
 		if (!isDomainsType(rootNode)) {
 			throw new OpenShiftException("Expected response type '{0}', but received '{1}'", PROPERTY_DOMAINS, rootNode
 					.get(PROPERTY_TYPE).asString());
 		}
 		final List<DomainDTO> domains = new ArrayList<DomainDTO>();
 		final List<Link> operations = new ArrayList<Link>();
-		for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
-			if (dataNode.getType() == ModelType.OBJECT) {
-				domains.add(createDomainDTO(dataNode));
+		// temporarily supporting absence of 'data' node in the 'domain' response message
+		// FIXME: simplify once openshift response is fixed
+		if (rootNode.get(PROPERTY_DATA).isDefined()) {
+			for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
+				if (dataNode.getType() == ModelType.OBJECT) {
+					domains.add(createDomainDTO(dataNode));
+				} else {
+					throw new OpenShiftException("Unexpected node type: {0}", dataNode.getType());
+				}
+			}
+		} else {
+			final ModelNode domainNode = rootNode.get(PROPERTY_DOMAIN);
+			if (domainNode.isDefined() && domainNode.getType() == ModelType.OBJECT) {
+				domains.add(createDomainDTO(domainNode));
 			} else {
-				throw new OpenShiftException("Unexpected node type: {0}", dataNode.getType());
+				throw new OpenShiftException("Unexpected node type: {0}", domainNode.getType());
 			}
 		}
 
 		return new DomainsDTO(domains, operations);
 	}
 
-	private static boolean isDomainsType(ModelNode rootNode) {
+	private static boolean isDomainsType(final ModelNode rootNode) {
 		return PROPERTY_DOMAINS.equals(rootNode.get(PROPERTY_TYPE).asString());
 	}
 
-	private static DomainDTO createDomainDTO(ModelNode domainNode) {
+	private static DomainDTO createDomainDTO(final ModelNode domainNode) {
+		final ModelNode dataNode = domainNode.get(PROPERTY_DATA);
+		if(dataNode.isDefined()) {
+			return createDomainDTO(dataNode);
+		} 
 		final ModelNode namespaceNode = domainNode.get(PROPERTY_NAMESPACE);
 		final String namespace = namespaceNode.isDefined() ? namespaceNode.asString() : null;
 		final Map<String, Link> operations = createLinks(domainNode.get(PROPERTY_LINKS).asList());
 		return new DomainDTO(namespace, operations);
 	}
 
-	private static Map<String, Link> createLinks(List<ModelNode> linkNodes) {
+	private static Map<String, Link> createLinks(final List<ModelNode> linkNodes) {
 		Map<String, Link> links = new HashMap<String, Link>();
 		for (ModelNode linkNode : linkNodes) {
 			final String linkName = linkNode.asProperty().getName();

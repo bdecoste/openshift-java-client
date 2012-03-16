@@ -28,6 +28,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_DEBUG = "debug";
 	public static final String PROPERTY_DELETE = "delete";
 	public static final String PROPERTY_DOMAINS = "domains";
+	public static final String PROPERTY_DOMAIN = "domain";
 	public static final String PROPERTY_EMBEDDED = "embedded";
 	public static final String PROPERTY_EXIT_CODE = "exit_code";
 	public static final String PROPERTY_FRAMEWORK = "framework";
