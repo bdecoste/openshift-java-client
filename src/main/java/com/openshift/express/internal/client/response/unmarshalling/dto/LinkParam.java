@@ -18,6 +18,8 @@ import java.util.List;
 public class LinkParam {
 
 	private final String name;
+	
+	/** The type. */
 	private final String type;
 	private final String description;
 	private final String defaultValue;

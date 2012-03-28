@@ -15,7 +15,8 @@ import java.util.List;
 
 import com.openshift.express.internal.client.ApplicationInfo;
 import com.openshift.express.internal.client.UserInfo;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DomainsDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DomainDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
 
 /**
  * @author André Dietisheim
@@ -379,7 +380,7 @@ public interface IOpenShiftService {
 	public String getStatus(String name, ICartridge cartridge, IUser user, String logFile, int numLines) throws OpenShiftException;
 
 
-	public DomainsDTO getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException;
+	public Response getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException;
 	
 	/**
 	 * Changes the current domain (namespace) to the given name.

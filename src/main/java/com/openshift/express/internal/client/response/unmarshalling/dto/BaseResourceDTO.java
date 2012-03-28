@@ -10,34 +10,43 @@
  ******************************************************************************/
 package com.openshift.express.internal.client.response.unmarshalling.dto;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * @author Xavier Coulon
+ * The Class BaseResourceDTO.
+ *
+ * @param <T> the generic type
  */
-public class DomainsDTO {
+public abstract class BaseResourceDTO {
+
+	/** the indexed map of links to perform operations from this resource. */
+	private final Map<String, Link> links;
 	
-	private final List<DomainDTO> domains;
-	
-	private final List<Link> links;
-	
-	public DomainsDTO(final List<DomainDTO> domains, final List<Link> links) {
-		this.domains = domains;
+	/**
+	 * Instantiates a new base resource dto.
+	 *
+	 * @param links the links
+	 */
+	public BaseResourceDTO(final Map<String, Link> links) {
 		this.links = links;
 	}
-
+	
 	/**
-	 * @return the domains
+	 * Gets the links.
+	 *
+	 * @return all the links
 	 */
-	public List<DomainDTO> getDomains() {
-		return domains;
-	}
-
-	/**
-	 * @return the operations
-	 */
-	public List<Link> getLinks() {
+	public final Map<String, Link> getLinks() {
 		return links;
 	}
-
+	
+	/**
+	 * Gets the link.
+	 *
+	 * @param name the name of the link to look for.
+	 * @return the named link
+	 */
+	public final Link getLink(String name) {
+		return links.get(name);
+	}
 }

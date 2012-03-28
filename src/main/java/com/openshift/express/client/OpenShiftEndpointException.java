@@ -15,7 +15,9 @@ import com.openshift.express.internal.client.response.OpenShiftResponse;
 
 /**
  * @author André Dietisheim
+ * @deprecated see {@link OpenShiftOperationException}
  */
+@Deprecated
 public class OpenShiftEndpointException extends OpenShiftException {
 
 	private static final long serialVersionUID = 1L;

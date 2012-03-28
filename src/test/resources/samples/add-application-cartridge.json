@@ -1,0 +1,117 @@
+{
+    "type":"cartridge",
+    "messages":[
+        {
+            "field":null,
+            "severity":"info",
+            "text":"Added mongodb-2.0 to application sample",
+            "exit_code":null
+        },
+        {
+            "field":"result",
+            "severity":"info",
+            "text":"\nMongoDB 2.0 database added.  Please make note of these credentials:\n\n       Root User: admin\n   foo Password: bar\n   Database Name: sample\n  Connection URL: mongodb://127.5.82.129:27017/\n\nYou can manage your new MongoDB by also embedding rockmongo-1.1\n",
+            "exit_code":0
+        },
+        {
+            "field":"appinfo",
+            "severity":"info",
+            "text":"Connection URL: mongodb://127.5.82.129:27017/\n",
+            "exit_code":0
+        }
+    ],
+    "version":"1.0",
+    "status":"created",
+    "data":{
+        "type":"embedded",
+        "name":"mongodb-2.0",
+        "links":{
+            "GET":{
+                "method":"GET",
+                "optional_params":[
+                    
+                ],
+                "rel":"Get embedded cartridge",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/foobar/applications/sample/cartridges/mongodb-2.0"
+            },
+            "RESTART":{
+                "method":"POST",
+                "optional_params":[
+                    
+                ],
+                "rel":"Restart embedded cartridge",
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"restart",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "href":"/domains/foobar/applications/sample/cartridges/mongodb-2.0/events"
+            },
+            "DELETE":{
+                "method":"DELETE",
+                "optional_params":[
+                    
+                ],
+                "rel":"Delete embedded cartridge",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/foobar/applications/sample/cartridges/mongodb-2.0"
+            },
+            "STOP":{
+                "method":"POST",
+                "optional_params":[
+                    
+                ],
+                "rel":"Stop embedded cartridge",
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"stop",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "href":"/domains/foobar/applications/sample/cartridges/mongodb-2.0/events"
+            },
+            "RELOAD":{
+                "method":"POST",
+                "optional_params":[
+                    
+                ],
+                "rel":"Reload embedded cartridge",
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"reload",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "href":"/domains/foobar/applications/sample/cartridges/mongodb-2.0/events"
+            },
+            "START":{
+                "method":"POST",
+                "optional_params":[
+                    
+                ],
+                "rel":"Start embedded cartridge",
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"start",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "href":"/domains/foobar/applications/sample/cartridges/mongodb-2.0/events"
+            }
+        }
+    }
+}

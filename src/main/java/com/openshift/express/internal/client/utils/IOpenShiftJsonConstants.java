@@ -52,5 +52,6 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_STATUS = "status";
 	
 	public static final String STATUS_OK = "ok";
+	public static final String STATUS_CREATED = "created";
 }
 

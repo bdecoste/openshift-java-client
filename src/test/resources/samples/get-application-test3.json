@@ -1,0 +1,264 @@
+{
+    "version":"1.0",
+    "status":"ok",
+    "type":"application",
+    "data":{
+        "framework":"jbossas-7",
+        "embedded":{
+            
+        },
+        "domain_id":"xcoulon",
+        "creation_time":"2012-03-22T06:55:54-04:00",
+        "aliases":[
+            
+        ],
+        "name":"test3",
+        "links":{
+            "SHOW_PORT":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"show-port",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Show port"
+            },
+            "ADD_ALIAS":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"add-alias",
+                        "type":"string",
+                        "name":"event"
+                    },
+                    {
+                        "description":"The server alias for the application",
+                        "valid_options":[
+                            
+                        ],
+                        "type":"string",
+                        "name":"alias"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Add application alias"
+            },
+            "REMOVE_ALIAS":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"remove-alias",
+                        "type":"string",
+                        "name":"event"
+                    },
+                    {
+                        "description":"The application alias to be removed",
+                        "valid_options":[
+                            
+                        ],
+                        "type":"string",
+                        "name":"alias"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Remove application alias"
+            },
+            "STOP":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"stop",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Stop application"
+            },
+            "DELETE":{
+                "method":"DELETE",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/xcoulon/applications/test3",
+                "optional_params":[
+                    
+                ],
+                "rel":"Delete application"
+            },
+            "FORCE_STOP":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"force-stop",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Force stop application"
+            },
+            "CONCEAL_PORT":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"conceal-port",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Conceal port"
+            },
+            "ADD_CARTRIDGE":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"framework-type, e.g.: mysql-5.1",
+                        "valid_options":[
+                            "mongodb-2.0",
+                            "cron-1.4",
+                            "mysql-5.1",
+                            "postgresql-8.4",
+                            "10gen-mms-agent-0.1",
+                            "phpmyadmin-3.4",
+                            "metrics-0.1",
+                            "rockmongo-1.1",
+                            "jenkins-client-1.4"
+                        ],
+                        "type":"string",
+                        "name":"cartridge"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/cartridges",
+                "optional_params":[
+                    
+                ],
+                "rel":"Add embedded cartridge"
+            },
+            "GET":{
+                "method":"GET",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/xcoulon/applications/test3",
+                "optional_params":[
+                    
+                ],
+                "rel":"Get application"
+            },
+            "GET_DESCRIPTOR":{
+                "method":"GET",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/xcoulon/applications/test3/descriptor",
+                "optional_params":[
+                    
+                ],
+                "rel":"Get application descriptor"
+            },
+            "EXPOSE_PORT":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"expose-port",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Expose port"
+            },
+            "GET_GEARS":{
+                "method":"GET",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/xcoulon/applications/test3/gears",
+                "optional_params":[
+                    
+                ],
+                "rel":"Get application gears"
+            },
+            "RESTART":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"restart",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Restart application"
+            },
+            "LIST_CARTRIDGES":{
+                "method":"GET",
+                "required_params":[
+                    
+                ],
+                "href":"/domains/xcoulon/applications/test3/cartridges",
+                "optional_params":[
+                    
+                ],
+                "rel":"List embedded cartridges"
+            },
+            "START":{
+                "method":"POST",
+                "required_params":[
+                    {
+                        "description":"event",
+                        "valid_options":"start",
+                        "type":"string",
+                        "name":"event"
+                    }
+                ],
+                "href":"/domains/xcoulon/applications/test3/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Start application"
+            }
+        },
+        "uuid":"2a26c36984a04a14a3621383ee15a889"
+    },
+    "messages":[
+        
+    ]
+}

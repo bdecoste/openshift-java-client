@@ -29,7 +29,7 @@ import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientB
 import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
 import com.openshift.express.internal.client.response.unmarshalling.dto.DTOFactory;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DomainsDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
 import com.openshift.express.internal.client.utils.StreamUtils;
 import com.openshift.express.internal.client.utils.UrlBuilder;
 
@@ -89,9 +89,9 @@ public class OpenShiftService implements IOpenShiftService {
 		return baseUrl;
 	}
 
-	public DomainsDTO getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException {
+	public Response getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException {
 		String response = sendRequest(new GetRequest(getResourceUrl(url)), createClient(user), "");
-		return DTOFactory.get(response, DomainsDTO.class);
+		return DTOFactory.get(response);
 	}
 
 	private URL getResourceUrl(String url) throws MalformedURLException {

@@ -1,0 +1,270 @@
+{
+    "type":"application",
+    "messages":[
+        
+    ],
+    "data":{
+        "aliases":[
+            "an-alias",
+            "another-alias"
+        ],
+        "framework":"jbossas-7",
+        "embedded":{
+            "mongodb-2.0":{
+                "info":"Connection URL: mongodb://127.5.82.129:27017/\n"
+            },
+            "mysql-5.1":{
+                "info":"Connection URL: mysql://127.5.82.129:3306/\n"
+            }
+        },
+        "domain_id":"foobar",
+        "creation_time":"2012-03-19T10:48:26-04:00",
+        "links":{
+            "ADD_CARTRIDGE":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":[
+                            "mongodb-2.0",
+                            "cron-1.4",
+                            "mysql-5.1",
+                            "postgresql-8.4",
+                            "10gen-mms-agent-0.1",
+                            "phpmyadmin-3.4",
+                            "metrics-0.1",
+                            "rockmongo-1.1",
+                            "jenkins-client-1.4"
+                        ],
+                        "name":"cartridge",
+                        "description":"framework-type, e.g.: mysql-5.1"
+                    }
+                ],
+                "rel":"Add embedded cartridge",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/cartridges"
+            },
+            "GET_GEARS":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    
+                ],
+                "rel":"Get application gears",
+                "method":"GET",
+                "href":"/domains/foobar/applications/sample/gears"
+            },
+            "GET_DESCRIPTOR":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    
+                ],
+                "rel":"Get application descriptor",
+                "method":"GET",
+                "href":"/domains/foobar/applications/sample/descriptor"
+            },
+            "STOP":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"stop",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Stop application",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "SHOW_PORT":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"show-port",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Show port",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "LIST_CARTRIDGES":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    
+                ],
+                "rel":"List embedded cartridges",
+                "method":"GET",
+                "href":"/domains/foobar/applications/sample/cartridges"
+            },
+            "GET":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    
+                ],
+                "rel":"Get application",
+                "method":"GET",
+                "href":"/domains/foobar/applications/sample"
+            },
+            "FORCE_STOP":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"force-stop",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Force stop application",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "REMOVE_ALIAS":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"remove-alias",
+                        "name":"event",
+                        "description":"event"
+                    },
+                    {
+                        "type":"string",
+                        "valid_options":[
+                            
+                        ],
+                        "name":"alias",
+                        "description":"The application alias to be removed"
+                    }
+                ],
+                "rel":"Remove application alias",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "DELETE":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    
+                ],
+                "rel":"Delete application",
+                "method":"DELETE",
+                "href":"/domains/foobar/applications/sample"
+            },
+            "EXPOSE_PORT":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"expose-port",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Expose port",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "START":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"start",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Start application",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "CONCEAL_PORT":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"conceal-port",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Conceal port",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "ADD_ALIAS":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"add-alias",
+                        "name":"event",
+                        "description":"event"
+                    },
+                    {
+                        "type":"string",
+                        "valid_options":[
+                            
+                        ],
+                        "name":"alias",
+                        "description":"The server alias for the application"
+                    }
+                ],
+                "rel":"Add application alias",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            },
+            "RESTART":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "type":"string",
+                        "valid_options":"restart",
+                        "name":"event",
+                        "description":"event"
+                    }
+                ],
+                "rel":"Restart application",
+                "method":"POST",
+                "href":"/domains/foobar/applications/sample/events"
+            }
+        },
+        "name":"sample",
+        "uuid":"5229a2c0f1424aed90d4ca8f20c0f9a2"
+    },
+    "status":"ok",
+    "version":"1.0"
+}

@@ -14,22 +14,35 @@ import java.util.Map;
 
 /**
  * @author Xavier Coulon
+ *
  */
-public class DomainDTO extends BaseResourceDTO {
+public class CartridgeDTO extends BaseResourceDTO {
 
-	/** the domain's configured namespace. */
-	private final String namespace;
+	private final String name;
 	
-	public DomainDTO(final String namespace, final Map<String, Link> links) {
+	private final String type;
+	
+	/**
+	 * @param links
+	 */
+	public CartridgeDTO(final String name, final String type, Map<String, Link> links) {
 		super(links);
-		this.namespace = namespace;
+		this.name = name;
+		this.type = type;
 	}
 
 	/**
-	 * @return the namespace
+	 * @return the name
 	 */
-	public final String getNamespace() {
-		return namespace;
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
 	}
 
 }

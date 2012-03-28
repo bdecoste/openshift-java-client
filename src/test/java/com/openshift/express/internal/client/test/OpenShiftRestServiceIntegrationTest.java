@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.internal.client.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.client.OpenShiftService;
 import com.openshift.express.client.configuration.OpenShiftConfiguration;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DomainsDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
 import com.openshift.express.internal.client.test.fakes.TestUser;
 
 public class OpenShiftRestServiceIntegrationTest {
@@ -39,8 +39,8 @@ public class OpenShiftRestServiceIntegrationTest {
 
 	@Test
 	public void canGetDomains() throws OpenShiftException, MalformedURLException {
-		DomainsDTO domains = service.getDomains(PATH_DOMAINS, user);
-		assertNotNull(domains);
+		Response domainsResponse = service.getDomains(PATH_DOMAINS, user);
+		assertNotNull(domainsResponse);
 	}
 	
 }
