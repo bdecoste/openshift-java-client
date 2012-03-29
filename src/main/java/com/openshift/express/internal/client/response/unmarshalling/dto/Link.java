@@ -12,6 +12,8 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
 
 import java.util.List;
 
+import com.openshift.express.client.HttpMethod;
+
 /**
  * The Class Link.
  *
@@ -26,13 +28,18 @@ public class Link {
 	private final String href;
 	
 	/** The http method. */
-	private final String httpMethod;
+	private final HttpMethod httpMethod;
 	
 	/** The required params. */
-	private final List<LinkParam> requiredParams;
+	private final List<RequiredLinkParameter> requiredParams;
 	
 	/** The optional params. */
-	private final List<LinkParam> optionalParams;
+	private final List<OptionalLinkParameter> optionalParams;
+	
+	public Link(final String rel, final String href, final String httpMethod,
+			final List<RequiredLinkParameter> requiredParams, final List<OptionalLinkParameter> optionalParams) {
+		this(rel, href, HttpMethod.valueOf(httpMethod), requiredParams, optionalParams);
+	}
 	
 	/**
 	 * Instantiates a new link.
@@ -43,9 +50,8 @@ public class Link {
 	 * @param requiredParams the required params
 	 * @param optionalParams the optional params
 	 */
-	public Link(final String rel, final String href, final String httpMethod,
-			final List<LinkParam> requiredParams,
-			final List<LinkParam> optionalParams) {
+	public Link(final String rel, final String href, final HttpMethod httpMethod,
+			final List<RequiredLinkParameter> requiredParams, final List<OptionalLinkParameter> optionalParams) {
 		this.rel = rel;
 		this.href = href;
 		this.httpMethod = httpMethod;
@@ -76,7 +82,7 @@ public class Link {
 	 *
 	 * @return the httpMethod
 	 */
-	public final String getHttpMethod() {
+	public final HttpMethod getHttpMethod() {
 		return httpMethod;
 	}
 
@@ -85,7 +91,7 @@ public class Link {
 	 *
 	 * @return the requiredParams
 	 */
-	public final List<LinkParam> getRequiredParams() {
+	public final List<RequiredLinkParameter> getRequiredParams() {
 		return requiredParams;
 	}
 
@@ -94,7 +100,7 @@ public class Link {
 	 *
 	 * @return the optionalParams
 	 */
-	public final List<LinkParam> getOptionalParams() {
+	public final List<OptionalLinkParameter> getOptionalParams() {
 		return optionalParams;
 	}
 

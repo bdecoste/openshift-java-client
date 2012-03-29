@@ -27,7 +27,7 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.DTOFacto
 import com.openshift.express.internal.client.response.unmarshalling.dto.DomainDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.EnumDataType;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParam;
+import com.openshift.express.internal.client.response.unmarshalling.dto.OptionalLinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
 import static com.openshift.express.internal.client.response.unmarshalling.dto.ILinkNames.*;
 
@@ -58,7 +58,7 @@ public class DmrUnmarshallingTestCase {
 		assertThat(link.getHref()).isEqualTo("/domains/xcoulon/applications");
 		assertThat(link.getRel()).isEqualTo("Create new application");
 		assertThat(link.getHttpMethod()).isEqualTo("POST");
-		final List<LinkParam> requiredParams = link.getRequiredParams();
+		final List<OptionalLinkParameter> requiredParams = link.getRequiredParams();
 		assertThat(requiredParams).hasSize(2);
 	}
 

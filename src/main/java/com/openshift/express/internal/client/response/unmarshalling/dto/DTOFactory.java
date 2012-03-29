@@ -278,8 +278,8 @@ public class DTOFactory {
 			final String rel = valueNode.get("rel").asString();
 			final String href = valueNode.get("href").asString();
 			final String method = valueNode.get("method").asString();
-			final List<LinkParam> requiredParams = createLinkParams(valueNode.get("required_params"));
-			final List<LinkParam> optionalParams = createLinkParams(valueNode.get("optional_params"));
+			final List<RequiredLinkParameter> requiredParams = createRequiredLinkParams(valueNode.get("required_params"));
+			final List<OptionalLinkParameter> optionalParams = createOptionalLinkParams(valueNode.get("optional_params"));
 			links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
 		}
 		return links;
@@ -292,28 +292,54 @@ public class DTOFactory {
 	 *            the link param nodes
 	 * @return the list< link param>
 	 */
-	private static List<LinkParam> createLinkParams(ModelNode linkParamNodes) {
-		List<LinkParam> linkParams = new ArrayList<LinkParam>();
+	private static List<OptionalLinkParameter> createOptionalLinkParams(ModelNode linkParamNodes) {
+		List<OptionalLinkParameter> linkParams = new ArrayList<OptionalLinkParameter>();
 		if (linkParamNodes.isDefined()) {
 			for (ModelNode linkParamNode : linkParamNodes.asList()) {
-				linkParams.add(createLinkParam(linkParamNode));
+				linkParams.add(createOptionalLinkParam(linkParamNode));
+			}
+		}
+		return linkParams;
+	}
+
+	private static List<RequiredLinkParameter> createRequiredLinkParams(ModelNode linkParamNodes) {
+		List<RequiredLinkParameter> linkParams = new ArrayList<RequiredLinkParameter>();
+		if (linkParamNodes.isDefined()) {
+			for (ModelNode linkParamNode : linkParamNodes.asList()) {
+				linkParams.add(createRequiredLinkParam(linkParamNode));
 			}
 		}
 		return linkParams;
 	}
 
 	/**
-	 * Creates a new DTO object.
+	 * Creates a new optional link parameter for the given link parameter node.
 	 * 
-	 * @param linkParamNode
-	 *            the link param node
-	 * @return the link param
+	 * @param linkParamNode the model node that contains the link parameters
+	 * @return the optional link parameter
 	 */
-	private static LinkParam createLinkParam(ModelNode linkParamNode) {
+	private static OptionalLinkParameter createOptionalLinkParam(ModelNode linkParamNode) {
 		final String description = linkParamNode.get("description").asString();
 		final String type = linkParamNode.get("type").asString();
 		final String defaultValue = linkParamNode.get("default-value").asString();
 		final String name = linkParamNode.get("name").asString();
+		return new OptionalLinkParameter(name, type, defaultValue, description, getValidOptions(linkParamNode));
+	}
+
+	/**
+	 * Creates a new required link parameter for the given link parameter node.
+	 * 
+	 * @param linkParamNode the model node that contains the link parameters
+	 * @return the required link parameter
+	 */
+	private static RequiredLinkParameter createRequiredLinkParam(ModelNode linkParamNode) {
+		final String description = linkParamNode.get("description").asString();
+		final String type = linkParamNode.get("type").asString();
+		final String name = linkParamNode.get("name").asString();
+		return new RequiredLinkParameter(name, type, description);
+	}
+
+	private static List<String> getValidOptions(ModelNode linkParamNode) {
 		final List<String> validOptions = new ArrayList<String>();
 		final ModelNode validOptionsNode = linkParamNode.get("valid_options");
 		if (validOptionsNode.isDefined()) {
@@ -330,7 +356,7 @@ public class DTOFactory {
 				break;
 			}
 		}
-		return new LinkParam(name, type, defaultValue, description, validOptions);
+		return validOptions;
 	}
 
 	/**
