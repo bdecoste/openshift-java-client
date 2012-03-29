@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.internal.client.rest.unmarshalling;
 
+import static com.openshift.express.internal.client.response.unmarshalling.dto.ILinkNames.ADD_APPLICATION;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -20,6 +21,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.ApplicationDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.CartridgeDTO;
@@ -27,9 +29,8 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.DTOFacto
 import com.openshift.express.internal.client.response.unmarshalling.dto.DomainDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.EnumDataType;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.express.internal.client.response.unmarshalling.dto.OptionalLinkParameter;
+import com.openshift.express.internal.client.response.unmarshalling.dto.RequiredLinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
-import static com.openshift.express.internal.client.response.unmarshalling.dto.ILinkNames.*;
 
 public class DmrUnmarshallingTestCase {
 
@@ -57,8 +58,8 @@ public class DmrUnmarshallingTestCase {
 		assertThat(link).isNotNull();
 		assertThat(link.getHref()).isEqualTo("/domains/xcoulon/applications");
 		assertThat(link.getRel()).isEqualTo("Create new application");
-		assertThat(link.getHttpMethod()).isEqualTo("POST");
-		final List<OptionalLinkParameter> requiredParams = link.getRequiredParams();
+		assertThat(link.getHttpMethod()).isEqualTo(HttpMethod.POST);
+		final List<RequiredLinkParameter> requiredParams = link.getRequiredParams();
 		assertThat(requiredParams).hasSize(2);
 	}
 
