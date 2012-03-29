@@ -28,7 +28,7 @@ import com.openshift.express.internal.client.httpclient.UnauthorizedException;
 import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DTOFactory;
+import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
 import com.openshift.express.internal.client.utils.StreamUtils;
 import com.openshift.express.internal.client.utils.UrlBuilder;
@@ -91,7 +91,7 @@ public class OpenShiftService implements IOpenShiftService {
 
 	public Response getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException {
 		String response = sendRequest(new GetRequest(getResourceUrl(url)), createClient(user), "");
-		return DTOFactory.get(response);
+		return ResourceDTOFactory.get(response);
 	}
 
 	private URL getResourceUrl(String url) throws MalformedURLException {

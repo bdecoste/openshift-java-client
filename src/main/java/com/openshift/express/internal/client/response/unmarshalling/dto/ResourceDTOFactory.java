@@ -33,7 +33,7 @@ import com.openshift.express.client.OpenShiftException;
  * 
  * @author Xavier Coulon
  */
-public class DTOFactory {
+public class ResourceDTOFactory {
 
 	/**
 	 * Gets the.
@@ -80,6 +80,8 @@ public class DTOFactory {
 
 		final EnumDataType dataType = EnumDataType.nullSafeValueOf(type);
 		switch (dataType) {
+		case links:
+			return new Response(status, messages, createLinks(rootNode), dataType);
 		case domains:
 			return new Response(status, messages, createDomainsDTO(rootNode), dataType);
 		case domain:
@@ -124,6 +126,24 @@ public class DTOFactory {
 
 		return node;
 	}
+	
+	/**
+	 * Creates a new RootResource DTO object.
+	 * 
+	 * @param rootNode
+	 *            the root node
+	 * @return the list< domain dt o>
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 */
+	private static Map<String, Link> createLinks(final ModelNode rootNode) throws OpenShiftException {
+		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
+		if (dataNode.isDefined()) {
+			// loop inside 'data' node
+			return createLinks(dataNode);
+		}
+		return createLinks(rootNode.get(PROPERTY_LINKS).asList());
+	}
 
 	/**
 	 * Creates a new DTO object.
@@ -134,8 +154,8 @@ public class DTOFactory {
 	 * @throws OpenShiftException
 	 *             the open shift exception
 	 */
-	private static List<DomainDTO> createDomainsDTO(final ModelNode rootNode) throws OpenShiftException {
-		final List<DomainDTO> domains = new ArrayList<DomainDTO>();
+	private static List<DomainResourceDTO> createDomainsDTO(final ModelNode rootNode) throws OpenShiftException {
+		final List<DomainResourceDTO> domains = new ArrayList<DomainResourceDTO>();
 		// temporarily supporting absence of 'data' node in the 'domain' response message
 		// FIXME: simplify once openshift response is fixed
 		if (rootNode.get(PROPERTY_DATA).isDefined()) {
@@ -165,7 +185,7 @@ public class DTOFactory {
 	 *            the domain node
 	 * @return the domain dto
 	 */
-	private static DomainDTO createDomainDTO(final ModelNode domainNode) {
+	private static DomainResourceDTO createDomainDTO(final ModelNode domainNode) {
 		final ModelNode dataNode = domainNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -173,7 +193,7 @@ public class DTOFactory {
 		}
 		final String namespace = getAsString(domainNode, PROPERTY_NAMESPACE);
 		final Map<String, Link> links = createLinks(domainNode.get(PROPERTY_LINKS).asList());
-		return new DomainDTO(namespace, links);
+		return new DomainResourceDTO(namespace, links);
 	}
 
 	/**
@@ -183,8 +203,8 @@ public class DTOFactory {
 	 *            the domain node
 	 * @return the list< application dt o>
 	 */
-	private static List<ApplicationDTO> createApplicationsDTO(final ModelNode rootNode) {
-		final List<ApplicationDTO> applicationDTOs = new ArrayList<ApplicationDTO>();
+	private static List<ApplicationResourceDTO> createApplicationsDTO(final ModelNode rootNode) {
+		final List<ApplicationResourceDTO> applicationDTOs = new ArrayList<ApplicationResourceDTO>();
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			for (ModelNode applicationNode : dataNode.asList()) {
@@ -201,7 +221,7 @@ public class DTOFactory {
 	 *            the app node
 	 * @return the application dto
 	 */
-	private static ApplicationDTO createApplicationDTO(ModelNode appNode) {
+	private static ApplicationResourceDTO createApplicationDTO(ModelNode appNode) {
 		final ModelNode dataNode = appNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -216,7 +236,7 @@ public class DTOFactory {
 		final List<String> aliases = createAliases(appNode.get("aliases").asList());
 		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get("embedded").asList());
 
-		return new ApplicationDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges, links);
+		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges, links);
 	}
 
 	private static Map<String, String> createEmbeddedCartridges(List<ModelNode> embeddedCartridgeNodes) {
@@ -232,8 +252,8 @@ public class DTOFactory {
 		return embeddedCartridges;
 	}
 
-	private static List<CartridgeDTO> createCartridgesDTO(ModelNode rootNode) {
-		final List<CartridgeDTO> cartridgesDTOs = new ArrayList<CartridgeDTO>();
+	private static List<CartridgeResourceDTO> createCartridgesDTO(ModelNode rootNode) {
+		final List<CartridgeResourceDTO> cartridgesDTOs = new ArrayList<CartridgeResourceDTO>();
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			for (ModelNode cartridgeNode : dataNode.asList()) {
@@ -243,7 +263,7 @@ public class DTOFactory {
 		return cartridgesDTOs;
 	}
 
-	private static CartridgeDTO createCartridgeDTO(ModelNode cartridgeNode) {
+	private static CartridgeResourceDTO createCartridgeDTO(ModelNode cartridgeNode) {
 		final ModelNode dataNode = cartridgeNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -252,7 +272,7 @@ public class DTOFactory {
 		final String name = getAsString(cartridgeNode, "name");
 		final String type = getAsString(cartridgeNode, "type");
 		final Map<String, Link> links = createLinks(cartridgeNode.get("links").asList());
-		return new CartridgeDTO(name, type, links);
+		return new CartridgeResourceDTO(name, type, links);
 	}
 
 	private static List<String> createAliases(List<ModelNode> aliasNodeList) {

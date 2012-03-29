@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.internal.client.rest.unmarshalling;
 
+import static com.openshift.express.internal.client.response.unmarshalling.dto.ILinkNames.ADD_APPLICATION;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -21,15 +22,14 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.internal.client.response.unmarshalling.dto.ApplicationDTO;
-import com.openshift.express.internal.client.response.unmarshalling.dto.CartridgeDTO;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DTOFactory;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DomainDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.EnumDataType;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParam;
+import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
-import static com.openshift.express.internal.client.response.unmarshalling.dto.ILinkNames.*;
 
 public class DmrUnmarshallingTestCase {
 
@@ -39,18 +39,32 @@ public class DmrUnmarshallingTestCase {
 	}
 	
 	@Test
+	public void shouldUnmarshallGetRootAPIResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("get-rest-api.json");
+		assertNotNull(content);
+		// operation
+		Response response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isEqualTo(EnumDataType.links);
+		final List<Link> links = response.getData();
+		assertThat(links).hasSize(7);
+	}
+
+	
+	@Test
 	public void shouldUnmarshallGetDomainsWith1ExistingResponseBody() throws OpenShiftException, IOException {
 		//pre-conditions
 		String content = getContentAsString("get-domains-1existing.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domains);
-		final List<DomainDTO> domainDTOs = response.getData();
+		final List<DomainResourceDTO> domainDTOs = response.getData();
 		assertThat(domainDTOs).isNotEmpty();
 		assertThat(domainDTOs).hasSize(1);
-		final DomainDTO domainDTO = domainDTOs.get(0);
+		final DomainResourceDTO domainDTO = domainDTOs.get(0);
 		assertThat(domainDTO.getNamespace()).isEqualTo("xcoulon");
 		assertThat(domainDTO.getLinks()).hasSize(7);
 		final Link link = domainDTO.getLink(ADD_APPLICATION);
@@ -68,10 +82,10 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-domains-noexisting.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domains);
-		final List<DomainDTO> domains = response.getData();
+		final List<DomainResourceDTO> domains = response.getData();
 		assertThat(domains).isEmpty();
 	}
 
@@ -81,10 +95,10 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-domain.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domain);
-		final DomainDTO domain = response.getData();
+		final DomainResourceDTO domain = response.getData();
 		assertNotNull(domain);
 		assertThat(domain.getNamespace()).isEqualTo("xcoulon");
 		assertThat(domain.getLinks()).hasSize(7);
@@ -96,10 +110,10 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-applications-with4apps.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.applications);
-		final List<ApplicationDTO> applications = response.getData();
+		final List<ApplicationResourceDTO> applications = response.getData();
 		assertThat(applications).hasSize(4);
 	}
 
@@ -115,10 +129,10 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-test3.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
-		final ApplicationDTO application = response.getData();
+		final ApplicationResourceDTO application = response.getData();
 		assertThat(application.getCreationTime()).isEqualTo("2012-03-22T06:55:54-04:00");
 		assertThat(application.getDomainId()).isEqualTo("xcoulon");
 		assertThat(application.getFramework()).isEqualTo("jbossas-7");
@@ -138,10 +152,10 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-sample-withoutCartridge.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
-		final ApplicationDTO application = response.getData();
+		final ApplicationResourceDTO application = response.getData();
 		assertThat(application.getAliases()).hasSize(2);
 	}
 	
@@ -157,10 +171,10 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-sample-withCartridges.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
-		final ApplicationDTO application = response.getData();
+		final ApplicationResourceDTO application = response.getData();
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 	}
 	
@@ -176,11 +190,11 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("add-application-cartridge.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getMessages()).hasSize(3);
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.cartridge);
-		final CartridgeDTO cartridge = response.getData();
+		final CartridgeResourceDTO cartridge = response.getData();
 		assertThat(cartridge.getName()).isEqualTo("mongodb-2.0");
 		assertThat(cartridge.getType()).isEqualTo("embedded");
 		assertThat(cartridge.getLinks()).hasSize(6);
@@ -199,11 +213,11 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-cartridges-with2elements.json");
 		assertNotNull(content);
 		// operation
-		Response response = DTOFactory.get(content);
+		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getMessages()).hasSize(0);
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.cartridges);
-		final List<CartridgeDTO> cartridges = response.getData();
+		final List<CartridgeResourceDTO> cartridges = response.getData();
 		assertThat(cartridges).hasSize(2);
 		assertThat(cartridges).onProperty("name").contains("mongodb-2.0", "mysql-5.1");
 	}

@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.openshift.express.internal.client.ApplicationInfo;
 import com.openshift.express.internal.client.UserInfo;
-import com.openshift.express.internal.client.response.unmarshalling.dto.DomainDTO;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
 
 /**

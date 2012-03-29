@@ -15,6 +15,8 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
  */
 public enum EnumDataType {
 
+	/** Links / the root node that allows for navigation amongst resources.*/
+	links,
 	/** The domains. */
 	domains,
 	/** The domain. */

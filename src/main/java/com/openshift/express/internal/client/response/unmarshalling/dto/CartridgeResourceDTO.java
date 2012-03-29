@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Xavier Coulon
  *
  */
-public class CartridgeDTO extends BaseResourceDTO {
+public class CartridgeResourceDTO extends BaseResourceDTO {
 
 	private final String name;
 	
@@ -25,7 +25,7 @@ public class CartridgeDTO extends BaseResourceDTO {
 	/**
 	 * @param links
 	 */
-	public CartridgeDTO(final String name, final String type, Map<String, Link> links) {
+	public CartridgeResourceDTO(final String name, final String type, Map<String, Link> links) {
 		super(links);
 		this.name = name;
 		this.type = type;

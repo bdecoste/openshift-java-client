@@ -15,12 +15,12 @@ import java.util.Map;
 /**
  * @author Xavier Coulon
  */
-public class DomainDTO extends BaseResourceDTO {
+public class DomainResourceDTO extends BaseResourceDTO {
 
 	/** the domain's configured namespace. */
 	private final String namespace;
 	
-	public DomainDTO(final String namespace, final Map<String, Link> links) {
+	public DomainResourceDTO(final String namespace, final Map<String, Link> links) {
 		super(links);
 		this.namespace = namespace;
 	}

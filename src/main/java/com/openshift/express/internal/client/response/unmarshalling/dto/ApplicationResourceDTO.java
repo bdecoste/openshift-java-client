@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author Xavier Coulon
  */
-public class ApplicationDTO extends BaseResourceDTO {
+public class ApplicationResourceDTO extends BaseResourceDTO {
 
 	/** the application's framework. */
 	private final String framework;
@@ -51,7 +51,7 @@ public class ApplicationDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final List<String> aliases, final Map<String, String> embeddedCartridges, final Map<String, Link> links) {
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final List<String> aliases, final Map<String, String> embeddedCartridges, final Map<String, Link> links) {
 		super(links);
 		this.framework = framework;
 		this.domainId = domainId;
