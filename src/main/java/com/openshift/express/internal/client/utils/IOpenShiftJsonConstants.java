@@ -26,6 +26,8 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_CARTS = "carts";
 	public static final String PROPERTY_CONSUMED_GEARS = "consumed_gears";
 	public static final String PROPERTY_DATA = "data";
+	public static final String PROPERTY_KEYS = "keys";
+	public static final String PROPERTY_KEY = "key";
 	public static final String PROPERTY_DEBUG = "debug";
 	public static final String PROPERTY_DELETE = "delete";
 	public static final String PROPERTY_DOMAIN = "domain";

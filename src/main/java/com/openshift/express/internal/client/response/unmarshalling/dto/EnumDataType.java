@@ -14,10 +14,14 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
  * The Enum EnumDataType.
  */
 public enum EnumDataType {
-	/** the user type. */
-	user,
 	/** Links / the root node that allows for navigation amongst resources.*/
 	links,
+	/** the user type. */
+	user,
+	/** the user's keys. */
+	keys,
+	/** one user's key.*/
+	key,
 	/** The domains type. */
 	domains,
 	/** The domain type. */
