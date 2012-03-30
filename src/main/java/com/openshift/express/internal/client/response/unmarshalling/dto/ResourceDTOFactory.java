@@ -10,11 +10,26 @@
  ******************************************************************************/
 package com.openshift.express.internal.client.response.unmarshalling.dto;
 
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ALIASES;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_CREATION_TIME;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DATA;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN_ID;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_EMBEDDED;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_FRAMEWORK;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INFO;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_METHOD;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAME;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAMESPACE;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_OPTIONAL_PARAMS;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REL;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REQUIRED_PARAMS;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_TYPE;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_UUID;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_CREATED;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_OK;
 
@@ -28,7 +43,6 @@ import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
 
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * A factory for creating DTO objects.
@@ -299,14 +313,14 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createApplicationDTO(dataNode);
 		}
-		final String framework = getAsString(appNode, IOpenShiftJsonConstants.PROPERTY_FRAMEWORK);
-		final String creationTime = getAsString(appNode, IOpenShiftJsonConstants.PROPERTY_CREATION_TIME);
-		final String name = getAsString(appNode,  IOpenShiftJsonConstants.PROPERTY_NAME);
-		final String uuid = getAsString(appNode,  IOpenShiftJsonConstants.PROPERTY_UUID);
-		final String domainId = getAsString(appNode, IOpenShiftJsonConstants.PROPERTY_DOMAIN_ID);
-		final Map<String, Link> links = createLinks(appNode.get(IOpenShiftJsonConstants.PROPERTY_LINKS).asList());
-		final List<String> aliases = createAliases(appNode.get(IOpenShiftJsonConstants.PROPERTY_ALIASES).asList());
-		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get(IOpenShiftJsonConstants.PROPERTY_EMBEDDED).asList());
+		final String framework = getAsString(appNode, PROPERTY_FRAMEWORK);
+		final String creationTime = getAsString(appNode, PROPERTY_CREATION_TIME);
+		final String name = getAsString(appNode,  PROPERTY_NAME);
+		final String uuid = getAsString(appNode,  PROPERTY_UUID);
+		final String domainId = getAsString(appNode, PROPERTY_DOMAIN_ID);
+		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS).asList());
+		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES).asList());
+		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get(PROPERTY_EMBEDDED).asList());
 
 		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges,
 				links);
@@ -324,7 +338,7 @@ public class ResourceDTOFactory {
 			for (ModelNode embeddedCartridgeNode : embeddedCartridgeNodes) {
 				if (embeddedCartridgeNode.getType() == ModelType.PROPERTY) {
 					final Property p = embeddedCartridgeNode.asProperty();
-					embeddedCartridges.put(p.getName(), p.getValue().get(IOpenShiftJsonConstants.PROPERTY_INFO).asString());
+					embeddedCartridges.put(p.getName(), p.getValue().get(PROPERTY_INFO).asString());
 				}
 			}
 		}
@@ -360,9 +374,9 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createCartridgeDTO(dataNode);
 		}
-		final String name = getAsString(cartridgeNode, IOpenShiftJsonConstants.PROPERTY_NAME);
-		final String type = getAsString(cartridgeNode, IOpenShiftJsonConstants.PROPERTY_TYPE);
-		final Map<String, Link> links = createLinks(cartridgeNode.get(IOpenShiftJsonConstants.PROPERTY_LINKS).asList());
+		final String name = getAsString(cartridgeNode, PROPERTY_NAME);
+		final String type = getAsString(cartridgeNode, PROPERTY_TYPE);
+		final Map<String, Link> links = createLinks(cartridgeNode.get(PROPERTY_LINKS).asList());
 		return new CartridgeResourceDTO(name, type, links);
 	}
 
@@ -393,11 +407,11 @@ public class ResourceDTOFactory {
 			final String linkName = linkNode.asProperty().getName();
 			final ModelNode valueNode = linkNode.asProperty().getValue();
 			if (valueNode.isDefined()) {
-				final String rel = valueNode.get(IOpenShiftJsonConstants.PROPERTY_REL).asString();
-				final String href = valueNode.get(IOpenShiftJsonConstants.PROPERTY_HREF).asString();
-				final String method = valueNode.get(IOpenShiftJsonConstants.PROPERTY_METHOD).asString();
-				final List<LinkParameter> requiredParams = createLinkParameters(valueNode.get(IOpenShiftJsonConstants.PROPERTY_REQUIRED_PARAMS));
-				final List<LinkParameter> optionalParams = createLinkParameters(valueNode.get(IOpenShiftJsonConstants.PROPERTY_OPTIONAL_PARAMS));
+				final String rel = valueNode.get(PROPERTY_REL).asString();
+				final String href = valueNode.get(PROPERTY_HREF).asString();
+				final String method = valueNode.get(PROPERTY_METHOD).asString();
+				final List<LinkParameter> requiredParams = createLinkParameters(valueNode.get(PROPERTY_REQUIRED_PARAMS));
+				final List<LinkParameter> optionalParams = createLinkParameters(valueNode.get(PROPERTY_OPTIONAL_PARAMS));
 				links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
 			}
 		}
@@ -443,7 +457,7 @@ public class ResourceDTOFactory {
 	 */
 	private static List<String> createValidOptions(ModelNode linkParamNode) {
 		final List<String> validOptions = new ArrayList<String>();
-		final ModelNode validOptionsNode = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS);
+		final ModelNode validOptionsNode = linkParamNode.get(PROPERTY_VALID_OPTIONS);
 		if (validOptionsNode.isDefined()) {
 			switch (validOptionsNode.getType()) {
 			case STRING: // if there's only one value, it is not serialized as a list, but just a string
