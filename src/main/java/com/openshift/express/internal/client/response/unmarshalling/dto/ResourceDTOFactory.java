@@ -30,8 +30,6 @@ import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstant
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_TYPE;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_UUID;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS;
-import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_CREATED;
-import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_OK;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,19 +61,6 @@ public class ResourceDTOFactory {
 	 */
 	public static RestResponse get(final String content) throws OpenShiftException {
 		final ModelNode rootNode = getModelNode(content);
-		return createResponse(rootNode);
-	}
-
-	/**
-	 * Creates a new DTO object.
-	 * 
-	 * @param rootNode
-	 *            the root node
-	 * @return the response
-	 * @throws OpenShiftException
-	 *             the open shift exception
-	 */
-	private static RestResponse createResponse(ModelNode rootNode) throws OpenShiftException {
 		final String type = rootNode.get("type").asString();
 		final String status = rootNode.get("status").asString();
 		final List<String> messages = createMessages(rootNode.get("messages"));
