@@ -13,6 +13,7 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DATA;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAMESPACE;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_CREATED;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_OK;
@@ -80,6 +81,8 @@ public class ResourceDTOFactory {
 
 		final EnumDataType dataType = EnumDataType.nullSafeValueOf(type);
 		switch (dataType) {
+		case user:
+			return new Response(status, messages, createUser(rootNode), dataType);
 		case links:
 			return new Response(status, messages, createLinks(rootNode), dataType);
 		case domains:
@@ -99,6 +102,7 @@ public class ResourceDTOFactory {
 		}
 	}
 
+
 	private static List<String> createMessages(ModelNode messagesNode) {
 		List<String> messages = new ArrayList<String>();
 		if (messagesNode.getType() == ModelType.LIST) {
@@ -108,7 +112,7 @@ public class ResourceDTOFactory {
 		}
 		return messages;
 	}
-
+	
 	/**
 	 * Gets the model node.
 	 * 
@@ -126,9 +130,20 @@ public class ResourceDTOFactory {
 
 		return node;
 	}
-	
+
+	private static UserResourceDTO createUser(ModelNode rootNode) {
+		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
+		if (dataNode.isDefined()) {
+			// loop inside 'data' node
+			return createUser(dataNode);
+		}
+		final String namespace = getAsString(rootNode, PROPERTY_LOGIN);
+		final Map<String, Link> links = createLinks(rootNode.get(PROPERTY_LINKS).asList());
+		return new UserResourceDTO(namespace, links);
+	}
+
 	/**
-	 * Creates a new RootResource DTO object.
+	 * Creates a new set of indexed links.
 	 * 
 	 * @param rootNode
 	 *            the root node
@@ -142,7 +157,7 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createLinks(dataNode);
 		}
-		return createLinks(rootNode.get(PROPERTY_LINKS).asList());
+		return createLinks(rootNode.asList());
 	}
 
 	/**
@@ -236,7 +251,8 @@ public class ResourceDTOFactory {
 		final List<String> aliases = createAliases(appNode.get("aliases").asList());
 		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get("embedded").asList());
 
-		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges, links);
+		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges,
+				links);
 	}
 
 	private static Map<String, String> createEmbeddedCartridges(List<ModelNode> embeddedCartridgeNodes) {
@@ -295,12 +311,14 @@ public class ResourceDTOFactory {
 		for (ModelNode linkNode : linkNodes) {
 			final String linkName = linkNode.asProperty().getName();
 			final ModelNode valueNode = linkNode.asProperty().getValue();
-			final String rel = valueNode.get("rel").asString();
-			final String href = valueNode.get("href").asString();
-			final String method = valueNode.get("method").asString();
-			final List<LinkParam> requiredParams = createLinkParams(valueNode.get("required_params"));
-			final List<LinkParam> optionalParams = createLinkParams(valueNode.get("optional_params"));
-			links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
+			if (valueNode.isDefined()) {
+				final String rel = valueNode.get("rel").asString();
+				final String href = valueNode.get("href").asString();
+				final String method = valueNode.get("method").asString();
+				final List<LinkParam> requiredParams = createLinkParams(valueNode.get("required_params"));
+				final List<LinkParam> optionalParams = createLinkParams(valueNode.get("optional_params"));
+				links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
+			}
 		}
 		return links;
 	}

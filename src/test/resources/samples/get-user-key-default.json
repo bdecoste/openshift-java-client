@@ -1,39 +1,38 @@
 {
-    "type":"user",
+    "type":"key",
     "messages":[
         
     ],
-    "version":"1.0",
-    "status":"ok",
     "data":{
-        "login":"xcoulon+test@redhat.com",
+        "type":"ssh-rsa",
         "links":{
             "GET":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    
+                ],
+                "rel":"Get SSH key",
                 "method":"GET",
-                "optional_params":[
-                    
-                ],
-                "rel":"Get user information",
-                "required_params":[
-                    
-                ],
-                "href":"/user"
+                "href":"/user/keys/default"
             },
-            "ADD_KEY":{
-                "method":"POST",
+            "DELETE":{
                 "optional_params":[
                     
                 ],
-                "rel":"Add new SSH key",
                 "required_params":[
-                    {
-                        "type":"string",
-                        "valid_options":[
-                            
-                        ],
-                        "name":"name",
-                        "description":"Name of the application"
-                    },
+                    
+                ],
+                "rel":"Delete SSH key",
+                "method":"DELETE",
+                "href":"/user/keys/default"
+            },
+            "UPDATE":{
+                "optional_params":[
+                    
+                ],
+                "required_params":[
                     {
                         "type":"string",
                         "valid_options":[
@@ -52,19 +51,14 @@
                         "description":"The key portion of an rsa key (excluding ssh-rsa and comment)"
                     }
                 ],
-                "href":"/user/keys"
-            },
-            "LIST_KEYS":{
-                "method":"GET",
-                "optional_params":[
-                    
-                ],
-                "rel":"Get SSH keys",
-                "required_params":[
-                    
-                ],
-                "href":"/user/keys"
+                "rel":"Update SSH key",
+                "method":"PUT",
+                "href":"/user/keys/default"
             }
-        }
-    }
+        },
+        "name":"default",
+        "content":"AAAAB...3"
+    },
+    "status":"ok",
+    "version":"1.0"
 }

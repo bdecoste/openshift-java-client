@@ -35,6 +35,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_HEALTH_CHECK_PATH = "health_check_path";
 	public static final String PROPERTY_INFO = "info";
 	public static final String PROPERTY_KEY_TYPE = "key_type";
+	public static final String PROPERTY_LOGIN = "login";
 	public static final String PROPERTY_LINKS = "links";
 	public static final String PROPERTY_MESSAGES = "messages";
 	public static final String PROPERTY_MAX_GEARS = "max_gears";

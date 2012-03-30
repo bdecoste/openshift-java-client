@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -30,12 +31,27 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParam;
 import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
+import com.openshift.express.internal.client.response.unmarshalling.dto.UserResourceDTO;
 
 public class DmrUnmarshallingTestCase {
 
 	private String getContentAsString(String fileName) throws IOException {
 		final InputStream contentStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("samples/" + fileName);
 		return IOUtils.toString(contentStream);
+	}
+	
+	@Test
+	public void shouldUnmarshallGetUserResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("get-user.json");
+		assertNotNull(content);
+		// operation
+		Response response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isEqualTo(EnumDataType.user);
+		UserResourceDTO userResourceDTO = response.getData();
+		assertThat(userResourceDTO.getRhLogin()).isEqualTo("xcoulon+test@redhat.com");
+		assertThat(userResourceDTO.getLinks()).hasSize(3);
 	}
 	
 	@Test
@@ -47,7 +63,7 @@ public class DmrUnmarshallingTestCase {
 		Response response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.links);
-		final List<Link> links = response.getData();
+		final Map<String, Link> links = response.getData();
 		assertThat(links).hasSize(7);
 	}
 

@@ -14,25 +14,27 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
  * The Enum EnumDataType.
  */
 public enum EnumDataType {
-
+	/** the user type. */
+	user,
 	/** Links / the root node that allows for navigation amongst resources.*/
 	links,
-	/** The domains. */
+	/** The domains type. */
 	domains,
-	/** The domain. */
+	/** The domain type. */
 	domain,
-	/** The applications. */
+	/** The applications type. */
 	applications,
-	/** The application. */
+	/** The application type. */
 	application,
-	/** The embedded cartridge. */
+	/** The embedded cartridge type. */
 	embedded,
-	/** The cartridges. */
+	/** The cartridges type. */
 	cartridges,
-	/** The cartridge. */
+	/** The cartridge type. */
 	cartridge,
-	/** The undefined. */
+	/** The undefined type. */
 	undefined;
+	
 
 	/**
 	 * Returns the enum value matching the given value (as string), or 'undefined' if null/unknown value.
