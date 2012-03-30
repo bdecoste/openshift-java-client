@@ -12,12 +12,11 @@ package com.openshift.express.client;
 
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.response.OpenShiftResponse;
+import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author André Dietisheim
- * @deprecated see {@link OpenShiftOperationException}
  */
-@Deprecated
 public class OpenShiftEndpointException extends OpenShiftException {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +25,10 @@ public class OpenShiftEndpointException extends OpenShiftException {
 
 	private OpenShiftResponse<Object> errorResponse;
 
+	/** the response received by the client. */
+	private RestResponse restResponse;
+	
+	
 	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) {
 		super(cause, message, arguments);
 		this.url = url;
@@ -35,6 +38,18 @@ public class OpenShiftEndpointException extends OpenShiftException {
 			String errorMessage, Object... arguments) {
 		this(url, e, errorMessage, arguments);
 		this.errorResponse = errorResponse;
+	}
+	
+	public OpenShiftEndpointException(RestResponse restResponse) {
+		this(null, null, null, (Object[])null);
+		this.restResponse = restResponse;
+	}
+	
+	/**
+	 * @return the response received by the client.
+	 */
+	public RestResponse getRestResponse() {
+		return restResponse;
 	}
 
 	protected String getUrl() {

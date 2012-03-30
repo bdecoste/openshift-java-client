@@ -45,9 +45,9 @@ public class ResourceDTOFactory {
 	 * @throws OpenShiftException
 	 *             the open shift exception
 	 */
-	public static Response get(final String content) throws OpenShiftException {
+	public static RestResponse get(final String content) throws OpenShiftException {
 		final ModelNode rootNode = getModelNode(content);
-		final Response response = createResponse(rootNode);
+		final RestResponse response = createResponse(rootNode);
 		if (isStatusOk(response)) {
 			return response;
 		}
@@ -61,7 +61,7 @@ public class ResourceDTOFactory {
 	 *            the response dto
 	 * @return true, if is status ok
 	 */
-	private static boolean isStatusOk(final Response response) {
+	private static boolean isStatusOk(final RestResponse response) {
 		return STATUS_OK.equals(response.getStatus()) || STATUS_CREATED.equals(response.getStatus());
 	}
 
@@ -74,7 +74,7 @@ public class ResourceDTOFactory {
 	 * @throws OpenShiftException
 	 *             the open shift exception
 	 */
-	private static Response createResponse(ModelNode rootNode) throws OpenShiftException {
+	private static RestResponse createResponse(ModelNode rootNode) throws OpenShiftException {
 		final String type = rootNode.get("type").asString();
 		final String status = rootNode.get("status").asString();
 		final List<String> messages = createMessages(rootNode.get("messages"));
@@ -82,21 +82,21 @@ public class ResourceDTOFactory {
 		final EnumDataType dataType = EnumDataType.nullSafeValueOf(type);
 		switch (dataType) {
 		case user:
-			return new Response(status, messages, createUser(rootNode), dataType);
+			return new RestResponse(status, messages, createUser(rootNode), dataType);
 		case links:
-			return new Response(status, messages, createLinks(rootNode), dataType);
+			return new RestResponse(status, messages, createLinks(rootNode), dataType);
 		case domains:
-			return new Response(status, messages, createDomainsDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createDomainsDTO(rootNode), dataType);
 		case domain:
-			return new Response(status, messages, createDomainDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createDomainDTO(rootNode), dataType);
 		case applications:
-			return new Response(status, messages, createApplicationsDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createApplicationsDTO(rootNode), dataType);
 		case application:
-			return new Response(status, messages, createApplicationDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createApplicationDTO(rootNode), dataType);
 		case cartridges:
-			return new Response(status, messages, createCartridgesDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createCartridgesDTO(rootNode), dataType);
 		case cartridge:
-			return new Response(status, messages, createCartridgeDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createCartridgeDTO(rootNode), dataType);
 		default:
 			return null;
 		}
@@ -315,8 +315,8 @@ public class ResourceDTOFactory {
 				final String rel = valueNode.get("rel").asString();
 				final String href = valueNode.get("href").asString();
 				final String method = valueNode.get("method").asString();
-				final List<LinkParam> requiredParams = createLinkParams(valueNode.get("required_params"));
-				final List<LinkParam> optionalParams = createLinkParams(valueNode.get("optional_params"));
+				final List<LinkParameter> requiredParams = createLinkParameters(valueNode.get("required_params"));
+				final List<LinkParameter> optionalParams = createLinkParameters(valueNode.get("optional_params"));
 				links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
 			}
 		}
@@ -330,28 +330,31 @@ public class ResourceDTOFactory {
 	 *            the link param nodes
 	 * @return the list< link param>
 	 */
-	private static List<LinkParam> createLinkParams(ModelNode linkParamNodes) {
-		List<LinkParam> linkParams = new ArrayList<LinkParam>();
+	private static List<LinkParameter> createLinkParameters(ModelNode linkParamNodes) {
+		List<LinkParameter> linkParams = new ArrayList<LinkParameter>();
 		if (linkParamNodes.isDefined()) {
 			for (ModelNode linkParamNode : linkParamNodes.asList()) {
-				linkParams.add(createLinkParam(linkParamNode));
+				linkParams.add(createLinkParameter(linkParamNode));
 			}
 		}
 		return linkParams;
 	}
 
 	/**
-	 * Creates a new DTO object.
+	 * Creates a new link parameter for the given link parameter node.
 	 * 
-	 * @param linkParamNode
-	 *            the link param node
-	 * @return the link param
+	 * @param linkParamNode the model node that contains the link parameters
+	 * @return the link parameter
 	 */
-	private static LinkParam createLinkParam(ModelNode linkParamNode) {
+	private static LinkParameter createLinkParameter(ModelNode linkParamNode) {
 		final String description = linkParamNode.get("description").asString();
 		final String type = linkParamNode.get("type").asString();
-		final String defaultValue = linkParamNode.get("default-value").asString();
+		final String defaultValue = linkParamNode.get("default_value").asString();
 		final String name = linkParamNode.get("name").asString();
+		return new LinkParameter(name, type, defaultValue, description, getValidOptions(linkParamNode));
+	}
+
+	private static List<String> getValidOptions(ModelNode linkParamNode) {
 		final List<String> validOptions = new ArrayList<String>();
 		final ModelNode validOptionsNode = linkParamNode.get("valid_options");
 		if (validOptionsNode.isDefined()) {
@@ -368,7 +371,7 @@ public class ResourceDTOFactory {
 				break;
 			}
 		}
-		return new LinkParam(name, type, defaultValue, description, validOptions);
+		return validOptions;
 	}
 
 	/**

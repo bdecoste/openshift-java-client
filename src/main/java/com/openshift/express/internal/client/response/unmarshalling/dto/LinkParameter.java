@@ -12,25 +12,24 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
 
 import java.util.List;
 
-/**
- * @author Xavier Coulon
- */
-public class LinkParam {
 
-	private final String name;
-	
-	/** The type. */
-	private final String type;
-	private final String description;
-	private final String defaultValue;
-	private final List<String> validOptions;
-	
-	public LinkParam(final String name, final String type, final String defaultValue, final String description,
+/**
+ * @author Andre Dietisheim
+ */
+public class LinkParameter {
+
+	protected final String name;
+	protected final String type;
+	protected final String description;
+	protected final String defaultValue;
+	protected final List<String> validOptions;
+
+	public LinkParameter(final String name, final String type, final String defaultValue, final String description,
 			final List<String> validOptions) {
 		this.name = name;
 		this.type = type;
-		this.defaultValue = defaultValue;
 		this.description = description;
+		this.defaultValue = defaultValue;
 		this.validOptions = validOptions;
 	}
 
@@ -49,13 +48,6 @@ public class LinkParam {
 	}
 
 	/**
-	 * @return the defaultValue
-	 */
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-
-	/**
 	 * @return the description
 	 */
 	public final String getDescription() {
@@ -63,9 +55,13 @@ public class LinkParam {
 	}
 
 	/**
-	 * @return the validOptions
+	 * @return the defaultValue, or null. Only applicable to optional parameters.
 	 */
-	public final List<String> getValidOptions() {
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public List<String> getValidOptions() {
 		return validOptions;
 	}
 }

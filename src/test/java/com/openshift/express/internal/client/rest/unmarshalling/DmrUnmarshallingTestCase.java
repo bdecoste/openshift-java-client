@@ -22,15 +22,16 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.EnumDataType;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParam;
+import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
-import com.openshift.express.internal.client.response.unmarshalling.dto.Response;
+import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.express.internal.client.response.unmarshalling.dto.UserResourceDTO;
 
 public class DmrUnmarshallingTestCase {
@@ -46,7 +47,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-user.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.user);
 		UserResourceDTO userResourceDTO = response.getData();
@@ -60,7 +61,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-rest-api.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.links);
 		final Map<String, Link> links = response.getData();
@@ -74,7 +75,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-domains-1existing.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domains);
 		final List<DomainResourceDTO> domainDTOs = response.getData();
@@ -87,8 +88,8 @@ public class DmrUnmarshallingTestCase {
 		assertThat(link).isNotNull();
 		assertThat(link.getHref()).isEqualTo("/domains/xcoulon/applications");
 		assertThat(link.getRel()).isEqualTo("Create new application");
-		assertThat(link.getHttpMethod()).isEqualTo("POST");
-		final List<LinkParam> requiredParams = link.getRequiredParams();
+		assertThat(link.getHttpMethod()).isEqualTo(HttpMethod.POST);
+		final List<LinkParameter> requiredParams = link.getRequiredParams();
 		assertThat(requiredParams).hasSize(2);
 	}
 
@@ -98,7 +99,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-domains-noexisting.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domains);
 		final List<DomainResourceDTO> domains = response.getData();
@@ -111,7 +112,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-domain.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domain);
 		final DomainResourceDTO domain = response.getData();
@@ -126,7 +127,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-applications-with4apps.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.applications);
 		final List<ApplicationResourceDTO> applications = response.getData();
@@ -145,7 +146,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-test3.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
 		final ApplicationResourceDTO application = response.getData();
@@ -168,7 +169,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-sample-withoutCartridge.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
 		final ApplicationResourceDTO application = response.getData();
@@ -187,7 +188,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-sample-withCartridges.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
 		final ApplicationResourceDTO application = response.getData();
@@ -206,7 +207,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("add-application-cartridge.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getMessages()).hasSize(3);
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.cartridge);
@@ -229,7 +230,7 @@ public class DmrUnmarshallingTestCase {
 		String content = getContentAsString("get-application-cartridges-with2elements.json");
 		assertNotNull(content);
 		// operation
-		Response response = ResourceDTOFactory.get(content);
+		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getMessages()).hasSize(0);
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.cartridges);

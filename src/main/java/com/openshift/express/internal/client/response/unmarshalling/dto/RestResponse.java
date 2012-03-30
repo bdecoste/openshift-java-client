@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The Class Response.
  */
-public class Response {
+public class RestResponse {
 
 	/** The status. */
 	final String status;
@@ -37,7 +37,7 @@ public class Response {
 	 * @param data the data
 	 * @param dataType the data type
 	 */
-	public Response(final String status, final List<String> messages, final Object data, final EnumDataType dataType) {
+	public RestResponse(final String status, final List<String> messages, final Object data, final EnumDataType dataType) {
 		this.status = status;
 		this.messages = messages;
 		this.data = data;
@@ -76,7 +76,7 @@ public class Response {
 	 *
 	 * @param <T> the generic type
 	 * @return the data, casted as the caller requires. To avoid ClassCastExceptions, caller may refer to the
-	 * {@link Response#getDataType()} method to discover the actual type of the data.
+	 * {@link RestResponse#getDataType()} method to discover the actual type of the data.
 	 */
 	@SuppressWarnings("unchecked")
 	public final <T> T getData() {

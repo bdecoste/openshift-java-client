@@ -85,6 +85,7 @@ public class UrlConnectionHttpClientBuilder {
 		private static final String SYSPROP_OPENSHIFT_CONNECT_TIMEOUT = "com.openshift.express.httpclient.timeout";
 		private static final String SYSPROP_DEFAULT_CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
 		private static final String SYSPROP_DEFAULT_READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
+		private static final String SYSPROPERTY_ENABLE_SNI_EXTENSION = "jsse.enableSNIExtension";
 
 		private String userAgent;
 		private boolean sslChecks;
@@ -191,6 +192,9 @@ public class UrlConnectionHttpClientBuilder {
 		private void setupSSLChecks(URL url, HttpURLConnection connection) {
 			if (isHttps(url)
 					&& !sslChecks) {
+				// JDK7 bug workaround
+				System.setProperty(SYSPROPERTY_ENABLE_SNI_EXTENSION, "false");
+
 				HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
 				httpsConnection.setHostnameVerifier(new NoopHostnameVerifier());
 				setPermissiveSSLSocketFactory(httpsConnection);

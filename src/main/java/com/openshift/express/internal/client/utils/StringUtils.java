@@ -30,4 +30,9 @@ public class StringUtils {
 		return toLowerCase(aEnum.name());
 	}
 
+	public static boolean isEmpty(String string) {
+		return string == null
+				|| string.isEmpty();
+	}
+	
 }
