@@ -83,6 +83,10 @@ public class ResourceDTOFactory {
 		switch (dataType) {
 		case user:
 			return new RestResponse(status, messages, createUser(rootNode), dataType);
+		case keys:
+			return new RestResponse(status, messages, createKeys(rootNode), dataType);
+		case key:
+			return new RestResponse(status, messages, createKey(rootNode), dataType);
 		case links:
 			return new RestResponse(status, messages, createLinks(rootNode), dataType);
 		case domains:
@@ -102,7 +106,12 @@ public class ResourceDTOFactory {
 		}
 	}
 
-
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param messagesNode the messages node
+	 * @return the list< string>
+	 */
 	private static List<String> createMessages(ModelNode messagesNode) {
 		List<String> messages = new ArrayList<String>();
 		if (messagesNode.getType() == ModelType.LIST) {
@@ -131,6 +140,12 @@ public class ResourceDTOFactory {
 		return node;
 	}
 
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param rootNode the root node
+	 * @return the user resource dto
+	 */
 	private static UserResourceDTO createUser(ModelNode rootNode) {
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
@@ -141,6 +156,47 @@ public class ResourceDTOFactory {
 		final Map<String, Link> links = createLinks(rootNode.get(PROPERTY_LINKS).asList());
 		return new UserResourceDTO(namespace, links);
 	}
+	
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param rootNode the root node
+	 * @return the list< key resource dt o>
+	 * @throws OpenShiftException the open shift exception
+	 */
+	private static List<KeyResourceDTO> createKeys(ModelNode rootNode) throws OpenShiftException {
+		final List<KeyResourceDTO> keys = new ArrayList<KeyResourceDTO>();
+		// temporarily supporting single and multiple values for 'keys' node
+		if (rootNode.get(PROPERTY_DATA).isDefined()) {
+			for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
+				if (dataNode.getType() == ModelType.OBJECT) {
+					keys.add(createKey(dataNode));
+				} 
+			}
+		}
+		return keys;
+	}
+
+	
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param keyNode the key node
+	 * @return the key resource dto
+	 */
+	private static KeyResourceDTO createKey(ModelNode keyNode) {
+		final ModelNode dataNode = keyNode.get(PROPERTY_DATA);
+		if (dataNode.isDefined()) {
+			// loop inside 'data' node
+			return createKey(dataNode);
+		}
+		final String name = getAsString(keyNode, "name");
+		final String type = getAsString(keyNode, "type");
+		final String content = getAsString(keyNode, "content");
+		final Map<String, Link> links = createLinks(keyNode.get(PROPERTY_LINKS).asList());
+		return new KeyResourceDTO(name, type, content, links);
+	}
+
 
 	/**
 	 * Creates a new set of indexed links.
@@ -255,6 +311,12 @@ public class ResourceDTOFactory {
 				links);
 	}
 
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param embeddedCartridgeNodes the embedded cartridge nodes
+	 * @return the map< string, string>
+	 */
 	private static Map<String, String> createEmbeddedCartridges(List<ModelNode> embeddedCartridgeNodes) {
 		final Map<String, String> embeddedCartridges = new HashMap<String, String>();
 		if (embeddedCartridgeNodes != null) {
@@ -268,6 +330,12 @@ public class ResourceDTOFactory {
 		return embeddedCartridges;
 	}
 
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param rootNode the root node
+	 * @return the list< cartridge resource dt o>
+	 */
 	private static List<CartridgeResourceDTO> createCartridgesDTO(ModelNode rootNode) {
 		final List<CartridgeResourceDTO> cartridgesDTOs = new ArrayList<CartridgeResourceDTO>();
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
@@ -279,6 +347,12 @@ public class ResourceDTOFactory {
 		return cartridgesDTOs;
 	}
 
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param cartridgeNode the cartridge node
+	 * @return the cartridge resource dto
+	 */
 	private static CartridgeResourceDTO createCartridgeDTO(ModelNode cartridgeNode) {
 		final ModelNode dataNode = cartridgeNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
@@ -291,6 +365,12 @@ public class ResourceDTOFactory {
 		return new CartridgeResourceDTO(name, type, links);
 	}
 
+	/**
+	 * Creates a new ResourceDTO object.
+	 *
+	 * @param aliasNodeList the alias node list
+	 * @return the list< string>
+	 */
 	private static List<String> createAliases(List<ModelNode> aliasNodeList) {
 		final List<String> aliases = new ArrayList<String>();
 		for (ModelNode aliasNode : aliasNodeList) {
@@ -351,10 +431,16 @@ public class ResourceDTOFactory {
 		final String type = linkParamNode.get("type").asString();
 		final String defaultValue = linkParamNode.get("default_value").asString();
 		final String name = linkParamNode.get("name").asString();
-		return new LinkParameter(name, type, defaultValue, description, getValidOptions(linkParamNode));
+		return new LinkParameter(name, type, defaultValue, description, createValidOptions(linkParamNode));
 	}
 
-	private static List<String> getValidOptions(ModelNode linkParamNode) {
+	/**
+	 * Gets the valid options.
+	 *
+	 * @param linkParamNode the link param node
+	 * @return the valid options
+	 */
+	private static List<String> createValidOptions(ModelNode linkParamNode) {
 		final List<String> validOptions = new ArrayList<String>();
 		final ModelNode validOptionsNode = linkParamNode.get("valid_options");
 		if (validOptionsNode.isDefined()) {

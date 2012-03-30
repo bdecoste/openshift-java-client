@@ -8,7 +8,7 @@
     "data":[
         {
             "type":"ssh-rsa",
-            "content":"AAAAB3NzaC...",
+            "content":"AAAA",
             "name":"default",
             "links":{
                 "GET":{

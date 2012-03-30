@@ -28,6 +28,7 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Applicat
 import com.openshift.express.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.EnumDataType;
+import com.openshift.express.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
@@ -54,6 +55,55 @@ public class DmrUnmarshallingTestCase {
 		assertThat(userResourceDTO.getRhLogin()).isEqualTo("xcoulon+test@redhat.com");
 		assertThat(userResourceDTO.getLinks()).hasSize(3);
 	}
+	
+	@Test
+	public void shouldUnmarshallGetUserNoKeyResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("get-user-keys-none.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isEqualTo(EnumDataType.keys);
+		List<KeyResourceDTO> keys = response.getData();
+		assertThat(keys).isEmpty();
+	}
+
+	@Test
+	public void shouldUnmarshallGetUserSingleKeyResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("get-user-keys-single.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isEqualTo(EnumDataType.keys);
+		List<KeyResourceDTO> keys = response.getData();
+		assertThat(keys).hasSize(1);
+		final KeyResourceDTO key = keys.get(0);
+		assertThat(key.getLinks()).hasSize(3);
+		assertThat(key.getName()).isEqualTo("default");
+		assertThat(key.getType()).isEqualTo("ssh-rsa");
+		assertThat(key.getContent()).isEqualTo("AAAA");
+	}
+
+	@Test
+	public void shouldUnmarshallGetUserMultipleKeyResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("get-user-keys-multiple.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isEqualTo(EnumDataType.keys);
+		List<KeyResourceDTO> keys = response.getData();
+		final KeyResourceDTO key = keys.get(0);
+		assertThat(key.getLinks()).hasSize(3);
+		assertThat(key.getName()).isEqualTo("default");
+		assertThat(key.getType()).isEqualTo("ssh-rsa");
+		assertThat(key.getContent()).isEqualTo("AAAA");
+	}
+	
 	
 	@Test
 	public void shouldUnmarshallGetRootAPIResponseBody() throws OpenShiftException, IOException {
@@ -237,6 +287,34 @@ public class DmrUnmarshallingTestCase {
 		final List<CartridgeResourceDTO> cartridges = response.getData();
 		assertThat(cartridges).hasSize(2);
 		assertThat(cartridges).onProperty("name").contains("mongodb-2.0", "mysql-5.1");
+	}
+	
+	@Test
+	public void shouldUnmarshallSingleValidOptionInResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("add-application-cartridge.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		final CartridgeResourceDTO cartridge = response.getData();
+		final Link link = cartridge.getLink("RESTART");
+		assertThat(link.getOptionalParams()).hasSize(0);
+		assertThat(link.getRequiredParams().get(0).getValidOptions()).containsExactly("restart");
+	}
+	
+	@Test
+	public void shouldUnmarshallMultipleValidOptionInResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("add-user-key-ok.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		final KeyResourceDTO key = response.getData();
+		final Link link = key.getLink("UPDATE");
+		assertThat(link.getOptionalParams()).hasSize(0);
+		assertThat(link.getRequiredParams().get(0).getValidOptions()).containsExactly("ssh-rsa", "ssh-dss");
 	}
 	
 }
