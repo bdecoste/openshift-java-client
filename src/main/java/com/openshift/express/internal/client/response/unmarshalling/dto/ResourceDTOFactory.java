@@ -43,6 +43,7 @@ import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
 
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.client.OpenShiftRequestParameterException;
 
 /**
  * A factory for creating DTO objects.
@@ -160,8 +161,9 @@ public class ResourceDTOFactory {
 	 *
 	 * @param rootNode the root node
 	 * @return the user resource dto
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static UserResourceDTO createUser(ModelNode rootNode) {
+	private static UserResourceDTO createUser(ModelNode rootNode) throws OpenShiftRequestParameterException {
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -198,8 +200,9 @@ public class ResourceDTOFactory {
 	 *
 	 * @param keyNode the key node
 	 * @return the key resource dto
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static KeyResourceDTO createKey(ModelNode keyNode) {
+	private static KeyResourceDTO createKey(ModelNode keyNode) throws OpenShiftRequestParameterException {
 		final ModelNode dataNode = keyNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -270,8 +273,9 @@ public class ResourceDTOFactory {
 	 * @param domainNode
 	 *            the domain node
 	 * @return the domain dto
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static DomainResourceDTO createDomainDTO(final ModelNode domainNode) {
+	private static DomainResourceDTO createDomainDTO(final ModelNode domainNode) throws OpenShiftRequestParameterException {
 		final ModelNode dataNode = domainNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -288,8 +292,9 @@ public class ResourceDTOFactory {
 	 * @param rootNode
 	 *            the domain node
 	 * @return the list< application dt o>
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static List<ApplicationResourceDTO> createApplicationsDTO(final ModelNode rootNode) {
+	private static List<ApplicationResourceDTO> createApplicationsDTO(final ModelNode rootNode) throws OpenShiftRequestParameterException {
 		final List<ApplicationResourceDTO> applicationDTOs = new ArrayList<ApplicationResourceDTO>();
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
@@ -306,8 +311,9 @@ public class ResourceDTOFactory {
 	 * @param appNode
 	 *            the app node
 	 * @return the application dto
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static ApplicationResourceDTO createApplicationDTO(ModelNode appNode) {
+	private static ApplicationResourceDTO createApplicationDTO(ModelNode appNode) throws OpenShiftRequestParameterException {
 		final ModelNode dataNode = appNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -350,8 +356,9 @@ public class ResourceDTOFactory {
 	 *
 	 * @param rootNode the root node
 	 * @return the list< cartridge resource dt o>
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static List<CartridgeResourceDTO> createCartridgesDTO(ModelNode rootNode) {
+	private static List<CartridgeResourceDTO> createCartridgesDTO(ModelNode rootNode) throws OpenShiftRequestParameterException {
 		final List<CartridgeResourceDTO> cartridgesDTOs = new ArrayList<CartridgeResourceDTO>();
 		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
@@ -367,8 +374,9 @@ public class ResourceDTOFactory {
 	 *
 	 * @param cartridgeNode the cartridge node
 	 * @return the cartridge resource dto
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static CartridgeResourceDTO createCartridgeDTO(ModelNode cartridgeNode) {
+	private static CartridgeResourceDTO createCartridgeDTO(ModelNode cartridgeNode) throws OpenShiftRequestParameterException {
 		final ModelNode dataNode = cartridgeNode.get(PROPERTY_DATA);
 		if (dataNode.isDefined()) {
 			// loop inside 'data' node
@@ -400,8 +408,9 @@ public class ResourceDTOFactory {
 	 * @param linkNodes
 	 *            the link nodes
 	 * @return the map< string, link>
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static Map<String, Link> createLinks(final List<ModelNode> linkNodes) {
+	private static Map<String, Link> createLinks(final List<ModelNode> linkNodes) throws OpenShiftRequestParameterException {
 		Map<String, Link> links = new HashMap<String, Link>();
 		for (ModelNode linkNode : linkNodes) {
 			final String linkName = linkNode.asProperty().getName();
@@ -424,8 +433,9 @@ public class ResourceDTOFactory {
 	 * @param linkParamNodes
 	 *            the link param nodes
 	 * @return the list< link param>
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static List<LinkParameter> createLinkParameters(ModelNode linkParamNodes) {
+	private static List<LinkParameter> createLinkParameters(ModelNode linkParamNodes) throws OpenShiftRequestParameterException {
 		List<LinkParameter> linkParams = new ArrayList<LinkParameter>();
 		if (linkParamNodes.isDefined()) {
 			for (ModelNode linkParamNode : linkParamNodes.asList()) {
@@ -440,8 +450,9 @@ public class ResourceDTOFactory {
 	 * 
 	 * @param linkParamNode the model node that contains the link parameters
 	 * @return the link parameter
+	 * @throws OpenShiftRequestParameterException 
 	 */
-	private static LinkParameter createLinkParameter(ModelNode linkParamNode) {
+	private static LinkParameter createLinkParameter(ModelNode linkParamNode) throws OpenShiftRequestParameterException {
 		final String description = linkParamNode.get("description").asString();
 		final String type = linkParamNode.get("type").asString();
 		final String defaultValue = linkParamNode.get("default_value").asString();

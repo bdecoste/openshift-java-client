@@ -12,6 +12,8 @@ package com.openshift.express.internal.client.response.unmarshalling.dto;
 
 import java.util.List;
 
+import com.openshift.express.client.OpenShiftRequestParameterException;
+
 
 /**
  * @author Andre Dietisheim
@@ -19,15 +21,15 @@ import java.util.List;
 public class LinkParameter {
 
 	protected final String name;
-	protected final String type;
+	protected final LinkParameterType type;
 	protected final String description;
 	protected final String defaultValue;
 	protected final List<String> validOptions;
 
 	public LinkParameter(final String name, final String type, final String defaultValue, final String description,
-			final List<String> validOptions) {
+			final List<String> validOptions) throws OpenShiftRequestParameterException {
 		this.name = name;
-		this.type = type;
+		this.type = LinkParameterType.valueOfIgnoreCase(type);
 		this.description = description;
 		this.defaultValue = defaultValue;
 		this.validOptions = validOptions;
@@ -43,7 +45,7 @@ public class LinkParameter {
 	/**
 	 * @return the type
 	 */
-	public final String getType() {
+	public final LinkParameterType getType() {
 		return type;
 	}
 

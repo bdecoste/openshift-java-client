@@ -26,6 +26,7 @@ import com.openshift.express.client.InvalidCredentialsOpenShiftException;
 import com.openshift.express.client.NotFoundOpenShiftException;
 import com.openshift.express.client.OpenShiftEndpointException;
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.client.OpenShiftRequestParameterException;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
@@ -34,7 +35,9 @@ import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
+import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameterType;
 import com.openshift.express.internal.client.utils.StreamUtils;
+import com.openshift.express.internal.client.utils.StringUtils;
 
 /**
  * @author André Dietisheim
@@ -83,9 +86,9 @@ public class RestRequest {
 			default:
 				throw new OpenShiftException("Unexpected Http method {0}", httpMethod.toString());
 			}
-		} catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
-		} catch(MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
 		} catch (UnauthorizedException e) {
 			throw new InvalidCredentialsOpenShiftException(link.getHref(), e);
@@ -98,14 +101,33 @@ public class RestRequest {
 		}
 	}
 
-	private void validateParameters(HttpParameters parameters, Link link) {
+	private void validateParameters(HttpParameters parameters, Link link)
+			throws OpenShiftRequestParameterException {
 		for (LinkParameter requiredParameter : link.getRequiredParams()) {
-			ensureRequiredParameter(requiredParameter, parameters);
+			ensureRequiredParameter(requiredParameter, parameters, link);
 		}
 	}
 
-	private void ensureRequiredParameter(LinkParameter parameter, HttpParameters parameters) {
-		
+	private void ensureRequiredParameter(LinkParameter parameter, HttpParameters parameters, Link link)
+			throws OpenShiftRequestParameterException {
+		if (!parameters.containsKey(parameter.getName())) {
+			throw new OpenShiftRequestParameterException(
+					"Requesting {0}: required request parameter \"{1}\" is missing", link.getHref(),
+					parameter.getName());
+		}
+
+		Object parameterValue = parameters.get(parameter.getName());
+		if (parameterValue == null
+				|| isEmptyString(parameter, parameterValue)) {
+			throw new OpenShiftRequestParameterException("Requesting {0}: required request parameter \"{1}\" is empty",
+					link.getHref(), parameter.getName());
+		}
+		// TODO: check valid options (still reported in a very incosistent way)
+	}
+
+	private boolean isEmptyString(LinkParameter parameter, Object parameterValue) {
+		return parameter.getType() == LinkParameterType.STRING
+		&& StringUtils.isEmpty((String) parameterValue);
 	}
 
 	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
@@ -117,7 +139,7 @@ public class RestRequest {
 				.setUserAgent(MessageFormat.format(USERAGENT_FORMAT, getVersion(), id)).setSSLChecks(doSSLChecks)
 				.client();
 	}
-	
+
 	public void setEnableSSLCertChecks(boolean doSSLChecks) {
 		this.doSSLChecks = doSSLChecks;
 	}
