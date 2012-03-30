@@ -28,6 +28,7 @@ import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
 
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * A factory for creating DTO objects.
@@ -242,14 +243,14 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createApplicationDTO(dataNode);
 		}
-		final String framework = getAsString(appNode, "framework");
-		final String creationTime = getAsString(appNode, "creation_time");
-		final String name = getAsString(appNode, "name");
-		final String uuid = getAsString(appNode, "uuid");
-		final String domainId = getAsString(appNode, "domain_id");
-		final Map<String, Link> links = createLinks(appNode.get("links").asList());
-		final List<String> aliases = createAliases(appNode.get("aliases").asList());
-		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get("embedded").asList());
+		final String framework = getAsString(appNode, IOpenShiftJsonConstants.PROPERTY_FRAMEWORK);
+		final String creationTime = getAsString(appNode, IOpenShiftJsonConstants.PROPERTY_CREATION_TIME);
+		final String name = getAsString(appNode,  IOpenShiftJsonConstants.PROPERTY_NAME);
+		final String uuid = getAsString(appNode,  IOpenShiftJsonConstants.PROPERTY_UUID);
+		final String domainId = getAsString(appNode, IOpenShiftJsonConstants.PROPERTY_DOMAIN_ID);
+		final Map<String, Link> links = createLinks(appNode.get(IOpenShiftJsonConstants.PROPERTY_LINKS).asList());
+		final List<String> aliases = createAliases(appNode.get(IOpenShiftJsonConstants.PROPERTY_ALIASES).asList());
+		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get(IOpenShiftJsonConstants.PROPERTY_EMBEDDED).asList());
 
 		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges,
 				links);
@@ -261,7 +262,7 @@ public class ResourceDTOFactory {
 			for (ModelNode embeddedCartridgeNode : embeddedCartridgeNodes) {
 				if (embeddedCartridgeNode.getType() == ModelType.PROPERTY) {
 					final Property p = embeddedCartridgeNode.asProperty();
-					embeddedCartridges.put(p.getName(), p.getValue().get("info").asString());
+					embeddedCartridges.put(p.getName(), p.getValue().get(IOpenShiftJsonConstants.PROPERTY_INFO).asString());
 				}
 			}
 		}
@@ -285,9 +286,9 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createCartridgeDTO(dataNode);
 		}
-		final String name = getAsString(cartridgeNode, "name");
-		final String type = getAsString(cartridgeNode, "type");
-		final Map<String, Link> links = createLinks(cartridgeNode.get("links").asList());
+		final String name = getAsString(cartridgeNode, IOpenShiftJsonConstants.PROPERTY_NAME);
+		final String type = getAsString(cartridgeNode, IOpenShiftJsonConstants.PROPERTY_TYPE);
+		final Map<String, Link> links = createLinks(cartridgeNode.get(IOpenShiftJsonConstants.PROPERTY_LINKS).asList());
 		return new CartridgeResourceDTO(name, type, links);
 	}
 
@@ -312,11 +313,11 @@ public class ResourceDTOFactory {
 			final String linkName = linkNode.asProperty().getName();
 			final ModelNode valueNode = linkNode.asProperty().getValue();
 			if (valueNode.isDefined()) {
-				final String rel = valueNode.get("rel").asString();
-				final String href = valueNode.get("href").asString();
-				final String method = valueNode.get("method").asString();
-				final List<LinkParameter> requiredParams = createLinkParameters(valueNode.get("required_params"));
-				final List<LinkParameter> optionalParams = createLinkParameters(valueNode.get("optional_params"));
+				final String rel = valueNode.get(IOpenShiftJsonConstants.PROPERTY_REL).asString();
+				final String href = valueNode.get(IOpenShiftJsonConstants.PROPERTY_HREF).asString();
+				final String method = valueNode.get(IOpenShiftJsonConstants.PROPERTY_METHOD).asString();
+				final List<LinkParameter> requiredParams = createLinkParameters(valueNode.get(IOpenShiftJsonConstants.PROPERTY_REQUIRED_PARAMS));
+				final List<LinkParameter> optionalParams = createLinkParameters(valueNode.get(IOpenShiftJsonConstants.PROPERTY_OPTIONAL_PARAMS));
 				links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
 			}
 		}
@@ -356,7 +357,7 @@ public class ResourceDTOFactory {
 
 	private static List<String> getValidOptions(ModelNode linkParamNode) {
 		final List<String> validOptions = new ArrayList<String>();
-		final ModelNode validOptionsNode = linkParamNode.get("valid_options");
+		final ModelNode validOptionsNode = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS);
 		if (validOptionsNode.isDefined()) {
 			switch (validOptionsNode.getType()) {
 			case STRING: // if there's only one value, it is not serialized as a list, but just a string
