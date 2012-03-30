@@ -35,7 +35,7 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Resource
 import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.express.internal.client.response.unmarshalling.dto.UserResourceDTO;
 
-public class DmrUnmarshallingTestCase {
+public class ResourceDTOFactoryTestCase {
 
 	private String getContentAsString(String fileName) throws IOException {
 		final InputStream contentStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("samples/" + fileName);
