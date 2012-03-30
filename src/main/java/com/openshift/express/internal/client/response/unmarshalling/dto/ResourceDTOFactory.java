@@ -47,22 +47,7 @@ public class ResourceDTOFactory {
 	 */
 	public static RestResponse get(final String content) throws OpenShiftException {
 		final ModelNode rootNode = getModelNode(content);
-		final RestResponse response = createResponse(rootNode);
-		if (isStatusOk(response)) {
-			return response;
-		}
-		throw new OpenShiftException("Operation failed", response);
-	}
-
-	/**
-	 * Checks if is status ok.
-	 * 
-	 * @param response
-	 *            the response dto
-	 * @return true, if is status ok
-	 */
-	private static boolean isStatusOk(final RestResponse response) {
-		return STATUS_OK.equals(response.getStatus()) || STATUS_CREATED.equals(response.getStatus());
+		return createResponse(rootNode);
 	}
 
 	/**
@@ -79,7 +64,11 @@ public class ResourceDTOFactory {
 		final String status = rootNode.get("status").asString();
 		final List<String> messages = createMessages(rootNode.get("messages"));
 
-		final EnumDataType dataType = EnumDataType.nullSafeValueOf(type);
+		final EnumDataType dataType = EnumDataType.safeValueOf(type);
+		// the response is after an error, only the messages are relevant
+		if(dataType == null) {
+			return new RestResponse(status, messages, null, null);
+		}
 		switch (dataType) {
 		case user:
 			return new RestResponse(status, messages, createUser(rootNode), dataType);
