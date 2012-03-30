@@ -31,6 +31,14 @@ public class HttpParameters {
 		parameters.put(key, value);
 		return this;
 	}
+	
+	public boolean containsKey(String key) {
+		return parameters.containsKey(key);
+	}
+		
+	public Object get(String key) {
+		return parameters.get(key); 
+	}
 
 	public String toUrlEncoded() throws UnsupportedEncodingException {
 		StringBuilder builder = new StringBuilder();
