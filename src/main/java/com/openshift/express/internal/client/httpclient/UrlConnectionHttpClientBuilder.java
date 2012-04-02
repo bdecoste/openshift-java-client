@@ -41,11 +41,15 @@ import com.openshift.express.internal.client.utils.StreamUtils;
  */
 public class UrlConnectionHttpClientBuilder {
 
+	public static final String ACCEPT_APPLICATION_JSON = "application/json";
+	public static final String ACCEPT_APPLICATION_XML = "application/xml";
+
 	private String userAgent;
 	private boolean sslChecks = false;
 	private String username;
 	private String password;
-
+	private String acceptedContentType = "application/json";
+		
 	public UrlConnectionHttpClientBuilder setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
 		return this;
@@ -62,8 +66,14 @@ public class UrlConnectionHttpClientBuilder {
 		return this;
 	}
 	
+	public UrlConnectionHttpClientBuilder setAcceptedContentType(String acceptedContentType) {
+		this.acceptedContentType = acceptedContentType;
+		return this;
+	}
+	
+	
 	public IHttpClient client() {
-		return new UrlConnectionHttpClient(username, password, userAgent, sslChecks);
+		return new UrlConnectionHttpClient(username, password, userAgent, sslChecks, acceptedContentType);
 	}
 
 
@@ -78,7 +88,6 @@ public class UrlConnectionHttpClientBuilder {
 		private static final String PROPERTY_AUTHORIZATION = "Authorization";
 		private static final String AUTHORIZATION_BASIC = "Basic";
 		private static final String PROPERTY_ACCEPT = "Accept";
-		private static final String ACCEPT_APPLICATION_JSON = "application/json";
 		
 		private static final int DEFAULT_CONNECT_TIMEOUT = 10 * 1024;
 		private static final int DEFAULT_READ_TIMEOUT = 60 * 1024;
@@ -91,12 +100,14 @@ public class UrlConnectionHttpClientBuilder {
 		private boolean sslChecks;
 		private String username;
 		private String password;
+		private String acceptedContentType;
 		
-		public UrlConnectionHttpClient(String username, String password, String userAgent, boolean sslChecks) {
+		public UrlConnectionHttpClient(String username, String password, String userAgent, boolean sslChecks, String acceptedContentType) {
 			this.username = username;
 			this.password = password;
 			this.userAgent = userAgent;
 			this.sslChecks = sslChecks;
+			this.acceptedContentType = acceptedContentType;
 		}
 
 		public String get(URL url) throws HttpClientException, SocketTimeoutException {
@@ -264,7 +275,7 @@ public class UrlConnectionHttpClientBuilder {
 			connection.setInstanceFollowRedirects(true);
 			connection.setRequestProperty(PROPERTY_CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM_URLENCODED);
 			connection.setRequestProperty(USER_AGENT, userAgent);
-			connection.setRequestProperty(PROPERTY_ACCEPT, ACCEPT_APPLICATION_JSON);
+			connection.setRequestProperty(PROPERTY_ACCEPT, acceptedContentType);
 			return connection;
 		}
 

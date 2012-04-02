@@ -10,14 +10,11 @@
  ******************************************************************************/
 package com.openshift.express.internal.client;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Properties;
 
 import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.IHttpClient;
@@ -36,7 +33,6 @@ import com.openshift.express.internal.client.response.unmarshalling.NakedRespons
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameterType;
-import com.openshift.express.internal.client.utils.StreamUtils;
 import com.openshift.express.internal.client.utils.StringUtils;
 
 /**
@@ -50,20 +46,28 @@ public class RestRequest {
 	private static final String SYSPROPERTY_PROXY_HOST = "proxyHost";
 	private static final String SYSPROPERTY_PROXY_SET = "proxySet";
 
-	// TODO extract to properties file
-	private static final String USERAGENT_FORMAT = "Java OpenShift/{0} ({1})";
-
 	private String baseUrl;
-	private String id;
-	private IUser user;
-	private boolean doSSLChecks = false;
+
+	private IHttpClient client;
 
 	protected static String version = null;
 
-	public RestRequest(String id, String baseUrl, IUser user) {
-		this.id = id;
+	public RestRequest(String id, String baseUrl, boolean doSSLChecks, IUser user) {
+		this(baseUrl, doSSLChecks, new RestRequestProperties(), user);
+	}
+
+	private RestRequest(String baseUrl, boolean doSSLChecks, RestRequestProperties properties, IUser user) {
+		this(baseUrl
+				, new UrlConnectionHttpClientBuilder()
+						.setCredentials(user.getRhlogin(), user.getPassword())
+						.setUserAgent(MessageFormat.format(properties.getUseragent(), properties.getClientId(), properties.getVersion()))
+						.setSSLChecks(doSSLChecks)
+						.client());
+	}
+
+	public RestRequest(String baseUrl, IHttpClient client) {
 		this.baseUrl = baseUrl;
-		this.user = user;
+		this.client = client;
 	}
 
 	public String execute(Link link, HttpParameters parameters)
@@ -71,7 +75,6 @@ public class RestRequest {
 		validateParameters(parameters, link);
 		HttpMethod httpMethod = link.getHttpMethod();
 		try {
-			IHttpClient client = createClient(user);
 			URL url = new URL(link.getHref());
 			String data = parameters.toUrlEncoded();
 			switch (link.getHttpMethod()) {
@@ -127,21 +130,11 @@ public class RestRequest {
 
 	private boolean isEmptyString(LinkParameter parameter, Object parameterValue) {
 		return parameter.getType() == LinkParameterType.STRING
-		&& StringUtils.isEmpty((String) parameterValue);
+				&& StringUtils.isEmpty((String) parameterValue);
 	}
 
 	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
 		return new NakedResponseUnmarshaller().unmarshall(response);
-	}
-
-	private IHttpClient createClient(IUser user) {
-		return new UrlConnectionHttpClientBuilder().setCredentials(user.getRhlogin(), user.getPassword())
-				.setUserAgent(MessageFormat.format(USERAGENT_FORMAT, getVersion(), id)).setSSLChecks(doSSLChecks)
-				.client();
-	}
-
-	public void setEnableSSLCertChecks(boolean doSSLChecks) {
-		this.doSSLChecks = doSSLChecks;
 	}
 
 	public void setProxySet(boolean proxySet) {
@@ -166,23 +159,5 @@ public class RestRequest {
 
 	public String getPlatformUrl() {
 		return baseUrl;
-	}
-
-	public static String getVersion() {
-		if (version == null) {
-			InputStream is = null;
-			try {
-				Properties props = new Properties();
-				is = RestRequest.class.getClassLoader().getResourceAsStream("version.properties");
-				props.load(is);
-				version = props.getProperty("version");
-			} catch (IOException e) {
-				version = "Unknown";
-			} finally {
-				StreamUtils.quietlyClose(is);
-			}
-		}
-
-		return version;
 	}
 }

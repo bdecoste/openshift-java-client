@@ -21,7 +21,8 @@ public enum LinkParameterType {
 	
 	public static LinkParameterType valueOfIgnoreCase(String name) throws OpenShiftRequestParameterException {
 		if (name == null) {
-			throw new OpenShiftRequestParameterException("Unknow request parameter type 'null");
+			// no type provided (this is valid, not an error)
+			return null;
 		}
 		try {
 			return			valueOf(name.toUpperCase());
