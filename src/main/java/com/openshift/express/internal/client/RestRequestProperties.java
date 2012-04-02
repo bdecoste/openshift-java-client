@@ -21,7 +21,7 @@ import com.openshift.express.internal.client.utils.StreamUtils;
  */
 public class RestRequestProperties {
 
-	private static final String PROPERTIES_FILE = "restrequest.properties";
+	private static final String PROPERTIES_FILE = "/restrequest.properties";
 
 	private static final String KEY_USERAGENT = "useragent";
 	private static final String KEY_VERSION = "version";
