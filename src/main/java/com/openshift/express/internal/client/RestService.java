@@ -38,7 +38,7 @@ import com.openshift.express.internal.client.utils.StringUtils;
 /**
  * @author André Dietisheim
  */
-public class RestRequest {
+public class RestService implements IRestService {
 
 	private static final String SERVICE_PATH = "/broker/rest/";
 
@@ -52,11 +52,11 @@ public class RestRequest {
 
 	protected static String version = null;
 
-	public RestRequest(String baseUrl, boolean doSSLChecks, IUser user) {
+	public RestService(String baseUrl, boolean doSSLChecks, IUser user) {
 		this(baseUrl, doSSLChecks, new RestRequestProperties(), user);
 	}
 
-	private RestRequest(String baseUrl, boolean doSSLChecks, RestRequestProperties properties, IUser user) {
+	private RestService(String baseUrl, boolean doSSLChecks, RestRequestProperties properties, IUser user) {
 		this(baseUrl
 				, new UrlConnectionHttpClientBuilder()
 						.setCredentials(user.getRhlogin(), user.getPassword())
@@ -65,7 +65,7 @@ public class RestRequest {
 						.client());
 	}
 
-	public RestRequest(String baseUrl, IHttpClient client) {
+	public RestService(String baseUrl, IHttpClient client) {
 		this.baseUrl = baseUrl;
 		this.client = client;
 	}
