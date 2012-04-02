@@ -52,7 +52,7 @@ public class RestRequest {
 
 	protected static String version = null;
 
-	public RestRequest(String id, String baseUrl, boolean doSSLChecks, IUser user) {
+	public RestRequest(String baseUrl, boolean doSSLChecks, IUser user) {
 		this(baseUrl, doSSLChecks, new RestRequestProperties(), user);
 	}
 
