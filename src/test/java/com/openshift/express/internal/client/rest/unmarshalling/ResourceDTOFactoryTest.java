@@ -39,7 +39,7 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Resource
 import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.express.internal.client.response.unmarshalling.dto.UserResourceDTO;
 
-public class ResourceDTOFactoryTestCase {
+public class ResourceDTOFactoryTest {
 
 	private static final class ValidLinkCondition extends Condition<Map<?, ?>> {
 		@Override
@@ -55,8 +55,8 @@ public class ResourceDTOFactoryTestCase {
 	}
 
 	private String getContentAsString(String fileName) throws IOException {
-		final InputStream contentStream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("samples/" + fileName);
+		final InputStream contentStream = getClass()
+				.getResourceAsStream("/samples/" + fileName);
 		return IOUtils.toString(contentStream);
 	}
 

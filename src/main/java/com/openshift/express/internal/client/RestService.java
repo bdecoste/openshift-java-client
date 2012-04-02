@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.text.MessageFormat;
 
 import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.IHttpClient;
@@ -52,15 +51,15 @@ public class RestService implements IRestService {
 
 	protected static String version = null;
 
-	public RestService(String baseUrl, boolean doSSLChecks, IUser user) {
-		this(baseUrl, doSSLChecks, new RestRequestProperties(), user);
+	public RestService(String clientId, String baseUrl, boolean doSSLChecks, IUser user) {
+		this(clientId, baseUrl, doSSLChecks, new RestRequestProperties(), user);
 	}
 
-	private RestService(String baseUrl, boolean doSSLChecks, RestRequestProperties properties, IUser user) {
+	private RestService(String clientId, String baseUrl, boolean doSSLChecks, RestRequestProperties properties, IUser user) {
 		this(baseUrl
 				, new UrlConnectionHttpClientBuilder()
 						.setCredentials(user.getRhlogin(), user.getPassword())
-						.setUserAgent(MessageFormat.format(properties.getUseragent(), properties.getClientId(), properties.getVersion()))
+						.setUserAgent(properties.getUseragent(clientId))
 						.setSSLChecks(doSSLChecks)
 						.client());
 	}
