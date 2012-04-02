@@ -32,38 +32,17 @@ public interface IUser {
 
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException;
 
-	/**
-	 * Returns the domain that this user created previously. Returns
-	 * <code>null</code> if no domain was created.
-	 * 
-	 * @return the domain that this user created
-	 * @throws OpenShiftException
-	 * 
-	 * @see #createDomain
-	 */
-	public IDomain getDomain() throws OpenShiftException;
-
+	public List<IDomain> getDomains() throws OpenShiftException;
+	
 	public boolean hasDomain() throws OpenShiftException;
 
-	public ISSHPublicKey getSshKey() throws OpenShiftException;
+	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException;
 
 	public List<ICartridge> getCartridges() throws OpenShiftException;
 
 	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException;
 
 	public ICartridge getCartridgeByName(String name) throws OpenShiftException;
-
-	public IApplication createApplication(String name, ICartridge cartridge) throws OpenShiftException;
-
-	public List<IApplication> getApplications() throws OpenShiftException;
-
-	public IApplication getApplicationByName(String name) throws OpenShiftException;
-
-	public boolean hasApplication(String name) throws OpenShiftException;
-		
-	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
-
-	public boolean hasApplication(ICartridge cartridge) throws OpenShiftException;
 
 	public void refresh() throws OpenShiftException;
 

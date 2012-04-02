@@ -91,7 +91,8 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public void destroy() throws OpenShiftException {
-		getInternalUser().destroy(this);
+		throw new UnsupportedOperationException();
+//		getInternalUser().destroy(this);
 	}
 
 	public void start() throws OpenShiftException {
@@ -125,20 +126,22 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public String getGitUri() throws OpenShiftException {
-		IDomain domain = getInternalUser().getDomain();
-		if (domain == null) {
-			return null;
-		}
-		return MessageFormat
-				.format(GIT_URI_PATTERN, getUUID(), getName(), domain.getNamespace(), domain.getRhcDomain());
+		throw new UnsupportedOperationException();
+//		IDomain domain = getInternalUser().getDomain();
+//		if (domain == null) {
+//			return null;
+//		}
+//		return MessageFormat
+//				.format(GIT_URI_PATTERN, getUUID(), getName(), domain.getNamespace(), domain.getRhcDomain());
 	}
 
 	public String getApplicationUrl() throws OpenShiftException {
-		IDomain domain = getInternalUser().getDomain();
-		if (domain == null) {
-			return null;
-		}
-		return MessageFormat.format(APPLICATION_URL_PATTERN, name, domain.getNamespace(), domain.getRhcDomain());
+		throw new UnsupportedOperationException();
+//		IDomain domain = getInternalUser().getDomain();
+//		if (domain == null) {
+//			return null;
+//		}
+//		return MessageFormat.format(APPLICATION_URL_PATTERN, name, domain.getNamespace(), domain.getRhcDomain());
 	}
 
 	public String getHealthCheckUrl() throws OpenShiftException {

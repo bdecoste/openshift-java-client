@@ -70,8 +70,7 @@ public class ApplicationTest {
 			return new Domain(
 					"testNamespace"
 					, "testRhcDomain"
-					, this
-					, getService());
+					, this);
 		}
 	};
 

@@ -54,22 +54,24 @@ public class ApplicationUtils {
 	}
 
 	public static void silentlyDestroyAnyJenkinsApplication(User user) {
-		try {
-			for (IApplication application : user.getApplicationsByCartridge(ICartridge.JENKINS_14)) {
-				application.destroy();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		throw new UnsupportedOperationException();
+//		try {
+//			for (IApplication application : user.getApplicationsByCartridge(ICartridge.JENKINS_14)) {
+//				application.destroy();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void silentlyDestroyAllApplications(User user) {
-		try {
-			for (IApplication application : user.getApplications()) {
-				application.destroy();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		throw new UnsupportedOperationException();
+//		try {
+//			for (IApplication application : user.getApplications()) {
+//				application.destroy();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 }

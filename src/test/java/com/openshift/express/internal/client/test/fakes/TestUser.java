@@ -50,7 +50,8 @@ public class TestUser extends User {
 	}
 
 	public IApplication createTestApplication() throws OpenShiftException {
-		return createApplication(ApplicationUtils.createRandomApplicationName(), Cartridge.JBOSSAS_7);
+		throw new UnsupportedOperationException();
+//		return createApplication(ApplicationUtils.createRandomApplicationName(), Cartridge.JBOSSAS_7);
 	}
 
 	public void silentlyDestroyApplication(IApplication application) {

@@ -12,8 +12,6 @@ package com.openshift.express.internal.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.openshift.express.client.IApplication;
@@ -23,8 +21,6 @@ import com.openshift.express.client.IEmbeddableCartridge;
 import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.ISSHPublicKey;
 import com.openshift.express.client.IUser;
-import com.openshift.express.client.InvalidCredentialsOpenShiftException;
-import com.openshift.express.client.NotFoundOpenShiftException;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.client.OpenShiftService;
 import com.openshift.express.client.configuration.IOpenShiftConfiguration;
@@ -88,67 +84,78 @@ public class InternalUser implements IUser {
 	}
 
 	public boolean isValid() throws OpenShiftException {
-		try {
-			return service.isValid(this);
-		} catch (InvalidCredentialsOpenShiftException e) {
-			return false;
-		}
+		throw new UnsupportedOperationException();
+//		try {
+//			return service.isValid(this);
+//		} catch (InvalidCredentialsOpenShiftException e) {
+//			return false;
+//		}
 	}
 
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException {
-		setSshKey(key);
-		this.domain = getService().createDomain(name, key, this);
-		return domain;
+		throw new UnsupportedOperationException();
+//		setSshKey(key);
+//		this.domain = getService().createDomain(name, key, this);
+//		return domain;
 	}
 
-    protected void destroyDomain() throws OpenShiftException {
-        if (getApplications().size() > 0) {
-            throw new OpenShiftException(
-                    "There are still applications, you can only delete the domain only if you delete all apps first!");
-        }
-        
-        service.destroyDomain(domain.getNamespace(), this);
-        getUserInfo().clearNameSpace();
-        this.domain = null;
-    }
-	
-	public IDomain getDomain() throws OpenShiftException {
-		if (domain == null
-				&& getUserInfo().hasDomain()) {
-			try {
-				this.domain = new Domain(
-						getUserInfo().getNamespace()
-						, getUserInfo().getRhcDomain()
-						, this
-						, service);
-			} catch (NotFoundOpenShiftException e) {
-				return null;
-			}
-		}
-		return domain;
+//    protected void destroyDomain() throws OpenShiftException {
+//        if (getApplications().size() > 0) {
+//            throw new OpenShiftException(
+//                    "There are still applications, you can only delete the domain only if you delete all apps first!");
+//        }
+//        
+//        service.destroyDomain(domain.getNamespace(), this);
+//        getUserInfo().clearNameSpace();
+//        this.domain = null;
+//    }
+
+	public List<IDomain> getDomains() throws OpenShiftException {
+		throw new UnsupportedOperationException();
 	}
+	
+//	public IDomain getDomain() throws OpenShiftException {
+//		if (domain == null
+//				&& getUserInfo().hasDomain()) {
+//			try {
+//				this.domain = new Domain(
+//						getUserInfo().getNamespace()
+//						, getUserInfo().getRhcDomain()
+//						, this
+//						, service);
+//			} catch (NotFoundOpenShiftException e) {
+//				return null;
+//			}
+//		}
+//		return domain;
+//	}
 
     public boolean hasDomain() throws OpenShiftException {
-		try {
-			return getDomain() != null;
-		} catch(NotFoundOpenShiftException e) {
-			// domain not found
-			return false;
-		}
+		throw new UnsupportedOperationException();
+//		try {
+//			return getDomain() != null;
+//		} catch(NotFoundOpenShiftException e) {
+//			// domain not found
+//			return false;
+//		}
 	}
 	
-	private void setSshKey(ISSHPublicKey key) {
-		this.sshKey = key;
-	}
+//	private void setSshKey(ISSHPublicKey key) {
+//		this.sshKey = key;
+//	}
 
-	public ISSHPublicKey getSshKey() throws OpenShiftException {
-		if (sshKey == null) {
-			this.sshKey = getUserInfo().getSshPublicKey();
-		}
-		return sshKey;
-	}
+//	public ISSHPublicKey getSshKey() throws OpenShiftException {
+//		if (sshKey == null) {
+//			this.sshKey = getUserInfo().getSshPublicKey();
+//		}
+//		return sshKey;
+//	}
 
-	public String getRhlogin() {
+    public List<ISSHPublicKey> getSshKeys() throws OpenShiftException {
+		throw new UnsupportedOperationException();
+    }
+    
+    public String getRhlogin() {
 		return rhlogin;
 	}
 
@@ -165,21 +172,24 @@ public class InternalUser implements IUser {
 	}
 
 	public String getUUID() throws OpenShiftException {
-		return getUserInfo().getUuid();
+		throw new UnsupportedOperationException();
+//		return getUserInfo().getUuid();
 	}
 
 	public List<ICartridge> getCartridges() throws OpenShiftException {
-		if (cartridges == null) {
-			this.cartridges = service.getCartridges(this);
-		}
-		return Collections.unmodifiableList(cartridges);
+		throw new UnsupportedOperationException();
+//		if (cartridges == null) {
+//			this.cartridges = service.getCartridges(this);
+//		}
+//		return Collections.unmodifiableList(cartridges);
 	}
 
 	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException {
-		if (embeddableCartridges == null) {
-			this.embeddableCartridges = service.getEmbeddableCartridges(this);
-		}
-		return embeddableCartridges;
+		throw new UnsupportedOperationException();
+//		if (embeddableCartridges == null) {
+//			this.embeddableCartridges = service.getEmbeddableCartridges(this);
+//		}
+//		return embeddableCartridges;
 	}
 
 	public ICartridge getCartridgeByName(String name) throws OpenShiftException {
@@ -191,66 +201,6 @@ public class InternalUser implements IUser {
 			}
 		}
 		return matchingCartridge;
-	}
-	
-	public IApplication createApplication(String name, ICartridge cartridge) throws OpenShiftException {
-		IApplication application = service.createApplication(name, cartridge, this);
-		add(application);
-		return application;
-	}
-
-	public List<IApplication> getApplications() throws OpenShiftException {
-		if (getUserInfo().getApplicationInfos().size() > applications.size()) {
-			update(getUserInfo().getApplicationInfos());
-		}
-		return Collections.unmodifiableList(applications);
-	}
-
-	public IApplication getApplicationByName(String name) throws OpenShiftException {
-		return getApplicationByName(name, getApplications());
-	}
-
-	public boolean hasApplication(String name) throws OpenShiftException {
-		return getApplicationByName(name) != null;
-	}
-
-	private IApplication getApplicationByName(String name, Collection<IApplication> applications) {
-		IApplication matchingApplication = null;
-		for (IApplication application : applications) {
-			if (name.equals(application.getName())) {
-				matchingApplication = application;
-				break;
-			}
-		}
-		return matchingApplication;
-	}
-
-	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
-		List<IApplication> matchingApplications = new ArrayList<IApplication>();
-		for (IApplication application : getApplications()) {
-			if (cartridge.equals(application.getCartridge())) {
-				matchingApplications.add(application);
-			}
-		}
-		return matchingApplications;
-	}
-	
-	public boolean hasApplication(ICartridge cartridge) throws OpenShiftException {
-		return getApplicationsByCartridge(cartridge).size() > 0;
-	}
-
-	protected void add(IApplication application) {
-		applications.add(application);
-	}
-
-	protected void destroy(IApplication application) throws OpenShiftException {
-		service.destroyApplication(application.getName(), application.getCartridge(), this);
-		remove(application);
-	}
-	
-	protected void remove(IApplication application) {
-		applications.remove(application);
-		this.userInfo.removeApplicationInfo(application.getName());
 	}
 
 	public void setSshPublicKey(ISSHPublicKey key) {
@@ -274,15 +224,6 @@ public class InternalUser implements IUser {
 		this.sshKey = null;
 		this.userInfo = null;
 		getUserInfo();
-	}
-
-	private void update(List<ApplicationInfo> applicationInfos) {
-		for (ApplicationInfo applicationInfo : applicationInfos) {
-			IApplication application = getApplicationByName(applicationInfo.getName(), applications);
-			if (application == null) {
-				applications.add(createApplication(applicationInfo));
-			}
-		}
 	}
 
 	private Application createApplication(ApplicationInfo applicationInfo) {

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import java.util.List;
+
 /**
  * @author André Dietisheim
  */
@@ -33,4 +35,17 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 */
 	public boolean waitForAccessible(long timeout) throws OpenShiftException;
+	
+	public IApplication createApplication(String name, ICartridge cartridge) throws OpenShiftException;
+
+	public List<IApplication> getApplications() throws OpenShiftException;
+
+	public IApplication getApplicationByName(String name) throws OpenShiftException;
+
+	public boolean hasApplication(String name) throws OpenShiftException;
+		
+	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
+
+	public boolean hasApplication(ICartridge cartridge) throws OpenShiftException;
+
 }

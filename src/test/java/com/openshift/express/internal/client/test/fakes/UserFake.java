@@ -27,6 +27,7 @@ public class UserFake extends InternalUser {
 	}
 
 	public void add(IApplication application) {
-		super.add(application);
+		throw new UnsupportedOperationException();
+//		super.add(application);
 	}
 }
