@@ -107,11 +107,14 @@ public class RestRequest {
 	private void validateParameters(HttpParameters parameters, Link link)
 			throws OpenShiftRequestParameterException {
 		for (LinkParameter requiredParameter : link.getRequiredParams()) {
-			ensureRequiredParameter(requiredParameter, parameters, link);
+			validateRequiredParameter(requiredParameter, parameters, link);
+		}
+		for (LinkParameter optionalParameter : link.getOptionalParams()) {
+			validateOptionalParameters(optionalParameter, link);
 		}
 	}
 
-	private void ensureRequiredParameter(LinkParameter parameter, HttpParameters parameters, Link link)
+	private void validateRequiredParameter(LinkParameter parameter, HttpParameters parameters, Link link)
 			throws OpenShiftRequestParameterException {
 		if (!parameters.containsKey(parameter.getName())) {
 			throw new OpenShiftRequestParameterException(
@@ -128,6 +131,10 @@ public class RestRequest {
 		// TODO: check valid options (still reported in a very incosistent way)
 	}
 
+	private void validateOptionalParameters(LinkParameter optionalParameter, Link link) {
+		// TODO: implement
+	}
+	
 	private boolean isEmptyString(LinkParameter parameter, Object parameterValue) {
 		return parameter.getType() == LinkParameterType.STRING
 				&& StringUtils.isEmpty((String) parameterValue);
