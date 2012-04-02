@@ -35,9 +35,7 @@ public enum EnumDataType {
 	/** The cartridges type. */
 	cartridges,
 	/** The cartridge type. */
-	cartridge,
-	/** The undefined type. */
-	undefined;
+	cartridge;
 	
 
 	/**
@@ -47,7 +45,7 @@ public enum EnumDataType {
 	 *            as String
 	 * @return value as enum
 	 */
-	static EnumDataType nullSafeValueOf(String value) {
+	static EnumDataType safeValueOf(String value) {
 		if (value != null) {
 			try {
 				return valueOf(value);
@@ -55,6 +53,6 @@ public enum EnumDataType {
 				// do nothing, will just return 'undefined'
 			}
 		}
-		return undefined;
+		return null;
 	}
 }

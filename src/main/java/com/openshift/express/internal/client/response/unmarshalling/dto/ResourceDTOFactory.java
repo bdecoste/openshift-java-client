@@ -30,8 +30,6 @@ import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstant
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_TYPE;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_UUID;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS;
-import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_CREATED;
-import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.STATUS_OK;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,39 +61,15 @@ public class ResourceDTOFactory {
 	 */
 	public static RestResponse get(final String content) throws OpenShiftException {
 		final ModelNode rootNode = getModelNode(content);
-		final RestResponse response = createResponse(rootNode);
-		if (isStatusOk(response)) {
-			return response;
-		}
-		throw new OpenShiftException("Operation failed", response);
-	}
-
-	/**
-	 * Checks if is status ok.
-	 * 
-	 * @param response
-	 *            the response dto
-	 * @return true, if is status ok
-	 */
-	private static boolean isStatusOk(final RestResponse response) {
-		return STATUS_OK.equals(response.getStatus()) || STATUS_CREATED.equals(response.getStatus());
-	}
-
-	/**
-	 * Creates a new DTO object.
-	 * 
-	 * @param rootNode
-	 *            the root node
-	 * @return the response
-	 * @throws OpenShiftException
-	 *             the open shift exception
-	 */
-	private static RestResponse createResponse(ModelNode rootNode) throws OpenShiftException {
 		final String type = rootNode.get("type").asString();
 		final String status = rootNode.get("status").asString();
 		final List<String> messages = createMessages(rootNode.get("messages"));
 
-		final EnumDataType dataType = EnumDataType.nullSafeValueOf(type);
+		final EnumDataType dataType = EnumDataType.safeValueOf(type);
+		// the response is after an error, only the messages are relevant
+		if(dataType == null) {
+			return new RestResponse(status, messages, null, null);
+		}
 		switch (dataType) {
 		case user:
 			return new RestResponse(status, messages, createUser(rootNode), dataType);

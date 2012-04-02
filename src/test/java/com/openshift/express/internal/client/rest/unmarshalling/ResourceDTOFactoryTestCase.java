@@ -172,6 +172,18 @@ public class ResourceDTOFactoryTestCase {
 	}
 
 	@Test
+	public void shouldUnmarshallDeleteDomainKoNotFoundResponseBody() throws OpenShiftException, IOException {
+		//pre-conditions
+		String content = getContentAsString("delete-domain-existing-ko-notfound.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isNull();
+		assertThat(response.getMessages()).hasSize(1);
+	}
+	
+	@Test
 	public void shouldUnmarshallGetApplicationsWith4AppsResponseBody() throws OpenShiftException, IOException {
 		//pre-conditions
 		String content = getContentAsString("get-applications-with4apps.json");
