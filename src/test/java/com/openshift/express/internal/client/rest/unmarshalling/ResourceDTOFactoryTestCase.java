@@ -18,8 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.fest.assertions.Condition;
 import org.junit.Test;
 
 import com.openshift.express.client.HttpMethod;
@@ -28,6 +30,8 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Applicat
 import com.openshift.express.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.EnumDataType;
+import com.openshift.express.internal.client.response.unmarshalling.dto.GearsComponent;
+import com.openshift.express.internal.client.response.unmarshalling.dto.GearResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
@@ -37,14 +41,28 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.UserReso
 
 public class ResourceDTOFactoryTestCase {
 
+	private static final class ValidLinkCondition extends Condition<Map<?, ?>> {
+		@Override
+		public boolean matches(Map<?, ?> links) {
+			for (Entry<?, ?> entry : links.entrySet()) {
+				Link link = (Link) entry.getValue();
+				if (link.getHref() == null || link.getHttpMethod() == null || link.getRel() == null) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 	private String getContentAsString(String fileName) throws IOException {
-		final InputStream contentStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("samples/" + fileName);
+		final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("samples/" + fileName);
 		return IOUtils.toString(contentStream);
 	}
-	
+
 	@Test
 	public void shouldUnmarshallGetUserResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-user.json");
 		assertNotNull(content);
 		// operation
@@ -55,10 +73,10 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(userResourceDTO.getRhLogin()).isEqualTo("xcoulon+test@redhat.com");
 		assertThat(userResourceDTO.getLinks()).hasSize(3);
 	}
-	
+
 	@Test
 	public void shouldUnmarshallGetUserNoKeyResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-user-keys-none.json");
 		assertNotNull(content);
 		// operation
@@ -71,7 +89,7 @@ public class ResourceDTOFactoryTestCase {
 
 	@Test
 	public void shouldUnmarshallGetUserSingleKeyResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-user-keys-single.json");
 		assertNotNull(content);
 		// operation
@@ -89,7 +107,7 @@ public class ResourceDTOFactoryTestCase {
 
 	@Test
 	public void shouldUnmarshallGetUserMultipleKeyResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-user-keys-multiple.json");
 		assertNotNull(content);
 		// operation
@@ -103,11 +121,10 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(key.getType()).isEqualTo("ssh-rsa");
 		assertThat(key.getContent()).isEqualTo("AAAA");
 	}
-	
-	
+
 	@Test
 	public void shouldUnmarshallGetRootAPIResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-rest-api.json");
 		assertNotNull(content);
 		// operation
@@ -116,12 +133,13 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.links);
 		final Map<String, Link> links = response.getData();
 		assertThat(links).hasSize(7);
+		assertThat(links).satisfies(new ValidLinkCondition());
+
 	}
 
-	
 	@Test
 	public void shouldUnmarshallGetDomainsWith1ExistingResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-domains-1existing.json");
 		assertNotNull(content);
 		// operation
@@ -145,7 +163,7 @@ public class ResourceDTOFactoryTestCase {
 
 	@Test
 	public void shouldUnmarshallGetDomainsWithNoExistingResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-domains-noexisting.json");
 		assertNotNull(content);
 		// operation
@@ -158,7 +176,7 @@ public class ResourceDTOFactoryTestCase {
 
 	@Test
 	public void shouldUnmarshallGetDomainResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-domain.json");
 		assertNotNull(content);
 		// operation
@@ -173,7 +191,7 @@ public class ResourceDTOFactoryTestCase {
 
 	@Test
 	public void shouldUnmarshallDeleteDomainKoNotFoundResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("delete-domain-existing-ko-notfound.json");
 		assertNotNull(content);
 		// operation
@@ -182,10 +200,10 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(response.getDataType()).isNull();
 		assertThat(response.getMessages()).hasSize(1);
 	}
-	
+
 	@Test
 	public void shouldUnmarshallGetApplicationsWith4AppsResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("get-applications-with4apps.json");
 		assertNotNull(content);
 		// operation
@@ -198,56 +216,44 @@ public class ResourceDTOFactoryTestCase {
 
 	/**
 	 * Should unmarshall get application response body.
-	 *
-	 * @throws OpenShiftException the open shift exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Test
-	public void shouldUnmarshallGetApplicationResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
-		String content = getContentAsString("get-application-test3.json");
-		assertNotNull(content);
-		// operation
-		RestResponse response = ResourceDTOFactory.get(content);
-		// verifications
-		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
-		final ApplicationResourceDTO application = response.getData();
-		assertThat(application.getCreationTime()).isEqualTo("2012-03-22T06:55:54-04:00");
-		assertThat(application.getDomainId()).isEqualTo("xcoulon");
-		assertThat(application.getFramework()).isEqualTo("jbossas-7");
-		assertThat(application.getName()).isEqualTo("test3");
-		assertThat(application.getLinks()).hasSize(15);
-	}
-	
-	/**
-	 * Should unmarshall get application response body.
-	 *
-	 * @throws OpenShiftException the open shift exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void shouldUnmarshallGetApplicationWithAliasesResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
-		String content = getContentAsString("get-application-sample-withoutCartridge.json");
+		// pre-conditions
+		String content = getContentAsString("get-application-with2aliases.json");
 		assertNotNull(content);
 		// operation
 		RestResponse response = ResourceDTOFactory.get(content);
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
 		final ApplicationResourceDTO application = response.getData();
-		assertThat(application.getAliases()).hasSize(2);
+		assertThat(application.getUuid()).isEqualTo("5229a2c0f1424aed90d4ca8f20c0f9a2");
+		assertThat(application.getCreationTime()).isEqualTo("2012-03-19T10:48:26-04:00");
+		assertThat(application.getDomainId()).isEqualTo("foobar");
+		assertThat(application.getFramework()).isEqualTo("jbossas-7");
+		assertThat(application.getName()).isEqualTo("sample");
+		assertThat(application.getLinks()).hasSize(15);
+		assertThat(application.getAliases()).contains("an-alias", "another-alias");
 	}
-	
+
 	/**
 	 * Should unmarshall get application response body.
-	 *
-	 * @throws OpenShiftException the open shift exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
-	public void shouldUnmarshallGetApplicationWithEmbeddedCartridgesResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
-		String content = getContentAsString("get-application-sample-withCartridges.json");
+	public void shouldUnmarshallGetApplicationWith2EmbeddedCartridgesResponseBody() throws OpenShiftException,
+			IOException {
+		// pre-conditions
+		String content = getContentAsString("get-application-with2Cartridges.json");
 		assertNotNull(content);
 		// operation
 		RestResponse response = ResourceDTOFactory.get(content);
@@ -255,17 +261,48 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
 		final ApplicationResourceDTO application = response.getData();
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
+		assertThat(application.getEmbeddedCartridges().get("mongodb-2.0")).isEqualTo(
+				"Connection URL: mongodb://127.5.82.129:27017/\n");
+		assertThat(application.getEmbeddedCartridges().get("mysql-5.1")).isEqualTo(
+				"Connection URL: mysql://127.5.82.129:3306/\n");
+
 	}
-	
+
 	/**
 	 * Should unmarshall get application response body.
-	 *
-	 * @throws OpenShiftException the open shift exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	@Test
+	public void shouldUnmarshallGetApplicationWith1EmbeddedCartridgeResponseBody() throws OpenShiftException,
+			IOException {
+		// pre-conditions
+		String content = getContentAsString("get-application-with1Cartridge.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		assertThat(response.getDataType()).isEqualTo(EnumDataType.application);
+		final ApplicationResourceDTO application = response.getData();
+		assertThat(application.getEmbeddedCartridges()).hasSize(1);
+		assertThat(application.getEmbeddedCartridges().get("mongodb-2.0")).isEqualTo(
+				"Connection URL: mongodb://127.5.82.129:27017/\n");
+	}
+
+	/**
+	 * Should unmarshall get application response body.
+	 * 
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void shouldUnmarshallAddApplicationEmbeddedCartridgeResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("add-application-cartridge.json");
 		assertNotNull(content);
 		// operation
@@ -277,19 +314,21 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(cartridge.getName()).isEqualTo("mongodb-2.0");
 		assertThat(cartridge.getType()).isEqualTo("embedded");
 		assertThat(cartridge.getLinks()).hasSize(6);
-		
+
 	}
-	
+
 	/**
 	 * Should unmarshall get application response body.
-	 *
-	 * @throws OpenShiftException the open shift exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void shouldUnmarshallGetApplicationCartridgesResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
-		String content = getContentAsString("get-application-cartridges-with2elements.json");
+		// pre-conditions
+		String content = getContentAsString("get-appcartridges-with2elements.json");
 		assertNotNull(content);
 		// operation
 		RestResponse response = ResourceDTOFactory.get(content);
@@ -300,10 +339,36 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(cartridges).hasSize(2);
 		assertThat(cartridges).onProperty("name").contains("mongodb-2.0", "mysql-5.1");
 	}
-	
+
+	/**
+	 * Should unmarshall get application response body.
+	 * 
+	 * @throws OpenShiftException
+	 *             the open shift exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	@Test
+	public void shouldUnmarshallGetApplicationGearsResponseBody() throws OpenShiftException, IOException {
+		// pre-conditions
+		String content = getContentAsString("get-appgears-with3components.json");
+		assertNotNull(content);
+		// operation
+		RestResponse response = ResourceDTOFactory.get(content);
+		// verifications
+		final List<GearResourceDTO> gears = response.getData();
+		assertThat(gears).hasSize(1);
+		final GearResourceDTO gear = gears.get(0); 
+		assertThat(gear.getUuid()).isEqualTo("5229a2c0f1424aed90d4ca8f20c0f9a2");
+		assertThat(gear.getGitUrl()).isEqualTo(
+				"ssh://5229a2c0f1424aed90d4ca8f20c0f9a2@sample-foobar.stg.rhcloud.com/~/git/sample.git/");
+		assertThat(gear.getComponents()).contains(new GearsComponent("jbossas-7", "8080", "proxy", "3128"),
+				new GearsComponent("mongodb-2.0", null, null, null), new GearsComponent("mysql-5.1", null, null, null));
+	}
+
 	@Test
 	public void shouldUnmarshallSingleValidOptionInResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("add-application-cartridge.json");
 		assertNotNull(content);
 		// operation
@@ -314,10 +379,10 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(link.getOptionalParams()).hasSize(0);
 		assertThat(link.getRequiredParams().get(0).getValidOptions()).containsExactly("restart");
 	}
-	
+
 	@Test
 	public void shouldUnmarshallMultipleValidOptionInResponseBody() throws OpenShiftException, IOException {
-		//pre-conditions
+		// pre-conditions
 		String content = getContentAsString("add-user-key-ok.json");
 		assertNotNull(content);
 		// operation
@@ -328,5 +393,5 @@ public class ResourceDTOFactoryTestCase {
 		assertThat(link.getOptionalParams()).hasSize(0);
 		assertThat(link.getRequiredParams().get(0).getValidOptions()).containsExactly("ssh-rsa", "ssh-dss");
 	}
-	
+
 }

@@ -1,0 +1,34 @@
+{
+    "status":"ok",
+    "messages":[
+        
+    ],
+    "type":"gears",
+    "data":[
+        {
+            "uuid":"5229a2c0f1424aed90d4ca8f20c0f9a2",
+            "components":[
+                {
+                    "name":"jbossas-7",
+                    "proxy_port":"3128",
+                    "internal_port":"8080",
+                    "proxy_host":"proxy"
+                },
+                {
+                    "name":"mongodb-2.0",
+                    "proxy_port":null,
+                    "internal_port":null,
+                    "proxy_host":null
+                },
+                {
+                    "name":"mysql-5.1",
+                    "proxy_port":null,
+                    "internal_port":null,
+                    "proxy_host":null
+                }
+            ],
+            "git_url":"ssh://5229a2c0f1424aed90d4ca8f20c0f9a2@sample-foobar.stg.rhcloud.com/~/git/sample.git/"
+        }
+    ],
+    "version":"1.0"
+}

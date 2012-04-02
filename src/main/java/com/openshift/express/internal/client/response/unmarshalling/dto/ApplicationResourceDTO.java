@@ -41,6 +41,9 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/** the application's embedded cartridges. */
 	private final Map<String, String> embeddedCartridges;
 	
+	/** the application's gears. */
+	private final List<GearResourceDTO> gears;
+	
 	/**
 	 * Instantiates a new application dto.
 	 *
@@ -51,7 +54,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final List<String> aliases, final Map<String, String> embeddedCartridges, final Map<String, Link> links) {
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final List<String> aliases, final Map<String, String> embeddedCartridges, final List<GearResourceDTO> gears, final Map<String, Link> links) {
 		super(links);
 		this.framework = framework;
 		this.domainId = domainId;
@@ -60,6 +63,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 		this.uuid = uuid;
 		this.aliases = aliases;
 		this.embeddedCartridges = embeddedCartridges;
+		this.gears = gears;
 	}
 
 	/**
@@ -119,6 +123,13 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 */
 	public Map<String, String> getEmbeddedCartridges() {
 		return embeddedCartridges;
+	}
+
+	/**
+	 * @return the gears
+	 */
+	public List<GearResourceDTO> getGears() {
+		return gears;
 	}
 
 	
