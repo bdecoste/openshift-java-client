@@ -28,7 +28,7 @@ import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstant
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REL;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REQUIRED_PARAMS;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_TYPE;
-import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_UUID;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.*;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ResourceDTOFactory {
 
 		final EnumDataType dataType = EnumDataType.safeValueOf(type);
 		// the response is after an error, only the messages are relevant
-		if(dataType == null) {
+		if (dataType == null) {
 			return new RestResponse(status, messages, null, null);
 		}
 		switch (dataType) {
@@ -80,17 +80,19 @@ public class ResourceDTOFactory {
 		case links:
 			return new RestResponse(status, messages, createLinks(rootNode), dataType);
 		case domains:
-			return new RestResponse(status, messages, createDomainsDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createDomains(rootNode), dataType);
 		case domain:
-			return new RestResponse(status, messages, createDomainDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createDomain(rootNode), dataType);
 		case applications:
-			return new RestResponse(status, messages, createApplicationsDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createApplications(rootNode), dataType);
 		case application:
-			return new RestResponse(status, messages, createApplicationDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createApplication(rootNode), dataType);
+		case gears:
+			return new RestResponse(status, messages, createGears(rootNode), dataType);
 		case cartridges:
-			return new RestResponse(status, messages, createCartridgesDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createCartridges(rootNode), dataType);
 		case cartridge:
-			return new RestResponse(status, messages, createCartridgeDTO(rootNode), dataType);
+			return new RestResponse(status, messages, createCartridge(rootNode), dataType);
 		default:
 			return null;
 		}
@@ -98,8 +100,9 @@ public class ResourceDTOFactory {
 
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param messagesNode the messages node
+	 * 
+	 * @param messagesNode
+	 *            the messages node
 	 * @return the list< string>
 	 */
 	private static List<String> createMessages(ModelNode messagesNode) {
@@ -111,7 +114,7 @@ public class ResourceDTOFactory {
 		}
 		return messages;
 	}
-	
+
 	/**
 	 * Gets the model node.
 	 * 
@@ -132,80 +135,96 @@ public class ResourceDTOFactory {
 
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param rootNode the root node
+	 * 
+	 * @param userNode
+	 *            the root node
 	 * @return the user resource dto
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException
 	 */
-	private static UserResourceDTO createUser(ModelNode rootNode) throws OpenShiftRequestParameterException {
-		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
+	private static UserResourceDTO createUser(ModelNode userNode) throws OpenShiftException {
+		if (userNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createUser(dataNode);
+			return createUser(userNode.get(PROPERTY_DATA));
 		}
-		final String namespace = getAsString(rootNode, PROPERTY_LOGIN);
-		final Map<String, Link> links = createLinks(rootNode.get(PROPERTY_LINKS).asList());
+		final String namespace = getAsString(userNode, PROPERTY_LOGIN);
+		final Map<String, Link> links = createLinks(userNode.get(PROPERTY_LINKS));
 		return new UserResourceDTO(namespace, links);
 	}
-	
+
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param rootNode the root node
+	 * 
+	 * @param rootNode
+	 *            the root node
 	 * @return the list< key resource dt o>
-	 * @throws OpenShiftException the open shift exception
+	 * @throws OpenShiftException
+	 *             the open shift exception
 	 */
 	private static List<KeyResourceDTO> createKeys(ModelNode rootNode) throws OpenShiftException {
 		final List<KeyResourceDTO> keys = new ArrayList<KeyResourceDTO>();
 		// temporarily supporting single and multiple values for 'keys' node
-		if (rootNode.get(PROPERTY_DATA).isDefined()) {
+		if (rootNode.has(PROPERTY_DATA)) {
 			for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
 				if (dataNode.getType() == ModelType.OBJECT) {
 					keys.add(createKey(dataNode));
-				} 
+				}
 			}
 		}
 		return keys;
 	}
 
-	
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param keyNode the key node
+	 * 
+	 * @param keyNode
+	 *            the key node
 	 * @return the key resource dto
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException
 	 */
-	private static KeyResourceDTO createKey(ModelNode keyNode) throws OpenShiftRequestParameterException {
-		final ModelNode dataNode = keyNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
+	private static KeyResourceDTO createKey(ModelNode keyNode) throws OpenShiftException {
+		if (keyNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createKey(dataNode);
+			return createKey(keyNode.get(PROPERTY_DATA));
 		}
 		final String name = getAsString(keyNode, "name");
 		final String type = getAsString(keyNode, "type");
 		final String content = getAsString(keyNode, "content");
-		final Map<String, Link> links = createLinks(keyNode.get(PROPERTY_LINKS).asList());
+		final Map<String, Link> links = createLinks(keyNode.get(PROPERTY_LINKS));
 		return new KeyResourceDTO(name, type, content, links);
 	}
-
 
 	/**
 	 * Creates a new set of indexed links.
 	 * 
-	 * @param rootNode
+	 * @param linksNode
 	 *            the root node
 	 * @return the list< domain dt o>
 	 * @throws OpenShiftException
 	 *             the open shift exception
 	 */
-	private static Map<String, Link> createLinks(final ModelNode rootNode) throws OpenShiftException {
-		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
+	private static Map<String, Link> createLinks(final ModelNode linksNode) throws OpenShiftException {
+		if (linksNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createLinks(dataNode);
+			return createLinks(linksNode.get(PROPERTY_DATA));
 		}
-		return createLinks(rootNode.asList());
+		Map<String, Link> links = new HashMap<String, Link>();
+		if (linksNode.isDefined()) {
+			for (ModelNode linkNode : linksNode.asList()) {
+				final String linkName = linkNode.asProperty().getName();
+				final ModelNode valueNode = linkNode.asProperty().getValue();
+				if (valueNode.isDefined()) {
+					final String rel = valueNode.get(PROPERTY_REL).asString();
+					final String href = valueNode.get(PROPERTY_HREF).asString();
+					final String method = valueNode.get(PROPERTY_METHOD).asString();
+					final List<LinkParameter> requiredParams = createLinkParameters(valueNode
+							.get(PROPERTY_REQUIRED_PARAMS));
+					final List<LinkParameter> optionalParams = createLinkParameters(valueNode
+							.get(PROPERTY_OPTIONAL_PARAMS));
+					links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
+				}
+			}
+		}
+		return links;
 	}
 
 	/**
@@ -217,14 +236,14 @@ public class ResourceDTOFactory {
 	 * @throws OpenShiftException
 	 *             the open shift exception
 	 */
-	private static List<DomainResourceDTO> createDomainsDTO(final ModelNode rootNode) throws OpenShiftException {
+	private static List<DomainResourceDTO> createDomains(final ModelNode rootNode) throws OpenShiftException {
 		final List<DomainResourceDTO> domains = new ArrayList<DomainResourceDTO>();
 		// temporarily supporting absence of 'data' node in the 'domain' response message
 		// FIXME: simplify once openshift response is fixed
-		if (rootNode.get(PROPERTY_DATA).isDefined()) {
+		if (rootNode.has(PROPERTY_DATA)) {
 			for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
 				if (dataNode.getType() == ModelType.OBJECT) {
-					domains.add(createDomainDTO(dataNode));
+					domains.add(createDomain(dataNode));
 				} else {
 					throw new OpenShiftException("Unexpected node type: {0}", dataNode.getType());
 				}
@@ -232,7 +251,7 @@ public class ResourceDTOFactory {
 		} else {
 			final ModelNode domainNode = rootNode.get(PROPERTY_DOMAIN);
 			if (domainNode.isDefined() && domainNode.getType() == ModelType.OBJECT) {
-				domains.add(createDomainDTO(domainNode));
+				domains.add(createDomain(domainNode));
 			} else {
 				throw new OpenShiftException("Unexpected node type: {0}", domainNode.getType());
 			}
@@ -247,16 +266,15 @@ public class ResourceDTOFactory {
 	 * @param domainNode
 	 *            the domain node
 	 * @return the domain dto
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException
 	 */
-	private static DomainResourceDTO createDomainDTO(final ModelNode domainNode) throws OpenShiftRequestParameterException {
-		final ModelNode dataNode = domainNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
+	private static DomainResourceDTO createDomain(final ModelNode domainNode) throws OpenShiftException {
+		if (domainNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createDomainDTO(dataNode);
+			return createDomain(domainNode.get(PROPERTY_DATA));
 		}
 		final String namespace = getAsString(domainNode, PROPERTY_NAMESPACE);
-		final Map<String, Link> links = createLinks(domainNode.get(PROPERTY_LINKS).asList());
+		final Map<String, Link> links = createLinks(domainNode.get(PROPERTY_LINKS));
 		return new DomainResourceDTO(namespace, links);
 	}
 
@@ -266,14 +284,14 @@ public class ResourceDTOFactory {
 	 * @param rootNode
 	 *            the domain node
 	 * @return the list< application dt o>
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException 
 	 */
-	private static List<ApplicationResourceDTO> createApplicationsDTO(final ModelNode rootNode) throws OpenShiftRequestParameterException {
+	private static List<ApplicationResourceDTO> createApplications(final ModelNode rootNode)
+			throws OpenShiftException {
 		final List<ApplicationResourceDTO> applicationDTOs = new ArrayList<ApplicationResourceDTO>();
-		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
-			for (ModelNode applicationNode : dataNode.asList()) {
-				applicationDTOs.add(createApplicationDTO(applicationNode));
+		if (rootNode.has(PROPERTY_DATA)) {
+			for (ModelNode applicationNode : rootNode.get(PROPERTY_DATA).asList()) {
+				applicationDTOs.add(createApplication(applicationNode));
 			}
 		}
 		return applicationDTOs;
@@ -285,41 +303,90 @@ public class ResourceDTOFactory {
 	 * @param appNode
 	 *            the app node
 	 * @return the application dto
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException 
 	 */
-	private static ApplicationResourceDTO createApplicationDTO(ModelNode appNode) throws OpenShiftRequestParameterException {
-		final ModelNode dataNode = appNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
+	private static ApplicationResourceDTO createApplication(ModelNode appNode)
+			throws OpenShiftException {
+		if (appNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createApplicationDTO(dataNode);
+			return createApplication(appNode.get(PROPERTY_DATA));
 		}
 		final String framework = getAsString(appNode, PROPERTY_FRAMEWORK);
 		final String creationTime = getAsString(appNode, PROPERTY_CREATION_TIME);
-		final String name = getAsString(appNode,  PROPERTY_NAME);
-		final String uuid = getAsString(appNode,  PROPERTY_UUID);
+		final String name = getAsString(appNode, PROPERTY_NAME);
+		final String uuid = getAsString(appNode, PROPERTY_UUID);
 		final String domainId = getAsString(appNode, PROPERTY_DOMAIN_ID);
-		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS).asList());
-		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES).asList());
-		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get(PROPERTY_EMBEDDED).asList());
-
-		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges,
+		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS));
+		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES));
+		final Map<String, String> embeddedCartridges = createEmbeddedCartridges(appNode.get(PROPERTY_EMBEDDED));
+		final List<GearResourceDTO> gears = createGears(appNode);
+		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, aliases, embeddedCartridges, gears,
 				links);
+	}
+
+	private static List<GearResourceDTO> createGears(ModelNode gearsNode) {
+		if (gearsNode.has(PROPERTY_DATA)) {
+			// loop inside 'data' node
+			return createGears(gearsNode.get(PROPERTY_DATA));
+		}
+		final List<GearResourceDTO> gears = new ArrayList<GearResourceDTO>();
+		if(gearsNode.getType() == ModelType.LIST) {
+			for(ModelNode childNode : gearsNode.asList()) {
+				gears.add(createGear(childNode));
+			}
+		}
+		return gears;
+	}
+
+	private static GearResourceDTO createGear(ModelNode gearNode) {
+		if (gearNode.has(PROPERTY_DATA)) {
+			// loop inside 'data' node
+			return createGear(gearNode.get(PROPERTY_DATA));
+		}
+		final String uuid = getAsString(gearNode, PROPERTY_UUID);
+		final String gitUrl = getAsString(gearNode, PROPERTY_GIT_URL);
+		final List<GearsComponent> components = createGearComponents(gearNode.get(PROPERTY_GEARS_COMPONENTS));
+		return new GearResourceDTO(uuid, components, gitUrl);
+	}
+	
+	private static List<GearsComponent> createGearComponents(ModelNode gearsComponentNode) {
+		final List<GearsComponent> components = new ArrayList<GearsComponent>();
+		if(gearsComponentNode.getType() == ModelType.LIST) {
+			for(ModelNode componentNode : gearsComponentNode.asList()) {
+				final String name = getAsString(componentNode, PROPERTY_NAME);
+				final String internalPort = getAsString(componentNode, PROPERTY_INTERNAL_PORT);
+				final String proxyPort = getAsString(componentNode, PROPERTY_PROXY_PORT);
+				final String proxyHost = getAsString(componentNode, PROPERTY_PROXY_HOST);
+				components.add(new GearsComponent(name, internalPort, proxyHost, proxyPort));
+			}
+		}
+		return components;
 	}
 
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param embeddedCartridgeNodes the embedded cartridge nodes
+	 * 
+	 * @param embeddedCartridgeNodes
+	 *            the embedded cartridge nodes
 	 * @return the map< string, string>
 	 */
-	private static Map<String, String> createEmbeddedCartridges(List<ModelNode> embeddedCartridgeNodes) {
+	private static Map<String, String> createEmbeddedCartridges(ModelNode embeddedCartridgesNode) {
 		final Map<String, String> embeddedCartridges = new HashMap<String, String>();
-		if (embeddedCartridgeNodes != null) {
-			for (ModelNode embeddedCartridgeNode : embeddedCartridgeNodes) {
-				if (embeddedCartridgeNode.getType() == ModelType.PROPERTY) {
-					final Property p = embeddedCartridgeNode.asProperty();
-					embeddedCartridges.put(p.getName(), p.getValue().get(PROPERTY_INFO).asString());
+		if (embeddedCartridgesNode != null) {
+			switch (embeddedCartridgesNode.getType()) {
+			case OBJECT:
+			case LIST:
+				for (ModelNode embeddedCartridgeNode : embeddedCartridgesNode.asList()) {
+					if (embeddedCartridgeNode.getType() == ModelType.PROPERTY) {
+						final Property p = embeddedCartridgeNode.asProperty();
+						embeddedCartridges.put(p.getName(), p.getValue().get(PROPERTY_INFO).asString());
+					}
 				}
+				break;
+			case PROPERTY:
+				final Property p = embeddedCartridgesNode.asProperty();
+				embeddedCartridges.put(p.getName(), p.getValue().get(PROPERTY_INFO).asString());
+				break;
 			}
 		}
 		return embeddedCartridges;
@@ -327,78 +394,61 @@ public class ResourceDTOFactory {
 
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param rootNode the root node
+	 * 
+	 * @param rootNode
+	 *            the root node
 	 * @return the list< cartridge resource dt o>
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException
 	 */
-	private static List<CartridgeResourceDTO> createCartridgesDTO(ModelNode rootNode) throws OpenShiftRequestParameterException {
-		final List<CartridgeResourceDTO> cartridgesDTOs = new ArrayList<CartridgeResourceDTO>();
-		final ModelNode dataNode = rootNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
-			for (ModelNode cartridgeNode : dataNode.asList()) {
-				cartridgesDTOs.add(createCartridgeDTO(cartridgeNode));
+	private static List<CartridgeResourceDTO> createCartridges(ModelNode rootNode) throws OpenShiftException {
+		final List<CartridgeResourceDTO> cartridges = new ArrayList<CartridgeResourceDTO>();
+		if (rootNode.has(PROPERTY_DATA)) {
+			for (ModelNode cartridgeNode : rootNode.get(PROPERTY_DATA).asList()) {
+				cartridges.add(createCartridge(cartridgeNode));
 			}
 		}
-		return cartridgesDTOs;
+		return cartridges;
 	}
 
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param cartridgeNode the cartridge node
+	 * 
+	 * @param cartridgeNode
+	 *            the cartridge node
 	 * @return the cartridge resource dto
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftException
 	 */
-	private static CartridgeResourceDTO createCartridgeDTO(ModelNode cartridgeNode) throws OpenShiftRequestParameterException {
-		final ModelNode dataNode = cartridgeNode.get(PROPERTY_DATA);
-		if (dataNode.isDefined()) {
+	private static CartridgeResourceDTO createCartridge(ModelNode cartridgeNode) throws OpenShiftException {
+		if (cartridgeNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createCartridgeDTO(dataNode);
+			return createCartridge(cartridgeNode.get(PROPERTY_DATA));
 		}
 		final String name = getAsString(cartridgeNode, PROPERTY_NAME);
 		final String type = getAsString(cartridgeNode, PROPERTY_TYPE);
-		final Map<String, Link> links = createLinks(cartridgeNode.get(PROPERTY_LINKS).asList());
+		final Map<String, Link> links = createLinks(cartridgeNode.get(PROPERTY_LINKS));
 		return new CartridgeResourceDTO(name, type, links);
 	}
 
 	/**
 	 * Creates a new ResourceDTO object.
-	 *
-	 * @param aliasNodeList the alias node list
+	 * 
+	 * @param aliasNodeList
+	 *            the alias node list
 	 * @return the list< string>
 	 */
-	private static List<String> createAliases(List<ModelNode> aliasNodeList) {
+	private static List<String> createAliases(ModelNode aliasNodesList) {
 		final List<String> aliases = new ArrayList<String>();
-		for (ModelNode aliasNode : aliasNodeList) {
-			aliases.add(aliasNode.asString());
+		switch (aliasNodesList.getType()) {
+		case OBJECT:
+		case LIST:
+			for (ModelNode aliasNode : aliasNodesList.asList()) {
+				aliases.add(aliasNode.asString());
+			}
+			break;
+		default:
+			aliases.add(aliasNodesList.asString());
 		}
 		return aliases;
-	}
-
-	/**
-	 * Creates a new DTO object.
-	 * 
-	 * @param linkNodes
-	 *            the link nodes
-	 * @return the map< string, link>
-	 * @throws OpenShiftRequestParameterException 
-	 */
-	private static Map<String, Link> createLinks(final List<ModelNode> linkNodes) throws OpenShiftRequestParameterException {
-		Map<String, Link> links = new HashMap<String, Link>();
-		for (ModelNode linkNode : linkNodes) {
-			final String linkName = linkNode.asProperty().getName();
-			final ModelNode valueNode = linkNode.asProperty().getValue();
-			if (valueNode.isDefined()) {
-				final String rel = valueNode.get(PROPERTY_REL).asString();
-				final String href = valueNode.get(PROPERTY_HREF).asString();
-				final String method = valueNode.get(PROPERTY_METHOD).asString();
-				final List<LinkParameter> requiredParams = createLinkParameters(valueNode.get(PROPERTY_REQUIRED_PARAMS));
-				final List<LinkParameter> optionalParams = createLinkParameters(valueNode.get(PROPERTY_OPTIONAL_PARAMS));
-				links.put(linkName, new Link(rel, href, method, requiredParams, optionalParams));
-			}
-		}
-		return links;
 	}
 
 	/**
@@ -407,9 +457,10 @@ public class ResourceDTOFactory {
 	 * @param linkParamNodes
 	 *            the link param nodes
 	 * @return the list< link param>
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftRequestParameterException
 	 */
-	private static List<LinkParameter> createLinkParameters(ModelNode linkParamNodes) throws OpenShiftRequestParameterException {
+	private static List<LinkParameter> createLinkParameters(ModelNode linkParamNodes)
+			throws OpenShiftRequestParameterException {
 		List<LinkParameter> linkParams = new ArrayList<LinkParameter>();
 		if (linkParamNodes.isDefined()) {
 			for (ModelNode linkParamNode : linkParamNodes.asList()) {
@@ -422,9 +473,10 @@ public class ResourceDTOFactory {
 	/**
 	 * Creates a new link parameter for the given link parameter node.
 	 * 
-	 * @param linkParamNode the model node that contains the link parameters
+	 * @param linkParamNode
+	 *            the model node that contains the link parameters
 	 * @return the link parameter
-	 * @throws OpenShiftRequestParameterException 
+	 * @throws OpenShiftRequestParameterException
 	 */
 	private static LinkParameter createLinkParameter(ModelNode linkParamNode) throws OpenShiftRequestParameterException {
 		final String description = linkParamNode.get("description").asString();
@@ -436,8 +488,9 @@ public class ResourceDTOFactory {
 
 	/**
 	 * Gets the valid options.
-	 *
-	 * @param linkParamNode the link param node
+	 * 
+	 * @param linkParamNode
+	 *            the link param node
 	 * @return the valid options
 	 */
 	private static List<String> createValidOptions(ModelNode linkParamNode) {

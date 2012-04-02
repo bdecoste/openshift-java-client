@@ -32,6 +32,8 @@ public enum EnumDataType {
 	application,
 	/** The embedded cartridge type. */
 	embedded,
+	/** the gears type. */
+	gears,
 	/** The cartridges type. */
 	cartridges,
 	/** The cartridge type. */

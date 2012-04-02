@@ -46,6 +46,9 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_METHOD = "method";
 	public static final String PROPERTY_MAX_GEARS = "max_gears";
 	public static final String PROPERTY_NAME = "name";
+	public static final String PROPERTY_INTERNAL_PORT = "internal_port";
+	public static final String PROPERTY_PROXY_PORT = "proxy_port";
+	public static final String PROPERTY_PROXY_HOST = "proxy_host";
 	public static final String PROPERTY_NAMESPACE = "namespace";
 	public static final String PROPERTY_NODE_PROFILE = "node_profile";
 	public static final String PROPERTY_OPTIONAL_PARAMS = "optional_params";
@@ -62,6 +65,9 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_USER_INFO = "user_info";
 	public static final String PROPERTY_UUID = "uuid";
 	public static final String PROPERTY_VALID_OPTIONS = "valid_options";
+	public static final String PROPERTY_GIT_URL = "git_url";
+	public static final String PROPERTY_GEARS_COMPONENTS = "components";
+	
 	
 	public static final String STATUS_OK = "ok";
 	public static final String STATUS_CREATED = "created";
