@@ -69,7 +69,7 @@ public class RestRequestProperties {
 			InputStream in = null;
 			try {
 				properties = new Properties();
-				in = getClass().getResourceAsStream(PROPERTIES_FILE);
+				in = getClass().getResourceAsStream("/" + PROPERTIES_FILE);
 				properties.load(in);
 			} finally {
 				StreamUtils.quietlyClose(in);
