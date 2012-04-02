@@ -15,24 +15,24 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.express.internal.client.RestRequestProperties;
+import com.openshift.express.internal.client.RestServiceProperties;
 
 /**
  * @author Andre Dietisheim
  */
-public class RestRequestPropertiesIntegrationTest {
+public class RestServicePropertiesIntegrationTest {
 
-	private RestRequestProperties restRequestProperties;
+	private RestServiceProperties restServiceProperties;
 
 	@Before
 	public void setUp() {
-		this.restRequestProperties = new RestRequestProperties();
+		this.restServiceProperties = new RestServiceProperties();
 	}
 		
 	@Test
 	public void userAgentShouldContainOpenShiftAndClientId() {
 		String clientId = "com.openshift.express.client.test";
-		assertThat(restRequestProperties.getUseragent(clientId)).contains("OpenShift").contains(clientId);
+		assertThat(restServiceProperties.getUseragent(clientId)).contains("OpenShift").contains(clientId);
 	}
 	
 }

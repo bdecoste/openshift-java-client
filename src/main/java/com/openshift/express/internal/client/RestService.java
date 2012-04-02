@@ -52,10 +52,10 @@ public class RestService implements IRestService {
 	protected static String version = null;
 
 	public RestService(String clientId, String baseUrl, boolean doSSLChecks, IUser user) {
-		this(clientId, baseUrl, doSSLChecks, new RestRequestProperties(), user);
+		this(clientId, baseUrl, doSSLChecks, new RestServiceProperties(), user);
 	}
 
-	private RestService(String clientId, String baseUrl, boolean doSSLChecks, RestRequestProperties properties, IUser user) {
+	private RestService(String clientId, String baseUrl, boolean doSSLChecks, RestServiceProperties properties, IUser user) {
 		this(baseUrl
 				, new UrlConnectionHttpClientBuilder()
 						.setCredentials(user.getRhlogin(), user.getPassword())

@@ -22,7 +22,7 @@ import com.openshift.express.internal.client.utils.StreamUtils;
 /**
  * @author Andre Dietisheim
  */
-public class RestRequestProperties {
+public class RestServiceProperties {
 
 	private static final String PROPERTIES_FILE = "/restservice.properties";
 
