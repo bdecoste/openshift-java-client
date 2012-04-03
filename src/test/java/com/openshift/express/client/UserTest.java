@@ -1,3 +1,13 @@
+/******************************************************************************* 
+ * Copyright (c) 2012 Red Hat, Inc. 
+ * Distributed under license by Red Hat, Inc. All rights reserved. 
+ * This program is made available under the terms of the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors: 
+ * Red Hat, Inc. - initial API and implementation 
+ ******************************************************************************/
 package com.openshift.express.client;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -18,6 +28,10 @@ import org.junit.Test;
 import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 
+/**
+ * @author Xavier Coulon
+ * @author Andre Dietisheim
+ */
 public class UserTest {
 
 	private static final String CLIENT_ID = "openshift-java-client-rest-test";
@@ -34,12 +48,6 @@ public class UserTest {
 				.build();
 	}
 
-	private String getContentAsString(String fileName) throws IOException {
-		final InputStream contentStream = getClass()
-				.getResourceAsStream("/samples/" + fileName);
-		return IOUtils.toString(contentStream);
-	}
-
 	@Test
 	public void shouldLoadSingleUserDomain() throws IOException, HttpClientException, OpenShiftException {
 		// pre-conditions
@@ -51,6 +59,12 @@ public class UserTest {
 		assertThat(domains).hasSize(1);
 		// verify(mockClient.get(any(URL.class))).times(1);
 
+	}
+
+	private String getContentAsString(String fileName) throws IOException {
+		final InputStream contentStream = getClass()
+				.getResourceAsStream("/samples/" + fileName);
+		return IOUtils.toString(contentStream);
 	}
 
 }
