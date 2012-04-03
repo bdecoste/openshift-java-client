@@ -43,7 +43,4 @@ public class UserBuilder {
 	public IUser build() throws FileNotFoundException, IOException, OpenShiftException {
 		return new User(service);
 	}
-
-	
-
 }
