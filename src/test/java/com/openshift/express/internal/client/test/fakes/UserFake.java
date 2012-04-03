@@ -13,17 +13,17 @@ package com.openshift.express.internal.client.test.fakes;
 import java.io.IOException;
 
 import com.openshift.express.client.IApplication;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.internal.client.InternalUser;
+import com.openshift.express.internal.client.IRestService;
+import com.openshift.express.internal.client.User;
 
 /**
  * @author André Dietisheim
  */
-public class UserFake extends InternalUser {
+public class UserFake extends User {
 
-	public UserFake(String rhlogin, String password, IOpenShiftService service) throws OpenShiftException, IOException {
-		super(rhlogin, password, service);
+	public UserFake(IRestService service) throws OpenShiftException, IOException {
+		super(service);
 	}
 
 	public void add(IApplication application) {

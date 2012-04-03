@@ -28,11 +28,11 @@ public class Domain extends UserInfoAware implements IDomain {
 	private String namespace;
 	private String rhcDomain;
 
-	public Domain(String namespace, InternalUser user) {
+	public Domain(String namespace, User user) {
 		this(namespace, null, user);
 	}
 
-	public Domain(String namespace, String rhcDomain, InternalUser user) {
+	public Domain(String namespace, String rhcDomain, User user) {
 		super(user);
 		this.namespace = namespace;
 		this.rhcDomain = rhcDomain;

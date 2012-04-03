@@ -13,7 +13,6 @@ package com.openshift.express.internal.client;
 import java.util.Calendar;
 
 import com.openshift.express.client.ICartridge;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.IRubyApplication;
 import com.openshift.express.client.OpenShiftException;
 
@@ -24,19 +23,20 @@ import com.openshift.express.client.OpenShiftException;
 public class RubyApplication extends Application implements IRubyApplication {
 
 	public RubyApplication(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			InternalUser user, IOpenShiftService service) {
+			User user, IRestService service) {
 		super(name, uuid, creationLog, healthCheckPath, cartridge, user, service);
 	}
 
-	public RubyApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, InternalUser user,
-			IOpenShiftService service) {
+	public RubyApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, User user,
+			IRestService service) {
 		super(name, uuid, cartridge, applicationInfo, user, service);
 	}
 
 	public String threadDump() throws OpenShiftException {
-		service.threadDumpApplication(name, cartridge, getInternalUser());
-		
-		return getRackLogFile();
+		throw new UnsupportedOperationException();
+//		service.threadDumpApplication(name, cartridge, getInternalUser());
+//		
+//		return getRackLogFile();
 	}
 	
 	private String getRackLogFile() {

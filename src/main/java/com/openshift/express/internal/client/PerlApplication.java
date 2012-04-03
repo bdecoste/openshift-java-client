@@ -11,9 +11,7 @@
 package com.openshift.express.internal.client;
 
 import com.openshift.express.client.ICartridge;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.IPerlApplication;
-import com.openshift.express.client.IPythonApplication;
 
 /**
  * @author William DeCoste
@@ -22,12 +20,12 @@ import com.openshift.express.client.IPythonApplication;
 public class PerlApplication extends Application implements IPerlApplication {
 
 	public PerlApplication(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			InternalUser user, IOpenShiftService service) {
+			User user, IRestService service) {
 		super(name, uuid, creationLog, healthCheckPath, cartridge, user, service);
 	}
 
-	public PerlApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, InternalUser user,
-			IOpenShiftService service) {
+	public PerlApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, User user,
+			IRestService service) {
 		super(name, uuid, cartridge, applicationInfo, user, service);
 	}
 }

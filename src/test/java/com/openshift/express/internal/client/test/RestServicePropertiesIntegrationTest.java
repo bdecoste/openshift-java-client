@@ -11,38 +11,28 @@
 package com.openshift.express.internal.client.test;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.express.internal.client.RestRequestProperties;
+import com.openshift.express.internal.client.RestServiceProperties;
 
 /**
  * @author Andre Dietisheim
  */
-public class RestRequestPropertiesIntegrationTest {
+public class RestServicePropertiesIntegrationTest {
 
-	private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)");
-	
-	private RestRequestProperties restRequestProperties;
+	private RestServiceProperties restServiceProperties;
 
 	@Before
 	public void setUp() {
-		this.restRequestProperties = new RestRequestProperties();
+		this.restServiceProperties = new RestServiceProperties();
 	}
-	
+		
 	@Test
-	public void versionShouldBeNumeric() {
-		String version = restRequestProperties.getVersion();
-		assertTrue(NUMBER_PATTERN.matcher(version).matches());
-	}
-	
-	@Test
-	public void userAgentShouldContainOpenShiftAndMessageFormat() {
-		assertThat(restRequestProperties.getUseragent()).contains("OpenShift").contains("{0}");
+	public void userAgentShouldContainOpenShiftAndClientId() {
+		String clientId = "com.openshift.express.client.test";
+		assertThat(restServiceProperties.getUseragent(clientId)).contains("OpenShift").contains(clientId);
 	}
 	
 }

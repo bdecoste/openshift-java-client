@@ -12,12 +12,10 @@ package com.openshift.express.internal.client.test.fakes;
 
 import java.io.IOException;
 
-import com.openshift.express.client.Cartridge;
 import com.openshift.express.client.IApplication;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
-import com.openshift.express.internal.client.test.utils.ApplicationUtils;
+import com.openshift.express.internal.client.IRestService;
+import com.openshift.express.internal.client.User;
 
 /**
  * @author André Dietisheim
@@ -31,22 +29,9 @@ public class TestUser extends User {
 	 public static final String RHLOGIN_USER_WITHOUT_DOMAIN = "toolsjboss+unittests_nodomain@gmail.com";
 	 public static final String PASSWORD_USER_WITHOUT_DOMAIN = "1q2w3e";
 
-	public TestUser(IOpenShiftService service) throws OpenShiftException, IOException {
-		super(System.getProperty("RHLOGIN"), System.getProperty("PASSWORD"), ID, service);
-//		super(new OpenShiftConfiguration().getRhlogin(), System.getProperty(SYSPROPERTY_PASSWORD), ID, service);
-	}
-
-	public TestUser(String password, IOpenShiftService service) throws OpenShiftException, IOException {
-		super(System.getProperty("RHLOGIN"), password, ID, service);
-//		super(new OpenShiftConfiguration().getRhlogin(), password, ID, service);
-	}
-
-	public TestUser(String rhlogin, String password, IOpenShiftService service) throws OpenShiftException, IOException {
-		super(rhlogin, password, ID, service);
-	}
-
-	public TestUser(String rhlogin, String password, String url, IOpenShiftService service) {
-		super(rhlogin, password, ID, url, service);
+	public TestUser(IRestService service) throws OpenShiftException, IOException {
+		super(service);
+		//		super(new OpenShiftConfiguration().getRhlogin(), System.getProperty(SYSPROPERTY_PASSWORD), ID, service);
 	}
 
 	public IApplication createTestApplication() throws OpenShiftException {
@@ -55,10 +40,11 @@ public class TestUser extends User {
 	}
 
 	public void silentlyDestroyApplication(IApplication application) {
-		try {
-			getService().destroyApplication(application.getName(), application.getCartridge(), this);
-		} catch (OpenShiftException e) {
-			e.printStackTrace();
-		}
+		throw new UnsupportedOperationException();
+//		try {
+//			getService().destroyApplication(application.getName(), application.getCartridge(), this);
+//		} catch (OpenShiftException e) {
+//			e.printStackTrace();
+//		}
 	}
 }

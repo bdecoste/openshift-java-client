@@ -183,7 +183,7 @@ public class OpenShiftService implements IOpenShiftService {
 	private IHttpClient createClient(IUser user) {
 		return new UrlConnectionHttpClientBuilder()
 				.setCredentials(user.getRhlogin(), user.getPassword())
-				.setUserAgent(MessageFormat.format(USERAGENT_FORMAT, getVersion(), id))
+				.setClientId(MessageFormat.format(USERAGENT_FORMAT, getVersion(), id))
 				.setSSLChecks(doSSLChecks)
 				.client();
 	}

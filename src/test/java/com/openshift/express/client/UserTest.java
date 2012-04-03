@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -19,12 +21,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
+import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 
 public class UserTest {
-	
-	private IUser user;
 
+	private static final String CLIENT_ID = "openshift-java-client-rest-test";
+
+	private IUser user;
+	private IHttpClient clientMock;
 	private IHttpClient mockClient;
 
 	/**
@@ -67,13 +72,14 @@ public class UserTest {
 	}
 
 	@Before
-	public void setup() throws HttpClientException, SocketTimeoutException {
+	public void setup() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(getContentAsString("get-rest-api.json"));
-		UserBuilder builder = new UserBuilder(mockClient);
-		this.user = builder.build("mocklogin", "mockpassword");
+		this.user = new UserBuilder()
+		.configure(new RestService(clientMock))
+		.build();
 	}
-
+	
 	@Test
 	public void shouldLoadEmptyListOfDomains() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions

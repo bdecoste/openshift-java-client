@@ -10,46 +10,40 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
-import com.openshift.express.internal.client.InternalUser;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import com.openshift.express.internal.client.IRestService;
+import com.openshift.express.internal.client.RestService;
+import com.openshift.express.internal.client.User;
 import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 
 /**
  * User Builder, used to establish a connection and retrieve a user.
  * 
  * @author Xavier Coulon
- *
+ * @author Andre Dietisheim
+ * 
  */
 public class UserBuilder {
-	
-	/** the client that sends http request to openshift. */
-	private IHttpClient client;
-	
-	/**
-	 * Default constructor.
-	 */
-	public UserBuilder() {
-		this(new UrlConnectionHttpClientBuilder().client());
+
+	private IRestService service;
+
+	public UserBuilder configure(final String clientId, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
+		IHttpClient client = new UrlConnectionHttpClientBuilder().setCredentials(login, password).setClientId(clientId).client();
+		this.service = new RestService(client);
+		return this;
 	}
-	
-	/**
-	 * Internal constructor.
-	 * @param client
-	 */
-	protected UserBuilder(IHttpClient client) {
-		this.client = client;
+
+	public UserBuilder configure(IRestService service) {
+		this.service = service;
+		return this;
 	}
-	
-	/**
-	 * Builds the user from the given credentials.
-	 *
-	 * @param login the login
-	 * @param password the password
-	 * @return the i user
-	 */
-	public IUser build(String login, String password) {
-		//FIXME: change service initialization, using RestService instead.
-		IOpenShiftService service = null;
-		return new InternalUser(login, password, service);
+
+	public IUser build() throws FileNotFoundException, IOException, OpenShiftException {
+		return new User(service);
 	}
+
+	
 
 }

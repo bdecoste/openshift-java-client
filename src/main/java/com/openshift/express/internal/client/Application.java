@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.express.internal.client;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,12 +18,9 @@ import java.util.List;
 import com.openshift.express.client.ApplicationLogReader;
 import com.openshift.express.client.IApplication;
 import com.openshift.express.client.ICartridge;
-import com.openshift.express.client.IDomain;
 import com.openshift.express.client.IEmbeddableCartridge;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.IUser;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.internal.client.utils.Assert;
 
 /**
  * @author André Dietisheim
@@ -38,7 +34,7 @@ public class Application extends UserInfoAware implements IApplication {
 	protected String name;
 	protected ICartridge cartridge;
 	private List<IEmbeddableCartridge> embeddedCartridges;
-	protected IOpenShiftService service;
+	protected IRestService service;
 	private HashMap<String, ApplicationLogReader> logReaders = new HashMap<String, ApplicationLogReader>();
 	private String healthCheckPath;
 	private ApplicationInfo applicationInfo;
@@ -46,19 +42,19 @@ public class Application extends UserInfoAware implements IApplication {
 	private String uuid;
 
 	public Application(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			InternalUser user, IOpenShiftService service) {
+			User user, IRestService service) {
 		this(name, uuid, creationLog, healthCheckPath, cartridge, new ArrayList<IEmbeddableCartridge>(), null, user,
 				service);
 	}
 
 	public Application(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo,
-			InternalUser user, IOpenShiftService service) {
+			User user, IRestService service) {
 		this(name, uuid, null, null, cartridge, null, applicationInfo, user, service);
 	}
 
 	protected Application(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			List<IEmbeddableCartridge> embeddedCartridges, ApplicationInfo applicationInfo, InternalUser user,
-			IOpenShiftService service) {
+			List<IEmbeddableCartridge> embeddedCartridges, ApplicationInfo applicationInfo, User user,
+			IRestService service) {
 		super(user);
 		this.name = name;
 		this.uuid = uuid;
@@ -96,33 +92,38 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public void start() throws OpenShiftException {
-		service.startApplication(name, cartridge, getInternalUser());
+		throw new UnsupportedOperationException();
+//		service.startApplication(name, cartridge, getInternalUser());
 	}
 
 	public void restart() throws OpenShiftException {
-		service.restartApplication(name, cartridge, getInternalUser());
+		throw new UnsupportedOperationException();
+//		service.restartApplication(name, cartridge, getInternalUser());
 	}
 
 	public void stop() throws OpenShiftException {
-		service.stopApplication(name, cartridge, getInternalUser());
+		throw new UnsupportedOperationException();
+//		service.stopApplication(name, cartridge, getInternalUser());
 	}
 
 	public ApplicationLogReader getLogReader() throws OpenShiftException {
-		ApplicationLogReader logReader = null;
-		if (logReaders.get(DEFAULT_LOGREADER) == null) {
-			logReader = new ApplicationLogReader(this, getInternalUser(), service);
-			logReaders.put(DEFAULT_LOGREADER, logReader);
-		}
-		return logReader;
+		throw new UnsupportedOperationException();
+//		ApplicationLogReader logReader = null;
+//		if (logReaders.get(DEFAULT_LOGREADER) == null) {
+//			logReader = new ApplicationLogReader(this, getInternalUser(), service);
+//			logReaders.put(DEFAULT_LOGREADER, logReader);
+//		}
+//		return logReader;
 	}
 
 	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException {
-		ApplicationLogReader logReader = null;
-		if (logReaders.get(logFile) == null) {
-			logReader = new ApplicationLogReader(this, getInternalUser(), service, logFile);
-			logReaders.put(logFile, logReader);
-		}
-		return logReader;
+		throw new UnsupportedOperationException();
+//		ApplicationLogReader logReader = null;
+//		if (logReaders.get(logFile) == null) {
+//			logReader = new ApplicationLogReader(this, getInternalUser(), service, logFile);
+//			logReaders.put(logFile, logReader);
+//		}
+//		return logReader;
 	}
 
 	public String getGitUri() throws OpenShiftException {
@@ -153,10 +154,11 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public void addEmbbedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException {
-		service.addEmbeddedCartridge(getName(), embeddedCartridge, getInternalUser());
-		Assert.isTrue(embeddedCartridge instanceof EmbeddableCartridge);
-		((EmbeddableCartridge) embeddedCartridge).setApplication(this);
-		this.embeddedCartridges.add(embeddedCartridge);
+		throw new UnsupportedOperationException();
+//		service.addEmbeddedCartridge(getName(), embeddedCartridge, getInternalUser());
+//		Assert.isTrue(embeddedCartridge instanceof EmbeddableCartridge);
+//		((EmbeddableCartridge) embeddedCartridge).setApplication(this);
+//		this.embeddedCartridges.add(embeddedCartridge);
 	}
 
 	public void addEmbbedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
@@ -168,12 +170,13 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public void removeEmbbedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException {
-		if (!hasEmbeddedCartridge(embeddedCartridge.getName())) {
-			throw new OpenShiftException("There's no cartridge \"{0}\" embedded to the application \"{1}\"",
-					cartridge.getName(), getName());
-		}
-		service.removeEmbeddedCartridge(getName(), embeddedCartridge, getInternalUser());
-		embeddedCartridges.remove(embeddedCartridge);
+		throw new UnsupportedOperationException();
+//		if (!hasEmbeddedCartridge(embeddedCartridge.getName())) {
+//			throw new OpenShiftException("There's no cartridge \"{0}\" embedded to the application \"{1}\"",
+//					cartridge.getName(), getName());
+//		}
+//		service.removeEmbeddedCartridge(getName(), embeddedCartridge, getInternalUser());
+//		embeddedCartridges.remove(embeddedCartridge);
 	}
 
 	public void removeEmbbedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
@@ -207,7 +210,7 @@ public class Application extends UserInfoAware implements IApplication {
 		return embeddedCartridge;
 	}
 
-	protected IOpenShiftService getService() {
+	protected IRestService getService() {
 		return service;
 	}
 
@@ -222,7 +225,8 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
-		return service.waitForApplication(getHealthCheckUrl(), timeout, getHealthCheckResponse());
+		throw new UnsupportedOperationException();
+//		return service.waitForApplication(getHealthCheckUrl(), timeout, getHealthCheckResponse());
 	}
 
 	public IUser getUser() {

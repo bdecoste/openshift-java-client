@@ -10,23 +10,26 @@
  ******************************************************************************/
 package com.openshift.express.internal.client;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Properties;
 
+import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.internal.client.utils.StreamUtils;
 
 /**
  * @author Andre Dietisheim
  */
-public class RestRequestProperties {
+public class RestServiceProperties {
 
-	private static final String PROPERTIES_FILE = "/restrequest.properties";
+	private static final String PROPERTIES_FILE = "/restservice.properties";
 
-	private static final String KEY_USERAGENT = "useragent";
+	private static final String KEY_USERAGENTPATTERN = "useragent";
 	private static final String KEY_VERSION = "version";
 	private static final String KEY_CLIENTID = "clientid";
-	
+
 	private String version;
 	private String userAgent;
 	private String clientId;
@@ -48,14 +51,18 @@ public class RestRequestProperties {
 		}
 	}
 
-	public String getUseragent() {
+	public String getUseragent(String id) {
+		return MessageFormat.format(getUseragentPattern(), id);
+	}
+
+	protected String getUseragentPattern() {
 		if (userAgent == null) {
-			userAgent = getStringProperty(KEY_USERAGENT);
+			userAgent = getStringProperty(KEY_USERAGENTPATTERN);
 		}
 
 		return userAgent;
 	}
-	
+
 	public String getClientId() {
 		if (clientId == null) {
 			clientId = getStringProperty(KEY_CLIENTID);
@@ -63,13 +70,17 @@ public class RestRequestProperties {
 
 		return clientId;
 	}
-	
+
 	private Properties getProperties() throws IOException {
 		if (properties == null) {
 			InputStream in = null;
 			try {
 				properties = new Properties();
 				in = getClass().getResourceAsStream("/" + PROPERTIES_FILE);
+				if (in == null) {
+					throw new FileNotFoundException(
+							MessageFormat.format("Could not load properties file {0}", PROPERTIES_FILE));
+				}
 				properties.load(in);
 			} finally {
 				StreamUtils.quietlyClose(in);

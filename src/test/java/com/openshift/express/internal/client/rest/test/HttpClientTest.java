@@ -44,7 +44,7 @@ public class HttpClientTest {
 		this.serverFake = new ServerFake();
 		serverFake.start();
 		this.httpClient = new UrlConnectionHttpClientBuilder()
-				.setUserAgent("com.openshift.express.client.test")
+				.setClientId("com.openshift.express.client.test")
 				.client();
 	}
 
@@ -86,7 +86,7 @@ public class HttpClientTest {
 		String username = "andre.dietisheim@redhat.com";
 		String password = "dummyPassword";
 		IHttpClient httpClient = new UrlConnectionHttpClientBuilder()
-				.setUserAgent("com.openshift.express.client.test")
+				.setClientId("com.openshift.express.client.test")
 				.setCredentials(username, password)
 				.client();
 
@@ -103,7 +103,7 @@ public class HttpClientTest {
 	@Test
 	public void canAcceptJson() throws SocketTimeoutException, HttpClientException, MalformedURLException {
 		IHttpClient httpClient = new UrlConnectionHttpClientBuilder()
-				.setUserAgent("com.openshift.express.client.test")
+				.setClientId("com.openshift.express.client.test")
 				.client();
 
 		String response = httpClient.get(new URL(serverFake.getUrl()));

@@ -12,7 +12,6 @@ package com.openshift.express.internal.client;
 
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IJBossASApplication;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.OpenShiftException;
 
 /**
@@ -22,20 +21,20 @@ import com.openshift.express.client.OpenShiftException;
 public class JBossASApplication extends Application implements IJBossASApplication {
 
 	public JBossASApplication(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			InternalUser user,
-			IOpenShiftService service) {
+			User user, IRestService service) {
 		super(name, uuid, creationLog, healthCheckPath, cartridge, user, service);
 	}
 
-	public JBossASApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, InternalUser user,
-			IOpenShiftService service) {
+	public JBossASApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, User user,
+			IRestService service) {
 		super(name, uuid, cartridge, applicationInfo, user, service);
 	}
 
 	public String threadDump() throws OpenShiftException {
-		service.threadDumpApplication(name, cartridge, getInternalUser());
-		
-		return "stdout.log";
+		throw new UnsupportedOperationException();
+//		service.threadDumpApplication(name, cartridge, getInternalUser());
+//		
+//		return "stdout.log";
 	}
 	
 	public String getHealthCheckUrl() throws OpenShiftException {
