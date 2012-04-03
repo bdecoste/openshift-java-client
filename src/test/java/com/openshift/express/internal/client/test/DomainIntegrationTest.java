@@ -43,22 +43,22 @@ public class DomainIntegrationTest {
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
-		service = new OpenShiftService(TestUser.ID, new OpenShiftConfiguration().getLibraServer());
-		service.setEnableSSLCertChecks(Boolean.parseBoolean(System.getProperty("enableSSLCertChecks")));
-		
-		user = new TestUser(service);
-		ensureDomainExists(user);
-		ensureNoApplicationsExist(user);
+//		service = new OpenShiftService(TestUser.ID, new OpenShiftConfiguration().getLibraServer());
+//		service.setEnableSSLCertChecks(Boolean.parseBoolean(System.getProperty("enableSSLCertChecks")));
+//		
+//		user = new TestUser(service);
+//		ensureDomainExists(user);
+//		ensureNoApplicationsExist(user);
 	}
 
 	@Test
 	public void canChangeDomain() throws Exception {
-		String domainName = createRandomString();
-		SSHKeyPair sshKey = TestSSHKey.create();
-		IDomain domain = service.changeDomain(domainName, sshKey, user);
-
-		assertNotNull(domain);
-		assertEquals(domainName, domain.getNamespace());
+//		String domainName = createRandomString();
+//		SSHKeyPair sshKey = TestSSHKey.create();
+//		IDomain domain = service.changeDomain(domainName, sshKey, user);
+//
+//		assertNotNull(domain);
+//		assertEquals(domainName, domain.getNamespace());
 	}
 
 	@Test

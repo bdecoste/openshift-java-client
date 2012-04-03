@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.express.internal.client;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -17,12 +19,12 @@ import java.net.URL;
 
 import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.IHttpClient;
-import com.openshift.express.client.IUser;
 import com.openshift.express.client.InvalidCredentialsOpenShiftException;
 import com.openshift.express.client.NotFoundOpenShiftException;
 import com.openshift.express.client.OpenShiftEndpointException;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.client.OpenShiftRequestParameterException;
+import com.openshift.express.client.configuration.OpenShiftConfiguration;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
@@ -51,17 +53,25 @@ public class RestService implements IRestService {
 
 	protected static String version = null;
 
-	public RestService(String clientId, String baseUrl, boolean doSSLChecks, IUser user) {
-		this(clientId, baseUrl, doSSLChecks, new RestServiceProperties(), user);
+	public RestService(String login, String password, String clientId, String baseUrl, boolean doSSLChecks) {
+		this(login, password, clientId, baseUrl, doSSLChecks, new RestServiceProperties());
 	}
 
-	private RestService(String clientId, String baseUrl, boolean doSSLChecks, RestServiceProperties properties, IUser user) {
+	public RestService(String login, String password, String clientId, boolean doSSLChecks) throws FileNotFoundException, IOException, OpenShiftException {
+		this(login, password, clientId, new OpenShiftConfiguration().getLibraServer(), doSSLChecks, new RestServiceProperties());
+	}
+
+	private RestService(String login, String password, String clientId, String baseUrl, boolean doSSLChecks, RestServiceProperties properties) {
 		this(baseUrl
 				, new UrlConnectionHttpClientBuilder()
-						.setCredentials(user.getRhlogin(), user.getPassword())
+						.setCredentials(login, password)
 						.setUserAgent(properties.getUseragent(clientId))
 						.setSSLChecks(doSSLChecks)
 						.client());
+	}
+	
+	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException {
+		this(new OpenShiftConfiguration().getLibraServer(), client);
 	}
 
 	public RestService(String baseUrl, IHttpClient client) {

@@ -19,15 +19,15 @@ import com.openshift.express.client.IUser;
 import com.openshift.express.client.JBossCartridge;
 import com.openshift.express.client.JenkinsCartridge;
 import com.openshift.express.client.NodeJSCartridge;
-import com.openshift.express.client.OpenShiftService;
 import com.openshift.express.client.PHPCartridge;
 import com.openshift.express.client.PerlCartridge;
 import com.openshift.express.client.PythonCartridge;
 import com.openshift.express.client.RawCartridge;
 import com.openshift.express.client.RubyCartridge;
+import com.openshift.express.client.User;
 import com.openshift.express.internal.client.Application;
 import com.openshift.express.internal.client.HAProxyApplication;
-import com.openshift.express.internal.client.InternalUser;
+import com.openshift.express.internal.client.IRestService;
 import com.openshift.express.internal.client.JBossASApplication;
 import com.openshift.express.internal.client.JenkinsApplication;
 import com.openshift.express.internal.client.NodeJSApplication;
@@ -43,16 +43,16 @@ import com.openshift.express.internal.client.utils.IOpenShiftJsonConstants;
  */
 public class ApplicationResponseUnmarshaller extends AbstractOpenShiftJsonResponseUnmarshaller<IApplication> {
 
-	protected final InternalUser user;
+	protected final User user;
 	protected final String applicationName;
 	protected final ICartridge cartridge;
-	protected final OpenShiftService service;
+	protected final IRestService service;
 
 	public ApplicationResponseUnmarshaller(final String applicationName, final ICartridge cartridge, final IUser user,
-			final OpenShiftService service) {
+			final IRestService service) {
 		this.applicationName = applicationName;
 		this.cartridge = cartridge;
-		this.user = (InternalUser) user;
+		this.user = (User) user;
 		this.service = service;
 	}
 

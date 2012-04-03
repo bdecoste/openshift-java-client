@@ -11,24 +11,26 @@
 package com.openshift.express.internal.client;
 
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.client.User;
 
 public class UserInfoAware {
 
 	private UserInfo userInfo;
-	private InternalUser user;
+	private User user;
 	
-	protected UserInfoAware(InternalUser user) {
+	protected UserInfoAware(User user) {
 		this.user = user;
 	}
 
 	protected UserInfo getUserInfo() throws OpenShiftException {
-		if (userInfo == null) {
-			this.userInfo = user.refreshUserInfo();
-		}
-		return userInfo;
+		throw new UnsupportedOperationException();
+//		if (userInfo == null) {
+//			this.userInfo = user.refreshUserInfo();
+//		}
+//		return userInfo;
 	}
 
-	protected InternalUser getInternalUser() {
+	protected User getInternalUser() {
 		return user;
 	}
 	

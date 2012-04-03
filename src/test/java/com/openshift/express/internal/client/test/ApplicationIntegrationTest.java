@@ -17,10 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -33,19 +30,15 @@ import com.openshift.express.client.Cartridge;
 import com.openshift.express.client.HAProxyCartridge;
 import com.openshift.express.client.IApplication;
 import com.openshift.express.client.ICartridge;
-import com.openshift.express.client.IEmbeddableCartridge;
 import com.openshift.express.client.IHAProxyApplication;
-import com.openshift.express.client.IHttpClient;
 import com.openshift.express.client.IJBossASApplication;
 import com.openshift.express.client.IJenkinsApplication;
 import com.openshift.express.client.INodeJSApplication;
-import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.IPHPApplication;
 import com.openshift.express.client.IPerlApplication;
 import com.openshift.express.client.IPythonApplication;
 import com.openshift.express.client.IRawApplication;
 import com.openshift.express.client.IRubyApplication;
-import com.openshift.express.client.InvalidCredentialsOpenShiftException;
 import com.openshift.express.client.JBossCartridge;
 import com.openshift.express.client.JenkinsCartridge;
 import com.openshift.express.client.NodeJSCartridge;
@@ -59,11 +52,10 @@ import com.openshift.express.client.RubyCartridge;
 import com.openshift.express.client.User;
 import com.openshift.express.client.configuration.OpenShiftConfiguration;
 import com.openshift.express.internal.client.ApplicationInfo;
-import com.openshift.express.internal.client.EmbeddableCartridge;
+import com.openshift.express.internal.client.IRestService;
 import com.openshift.express.internal.client.UserInfo;
 import com.openshift.express.internal.client.test.fakes.TestUser;
 import com.openshift.express.internal.client.test.utils.ApplicationUtils;
-import com.openshift.express.internal.client.utils.StreamUtils;
 
 /**
  * @author André Dietisheim
@@ -72,7 +64,7 @@ public class ApplicationIntegrationTest {
 	
 	private static final int WAIT_FOR_APPLICATION = 10 * 1024;
 
-	private IOpenShiftService service;
+	private IRestService service;
 
 	private User user;
 	private User invalidUser;
@@ -80,333 +72,333 @@ public class ApplicationIntegrationTest {
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
 //		UserConfiguration userConfiguration = new UserConfiguration(new SystemConfiguration(new DefaultConfiguration()));
-		service = new OpenShiftService(TestUser.ID, new OpenShiftConfiguration().getLibraServer());
-		service.setEnableSSLCertChecks(Boolean.parseBoolean(System.getProperty("enableSSLCertChecks")));
-		
-		user = new TestUser(service);
-		invalidUser = new TestUser("bogusPassword", service);
+//		service = new OpenShiftService(TestUser.ID, new OpenShiftConfiguration().getLibraServer());
+//		service.setEnableSSLCertChecks(Boolean.parseBoolean(System.getProperty("enableSSLCertChecks")));
+//		
+//		user = new TestUser(service);
+//		invalidUser = new TestUser("bogusPassword", service);
 	}
 	
 	@Test(expected=OpenShiftException.class)
 	public void canCreateBogusApplication() throws Exception {
-		List<ICartridge> cartridges = service.getCartridges(user);
-		
-		Iterator<ICartridge> i = cartridges.iterator();
-		while (i.hasNext()){
-			ICartridge cartridge = i.next();
-			System.out.println("cartridge " + cartridge.getName());
-		}
-		
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		
-		ICartridge bogus = new Cartridge("bogus-1.0");
-		IApplication application = service.createApplication(applicationName, bogus, user);
+//		List<ICartridge> cartridges = service.getCartridges(user);
+//		
+//		Iterator<ICartridge> i = cartridges.iterator();
+//		while (i.hasNext()){
+//			ICartridge cartridge = i.next();
+//			System.out.println("cartridge " + cartridge.getName());
+//		}
+//		
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		
+//		ICartridge bogus = new Cartridge("bogus-1.0");
+//		IApplication application = service.createApplication(applicationName, bogus, user);
 	}
 
 	//@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void createApplicationWithInvalidCredentialsThrowsException() throws Exception {
-		service.createApplication(ApplicationUtils.createRandomApplicationName(), ICartridge.JBOSSAS_7, invalidUser);
+//		service.createApplication(ApplicationUtils.createRandomApplicationName(), ICartridge.JBOSSAS_7, invalidUser);
 	}
 
 	@Test
 	public void canCreateJBossApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IJBossASApplication application = null;
-		try {
-			application = service.createJBossASApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof JBossCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IJBossASApplication application = null;
+//		try {
+//			application = service.createJBossASApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof JBossCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreateRubyApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IRubyApplication application = null;
-		try {
-			application = service.createRubyApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof RubyCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IRubyApplication application = null;
+//		try {
+//			application = service.createRubyApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof RubyCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreateHAProxyApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IHAProxyApplication application = null;
-		try {
-			application = service.createHAProxyApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof HAProxyCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IHAProxyApplication application = null;
+//		try {
+//			application = service.createHAProxyApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof HAProxyCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canRawProxyApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IRawApplication application = null;
-		try {
-			application = service.createRawApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof RawCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IRawApplication application = null;
+//		try {
+//			application = service.createRawApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof RawCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreatePythonApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IPythonApplication application = null;
-		try {
-			application = service.createPythonApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof PythonCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IPythonApplication application = null;
+//		try {
+//			application = service.createPythonApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof PythonCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreatePHPApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IPHPApplication application = null;
-		try {
-			application = service.createPHPApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof PHPCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IPHPApplication application = null;
+//		try {
+//			application = service.createPHPApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof PHPCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreatePerlApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IPerlApplication application = null;
-		try {
-			application = service.createPerlApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof PerlCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IPerlApplication application = null;
+//		try {
+//			application = service.createPerlApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof PerlCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreateNodeJSApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		INodeJSApplication application = null;
-		try {
-			application = service.createNodeJSApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof NodeJSCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		INodeJSApplication application = null;
+//		try {
+//			application = service.createNodeJSApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof NodeJSCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 	
 	@Test
 	public void canCreateJenkinsApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		IJenkinsApplication application = null;
-		try {
-			application = service.createJenkinsApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof JenkinsCartridge);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		IJenkinsApplication application = null;
+//		try {
+//			application = service.createJenkinsApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof JenkinsCartridge);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 
 
 	@Test
 	public void canDestroyApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		service.destroyApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		service.destroyApplication(applicationName, ICartridge.JBOSSAS_7, user);
 	}
 
 	@Test(expected = OpenShiftException.class)
 	public void createDuplicateApplicationThrowsException() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void canStopApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void canStartStoppedApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.startApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.startApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void canStartStartedApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			/**
-			 * freshly created apps are started
-			 * 
-			 * @link 
-			 *       https://github.com/openshift/os-client-tools/blob/master/express
-			 *       /doc/API
-			 */
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.startApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			/**
+//			 * freshly created apps are started
+//			 * 
+//			 * @link 
+//			 *       https://github.com/openshift/os-client-tools/blob/master/express
+//			 *       /doc/API
+//			 */
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.startApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void canStopStoppedApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			/**
-			 * freshly created apps are started
-			 * 
-			 * @link 
-			 *       https://github.com/openshift/os-client-tools/blob/master/express
-			 *       /doc/API
-			 */
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			/**
+//			 * freshly created apps are started
+//			 * 
+//			 * @link 
+//			 *       https://github.com/openshift/os-client-tools/blob/master/express
+//			 *       /doc/API
+//			 */
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void canRestartApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			/**
-			 * freshly created apps are started
-			 * 
-			 * @link 
-			 *       https://github.com/openshift/os-client-tools/blob/master/express
-			 *       /doc/API
-			 */
-			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			service.restartApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			/**
+//			 * freshly created apps are started
+//			 * 
+//			 * @link 
+//			 *       https://github.com/openshift/os-client-tools/blob/master/express
+//			 *       /doc/API
+//			 */
+//			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			service.restartApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void canGetStatus() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			String applicationStatus = service.getStatus(application.getName(), application.getCartridge(), user);
-			assertNotNull(applicationStatus);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			String applicationStatus = service.getStatus(application.getName(), application.getCartridge(), user);
+//			assertNotNull(applicationStatus);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void returnsValidGitUri() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			String gitUri = application.getGitUri();
-			assertNotNull(gitUri);
-			assertGitUri(applicationName, gitUri);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			String gitUri = application.getGitUri();
+//			assertNotNull(gitUri);
+//			assertGitUri(applicationName, gitUri);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void returnsValidApplicationUrl() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			String applicationUrl = application.getApplicationUrl();
-			assertNotNull(applicationUrl);
-			assertApplicationUrl(applicationName, applicationUrl);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			String applicationUrl = application.getApplicationUrl();
+//			assertNotNull(applicationUrl);
+//			assertApplicationUrl(applicationName, applicationUrl);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	@Test
 	public void returnsCreationTime() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		try {
-			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
-			Date creationTime = application.getCreationTime();
-			assertNotNull(creationTime);
-			assertTrue(creationTime.compareTo(new Date()) == -1);
-		} finally {
-			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		try {
+//			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
+//			Date creationTime = application.getCreationTime();
+//			assertNotNull(creationTime);
+//			assertTrue(creationTime.compareTo(new Date()) == -1);
+//		} finally {
+//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//		}
 	}
 
 	/**
@@ -444,30 +436,30 @@ public class ApplicationIntegrationTest {
 	
 	@Test
 	public void canThreadDumpJBossApplication() throws Exception {
-		String applicationName = ApplicationUtils.createRandomApplicationName();
-		ApplicationLogReader reader = null;
-		IJBossASApplication application = null;
-		try {
-			application = service.createJBossASApplication(applicationName, user);
-			assertNotNull(application);
-			assertEquals(applicationName, application.getName());
-			assertTrue(application.getCartridge() instanceof JBossCartridge);
-			
-			String logFile = application.threadDump();
-			
-			String log = service.getStatus(applicationName, application.getCartridge(), user, logFile, 100);
-				
-			assertTrue("Failed to retrieve logged thread dump", log.contains("new generation"));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-			
-			if (reader != null)
-				reader.close();
-		}
+//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		ApplicationLogReader reader = null;
+//		IJBossASApplication application = null;
+//		try {
+//			application = service.createJBossASApplication(applicationName, user);
+//			assertNotNull(application);
+//			assertEquals(applicationName, application.getName());
+//			assertTrue(application.getCartridge() instanceof JBossCartridge);
+//			
+//			String logFile = application.threadDump();
+//			
+//			String log = service.getStatus(applicationName, application.getCartridge(), user, logFile, 100);
+//				
+//			assertTrue("Failed to retrieve logged thread dump", log.contains("new generation"));
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			
+//			if (reader != null)
+//				reader.close();
+//		}
 	}
 	
 	@Test
@@ -515,17 +507,17 @@ public class ApplicationIntegrationTest {
 	
 	@Test
 	public void canWaitForApplication() throws OpenShiftException, MalformedURLException, IOException {
-		String applicationName = null;
-		IApplication application = null;
-		try {
-			applicationName = ApplicationUtils.createRandomApplicationName();
-			application = service.createJBossASApplication(applicationName, user);
-			assertNotNull(application);
-			
-			assertTrue(application.waitForAccessible(WAIT_FOR_APPLICATION));
-			
-		} finally {
-			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
-		}
+//		String applicationName = null;
+//		IApplication application = null;
+//		try {
+//			applicationName = ApplicationUtils.createRandomApplicationName();
+//			application = service.createJBossASApplication(applicationName, user);
+//			assertNotNull(application);
+//			
+//			assertTrue(application.waitForAccessible(WAIT_FOR_APPLICATION));
+//			
+//		} finally {
+//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//		}
 	}
 }
