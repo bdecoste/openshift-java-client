@@ -67,8 +67,6 @@ public class UserTest {
 		}
 	}
 
-<<<<<<< HEAD
-=======
 	/** More friendly way to call the {@link UrlEndsWithMatcher}. */
 	private URL urlEndsWith(String suffix) {
 		return argThat(new UrlEndsWithMatcher(suffix));
@@ -107,7 +105,6 @@ public class UserTest {
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
 	
->>>>>>> f3724ed0243dac1b147c8ca263367070c0806865
 	@Test
 	public void shouldLoadSingleUserDomain() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
@@ -130,11 +127,4 @@ public class UserTest {
 		assertThat(applications).hasSize(2);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
-
-	private String getContentAsString(String fileName) throws IOException {
-		final InputStream contentStream = getClass()
-				.getResourceAsStream("/samples/" + fileName);
-		return IOUtils.toString(contentStream);
-	}
-
 }
