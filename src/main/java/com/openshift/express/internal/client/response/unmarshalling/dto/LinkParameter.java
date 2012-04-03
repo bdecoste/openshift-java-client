@@ -16,6 +16,7 @@ import com.openshift.express.client.OpenShiftRequestParameterException;
 
 
 /**
+ * @author Xavier Coulon
  * @author Andre Dietisheim
  */
 public class LinkParameter {
@@ -28,8 +29,13 @@ public class LinkParameter {
 
 	public LinkParameter(final String name, final String type, final String defaultValue, final String description,
 			final List<String> validOptions) throws OpenShiftRequestParameterException {
+		this(name, LinkParameterType.valueOfIgnoreCase(type), defaultValue, description, validOptions);
+	}
+
+	public LinkParameter(final String name, final LinkParameterType type, final String defaultValue, final String description,
+			final List<String> validOptions) throws OpenShiftRequestParameterException {
 		this.name = name;
-		this.type = LinkParameterType.valueOfIgnoreCase(type);
+		this.type = type;
 		this.description = description;
 		this.defaultValue = defaultValue;
 		this.validOptions = validOptions;

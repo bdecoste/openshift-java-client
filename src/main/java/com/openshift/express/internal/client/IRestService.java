@@ -21,6 +21,9 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
  */
 public interface IRestService {
 
+	public abstract String execute(Link link)
+			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
+
 	public abstract String execute(Link link, HttpParameters parameters)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
 
