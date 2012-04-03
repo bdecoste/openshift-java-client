@@ -16,7 +16,7 @@
                             "valid_options":"true or false"
                         }
                     ],
-                    "href":"/domains/xcoulon",
+                    "href":"/domains/foobar",
                     "method":"DELETE"
                 },
                 "LIST_APPLICATIONS":{
@@ -27,7 +27,7 @@
                     "optional_params":[
                         
                     ],
-                    "href":"/domains/xcoulon/applications",
+                    "href":"/domains/foobar/applications",
                     "method":"GET"
                 },
                 "ADD_APPLICATION_FROM_TEMPLATE":{
@@ -53,7 +53,7 @@
                     "optional_params":[
                         
                     ],
-                    "href":"/domains/xcoulon/applications",
+                    "href":"/domains/foobar/applications",
                     "method":"POST"
                 },
                 "CREATE":{
@@ -104,7 +104,7 @@
                     "optional_params":[
                         
                     ],
-                    "href":"/domains/xcoulon/applications",
+                    "href":"/domains/foobar/applications",
                     "method":"POST"
                 },
                 "GET":{
@@ -115,7 +115,7 @@
                     "optional_params":[
                         
                     ],
-                    "href":"/domains/xcoulon",
+                    "href":"/domains/foobar",
                     "method":"GET"
                 },
                 "UPDATE":{
@@ -133,11 +133,11 @@
                     "optional_params":[
                         
                     ],
-                    "href":"/domains/xcoulon",
+                    "href":"/domains/foobar",
                     "method":"PUT"
                 }
             },
-            "namespace":"xcoulon"
+            "namespace":"foobar"
         }
     ],
     "type":"domains",
