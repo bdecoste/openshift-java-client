@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.IHttpClient;
@@ -28,7 +29,6 @@ import com.openshift.express.client.configuration.OpenShiftConfiguration;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
-import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
@@ -41,6 +41,8 @@ import com.openshift.express.internal.client.utils.StringUtils;
  */
 public class RestService implements IRestService {
 
+	private static final Pattern HTTP_PROTOCOL_PATTERN = Pattern.compile("http?:");
+	
 	private static final String SERVICE_PATH = "/broker/rest/";
 
 	private static final String SYSPROPERTY_PROXY_PORT = "proxyPort";
@@ -70,8 +72,8 @@ public class RestService implements IRestService {
 		validateParameters(parameters, link);
 		HttpMethod httpMethod = link.getHttpMethod();
 		try {
-			URL url = new URL(link.getHref());
-			String data = parameters.toUrlEncoded();
+			URL url = getUrl(link.getHref());
+			String data = getData(parameters);
 			switch (link.getHttpMethod()) {
 			case GET:
 				return client.get(url);
@@ -97,6 +99,23 @@ public class RestService implements IRestService {
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(link.getHref(), e, createNakedResponse(e.getMessage()), e.getMessage());
 		}
+	}
+
+	private String getData(HttpParameters parameters) throws UnsupportedEncodingException {
+		if (parameters == null) {
+			return null;
+		}
+		return parameters.toUrlEncoded();
+	}
+
+	private URL getUrl(String href) throws MalformedURLException {
+		if (HTTP_PROTOCOL_PATTERN.matcher(href).find()) {
+			return new URL(href);
+		}
+		if (href.startsWith(SERVICE_PATH)) {
+			return new URL(baseUrl + href);
+		}
+		return new URL(getServiceUrl() + href);
 	}
 
 	private void validateParameters(HttpParameters parameters, Link link)
