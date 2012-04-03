@@ -61,7 +61,7 @@
             "severity":"info",
             "exit_code":null,
             "field":null,
-            "text":"Updated SSH key with name default for user xcoulon+test@redhat.com"
+            "text":"Updated SSH key with name default for user foobar+test@redhat.com"
         }
     ],
     "version":"1.0",

@@ -24,7 +24,7 @@ import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.SSHKeyType;
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.client.SSHKeyPair;
-import com.openshift.express.client.User;
+import com.openshift.express.internal.client.User;
 import com.openshift.express.internal.client.request.ChangeDomainRequest;
 import com.openshift.express.internal.client.request.CreateDomainRequest;
 import com.openshift.express.internal.client.request.OpenShiftEnvelopeFactory;

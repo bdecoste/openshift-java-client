@@ -14,6 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.openshift.express.internal.client.IRestService;
+import com.openshift.express.internal.client.RestService;
+import com.openshift.express.internal.client.User;
+import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 
 /**
  * User Builder, used to establish a connection and retrieve a user.
@@ -24,60 +27,23 @@ import com.openshift.express.internal.client.IRestService;
  */
 public class UserBuilder {
 
-	private String clientId;
 	private IRestService service;
-	private String login;
-	private String password;
 
-	public UserBuilder clientId(String clientId) {
-		this.clientId = clientId;
+	public UserBuilder configure(final String clientId, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
+		IHttpClient client = new UrlConnectionHttpClientBuilder().setCredentials(login, password).setClientId(clientId).client();
+		this.service = new RestService(client);
 		return this;
 	}
 
-	public ServiceUnawareUserBuilder credentials(String login, String password) {
-		this.login = login;
-		this.password = password;
-		return new ServiceUnawareUserBuilder();
-	}
-
-	public ServiceAwareUserBuilder service(IRestService service) {
+	public UserBuilder configure(IRestService service) {
 		this.service = service;
-		return new ServiceAwareUserBuilder();
+		return this;
 	}
 
-	public class ServiceAwareUserBuilder extends AbstractUserBuilder {
-
-		public IUser build() {
-			return new User(service);
-		}
-
-		public ServiceAwareUserBuilder clientId(String clientId) {
-			super.clientId(clientId);
-			return this;
-		}
+	public IUser build() throws FileNotFoundException, IOException, OpenShiftException {
+		return new User(service);
 	}
 
-	public class ServiceUnawareUserBuilder extends AbstractUserBuilder {
-		public IUser build() throws FileNotFoundException, IOException, OpenShiftException {
-			return new User(login, password, clientId);
-		}
-
-		public ServiceUnawareUserBuilder clientId(String clientId) {
-			super.clientId(clientId);
-			return this;
-		}
-	}
-
-	public abstract class AbstractUserBuilder {
-
-		protected AbstractUserBuilder() {
-			// inhibit instantiation
-		}
-
-		public AbstractUserBuilder clientId(String clientId) {
-			UserBuilder.this.clientId = clientId;
-			return this;
-		}
-	}
+	
 
 }

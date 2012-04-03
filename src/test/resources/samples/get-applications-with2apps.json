@@ -5,12 +5,12 @@
         {
             "name":"sample1",
             "creation_time":"2012-03-06T16:30:54-05:00",
-            "domain_id":"xcoulon",
+            "domain_id":"foobar",
             "framework":"jbossas-7",
             "uuid":"78337de0b54047e0a8577b0697ace5d6",
             "links":{
                 "GET":{
-                    "href":"/domains/xcoulon/applications/sample1/gears",
+                    "href":"/domains/foobar/applications/sample1/gears",
                     "required_params":[
                         
                     ],
@@ -21,7 +21,7 @@
                     ]
                 },
                 "FORCE_STOP":{
-                    "href":"/domains/xcoulon/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample1/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -37,7 +37,7 @@
                     ]
                 },
                 "STOP":{
-                    "href":"/domains/xcoulon/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample1/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -53,7 +53,7 @@
                     ]
                 },
                 "ADD_CARTRIDGE":{
-                    "href":"/domains/xcoulon/applications/sample1/cartridges",
+                    "href":"/domains/foobar/applications/sample1/cartridges",
                     "required_params":[
                         {
                             "name":"cartridge",
@@ -79,7 +79,7 @@
                     ]
                 },
                 "LIST_CARTRIDGES":{
-                    "href":"/domains/xcoulon/applications/sample1/cartridges",
+                    "href":"/domains/foobar/applications/sample1/cartridges",
                     "required_params":[
                         
                     ],
@@ -90,7 +90,7 @@
                     ]
                 },
                 "RESTART":{
-                    "href":"/domains/xcoulon/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample1/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -106,7 +106,7 @@
                     ]
                 },
                 "START":{
-                    "href":"/domains/xcoulon/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample1/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -122,7 +122,7 @@
                     ]
                 },
                 "DELETE":{
-                    "href":"/domains/xcoulon/applications/sample1",
+                    "href":"/domains/foobar/applications/sample1",
                     "required_params":[
                         
                     ],
@@ -143,12 +143,12 @@
         {
             "name":"sample2",
             "creation_time":"2012-03-06T17:33:11-05:00",
-            "domain_id":"xcoulon",
+            "domain_id":"foobar",
             "framework":"jbossas-7",
             "uuid":"a8cbe61fb98d4d9e9a748c0d35328b0f",
             "links":{
                 "GET":{
-                    "href":"/domains/xcoulon/applications/sample2/gears",
+                    "href":"/domains/foobar/applications/sample2/gears",
                     "required_params":[
                         
                     ],
@@ -159,7 +159,7 @@
                     ]
                 },
                 "FORCE_STOP":{
-                    "href":"/domains/xcoulon/applications/sample2/events",
+                    "href":"/domains/foobar/applications/sample2/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -175,7 +175,7 @@
                     ]
                 },
                 "STOP":{
-                    "href":"/domains/xcoulon/applications/sample2/events",
+                    "href":"/domains/foobar/applications/sample2/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -191,7 +191,7 @@
                     ]
                 },
                 "ADD_CARTRIDGE":{
-                    "href":"/domains/xcoulon/applications/sample2/cartridges",
+                    "href":"/domains/foobar/applications/sample2/cartridges",
                     "required_params":[
                         {
                             "name":"cartridge",
@@ -217,7 +217,7 @@
                     ]
                 },
                 "LIST_CARTRIDGES":{
-                    "href":"/domains/xcoulon/applications/sample2/cartridges",
+                    "href":"/domains/foobar/applications/sample2/cartridges",
                     "required_params":[
                         
                     ],
@@ -228,7 +228,7 @@
                     ]
                 },
                 "RESTART":{
-                    "href":"/domains/xcoulon/applications/sample2/events",
+                    "href":"/domains/foobar/applications/sample2/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -244,7 +244,7 @@
                     ]
                 },
                 "START":{
-                    "href":"/domains/xcoulon/applications/sample2/events",
+                    "href":"/domains/foobar/applications/sample2/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -260,7 +260,7 @@
                     ]
                 },
                 "DELETE":{
-                    "href":"/domains/xcoulon/applications/sample2",
+                    "href":"/domains/foobar/applications/sample2",
                     "required_params":[
                         
                     ],

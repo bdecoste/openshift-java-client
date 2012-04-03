@@ -13,7 +13,7 @@ package com.openshift.express.internal.client.test.utils;
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IOpenShiftService;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
+import com.openshift.express.internal.client.User;
 
 /**
  * @author André Dietisheim

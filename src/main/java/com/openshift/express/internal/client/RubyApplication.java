@@ -15,7 +15,6 @@ import java.util.Calendar;
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IRubyApplication;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
 
 /**
  * @author William DeCoste

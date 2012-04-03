@@ -4,7 +4,7 @@
         {
             "severity":"info",
             "field":null,
-            "text":"Created SSH key default for user xcoulon+test@redhat.com",
+            "text":"Created SSH key default for user foobar+test@redhat.com",
             "exit_code":null
         }
     ],

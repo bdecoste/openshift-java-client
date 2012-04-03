@@ -51,27 +51,7 @@ public class RestService implements IRestService {
 	private IHttpClient client;
 	protected static String version;
 
-	public RestService(String login, String password, String clientId, String baseUrl, boolean doSSLChecks) {
-		this(login, password, clientId, baseUrl, doSSLChecks, new RestServiceProperties());
-	}
-
-	public RestService(String login, String password, String clientId, boolean doSSLChecks)
-			throws FileNotFoundException, IOException, OpenShiftException {
-		this(login, password, clientId, new OpenShiftConfiguration().getLibraServer(), doSSLChecks,
-				new RestServiceProperties());
-	}
-
-	private RestService(String login, String password, String clientId, String baseUrl, boolean doSSLChecks,
-			RestServiceProperties properties) {
-		this(baseUrl
-				, new UrlConnectionHttpClientBuilder()
-						.setCredentials(login, password)
-						.setUserAgent(properties.getUseragent(clientId))
-						.setSSLChecks(doSSLChecks)
-						.client());
-	}
-
-	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException {
+	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException  {
 		this(new OpenShiftConfiguration().getLibraServer(), client);
 	}
 

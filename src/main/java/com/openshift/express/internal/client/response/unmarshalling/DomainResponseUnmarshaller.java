@@ -14,8 +14,8 @@ import org.jboss.dmr.ModelNode;
 
 import com.openshift.express.client.IDomain;
 import com.openshift.express.client.IUser;
-import com.openshift.express.client.User;
 import com.openshift.express.internal.client.Domain;
+import com.openshift.express.internal.client.User;
 
 /**
  * @author André Dietisheim

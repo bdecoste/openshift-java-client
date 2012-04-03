@@ -24,7 +24,6 @@ import com.openshift.express.client.PerlCartridge;
 import com.openshift.express.client.PythonCartridge;
 import com.openshift.express.client.RawCartridge;
 import com.openshift.express.client.RubyCartridge;
-import com.openshift.express.client.User;
 import com.openshift.express.internal.client.Application;
 import com.openshift.express.internal.client.HAProxyApplication;
 import com.openshift.express.internal.client.IRestService;
@@ -36,6 +35,7 @@ import com.openshift.express.internal.client.PerlApplication;
 import com.openshift.express.internal.client.PythonApplication;
 import com.openshift.express.internal.client.RawApplication;
 import com.openshift.express.internal.client.RubyApplication;
+import com.openshift.express.internal.client.User;
 import com.openshift.express.internal.client.utils.IOpenShiftJsonConstants;
 
 /**

@@ -13,7 +13,6 @@ package com.openshift.express.internal.client;
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IJenkinsApplication;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
 
 /**
  * @author William DeCoste

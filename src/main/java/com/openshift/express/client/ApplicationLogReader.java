@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.openshift.express.internal.client.Application;
+import com.openshift.express.internal.client.User;
 
 /**
  * @author André Dietisheim

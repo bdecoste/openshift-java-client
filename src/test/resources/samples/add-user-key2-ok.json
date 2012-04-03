@@ -61,7 +61,7 @@
             "severity":"info",
             "exit_code":null,
             "field":null,
-            "text":"Created SSH key default2 for user xcoulon+test@redhat.com"
+            "text":"Created SSH key default2 for user foobar+test@redhat.com"
         }
     ],
     "version":"1.0",

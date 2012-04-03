@@ -13,6 +13,8 @@ package com.openshift.express.client;
 import java.util.Date;
 import java.util.List;
 
+import com.openshift.express.internal.client.User;
+
 /**
  * @author André Dietisheim
  */

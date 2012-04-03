@@ -21,7 +21,6 @@ import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IEmbeddableCartridge;
 import com.openshift.express.client.IUser;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
 
 /**
  * @author André Dietisheim

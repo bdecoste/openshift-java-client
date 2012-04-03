@@ -12,7 +12,6 @@ package com.openshift.express.internal.client;
 
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IPerlApplication;
-import com.openshift.express.client.User;
 
 /**
  * @author William DeCoste

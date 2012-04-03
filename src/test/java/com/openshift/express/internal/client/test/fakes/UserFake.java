@@ -14,8 +14,8 @@ import java.io.IOException;
 
 import com.openshift.express.client.IApplication;
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
 import com.openshift.express.internal.client.IRestService;
+import com.openshift.express.internal.client.User;
 
 /**
  * @author André Dietisheim

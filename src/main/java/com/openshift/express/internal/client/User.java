@@ -8,19 +8,20 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.express.client;
+package com.openshift.express.internal.client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.openshift.express.client.configuration.OpenShiftConfiguration;
-import com.openshift.express.internal.client.Application;
-import com.openshift.express.internal.client.ApplicationInfo;
-import com.openshift.express.internal.client.IRestService;
-import com.openshift.express.internal.client.RestService;
-import com.openshift.express.internal.client.UserInfo;
+import com.openshift.express.client.IApplication;
+import com.openshift.express.client.ICartridge;
+import com.openshift.express.client.IDomain;
+import com.openshift.express.client.IEmbeddableCartridge;
+import com.openshift.express.client.ISSHPublicKey;
+import com.openshift.express.client.IUser;
+import com.openshift.express.client.OpenShiftException;
 
 /**
  * @author André Dietisheim
@@ -40,27 +41,8 @@ public class User implements IUser {
 
 	private IRestService service;
 
-	public User(String rhlogin, String password, String id)
+	public User(IRestService service)
 			throws FileNotFoundException, IOException, OpenShiftException {
-		this(null, null, (ISSHPublicKey) null, new RestService(rhlogin, password, id, false));
-	}
-
-	public User(String rhlogin, String password, String id, String url) {
-		this(null, null, (ISSHPublicKey) null, new RestService(rhlogin, password, id, url, false));
-	}
-
-	public User(String authKey, String authIV, IRestService service) {
-		this(authKey, authIV, (ISSHPublicKey) null, service);
-	}
-
-	public User(IRestService service) {
-		this(null, null, service);
-	}
-
-	public User(String authKey, String authIV, ISSHPublicKey sshKey, IRestService service) {
-		this.authKey = authKey;
-		this.authIV = authIV;
-		this.sshKey = sshKey;
 		this.service = service;
 	}
 

@@ -11,7 +11,6 @@
 package com.openshift.express.internal.client;
 
 import com.openshift.express.client.OpenShiftException;
-import com.openshift.express.client.User;
 
 public class UserInfoAware {
 
