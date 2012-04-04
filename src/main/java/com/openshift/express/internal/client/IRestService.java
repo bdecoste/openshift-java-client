@@ -15,16 +15,17 @@ import java.net.MalformedURLException;
 
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author Andre Dietisheim
  */
 public interface IRestService {
 
-	public abstract String execute(Link link)
+	public abstract RestResponse execute(Link link)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
 
-	public abstract String execute(Link link, HttpParameters parameters)
+	public abstract RestResponse execute(Link link, HttpParameters parameters)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
 
 	public abstract void setProxySet(boolean proxySet);

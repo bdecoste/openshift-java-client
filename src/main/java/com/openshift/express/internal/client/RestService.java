@@ -34,6 +34,8 @@ import com.openshift.express.internal.client.response.unmarshalling.NakedRespons
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameterType;
+import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
+import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.express.internal.client.utils.StringUtils;
 
 /**
@@ -42,7 +44,7 @@ import com.openshift.express.internal.client.utils.StringUtils;
 public class RestService implements IRestService {
 
 	private static final Pattern HTTP_PROTOCOL_PATTERN = Pattern.compile("http?:");
-	
+
 	private static final String SERVICE_PATH = "/broker/rest/";
 
 	private static final String SYSPROPERTY_PROXY_PORT = "proxyPort";
@@ -53,7 +55,7 @@ public class RestService implements IRestService {
 	private IHttpClient client;
 	protected static String version;
 
-	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException  {
+	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException {
 		this(new OpenShiftConfiguration().getLibraServer(), client);
 	}
 
@@ -62,30 +64,20 @@ public class RestService implements IRestService {
 		this.client = client;
 	}
 
-	public String execute(Link link)
+	public RestResponse execute(Link link)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
 		return execute(link, null);
 	}
-	
-	public String execute(Link link, HttpParameters parameters)
+
+	public RestResponse execute(Link link, HttpParameters parameters)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
 		validateParameters(parameters, link);
 		HttpMethod httpMethod = link.getHttpMethod();
 		try {
 			URL url = getUrl(link.getHref());
 			String data = getData(parameters);
-			switch (link.getHttpMethod()) {
-			case GET:
-				return client.get(url);
-			case POST:
-				return client.post(data, url);
-			case PUT:
-				return client.put(data, url);
-			case DELETE:
-				return client.delete(url);
-			default:
-				throw new OpenShiftException("Unexpected Http method {0}", httpMethod.toString());
-			}
+			String response = request(httpMethod, url, data);
+			return ResourceDTOFactory.get(response);
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
 		} catch (MalformedURLException e) {
@@ -98,6 +90,22 @@ public class RestService implements IRestService {
 			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage());
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(link.getHref(), e, createNakedResponse(e.getMessage()), e.getMessage());
+		}
+	}
+
+	private String request(HttpMethod httpMethod, URL url, String data)
+			throws HttpClientException, SocketTimeoutException, OpenShiftException {
+		switch (httpMethod) {
+		case GET:
+			return client.get(url);
+		case POST:
+			return client.post(data, url);
+		case PUT:
+			return client.put(data, url);
+		case DELETE:
+			return client.delete(url);
+		default:
+			throw new OpenShiftException("Unexpected Http method {0}", httpMethod.toString());
 		}
 	}
 
