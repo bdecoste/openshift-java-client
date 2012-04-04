@@ -8,33 +8,39 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.express.internal.client;
+package com.openshift.express.internal.client.response.unmarshalling;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.util.Map;
 
+import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.internal.client.IRestService;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author Andre Dietisheim
  */
-public interface IRestService {
+public class Resources {
 
-	public abstract String execute(Link link)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
+	private Map<String, Link> links;
+	private IRestService service;
+	private Link resourcesLink;
 
-	public abstract String execute(Link link, HttpParameters parameters)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
+	public Resources(IRestService service) {
+		this.service = service;
+		this.resourcesLink = new Link("Get API", "/api", HttpMethod.GET, null, null);
+	}
 
-	public abstract void setProxySet(boolean proxySet);
+	public Map<String, Link> getLinks() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException {
+		if (links == null) {
+			service.execute(resourcesLink);
+		}
+		return links;
+	}
 
-	public abstract void setProxyHost(String proxyHost);
-
-	public abstract void setProxyPort(String proxyPort);
-
-	public abstract String getServiceUrl();
-
-	public abstract String getPlatformUrl();
-
+	public Link getLinkByName(String name) {
+		return links.get(name);
+	}
 }

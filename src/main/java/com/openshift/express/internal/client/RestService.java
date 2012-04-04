@@ -48,10 +48,8 @@ public class RestService implements IRestService {
 	private static final String SYSPROPERTY_PROXY_SET = "proxySet";
 
 	private String baseUrl;
-
 	private IHttpClient client;
-
-	protected static String version = null;
+	protected static String version;
 
 	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException  {
 		this(new OpenShiftConfiguration().getLibraServer(), client);
@@ -62,6 +60,11 @@ public class RestService implements IRestService {
 		this.client = client;
 	}
 
+	public <T> T execute(Link link)
+			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
+		return execute(link, null);
+	}
+	
 	public String execute(Link link, HttpParameters parameters)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
 		validateParameters(parameters, link);
@@ -98,17 +101,22 @@ public class RestService implements IRestService {
 
 	private void validateParameters(HttpParameters parameters, Link link)
 			throws OpenShiftRequestParameterException {
-		for (LinkParameter requiredParameter : link.getRequiredParams()) {
-			validateRequiredParameter(requiredParameter, parameters, link);
+		if (link.getRequiredParams() != null) {
+			for (LinkParameter requiredParameter : link.getRequiredParams()) {
+				validateRequiredParameter(requiredParameter, parameters, link);
+			}
 		}
-		for (LinkParameter optionalParameter : link.getOptionalParams()) {
-			validateOptionalParameters(optionalParameter, link);
+		if (link.getOptionalParams() != null) {
+			for (LinkParameter optionalParameter : link.getOptionalParams()) {
+				validateOptionalParameters(optionalParameter, link);
+			}
 		}
 	}
 
 	private void validateRequiredParameter(LinkParameter parameter, HttpParameters parameters, Link link)
 			throws OpenShiftRequestParameterException {
-		if (!parameters.containsKey(parameter.getName())) {
+		if (parameters == null
+				|| !parameters.containsKey(parameter.getName())) {
 			throw new OpenShiftRequestParameterException(
 					"Requesting {0}: required request parameter \"{1}\" is missing", link.getHref(),
 					parameter.getName());
@@ -126,7 +134,7 @@ public class RestService implements IRestService {
 	private void validateOptionalParameters(LinkParameter optionalParameter, Link link) {
 		// TODO: implement
 	}
-	
+
 	private boolean isEmptyString(LinkParameter parameter, Object parameterValue) {
 		return parameter.getType() == LinkParameterType.STRING
 				&& StringUtils.isEmpty((String) parameterValue);

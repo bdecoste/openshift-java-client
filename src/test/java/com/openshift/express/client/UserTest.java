@@ -1,3 +1,13 @@
+/******************************************************************************* 
+ * Copyright (c) 2012 Red Hat, Inc. 
+ * Distributed under license by Red Hat, Inc. All rights reserved. 
+ * This program is made available under the terms of the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors: 
+ * Red Hat, Inc. - initial API and implementation 
+ ******************************************************************************/
 package com.openshift.express.client;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -27,6 +37,10 @@ import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
+/**
+ * @author Xavier Coulon
+ * @author Andre Dietisheim
+ */
 public class UserTest {
 
 	private static final String CLIENT_ID = "openshift-java-client-rest-test";
@@ -92,7 +106,6 @@ public class UserTest {
 		assertThat(domains).hasSize(0);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
-
 	@Test
 	public void shouldLoadSingleUserDomain() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
@@ -119,6 +132,5 @@ public class UserTest {
 		assertThat(applications).hasSize(2);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
-
 
 }
