@@ -30,7 +30,6 @@ import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
 import com.openshift.express.internal.client.response.OpenShiftResponse;
-import com.openshift.express.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameterType;
@@ -89,7 +88,7 @@ public class RestService implements IRestService {
 		} catch (SocketTimeoutException e) {
 			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage());
 		} catch (HttpClientException e) {
-			throw new OpenShiftEndpointException(link.getHref(), e, createNakedResponse(e.getMessage()), e.getMessage());
+			throw new OpenShiftEndpointException(link.getHref(), e, createRestResponse(e.getMessage()), e.getMessage());
 		}
 	}
 
@@ -170,8 +169,8 @@ public class RestService implements IRestService {
 				&& StringUtils.isEmpty((String) parameterValue);
 	}
 
-	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
-		return new NakedResponseUnmarshaller().unmarshall(response);
+	private RestResponse createRestResponse(String response) throws OpenShiftException {
+		return ResourceDTOFactory.get(response);
 	}
 
 	public void setProxySet(boolean proxySet) {

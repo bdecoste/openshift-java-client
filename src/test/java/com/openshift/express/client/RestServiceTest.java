@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -29,9 +31,11 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.express.client.utils.Samples;
 import com.openshift.express.internal.client.IRestService;
 import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
+import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameterType;
@@ -134,13 +138,18 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void should() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
-		// operation
-		String url = "/broker/rest/adietisheim-redhat";
-		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
-		// verifications
-		String targetUrl = service.getPlatformUrl() + url;
-		verify(clientMock, times(1)).get(new URL(targetUrl));
+	public void shouldThrowExceptionOnInternalError() throws Throwable {
+		try {
+			// pre-conditions
+			NotFoundException e = new NotFoundException(Samples.GET_DOMAIN_NOTFOUND_JSON.getContentAsString());
+			when(clientMock.get(any(URL.class))).thenThrow(e);
+			// operation
+			String url = "/broker/rest/adietisheim-redhat";
+			service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
+			fail("No OpenShiftEndPointException occurred");
+		} catch (OpenShiftEndpointException e) {
+			assertThat(e.getRestResponse()).isNotNull();
+		}
 	}
 	
 	

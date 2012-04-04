@@ -24,9 +24,4 @@ public class InternalServerErrorException extends HttpClientException {
 	public InternalServerErrorException(String message) {
 		super(message);
 	}
-
-	public InternalServerErrorException(Throwable cause) {
-		super(cause);
-	}
-
 }

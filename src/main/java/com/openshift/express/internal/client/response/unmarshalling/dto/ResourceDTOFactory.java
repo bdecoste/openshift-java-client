@@ -125,9 +125,12 @@ public class ResourceDTOFactory {
 	 *             the open shift exception
 	 */
 	private static ModelNode getModelNode(final String content) throws OpenShiftException {
+		if (content == null) {
+			throw new OpenShiftException("Could not unmarshall response: no content.");
+		}
 		final ModelNode node = ModelNode.fromJSONString(content);
 		if (!node.isDefined()) {
-			throw new OpenShiftException("Failed to read response.");
+			throw new OpenShiftException("Could not unmarshall response: erroneous content.");
 		}
 
 		return node;

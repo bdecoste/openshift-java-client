@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
-import com.openshift.express.internal.client.httpclient.HttpClientException;
-import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
@@ -22,32 +20,19 @@ public class OpenShiftEndpointException extends OpenShiftException {
 	private static final long serialVersionUID = 1L;
 
 	private String url;
-
-	private OpenShiftResponse<Object> errorResponse;
-
-	/** the response received by the client. */
 	private RestResponse restResponse;
 	
-	
 	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) {
-		super(cause, message, arguments);
-		this.url = url;
+		this(url, cause, null, message, arguments);
 	}
 
-	public OpenShiftEndpointException(String url, HttpClientException e, OpenShiftResponse<Object> errorResponse,
-			String errorMessage, Object... arguments) {
-		this(url, e, errorMessage, arguments);
-		this.errorResponse = errorResponse;
-	}
-	
-	public OpenShiftEndpointException(RestResponse restResponse) {
-		this(null, null, null, (Object[])null);
+	public OpenShiftEndpointException(String url, Throwable cause, RestResponse restResponse,
+			String message, Object... arguments) {
+		super(cause, message, arguments);
 		this.restResponse = restResponse;
+		this.url = url;
 	}
-	
-	/**
-	 * @return the response received by the client.
-	 */
+		
 	public RestResponse getRestResponse() {
 		return restResponse;
 	}
@@ -55,26 +40,4 @@ public class OpenShiftEndpointException extends OpenShiftException {
 	protected String getUrl() {
 		return url;
 	}
-
-	public String getResponseMessage() {
-		if (errorResponse == null) {
-			return null;
-		}
-		return errorResponse.getMessages();
-	}
-
-	public String getResponseResult() {
-		if (errorResponse == null) {
-			return null;
-		}
-		return errorResponse.getResult();
-	}
-
-	public int getResponseExitCode() {
-		if (errorResponse == null) {
-			return -1;
-		}
-		return errorResponse.getExitCode();
-	}
-
 }

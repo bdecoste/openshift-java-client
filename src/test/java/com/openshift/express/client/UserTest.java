@@ -11,7 +11,6 @@
 package com.openshift.express.client;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -19,23 +18,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
+import com.openshift.express.client.utils.Samples;
 import com.openshift.express.internal.client.RestService;
-import com.openshift.express.internal.client.httpclient.HttpClientException;
-import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author Xavier Coulon
@@ -75,31 +66,18 @@ public class UserTest {
 		return argThat(new UrlEndsWithMatcher(suffix));
 	}
 
-	/** Convenient method to retrieve the content of a file as a String. */
-	private String getContentAsString(String fileName) {
-		String content = null;
-		try {
-			final InputStream contentStream = getClass().getResourceAsStream("/samples/" + fileName);
-			content = IOUtils.toString(contentStream);
-		} catch (Throwable e) {
-			e.printStackTrace();
-			fail("Failed to obtain file content: " + e.getMessage());
-		}
-		return content;
-	}
-
 	@Before
-	public void setup() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
+	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
-		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(getContentAsString("get-rest-api.json"));
+		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient)).build();
 	}
 
 	@Test
-	public void shouldLoadEmptyListOfDomains() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldLoadEmptyListOfDomains() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				getContentAsString("get-domains-noexisting.json"));
+				Samples.GET_DOMAINS_NOEXISTING_JSON.getContentAsString());
 		// operation
 		final List<IDomain> domains = user.getDomains();
 		// verifications
@@ -108,10 +86,10 @@ public class UserTest {
 	}
 
 	@Test
-	public void shouldLoadSingleUserDomain() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldLoadSingleUserDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				getContentAsString("get-domains-1existing.json"));
+				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		// operation
 		final List<IDomain> domains = user.getDomains();
 		// verifications
@@ -120,13 +98,12 @@ public class UserTest {
 	}
 
 	@Test
-	public void shouldLoadEmptyListOfApplications() throws OpenShiftException, SocketTimeoutException,
-			HttpClientException {
+	public void shouldLoadEmptyListOfApplications() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				getContentAsString("get-domains-1existing.json"));
+				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
-				getContentAsString("get-applications-with2apps.json"));
+				Samples.GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		// operation
 		final List<IApplication> applications = user.getDomains().get(0).getApplications();
 		// verifications
