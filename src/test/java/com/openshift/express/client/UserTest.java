@@ -22,6 +22,8 @@ import static org.mockito.Mockito.when;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
@@ -33,6 +35,7 @@ import org.mockito.ArgumentMatcher;
 
 import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
+import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author Xavier Coulon
@@ -41,7 +44,6 @@ import com.openshift.express.internal.client.httpclient.HttpClientException;
 public class UserTest {
 
 	private IUser user;
-	private IHttpClient clientMock;
 	private IHttpClient mockClient;
 
 	/**
@@ -60,6 +62,9 @@ public class UserTest {
 
 		@Override
 		public boolean matches(Object argument) {
+			if(argument == null) {
+				return false;
+			}
 			URL url = (URL) argument;
 			return url.toExternalForm().endsWith(urlSuffix);
 		}
@@ -87,38 +92,41 @@ public class UserTest {
 	public void setup() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(getContentAsString("get-rest-api.json"));
-		this.user = new UserBuilder()
-		.configure(new RestService(IRestServiceTestConstants.CLIENT_ID, clientMock))
-		.build();
+		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient)).build();
 	}
-	
+
 	@Test
 	public void shouldLoadEmptyListOfDomains() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/broker/domains"))).thenReturn(getContentAsString("get-domains-noexisting.json"));
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
+				getContentAsString("get-domains-noexisting.json"));
 		// operation
 		final List<IDomain> domains = user.getDomains();
 		// verifications
 		assertThat(domains).hasSize(0);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
-	
+
 	@Test
 	public void shouldLoadSingleUserDomain() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/broker/domains"))).thenReturn(getContentAsString("get-domains-1existing.json"));
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
+				getContentAsString("get-domains-1existing.json"));
 		// operation
 		final List<IDomain> domains = user.getDomains();
 		// verifications
 		assertThat(domains).hasSize(1);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
-	
+
 	@Test
-	public void shouldLoadEmptyListOfApplications() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldLoadEmptyListOfApplications() throws OpenShiftException, SocketTimeoutException,
+			HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/broker/domains"))).thenReturn(getContentAsString("get-domains-1existing.json"));
-		when(mockClient.get(urlEndsWith("/broker/domains/foobar/applications"))).thenReturn(getContentAsString("get-applications-with2apps.json"));
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
+				getContentAsString("get-domains-1existing.json"));
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
+				getContentAsString("get-applications-with2apps.json"));
 		// operation
 		final List<IApplication> applications = user.getDomains().get(0).getApplications();
 		// verifications
