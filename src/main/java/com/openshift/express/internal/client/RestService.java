@@ -17,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.IHttpClient;
@@ -44,15 +43,13 @@ import com.openshift.express.internal.client.utils.StringUtils;
  */
 public class RestService implements IRestService {
 
-	private static final Pattern HTTP_PROTOCOL_PATTERN = Pattern.compile("http?:");
-
+	private static final String HTTP = "http";
 	private static final String SERVICE_PATH = "/broker/rest/";
+	private static final char SLASH = '/';
 
 	private static final String SYSPROPERTY_PROXY_PORT = "proxyPort";
 	private static final String SYSPROPERTY_PROXY_HOST = "proxyHost";
 	private static final String SYSPROPERTY_PROXY_SET = "proxySet";
-
-	private static final String SLASH = "/";
 
 	private String baseUrl;
 	private IHttpClient client;
@@ -77,8 +74,7 @@ public class RestService implements IRestService {
 		validateParameters(parameters, link);
 		HttpMethod httpMethod = link.getHttpMethod();
 		try {
-			URL url = getUrl(link.getHref());
-			String response = request(httpMethod, parameters, url);
+			String response = request(httpMethod, parameters, getUrl(link.getHref()));
 			return ResourceDTOFactory.get(response);
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
@@ -111,17 +107,23 @@ public class RestService implements IRestService {
 		}
 	}
 
-	private URL getUrl(String href) throws MalformedURLException {
-		if (HTTP_PROTOCOL_PATTERN.matcher(href).find()) {
+	private URL getUrl(String href) throws MalformedURLException, OpenShiftException {
+		if (href == null) {
+			throw new OpenShiftException("Invalid empty url");
+		}
+		
+		if (href.startsWith(HTTP)) {
 			return new URL(href);
 		}
+		
 		if (href.startsWith(SERVICE_PATH)) {
 			return new URL(baseUrl + href);
 		}
 		
-		if (href.startsWith(SLASH)) {
+		if (href.charAt(0) == SLASH) {
 			href = href.substring(1, href.length());
 		}
+
 		return new URL(getServiceUrl() + href);
 	}
 
