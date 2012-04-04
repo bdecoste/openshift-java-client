@@ -30,8 +30,8 @@ public class UserBuilder {
 	private IRestService service;
 
 	public UserBuilder configure(final String clientId, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
-		IHttpClient client = new UrlConnectionHttpClientBuilder().setCredentials(login, password).setClientId(clientId).client();
-		this.service = new RestService(client);
+		IHttpClient client = new UrlConnectionHttpClientBuilder().setCredentials(login, password).client();
+		this.service = new RestService(clientId, client);
 		return this;
 	}
 

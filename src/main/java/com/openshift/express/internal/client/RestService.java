@@ -53,15 +53,16 @@ public class RestService implements IRestService {
 
 	private String baseUrl;
 	private IHttpClient client;
-	protected static String version;
 
-	public RestService(IHttpClient client) throws FileNotFoundException, IOException, OpenShiftException {
-		this(new OpenShiftConfiguration().getLibraServer(), client);
+	public RestService(String clientId, IHttpClient client) throws FileNotFoundException, IOException,
+			OpenShiftException {
+		this(new OpenShiftConfiguration().getLibraServer(), clientId, client);
 	}
 
-	public RestService(String baseUrl, IHttpClient client) {
+	public RestService(String baseUrl, String clientId, IHttpClient client) {
 		this.baseUrl = baseUrl;
 		this.client = client;
+		client.setUserAgent(new RestServiceProperties().getUseragent(clientId));
 	}
 
 	public RestResponse execute(Link link)
@@ -72,9 +73,10 @@ public class RestService implements IRestService {
 	public RestResponse execute(Link link, Map<String, Object> parameters)
 			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
 		validateParameters(parameters, link);
-		HttpMethod httpMethod = link.getHttpMethod();
 		try {
-			String response = request(httpMethod, parameters, getUrl(link.getHref()));
+			HttpMethod httpMethod = link.getHttpMethod();
+			URL url = getUrl(link.getHref());
+			String response = request(httpMethod, parameters, url);
 			return ResourceDTOFactory.get(response);
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
@@ -111,15 +113,15 @@ public class RestService implements IRestService {
 		if (href == null) {
 			throw new OpenShiftException("Invalid empty url");
 		}
-		
+
 		if (href.startsWith(HTTP)) {
 			return new URL(href);
 		}
-		
+
 		if (href.startsWith(SERVICE_PATH)) {
 			return new URL(baseUrl + href);
 		}
-		
+
 		if (href.charAt(0) == SLASH) {
 			href = href.substring(1, href.length());
 		}

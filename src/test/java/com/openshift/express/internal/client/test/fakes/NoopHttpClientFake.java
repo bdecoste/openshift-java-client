@@ -38,4 +38,8 @@ public class NoopHttpClientFake implements IHttpClient {
 		throw new UnsupportedOperationException();
 	}
 
+	public void setUserAgent(String userAgent) {
+		throw new UnsupportedOperationException();
+	}
+
 }

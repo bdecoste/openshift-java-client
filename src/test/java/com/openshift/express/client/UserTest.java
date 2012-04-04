@@ -40,8 +40,6 @@ import com.openshift.express.internal.client.httpclient.HttpClientException;
  */
 public class UserTest {
 
-	private static final String CLIENT_ID = "openshift-java-client-rest-test";
-
 	private IUser user;
 	private IHttpClient clientMock;
 	private IHttpClient mockClient;
@@ -90,7 +88,7 @@ public class UserTest {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(getContentAsString("get-rest-api.json"));
 		this.user = new UserBuilder()
-		.configure(new RestService(clientMock))
+		.configure(new RestService(IRestServiceTestConstants.CLIENT_ID, clientMock))
 		.build();
 	}
 	
