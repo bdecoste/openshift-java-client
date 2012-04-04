@@ -12,6 +12,7 @@ package com.openshift.express.internal.client.httpclient;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -22,6 +23,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -96,7 +98,7 @@ public class UrlConnectionHttpClientBuilder {
 		private static final String SYSPROP_OPENSHIFT_CONNECT_TIMEOUT = "com.openshift.express.httpclient.timeout";
 		private static final String SYSPROP_DEFAULT_CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
 		private static final String SYSPROP_DEFAULT_READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
-		private static final String SYSPROPERTY_ENABLE_SNI_EXTENSION = "jsse.enableSNIExtension";
+		private static final String SYSPROP_ENABLE_SNI_EXTENSION = "jsse.enableSNIExtension";
 
 		private String userAgent;
 		private boolean sslChecks;
@@ -127,11 +129,19 @@ public class UrlConnectionHttpClientBuilder {
 			}
 		}
 
-		public String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
+		public String put(Map<String, Object> parameters, URL url) throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
+			return put(new HttpParameters(parameters).toUrlEncoded(), url);
+		}
+		
+		protected String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
 			return write(data, HTTP_METHOD_PUT, url);
 		}
 
-		public String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
+		public String post(Map<String, Object> parameters, URL url) throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
+			return post(new HttpParameters(parameters).toUrlEncoded(), url);
+		}
+
+		protected String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
 			return write(data, HTTP_METHOD_POST, url);
 		}
 
@@ -206,7 +216,7 @@ public class UrlConnectionHttpClientBuilder {
 			if (isHttps(url)
 					&& !sslChecks) {
 				// JDK7 bug workaround
-				System.setProperty(SYSPROPERTY_ENABLE_SNI_EXTENSION, "false");
+				System.setProperty(SYSPROP_ENABLE_SNI_EXTENSION, "false");
 
 				HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
 				httpsConnection.setHostnameVerifier(new NoopHostnameVerifier());
