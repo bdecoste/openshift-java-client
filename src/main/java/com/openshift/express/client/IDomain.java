@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public interface IDomain {
 
-	public void setNamespace(String namespace) throws OpenShiftException;
+	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException;
 
 	// TODO : rename as 'name' to match the json messages ?
 	public String getNamespace();

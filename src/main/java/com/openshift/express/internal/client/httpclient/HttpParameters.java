@@ -12,7 +12,7 @@ package com.openshift.express.internal.client.httpclient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -25,11 +25,16 @@ public class HttpParameters {
 
 	private static final String UTF8 = "UTF-8";
 
-	private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+	private Map<String, Object> parameters;
+
+	public HttpParameters() {
+		this.parameters = new HashMap<String, Object>();
+	}
 
 	protected HttpParameters(Map<String, Object> parameters) {
-		parameters.putAll(parameters);
+		this.parameters = parameters;
 	}
+
 
 	protected HttpParameters put(String key, Object value) {
 		parameters.put(key, value);

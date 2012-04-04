@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 
@@ -30,13 +31,13 @@ public interface IUser {
 
 	public String getUUID() throws OpenShiftException;
 
-	public IDomain createDomain(String name) throws OpenShiftException;
+	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
 
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException;
 
-	public List<IDomain> getDomains() throws OpenShiftException;
+	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
 	
-	public IDomain getDomain(String namespace) throws OpenShiftException;
+	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException;
 	
 	public boolean hasDomain() throws OpenShiftException;
 

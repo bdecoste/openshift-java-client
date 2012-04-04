@@ -61,7 +61,7 @@ public class RestServiceTest {
 	}
 	
 	@Test(expected=OpenShiftException.class)
-	public void throwsIfRequiredParameterMissing() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException {
+	public void throwsIfRequiredParameterMissing() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException {
 		// operation
 		LinkParameter parameter = new LinkParameter("required string parameter", LinkParameterType.STRING, null, null, null);
 		Link link = new Link("1 required parameter", "/dummy", HttpMethod.GET, Arrays.asList(parameter), null);
@@ -69,7 +69,7 @@ public class RestServiceTest {
 	}
 	
 	@Test
-	public void shouldNotThrowIfNoReqiredParameter() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException {
+	public void shouldNotThrowIfNoReqiredParameter() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException {
 		// operation
 		Link link = new Link("0 required parameter", "/dummy", HttpMethod.GET, null, null);
 		service.execute(link, new HashMap<String, Object>());
@@ -138,7 +138,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldThrowExceptionOnInternalError() throws Throwable {
+	public void shouldThrowExceptionWithResponseOnNotFound() throws Throwable {
 		try {
 			// pre-conditions
 			NotFoundException e = new NotFoundException(Samples.GET_DOMAIN_NOTFOUND_JSON.getContentAsString());
@@ -151,6 +151,4 @@ public class RestServiceTest {
 			assertThat(e.getRestResponse()).isNotNull();
 		}
 	}
-	
-	
 }

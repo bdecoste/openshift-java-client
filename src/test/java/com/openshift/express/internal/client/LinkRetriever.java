@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.express.internal.client;
 
+import java.net.SocketTimeoutException;
+
 import com.openshift.express.client.OpenShiftException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
@@ -25,9 +27,10 @@ public class LinkRetriever {
 	/**
 	 * Retrieves the link identified by the given name from the given resource.
 	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
 	 * 
 	 */
-	public static Link retrieveLink(final Object resource, final String linkName) throws OpenShiftException {
+	public static Link retrieveLink(final Object resource, final String linkName) throws OpenShiftException, SocketTimeoutException {
 		return ((AbstractOpenShiftResource)resource).getLink(linkName);
 	}
 

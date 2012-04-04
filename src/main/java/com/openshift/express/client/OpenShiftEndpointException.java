@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
@@ -22,8 +23,8 @@ public class OpenShiftEndpointException extends OpenShiftException {
 	private String url;
 	private RestResponse restResponse;
 	
-	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) {
-		this(url, cause, null, message, arguments);
+	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) throws OpenShiftException {
+		this(url, cause, ResourceDTOFactory.get(cause.getMessage()), message, arguments);
 	}
 
 	public OpenShiftEndpointException(String url, Throwable cause, RestResponse restResponse,

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.express.internal.client;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 		return rhcDomain;
 	}
 
-	public void setNamespace(String namespace) throws OpenShiftException {
+	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException {
     	DomainResourceDTO domainDTO = execute(getLink(LINK_UPDATE), new ServiceParameter("namespace", namespace));
     	this.namespace = domainDTO.getNamespace();
     	this.rhcDomain = domainDTO.getSuffix();

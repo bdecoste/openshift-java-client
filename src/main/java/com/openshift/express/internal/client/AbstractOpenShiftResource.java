@@ -12,6 +12,7 @@ package com.openshift.express.internal.client;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,22 +42,15 @@ public class AbstractOpenShiftResource {
 	}
 
 	// made protectedfor testing purpose, but not part of the public interface, though
-	protected Link getLink(String linkName) throws OpenShiftException {
+	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
 		return links.get(linkName);
 	}
 
-	<T> T execute(Link link, ServiceParameter... parameters) throws OpenShiftException {
+	<T> T execute(Link link, ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException {
 		assert link != null;
 		// avoid concurrency issues, to prevent reading the links map while it is still being retrieved
 		try {
-			Map<String, Object> params = null;
-			if (parameters != null) {
-				params = new HashMap<String, Object>();
-				for (ServiceParameter parameter : parameters) {
-					params.put(parameter.getKey(), parameter.getValue());
-				}
-			}
-			RestResponse response = service.execute(link, params);
+			RestResponse response = service.execute(link, parameters);
 			return response.getData();
 		} catch (MalformedURLException e) {
 			throw new OpenShiftException(e, "Failed to execute {0} {1}", link.getHttpMethod().name(), link.getHref());

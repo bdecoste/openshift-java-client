@@ -12,6 +12,7 @@ package com.openshift.express.internal.client;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 
 import com.openshift.express.client.OpenShiftException;
@@ -24,10 +25,13 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.RestResp
 public interface IRestService {
 
 	public abstract RestResponse execute(Link link)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
+			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException;
+
+	public RestResponse execute(Link link, ServiceParameter... serviceParameters)
+			throws SocketTimeoutException, MalformedURLException, UnsupportedEncodingException, OpenShiftException;
 
 	public abstract RestResponse execute(Link link, Map<String, Object> parameters)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException;
+			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException;
 
 	public abstract void setProxySet(boolean proxySet);
 

@@ -12,6 +12,7 @@ package com.openshift.express.internal.client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,11 +54,12 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	 * Cause the underlying REST Service to call the root API in an asynchronous manner to avoid UI blockings.
 	 * 
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 */
 	@Override
-	protected Link getLink(String linkName) throws OpenShiftException {
+	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
 		if (links.isEmpty()) {
-			Map<String, Link> apiLinks = execute(new Link("Get API", "/api", HttpMethod.GET, null, null));
+			Map<String, Link> apiLinks = execute(new Link("Get API", "/api", HttpMethod.GET));
 			this.links.putAll(apiLinks);
 		}
 		return links.get(linkName);
@@ -72,7 +74,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		// }
 	}
 
-	public IDomain createDomain(String name) throws OpenShiftException {
+	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
 		if(hasDomain(name)) {
 			throw new OpenShiftException("Domain {0} already exists", name);
 		}
@@ -101,7 +103,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// this.domain = null;
 	// }
 
-	public List<IDomain> getDomains() throws OpenShiftException {
+	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
 		if (this.domains == null) {
 			this.domains = new ArrayList<IDomain>();
 			List<DomainResourceDTO> domainDTOs = execute(getLink(LINK_LIST_DOMAINS));
@@ -113,7 +115,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		return domains;
 	}
 	
-	public IDomain getDomain(String namespace) throws OpenShiftException {
+	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
 		for(IDomain domain : getDomains()) {
 			if(domain.getNamespace().equals(namespace)) {
 				return domain;
@@ -123,7 +125,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	
-	boolean hasDomain(String name) throws OpenShiftException {
+	boolean hasDomain(String name) throws OpenShiftException, SocketTimeoutException {
 		return getDomain(name) != null;
 	}
 	

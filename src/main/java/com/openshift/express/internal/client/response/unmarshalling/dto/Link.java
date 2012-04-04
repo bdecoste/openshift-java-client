@@ -36,6 +36,10 @@ public class Link {
 	/** The optional params. */
 	private final List<LinkParameter> optionalParams;
 	
+	public Link(final String rel, final String href, final HttpMethod httpMethod) {
+		this(rel, href, httpMethod, null, null);
+	}
+
 	public Link(final String rel, final String href, final String httpMethod,
 			final List<LinkParameter> requiredParams, final List<LinkParameter> optionalParams) {
 		this(rel, href, HttpMethod.valueOf(httpMethod), requiredParams, optionalParams);

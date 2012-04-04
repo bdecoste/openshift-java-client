@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.openshift.express.client.HttpMethod;
@@ -29,7 +30,6 @@ import com.openshift.express.client.configuration.OpenShiftConfiguration;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.httpclient.NotFoundException;
 import com.openshift.express.internal.client.httpclient.UnauthorizedException;
-import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.express.internal.client.response.unmarshalling.dto.LinkParameterType;
@@ -65,30 +65,36 @@ public class RestService implements IRestService {
 	}
 
 	public RestResponse execute(Link link)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
-		return execute(link, null);
+			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException {
+		return execute(link, (Map<String, Object>) null);
+	}
+
+	public RestResponse execute(Link link, ServiceParameter...serviceParameters) throws SocketTimeoutException, MalformedURLException, UnsupportedEncodingException, OpenShiftException {
+		return execute(link, toMap(serviceParameters));
+	}
+
+	private Map<String, Object> toMap(ServiceParameter... serviceParameters) {
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		for(ServiceParameter serviceParameter : serviceParameters) {
+			parameterMap.put(serviceParameter.getKey(), serviceParameter.getValue());
+		}
+		return parameterMap;
 	}
 
 	public RestResponse execute(Link link, Map<String, Object> parameters)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException {
+			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException {
 		validateParameters(parameters, link);
 		try {
 			HttpMethod httpMethod = link.getHttpMethod();
 			URL url = getUrl(link.getHref());
 			String response = request(httpMethod, parameters, url);
 			return ResourceDTOFactory.get(response);
-		} catch (UnsupportedEncodingException e) {
-			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
-		} catch (MalformedURLException e) {
-			throw new OpenShiftException(e, "Could not encode parameters: {0}", e.getMessage());
 		} catch (UnauthorizedException e) {
 			throw new InvalidCredentialsOpenShiftException(link.getHref(), e);
 		} catch (NotFoundException e) {
 			throw new NotFoundOpenShiftException(link.getHref(), e);
-		} catch (SocketTimeoutException e) {
-			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage());
 		} catch (HttpClientException e) {
-			throw new OpenShiftEndpointException(link.getHref(), e, createRestResponse(e.getMessage()), e.getMessage());
+			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage());
 		}
 	}
 
@@ -104,7 +110,7 @@ public class RestService implements IRestService {
 		case DELETE:
 			return client.delete(url);
 		default:
-			throw new OpenShiftException("Unexpected Http method {0}", httpMethod.toString());
+			throw new OpenShiftException("Unexpected HTTP method {0}", httpMethod.toString());
 		}
 	}
 
@@ -167,10 +173,6 @@ public class RestService implements IRestService {
 	private boolean isEmptyString(LinkParameter parameter, Object parameterValue) {
 		return parameter.getType() == LinkParameterType.STRING
 				&& StringUtils.isEmpty((String) parameterValue);
-	}
-
-	private RestResponse createRestResponse(String response) throws OpenShiftException {
-		return ResourceDTOFactory.get(response);
 	}
 
 	public void setProxySet(boolean proxySet) {
