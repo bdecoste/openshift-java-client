@@ -19,10 +19,13 @@ public class DomainResourceDTO extends BaseResourceDTO {
 
 	/** the domain's configured namespace. */
 	private final String namespace;
+	/** the domain's configured suffix (cannot be configured by user, returned by platform). */
+	private String suffix;
 	
-	public DomainResourceDTO(final String namespace, final Map<String, Link> links) {
+	public DomainResourceDTO(final String namespace, final String suffix, final Map<String, Link> links) {
 		super(links);
 		this.namespace = namespace;
+		this.suffix = suffix;
 	}
 
 	/**
@@ -30,6 +33,10 @@ public class DomainResourceDTO extends BaseResourceDTO {
 	 */
 	public final String getNamespace() {
 		return namespace;
+	}
+
+	public String getSuffix() {
+		return suffix;
 	}
 
 }

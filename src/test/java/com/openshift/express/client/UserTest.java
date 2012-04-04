@@ -12,21 +12,28 @@ package com.openshift.express.client;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.UnsupportedEncodingException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
 import com.openshift.express.client.utils.Samples;
+import com.openshift.express.internal.client.LinkRetriever;
 import com.openshift.express.internal.client.RestService;
+import com.openshift.express.internal.client.httpclient.HttpClientException;
+import com.openshift.express.internal.client.httpclient.UnauthorizedException;
 
 /**
  * @author Xavier Coulon
@@ -97,6 +104,60 @@ public class UserTest {
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
 
+	@Test(expected=InvalidCredentialsOpenShiftException.class)
+	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/api"))).thenThrow(new UnauthorizedException("invalid mock credentials", null));
+		// operation
+		user.getDomains();
+		// verifications
+		// expect an exception
+	}
+	
+	@Test
+	public void shouldCreateNewDomain() throws Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
+				Samples.GET_DOMAINS_NOEXISTING_JSON.getContentAsString());
+		when(mockClient.post(anyMapOf(String.class, Object.class), urlEndsWith("/domains"))).thenReturn(
+				Samples.ADD_DOMAIN_JSON.getContentAsString());
+		// operation
+		final IDomain domain = user.createDomain("foobar2");
+		// verifications
+		assertThat(domain.getNamespace()).isEqualTo("foobar2");
+	}
+	
+	@Test(expected=OpenShiftException.class)
+	public void shouldNotRecreateExistingDomain() throws Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
+				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.post(anyMapOf(String.class, Object.class), urlEndsWith("/domains"))).thenReturn(
+				Samples.ADD_DOMAIN_JSON.getContentAsString());
+		// operation
+		user.createDomain("foobar");
+		// verifications
+		// expect an exception
+	}
+
+	@Test
+	public void shouldUpdateDomainNamespace() throws Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
+				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
+				Samples.UPDATE_DOMAIN_NAMESPACE.getContentAsString());
+		final IDomain domain = user.getDomain("foobar");
+		// operation
+		domain.setNamespace("foobarbaz");
+		// verifications
+		final IDomain updatedDomain = user.getDomain("foobarbaz");
+		assertThat(updatedDomain.getNamespace()).isEqualTo("foobarbaz");
+		assertThat(LinkRetriever.retrieveLink(updatedDomain, "UPDATE").getHref()).contains("/foobarbaz");
+		verify(mockClient, times(1)).put(anyMapOf(String.class, Object.class), any(URL.class));
+	}
+	
+	@Ignore
 	@Test
 	public void shouldLoadEmptyListOfApplications() throws Throwable {
 		// pre-conditions

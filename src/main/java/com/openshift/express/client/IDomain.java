@@ -19,8 +19,10 @@ public interface IDomain {
 
 	public void setNamespace(String namespace) throws OpenShiftException;
 
+	// TODO : rename as 'name' to match the json messages ?
 	public String getNamespace();
 
+	// TODO: rename as 'suffix' to match the json messages ?
 	public String getRhcDomain() throws OpenShiftException;
 
 	public void destroy() throws OpenShiftException;

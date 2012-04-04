@@ -30,9 +30,13 @@ public interface IUser {
 
 	public String getUUID() throws OpenShiftException;
 
+	public IDomain createDomain(String name) throws OpenShiftException;
+
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException;
 
 	public List<IDomain> getDomains() throws OpenShiftException;
+	
+	public IDomain getDomain(String namespace) throws OpenShiftException;
 	
 	public boolean hasDomain() throws OpenShiftException;
 

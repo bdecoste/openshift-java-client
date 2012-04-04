@@ -19,6 +19,7 @@ import com.openshift.express.client.IApplication;
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IDomain;
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 
@@ -27,12 +28,14 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
  */
 public class Domain extends AbstractOpenShiftResource implements IDomain {
 
+	public static final String LINK_UPDATE = "UPDATE";
 	private String namespace;
 	private String rhcDomain;
 
-	public Domain(String namespace, Map<String, Link> links, User user) {
+	public Domain(final String namespace, final String suffix, final Map<String, Link> links, final User user) {
 		super(user.service, links);
 		this.namespace = namespace;
+		this.rhcDomain = suffix;
 	}
 
 	public String getNamespace() {
@@ -40,17 +43,15 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	}
 	
 	public String getRhcDomain() throws OpenShiftException {
-//		if (rhcDomain == null) {
-//			this.rhcDomain = getUserInfo().getRhcDomain();
-//		}
 		return rhcDomain;
 	}
 
 	public void setNamespace(String namespace) throws OpenShiftException {
-    	throw new UnsupportedOperationException();
-//		InternalUser user = getInternalUser();
-//		IDomain domain = service.changeDomain(namespace, user.getSshKey(), user);
-//		update(domain);
+    	DomainResourceDTO domainDTO = execute(getLink(LINK_UPDATE), new ServiceParameter("namespace", namespace));
+    	this.namespace = domainDTO.getNamespace();
+    	this.rhcDomain = domainDTO.getSuffix();
+    	this.links.clear();
+    	this.links.putAll(domainDTO.getLinks());
 	}
 
 //	private void update(IDomain domain) throws OpenShiftException {
