@@ -150,7 +150,8 @@ public class ResourceDTOFactoryTest {
 		assertThat(domainDTOs).isNotEmpty();
 		assertThat(domainDTOs).hasSize(1);
 		final DomainResourceDTO domainDTO = domainDTOs.get(0);
-		assertThat(domainDTO.getNamespace()).isEqualTo("xcoulon");
+		assertThat(domainDTO.getNamespace()).isEqualTo("foobar");
+		assertThat(domainDTO.getNamespace()).isEqualTo("stg.rhcloud.com");
 		assertThat(domainDTO.getLinks()).hasSize(7);
 		final Link link = domainDTO.getLink(ADD_APPLICATION);
 		assertThat(link).isNotNull();

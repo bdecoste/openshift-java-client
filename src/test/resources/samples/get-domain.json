@@ -1,147 +1,156 @@
 {
+    "version":"1.0",
+    "messages":[
+        
+    ],
     "data":{
+        "suffix":"stg.rhcloud.com",
         "links":{
-            "DELETE":{
-                "rel":"Delete domain",
+            "LIST_APPLICATIONS":{
+                "href":"/domains/foobar/applications",
+                "optional_params":[
+                    
+                ],
                 "required_params":[
                     
                 ],
+                "method":"GET",
+                "rel":"List applications"
+            },
+            "UPDATE":{
+                "href":"/domains/foobar",
                 "optional_params":[
+                    
+                ],
+                "required_params":[
                     {
-                        "description":"Force delete domain.  i.e. delete any applications under this domain",
-                        "type":"boolean",
-                        "default_value":false,
-                        "name":"force",
-                        "valid_options":"true or false"
+                        "name":"namespace",
+                        "valid_options":[
+                            
+                        ],
+                        "description":"Name of the domain",
+                        "type":"string"
                     }
                 ],
-                "href":"/domains/foobar",
-                "method":"DELETE"
+                "method":"PUT",
+                "rel":"Update domain"
             },
-            "LIST_APPLICATIONS":{
-                "rel":"List applications",
+            "DELETE":{
+                "href":"/domains/foobar",
+                "optional_params":[
+                    {
+                        "default_value":false,
+                        "name":"force",
+                        "valid_options":[
+                            true,
+                            false
+                        ],
+                        "description":"Force delete domain.  i.e. delete any applications under this domain",
+                        "type":"boolean"
+                    }
+                ],
                 "required_params":[
                     
                 ],
+                "method":"DELETE",
+                "rel":"Delete domain"
+            },
+            "GET":{
+                "href":"/domains/foobar",
                 "optional_params":[
                     
                 ],
-                "href":"/domains/foobar/applications",
-                "method":"GET"
+                "required_params":[
+                    
+                ],
+                "method":"GET",
+                "rel":"Get domain"
             },
-            "ADD_APPLICATION_FROM_TEMPLATE":{
-                "rel":"Create new application",
+            "ADD_APPLICATION":{
+                "href":"/domains/foobar/applications",
+                "optional_params":[
+                    {
+                        "default_value":false,
+                        "name":"scale",
+                        "valid_options":[
+                            true,
+                            false
+                        ],
+                        "description":"Mark application as scalable",
+                        "type":"boolean"
+                    },
+                    {
+                        "default_value":"small",
+                        "name":"node_profile",
+                        "valid_options":[
+                            "small",
+                            "micro",
+                            "medium",
+                            "large",
+                            "exlarge",
+                            "jumbo"
+                        ],
+                        "description":"The size of the gear",
+                        "type":"string"
+                    }
+                ],
                 "required_params":[
                     {
-                        "description":"Name of the application",
-                        "type":"string",
                         "name":"name",
                         "valid_options":[
                             
-                        ]
+                        ],
+                        "description":"Name of the application",
+                        "type":"string"
                     },
                     {
-                        "description":"UUID of the application template",
-                        "type":"string",
+                        "name":"cartridge",
+                        "valid_options":[
+                            "nodejs-0.6",
+                            "jbossas-7",
+                            "python-2.6",
+                            "jenkins-1.4",
+                            "ruby-1.8",
+                            "diy-0.1",
+                            "php-5.3",
+                            "perl-5.10"
+                        ],
+                        "description":"framework-type, e.g: php-5.3",
+                        "type":"string"
+                    }
+                ],
+                "method":"POST",
+                "rel":"Create new application"
+            },
+            "ADD_APPLICATION_FROM_TEMPLATE":{
+                "href":"/domains/foobar/applications",
+                "optional_params":[
+                    
+                ],
+                "required_params":[
+                    {
+                        "name":"name",
+                        "valid_options":[
+                            
+                        ],
+                        "description":"Name of the application",
+                        "type":"string"
+                    },
+                    {
                         "name":"template",
                         "valid_options":[
                             
-                        ]
+                        ],
+                        "description":"UUID of the application template",
+                        "type":"string"
                     }
                 ],
-                "optional_params":[
-                    
-                ],
-                "href":"/domains/foobar/applications",
-                "method":"POST"
-            },
-            "CREATE":{
-                "rel":"Create new domain",
-                "required_params":[
-                    {
-                        "description":"Name of the domain",
-                        "type":"string",
-                        "name":"namespace",
-                        "valid_options":[
-                            
-                        ]
-                    }
-                ],
-                "optional_params":[
-                    
-                ],
-                "href":"/domains",
-                "method":"POST"
-            },
-            "ADD_APPLICATION":{
-                "rel":"Create new application",
-                "required_params":[
-                    {
-                        "description":"Name of the application",
-                        "type":"string",
-                        "name":"name",
-                        "valid_options":[
-                            
-                        ]
-                    },
-                    {
-                        "description":"framework-type, e.g: php-5.3",
-                        "type":"string",
-                        "name":"cartridge",
-                        "valid_options":[
-                            "raw-0.1",
-                            "php-5.3",
-                            "jenkins-1.4",
-                            "jbossas-7",
-                            "nodejs-0.6",
-                            "python-2.6",
-                            "perl-5.10",
-                            "ruby-1.8"
-                        ]
-                    }
-                ],
-                "optional_params":[
-                    
-                ],
-                "href":"/domains/foobar/applications",
-                "method":"POST"
-            },
-            "GET":{
-                "rel":"Get domain",
-                "required_params":[
-                    
-                ],
-                "optional_params":[
-                    
-                ],
-                "href":"/domains/foobar",
-                "method":"GET"
-            },
-            "UPDATE":{
-                "rel":"Update domain",
-                "required_params":[
-                    {
-                        "description":"Name of the domain",
-                        "type":"string",
-                        "name":"namespace",
-                        "valid_options":[
-                            
-                        ]
-                    }
-                ],
-                "optional_params":[
-                    
-                ],
-                "href":"/domains/foobar",
-                "method":"PUT"
+                "method":"POST",
+                "rel":"Create new application"
             }
         },
         "namespace":"foobar"
     },
-    "type":"domain",
     "status":"ok",
-    "messages":[
-        
-    ],
-    "version":"1.0"
+    "type":"domain"
 }

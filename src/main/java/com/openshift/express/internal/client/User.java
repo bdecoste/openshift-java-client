@@ -32,6 +32,8 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
  */
 public class User extends AbstractOpenShiftResource implements IUser {
 
+	private static final String LINK_ADD_DOMAIN = "ADD_DOMAIN";
+	private static final String LINK_LIST_DOMAINS = "LIST_DOMAINS";
 	private String rhlogin;
 	private String password;
 	private String authKey;
@@ -45,7 +47,6 @@ public class User extends AbstractOpenShiftResource implements IUser {
 
 	public User(IRestService service) throws FileNotFoundException, IOException, OpenShiftException {
 		super(service);
-		postInitializeLinks();
 	}
 
 	/**
@@ -53,11 +54,13 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	 * 
 	 * @throws OpenShiftException
 	 */
-	private void postInitializeLinks() throws OpenShiftException {
-		synchronized (links) {
-			Map<String, Link> links = execute(new Link("Get API", "/api", HttpMethod.GET, null, null));
-			this.links.putAll(links);
+	@Override
+	protected Link getLink(String linkName) throws OpenShiftException {
+		if (links.isEmpty()) {
+			Map<String, Link> apiLinks = execute(new Link("Get API", "/api", HttpMethod.GET, null, null));
+			this.links.putAll(apiLinks);
 		}
+		return links.get(linkName);
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -69,6 +72,17 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		// }
 	}
 
+	public IDomain createDomain(String name) throws OpenShiftException {
+		if(hasDomain(name)) {
+			throw new OpenShiftException("Domain {0} already exists", name);
+		}
+		
+		final DomainResourceDTO domainDTO = execute(getLink(LINK_ADD_DOMAIN), new ServiceParameter("namespace", name));
+		IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), this);
+		this.domains.add(domain);
+		return domain;
+	}
+	
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		// setSshKey(key);
@@ -90,14 +104,29 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	public List<IDomain> getDomains() throws OpenShiftException {
 		if (this.domains == null) {
 			this.domains = new ArrayList<IDomain>();
-			List<DomainResourceDTO> domainDTOs = execute(getLink("LIST_DOMAINS"));
+			List<DomainResourceDTO> domainDTOs = execute(getLink(LINK_LIST_DOMAINS));
 			for (DomainResourceDTO domainDTO : domainDTOs) {
-				IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getLinks(), this);
+				IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), this);
 				this.domains.add(domain);
 			}
 		}
 		return domains;
 	}
+	
+	public IDomain getDomain(String namespace) throws OpenShiftException {
+		for(IDomain domain : getDomains()) {
+			if(domain.getNamespace().equals(namespace)) {
+				return domain;
+			}
+		}
+		return null;
+	}
+
+	
+	boolean hasDomain(String name) throws OpenShiftException {
+		return getDomain(name) != null;
+	}
+	
 
 	// public IDomain getDomain() throws OpenShiftException {
 	// if (domain == null

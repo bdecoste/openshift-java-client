@@ -40,28 +40,28 @@ public class AbstractOpenShiftResource {
 		}
 	}
 
-	Link getLink(String linkName) {
+	// made protectedfor testing purpose, but not part of the public interface, though
+	protected Link getLink(String linkName) throws OpenShiftException {
 		return links.get(linkName);
 	}
 
-	<T> T execute(Link link) throws OpenShiftException {
-		return execute(link, null);
-	}
-
-	<T> T execute(Link link, Map<String, Object> parameters) throws OpenShiftException {
+	<T> T execute(Link link, ServiceParameter... parameters) throws OpenShiftException {
 		assert link != null;
 		// avoid concurrency issues, to prevent reading the links map while it is still being retrieved
-		synchronized (links) {
-			try {
-				RestResponse response = service.execute(link, parameters);
-				return response.getData();
-			} catch (MalformedURLException e) {
-				throw new OpenShiftException(e, "Failed to execute {0} {1}", link.getHttpMethod().name(),
-						link.getHref());
-			} catch (UnsupportedEncodingException e) {
-				throw new OpenShiftException(e, "Failed to execute {0} {1}", link.getHttpMethod().name(),
-						link.getHref());
+		try {
+			Map<String, Object> params = null;
+			if (parameters != null) {
+				params = new HashMap<String, Object>();
+				for (ServiceParameter parameter : parameters) {
+					params.put(parameter.getKey(), parameter.getValue());
+				}
 			}
+			RestResponse response = service.execute(link, params);
+			return response.getData();
+		} catch (MalformedURLException e) {
+			throw new OpenShiftException(e, "Failed to execute {0} {1}", link.getHttpMethod().name(), link.getHref());
+		} catch (UnsupportedEncodingException e) {
+			throw new OpenShiftException(e, "Failed to execute {0} {1}", link.getHttpMethod().name(), link.getHref());
 		}
 
 	}

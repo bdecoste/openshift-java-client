@@ -50,6 +50,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_PROXY_PORT = "proxy_port";
 	public static final String PROPERTY_PROXY_HOST = "proxy_host";
 	public static final String PROPERTY_NAMESPACE = "namespace";
+	public static final String PROPERTY_SUFFIX = "suffix";
 	public static final String PROPERTY_NODE_PROFILE = "node_profile";
 	public static final String PROPERTY_OPTIONAL_PARAMS = "optional_params";
 	public static final String PROPERTY_REL = "rel";

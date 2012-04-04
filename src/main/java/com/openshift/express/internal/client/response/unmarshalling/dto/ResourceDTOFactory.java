@@ -17,18 +17,24 @@ import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstant
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN_ID;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_EMBEDDED;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_FRAMEWORK;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEARS_COMPONENTS;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GIT_URL;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INFO;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INTERNAL_PORT;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_METHOD;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAME;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAMESPACE;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_OPTIONAL_PARAMS;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_HOST;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_PORT;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REL;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REQUIRED_PARAMS;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_SUFFIX;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_TYPE;
-import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.*;
+import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_UUID;
 import static com.openshift.express.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_VALID_OPTIONS;
 
 import java.util.ArrayList;
@@ -274,8 +280,9 @@ public class ResourceDTOFactory {
 			return createDomain(domainNode.get(PROPERTY_DATA));
 		}
 		final String namespace = getAsString(domainNode, PROPERTY_NAMESPACE);
+		final String suffix = getAsString(domainNode, PROPERTY_SUFFIX);
 		final Map<String, Link> links = createLinks(domainNode.get(PROPERTY_LINKS));
-		return new DomainResourceDTO(namespace, links);
+		return new DomainResourceDTO(namespace, suffix, links);
 	}
 
 	/**
