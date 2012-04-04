@@ -12,6 +12,7 @@ package com.openshift.express.internal.client.httpclient;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -22,6 +23,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -127,11 +129,19 @@ public class UrlConnectionHttpClientBuilder {
 			}
 		}
 
-		public String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
+		public String put(Map<String, Object> parameters, URL url) throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
+			return put(new HttpParameters(parameters).toUrlEncoded(), url);
+		}
+		
+		protected String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
 			return write(data, HTTP_METHOD_PUT, url);
 		}
 
-		public String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
+		public String post(Map<String, Object> parameters, URL url) throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
+			return post(new HttpParameters(parameters).toUrlEncoded(), url);
+		}
+
+		protected String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
 			return write(data, HTTP_METHOD_POST, url);
 		}
 

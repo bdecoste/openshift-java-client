@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.express.internal.client;
+package com.openshift.express.internal.client.httpclient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,6 +26,10 @@ public class HttpParameters {
 	private static final String UTF8 = "UTF-8";
 
 	private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+
+	public HttpParameters(Map<String, Object> parameters) {
+		parameters.putAll(parameters);
+	}
 
 	public HttpParameters put(String key, Object value) {
 		parameters.put(key, value);

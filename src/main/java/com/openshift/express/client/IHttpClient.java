@@ -10,8 +10,10 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.Map;
 
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 
@@ -33,9 +35,9 @@ public interface IHttpClient {
 
 	public String get(URL url) throws HttpClientException, SocketTimeoutException;
 
-	public String post(String data, URL url) throws HttpClientException, SocketTimeoutException;
+	public String post(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
 
-	public String put(String data, URL url) throws HttpClientException, SocketTimeoutException;
+	public String put(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
 
 	public String delete(URL url) throws HttpClientException, SocketTimeoutException;
 }

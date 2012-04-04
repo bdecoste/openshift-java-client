@@ -13,22 +13,16 @@ package com.openshift.express.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
 
-import com.openshift.express.client.IHttpClientRequest.GetRequest;
 import com.openshift.express.client.utils.HostUtils;
 import com.openshift.express.internal.client.UserInfo;
-import com.openshift.express.internal.client.httpclient.HttpClientException;
-import com.openshift.express.internal.client.httpclient.NotFoundException;
-import com.openshift.express.internal.client.httpclient.UnauthorizedException;
 import com.openshift.express.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 import com.openshift.express.internal.client.response.OpenShiftResponse;
 import com.openshift.express.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
-import com.openshift.express.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.express.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.express.internal.client.utils.StreamUtils;
 import com.openshift.express.internal.client.utils.UrlBuilder;
@@ -90,8 +84,9 @@ public class OpenShiftService implements IOpenShiftService {
 	}
 
 	public RestResponse getDomains(String url, IUser user) throws OpenShiftException, MalformedURLException {
-		String response = sendRequest(new GetRequest(getResourceUrl(url)), createClient(user), "");
-		return ResourceDTOFactory.get(response);
+		throw new UnsupportedOperationException();
+//		String response = sendRequest(new GetRequest(getResourceUrl(url)), createClient(user), "");
+//		return ResourceDTOFactory.get(response);
 	}
 
 	private URL getResourceUrl(String url) throws MalformedURLException {
@@ -140,23 +135,24 @@ public class OpenShiftService implements IOpenShiftService {
 		}
 	}
 
-	private String sendRequest(final IHttpClientRequest request, IHttpClient client, String errorMessage)
-			throws OpenShiftException {
-		String url = request.getUrl().toString();
-		try {
-			return request.execute(client);
-		} catch (MalformedURLException e) {
-			throw new OpenShiftException(e, errorMessage);
-		} catch (UnauthorizedException e) {
-			throw new InvalidCredentialsOpenShiftException(url, e);
-		} catch (NotFoundException e) {
-			throw new NotFoundOpenShiftException(url, e);
-		} catch (SocketTimeoutException e) {
-			throw new OpenShiftEndpointException(url, e, errorMessage);
-		} catch (HttpClientException e) {
-			throw new OpenShiftEndpointException(url, e, createNakedResponse(e.getMessage()), errorMessage);
-		}
-	}
+//	private String sendRequest(final IHttpClientRequest request, IHttpClient client, String errorMessage)
+//			throws OpenShiftException {
+//		throw new UnsupportedOperationException();
+//		String url = request.getUrl().toString();
+//		try {
+//			return request.execute(client);
+//		} catch (MalformedURLException e) {
+//			throw new OpenShiftException(e, errorMessage);
+//		} catch (UnauthorizedException e) {
+//			throw new InvalidCredentialsOpenShiftException(url, e);
+//		} catch (NotFoundException e) {
+//			throw new NotFoundOpenShiftException(url, e);
+//		} catch (SocketTimeoutException e) {
+//			throw new OpenShiftEndpointException(url, e, errorMessage);
+//		} catch (HttpClientException e) {
+//			throw new OpenShiftEndpointException(url, e, createNakedResponse(e.getMessage()), errorMessage);
+//		}
+//	}
 
 	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
 		return new NakedResponseUnmarshaller().unmarshall(response);

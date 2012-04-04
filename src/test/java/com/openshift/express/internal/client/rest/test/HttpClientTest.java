@@ -14,9 +14,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,15 +63,15 @@ public class HttpClientTest {
 	}
 
 	@Test
-	public void canPost() throws SocketTimeoutException, HttpClientException, MalformedURLException {
-		String response = httpClient.post("dummy", new URL(serverFake.getUrl()));
+	public void canPost() throws SocketTimeoutException, HttpClientException, MalformedURLException, UnsupportedEncodingException {
+		String response = httpClient.post(new HashMap<String, Object>(), new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("POST"));
 	}
 
 	@Test
-	public void canPut() throws SocketTimeoutException, HttpClientException, MalformedURLException {
-		String response = httpClient.put("dummy", new URL(serverFake.getUrl()));
+	public void canPut() throws SocketTimeoutException, HttpClientException, MalformedURLException, UnsupportedEncodingException {
+		String response = httpClient.put(new HashMap<String, Object>(), new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("PUT"));
 	}

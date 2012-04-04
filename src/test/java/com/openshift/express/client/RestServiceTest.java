@@ -10,10 +10,11 @@
  ******************************************************************************/
 package com.openshift.express.client;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,11 +23,12 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.express.internal.client.HttpParameters;
 import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
@@ -42,8 +44,14 @@ public class RestServiceTest {
 	private IHttpClient clientMock;
 
 	@Before
-	public void setUp() throws FileNotFoundException, IOException, OpenShiftException {
+	public void setUp() throws FileNotFoundException, IOException, OpenShiftException, HttpClientException {
 		this.clientMock = mock(IHttpClient.class);
+		String jsonResponse = "{}";
+		when(clientMock.get(any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.post(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.delete(any(URL.class))).thenReturn(jsonResponse);
+
 		this.service = new RestService(clientMock);
 	}
 	
@@ -52,45 +60,65 @@ public class RestServiceTest {
 		// operation
 		LinkParameter parameter = new LinkParameter("required string parameter", LinkParameterType.STRING, null, null, null);
 		Link link = new Link("1 required parameter", "/dummy", HttpMethod.GET, Arrays.asList(parameter), null);
-		service.execute(link, new HttpParameters());
+		service.execute(link, new HashMap<String, Object>());
 	}
 	
 	@Test
-	public void doesNotThrowIfNoReqiredParameter() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException {
+	public void shouldNotThrowIfNoReqiredParameter() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException {
 		// operation
-		Link link = new Link("0 require parameter", "/dummy", HttpMethod.GET, null, null);
-		service.execute(link, new HttpParameters());
+		Link link = new Link("0 required parameter", "/dummy", HttpMethod.GET, null, null);
+		service.execute(link, new HashMap<String, Object>());
 	}
 
 	@Test
-	public void doesGetIfGetHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldGetIfGetHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
-		service.execute(new Link("0 require parameter", "http://www.redhat.com", HttpMethod.GET, null, null));
+		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.GET, null, null));
 		// verifications
 		verify(clientMock, times(1)).get(any(URL.class));
 	}
 
 	@Test
-	public void doesPostIfPostHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldPostIfPostHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
-		service.execute(new Link("0 require parameter", "http://www.redhat.com", HttpMethod.POST, null, null));
+		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.POST, null, null));
 		// verifications
-		verify(clientMock, times(1)).post(any(String.class), any(URL.class));
+		verify(clientMock, times(1)).post(any(Map.class), any(URL.class));
 	}
 
 	@Test
-	public void doesPutIfPutHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldPutIfPutHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
-		service.execute(new Link("0 require parameter", "http://www.redhat.com", HttpMethod.PUT, null, null));
+		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.PUT, null, null));
 		// verifications
-		verify(clientMock, times(1)).put(any(String.class), any(URL.class));
+		verify(clientMock, times(1)).put(any(Map.class), any(URL.class));
 	}
 
 	@Test
-	public void doesDeleteIfDeleteHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldDeleteIfDeleteHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
-		service.execute(new Link("0 require parameter", "http://www.redhat.com", HttpMethod.DELETE, null, null));
+		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.DELETE, null, null));
 		// verifications
 		verify(clientMock, times(1)).delete(any(URL.class));
+	}
+
+	@Test
+	public void shouldNotAddServerToAbsUrl() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+		// operation
+		String url = "http://www.redhat.com";
+		service.execute(new Link("0 required parameter", url, HttpMethod.GET, null, null));
+		// verifications
+		verify(clientMock, times(1)).get(new URL(url));
+		
+	}
+
+	@Test
+	public void shouldAddServerToPath() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+		// operation
+		String url = "/adietisheim";
+		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
+		// verifications
+		String targetUrl = service.getServiceUrl() + url;
+		verify(clientMock, times(1)).get(new URL(targetUrl));
 	}
 }
