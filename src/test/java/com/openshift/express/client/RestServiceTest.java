@@ -29,6 +29,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.express.internal.client.IRestService;
 import com.openshift.express.internal.client.RestService;
 import com.openshift.express.internal.client.httpclient.HttpClientException;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
@@ -40,7 +41,7 @@ import com.openshift.express.internal.client.response.unmarshalling.dto.LinkPara
  */
 public class RestServiceTest {
 
-	private RestService service;
+	private IRestService service;
 	private IHttpClient clientMock;
 
 	@Before
@@ -52,7 +53,7 @@ public class RestServiceTest {
 		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
 		when(clientMock.delete(any(URL.class))).thenReturn(jsonResponse);
 
-		this.service = new RestService(clientMock);
+		this.service = new RestService(IRestServiceTestConstants.CLIENT_ID, clientMock);
 	}
 	
 	@Test(expected=OpenShiftException.class)
@@ -115,10 +116,32 @@ public class RestServiceTest {
 	@Test
 	public void shouldAddServerToPath() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
-		String url = "/adietisheim";
+		String url = "/adietisheim-redhat";
 		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
 		// verifications
-		String targetUrl = service.getServiceUrl() + url;
+		String targetUrl = service.getServiceUrl() + url.substring(1, url.length());
 		verify(clientMock, times(1)).get(new URL(targetUrl));
 	}
+
+	@Test
+	public void shouldNotAddBrokerPathIfPresent() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+		// operation
+		String url = "/broker/rest/adietisheim-redhat";
+		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
+		// verifications
+		String targetUrl = service.getPlatformUrl() + url;
+		verify(clientMock, times(1)).get(new URL(targetUrl));
+	}
+
+	@Test
+	public void should() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+		// operation
+		String url = "/broker/rest/adietisheim-redhat";
+		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
+		// verifications
+		String targetUrl = service.getPlatformUrl() + url;
+		verify(clientMock, times(1)).get(new URL(targetUrl));
+	}
+	
+	
 }

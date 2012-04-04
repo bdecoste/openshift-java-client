@@ -16,22 +16,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.openshift.express.client.IHttpClient;
+
 /**
  * @author Andre Dietisheim
  */
 public class HttpParameters {
 
-	private static final char AMPERSAND = '&';
-	private static final char EQUALS = '=';
 	private static final String UTF8 = "UTF-8";
 
 	private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
-	public HttpParameters(Map<String, Object> parameters) {
+	protected HttpParameters(Map<String, Object> parameters) {
 		parameters.putAll(parameters);
 	}
 
-	public HttpParameters put(String key, Object value) {
+	protected HttpParameters put(String key, Object value) {
 		parameters.put(key, value);
 		return this;
 	}
@@ -54,10 +54,10 @@ public class HttpParameters {
 
 	private void append(String name, Object value, StringBuilder builder) {
 		if (builder.length() > 0) {
-			builder.append(AMPERSAND);
+			builder.append(IHttpClient.AMPERSAND);
 		}
 		builder.append(name)
-				.append(EQUALS)
+				.append(IHttpClient.EQUALS)
 				.append(value.toString());
 	}
 }

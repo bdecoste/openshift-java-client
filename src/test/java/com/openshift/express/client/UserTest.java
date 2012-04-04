@@ -45,8 +45,6 @@ import com.openshift.express.internal.client.httpclient.UnauthorizedException;
  */
 public class UserTest {
 
-	private static final String CLIENT_ID = "openshift-java-client-rest-test";
-
 	private IUser user;
 	private IHttpClient mockClient;
 
@@ -96,7 +94,7 @@ public class UserTest {
 	public void setup() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(getContentAsString("get-rest-api.json"));
-		this.user = new UserBuilder().configure(new RestService(mockClient)).build();
+		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient)).build();
 	}
 
 	@Test

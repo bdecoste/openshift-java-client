@@ -36,7 +36,6 @@ import javax.net.ssl.X509TrustManager;
 
 import com.openshift.express.client.IHttpClient;
 import com.openshift.express.client.utils.Base64Coder;
-import com.openshift.express.internal.client.RestServiceProperties;
 import com.openshift.express.internal.client.utils.StreamUtils;
 
 /**
@@ -47,15 +46,14 @@ public class UrlConnectionHttpClientBuilder {
 	public static final String ACCEPT_APPLICATION_JSON = "application/json";
 	public static final String ACCEPT_APPLICATION_XML = "application/xml";
 
-	private final RestServiceProperties properties = new RestServiceProperties();
 	private String userAgent;
 	private boolean sslChecks = false;
 	private String username;
 	private String password;
 	private String acceptedContentType = "application/json";
 		
-	public UrlConnectionHttpClientBuilder setClientId(String clientId) {
-		this.userAgent = properties.getUseragent(clientId);
+	public UrlConnectionHttpClientBuilder setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 		return this;
 	}
 	
@@ -129,6 +127,10 @@ public class UrlConnectionHttpClientBuilder {
 			}
 		}
 
+		public void setUserAgent(String userAgent) {
+			this.userAgent = userAgent;
+		}
+		
 		public String put(Map<String, Object> parameters, URL url) throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
 			return put(new HttpParameters(parameters).toUrlEncoded(), url);
 		}
@@ -286,8 +288,10 @@ public class UrlConnectionHttpClientBuilder {
 			setReadTimeout(connection);
 			connection.setInstanceFollowRedirects(true);
 			connection.setRequestProperty(PROPERTY_CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM_URLENCODED);
-			connection.setRequestProperty(USER_AGENT, userAgent);
 			connection.setRequestProperty(PROPERTY_ACCEPT, acceptedContentType);
+			if (userAgent != null) {
+				connection.setRequestProperty(USER_AGENT, userAgent);
+			}
 			return connection;
 		}
 

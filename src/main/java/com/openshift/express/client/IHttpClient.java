@@ -30,9 +30,13 @@ public interface IHttpClient {
 
 	public static final char SPACE = ' ';
 	public static final char COLON = ':';
-
+	public static final char AMPERSAND = '&';
+	public static final char EQUALS = '=';
+	
 	public static final String USER_AGENT = "User-Agent"; //$NON-NLS-1$
 
+	public void setUserAgent(String userAgent);
+	
 	public String get(URL url) throws HttpClientException, SocketTimeoutException;
 
 	public String post(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
