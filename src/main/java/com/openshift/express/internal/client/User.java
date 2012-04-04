@@ -13,7 +13,9 @@ package com.openshift.express.internal.client;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.openshift.express.client.IApplication;
 import com.openshift.express.client.ICartridge;
@@ -22,11 +24,12 @@ import com.openshift.express.client.IEmbeddableCartridge;
 import com.openshift.express.client.ISSHPublicKey;
 import com.openshift.express.client.IUser;
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author André Dietisheim
  */
-public class User implements IUser {
+public class User extends AbstractResource implements IUser {
 
 	private String rhlogin;
 	private String password;
@@ -38,12 +41,10 @@ public class User implements IUser {
 	private List<ICartridge> cartridges;
 	private List<IEmbeddableCartridge> embeddableCartridges;
 	private List<IApplication> applications = new ArrayList<IApplication>();
-
-	private IRestService service;
-
+	
 	public User(IRestService service)
 			throws FileNotFoundException, IOException, OpenShiftException {
-		this.service = service;
+		super(service);
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -74,7 +75,7 @@ public class User implements IUser {
 	// }
 
 	public List<IDomain> getDomains() throws OpenShiftException {
-		throw new UnsupportedOperationException();
+		{{"foo", "bar"}};
 	}
 
 	// public IDomain getDomain() throws OpenShiftException {
@@ -197,10 +198,10 @@ public class User implements IUser {
 				, applicationInfo.getCartridge()
 				, applicationInfo
 				, this
-				, service);
+				, communicationService);
 	}
 
 	protected IRestService getService() {
-		return service;
+		return communicationService;
 	}
 }

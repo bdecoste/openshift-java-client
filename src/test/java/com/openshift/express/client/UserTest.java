@@ -106,6 +106,7 @@ public class UserTest {
 		assertThat(domains).hasSize(0);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
+
 	@Test
 	public void shouldLoadSingleUserDomain() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
@@ -132,5 +133,4 @@ public class UserTest {
 		assertThat(applications).hasSize(2);
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
-
 }
