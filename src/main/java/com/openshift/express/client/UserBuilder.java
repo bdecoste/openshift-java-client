@@ -44,6 +44,4 @@ public class UserBuilder {
 		return new User(service);
 	}
 
-	
-
 }
