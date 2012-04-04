@@ -30,7 +30,9 @@ public interface IHttpClient {
 
 	public static final char SPACE = ' ';
 	public static final char COLON = ':';
-
+	public static final char AMPERSAND = '&';
+	public static final char EQUALS = '=';
+	
 	public static final String USER_AGENT = "User-Agent"; //$NON-NLS-1$
 
 	public String get(URL url) throws HttpClientException, SocketTimeoutException;
