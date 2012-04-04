@@ -46,7 +46,6 @@ public class UserTest {
 	private static final String CLIENT_ID = "openshift-java-client-rest-test";
 
 	private IUser user;
-	private IHttpClient clientMock;
 	private IHttpClient mockClient;
 
 	/**
@@ -65,6 +64,9 @@ public class UserTest {
 
 		@Override
 		public boolean matches(Object argument) {
+			if(argument == null) {
+				return false;
+			}
 			URL url = (URL) argument;
 			return url.toExternalForm().endsWith(urlSuffix);
 		}
@@ -92,13 +94,13 @@ public class UserTest {
 	public void setup() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(getContentAsString("get-rest-api.json"));
-		this.user = new UserBuilder().configure(new RestService(clientMock)).build();
+		this.user = new UserBuilder().configure(new RestService(mockClient)).build();
 	}
 
 	@Test
 	public void shouldLoadEmptyListOfDomains() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/broker/domains"))).thenReturn(
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
 				getContentAsString("get-domains-noexisting.json"));
 		// operation
 		final List<IDomain> domains = user.getDomains();
@@ -110,7 +112,7 @@ public class UserTest {
 	@Test
 	public void shouldLoadSingleUserDomain() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/broker/domains"))).thenReturn(
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
 				getContentAsString("get-domains-1existing.json"));
 		// operation
 		final List<IDomain> domains = user.getDomains();
@@ -123,9 +125,9 @@ public class UserTest {
 	public void shouldLoadEmptyListOfApplications() throws OpenShiftException, SocketTimeoutException,
 			HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/broker/domains"))).thenReturn(
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
 				getContentAsString("get-domains-1existing.json"));
-		when(mockClient.get(urlEndsWith("/broker/domains/foobar/applications"))).thenReturn(
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				getContentAsString("get-applications-with2apps.json"));
 		// operation
 		final List<IApplication> applications = user.getDomains().get(0).getApplications();

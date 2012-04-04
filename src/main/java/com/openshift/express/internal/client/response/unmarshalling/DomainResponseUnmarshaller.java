@@ -31,6 +31,6 @@ public class DomainResponseUnmarshaller extends AbstractOpenShiftJsonResponseUnm
 	}
 
 	protected IDomain createOpenShiftObject(final ModelNode node) {
-		return new Domain(domainName, user);
+		return null; //new Domain(domainName, user);
 	}
 }

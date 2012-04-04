@@ -13,29 +13,26 @@ package com.openshift.express.internal.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.openshift.express.client.IApplication;
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IDomain;
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 
 /**
  * @author André Dietisheim
  */
-public class Domain extends UserInfoAware implements IDomain {
+public class Domain extends AbstractOpenShiftResource implements IDomain {
 
 	private String namespace;
 	private String rhcDomain;
 
-	public Domain(String namespace, User user) {
-		this(namespace, null, user);
-	}
-
-	public Domain(String namespace, String rhcDomain, User user) {
-		super(user);
+	public Domain(String namespace, Map<String, Link> links, User user) {
+		super(user.service, links);
 		this.namespace = namespace;
-		this.rhcDomain = rhcDomain;
 	}
 
 	public String getNamespace() {
@@ -43,9 +40,9 @@ public class Domain extends UserInfoAware implements IDomain {
 	}
 	
 	public String getRhcDomain() throws OpenShiftException {
-		if (rhcDomain == null) {
-			this.rhcDomain = getUserInfo().getRhcDomain();
-		}
+//		if (rhcDomain == null) {
+//			this.rhcDomain = getUserInfo().getRhcDomain();
+//		}
 		return rhcDomain;
 	}
 

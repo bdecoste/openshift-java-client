@@ -13,10 +13,10 @@ package com.openshift.express.internal.client;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.express.client.HttpMethod;
 import com.openshift.express.client.IApplication;
 import com.openshift.express.client.ICartridge;
 import com.openshift.express.client.IDomain;
@@ -24,27 +24,40 @@ import com.openshift.express.client.IEmbeddableCartridge;
 import com.openshift.express.client.ISSHPublicKey;
 import com.openshift.express.client.IUser;
 import com.openshift.express.client.OpenShiftException;
+import com.openshift.express.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.express.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author André Dietisheim
  */
-public class User extends AbstractResource implements IUser {
+public class User extends AbstractOpenShiftResource implements IUser {
 
 	private String rhlogin;
 	private String password;
 	private String authKey;
 	private String authIV;
 	private ISSHPublicKey sshKey;
-	private IDomain domain;
+	private List<IDomain> domains;
 	private UserInfo userInfo;
 	private List<ICartridge> cartridges;
 	private List<IEmbeddableCartridge> embeddableCartridges;
 	private List<IApplication> applications = new ArrayList<IApplication>();
-	
-	public User(IRestService service)
-			throws FileNotFoundException, IOException, OpenShiftException {
+
+	public User(IRestService service) throws FileNotFoundException, IOException, OpenShiftException {
 		super(service);
+		postInitializeLinks();
+	}
+
+	/**
+	 * Cause the underlying REST Service to call the root API in an asynchronous manner to avoid UI blockings.
+	 * 
+	 * @throws OpenShiftException
+	 */
+	private void postInitializeLinks() throws OpenShiftException {
+		synchronized (links) {
+			Map<String, Link> links = execute(new Link("Get API", "/api", HttpMethod.GET, null, null));
+			this.links.putAll(links);
+		}
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -75,7 +88,15 @@ public class User extends AbstractResource implements IUser {
 	// }
 
 	public List<IDomain> getDomains() throws OpenShiftException {
-		{{"foo", "bar"}};
+		if (this.domains == null) {
+			this.domains = new ArrayList<IDomain>();
+			List<DomainResourceDTO> domainDTOs = execute(getLink("LIST_DOMAINS"));
+			for (DomainResourceDTO domainDTO : domainDTOs) {
+				IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getLinks(), this);
+				this.domains.add(domain);
+			}
+		}
+		return domains;
 	}
 
 	// public IDomain getDomain() throws OpenShiftException {
@@ -185,23 +206,10 @@ public class User extends AbstractResource implements IUser {
 	}
 
 	public void refresh() throws OpenShiftException {
-		this.domain = null;
+		this.domains = null;
 		this.sshKey = null;
 		this.userInfo = null;
 		getUserInfo();
 	}
 
-	private Application createApplication(ApplicationInfo applicationInfo) {
-		return new Application(
-				applicationInfo.getName()
-				, applicationInfo.getUuid()
-				, applicationInfo.getCartridge()
-				, applicationInfo
-				, this
-				, communicationService);
-	}
-
-	protected IRestService getService() {
-		return communicationService;
-	}
 }
