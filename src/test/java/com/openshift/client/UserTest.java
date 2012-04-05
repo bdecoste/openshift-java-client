@@ -19,7 +19,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
@@ -29,13 +28,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
-import com.openshift.client.IApplication;
-import com.openshift.client.IDomain;
-import com.openshift.client.IHttpClient;
-import com.openshift.client.IUser;
-import com.openshift.client.InvalidCredentialsOpenShiftException;
-import com.openshift.client.OpenShiftException;
-import com.openshift.client.UserBuilder;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;

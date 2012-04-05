@@ -41,13 +41,13 @@ public class Application extends UserInfoAware implements IApplication {
 	private String creationLog;
 	private String uuid;
 
-	public Application(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
+	protected Application(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
 			User user, IRestService service) {
 		this(name, uuid, creationLog, healthCheckPath, cartridge, new ArrayList<IEmbeddableCartridge>(), null, user,
 				service);
 	}
 
-	public Application(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo,
+	protected Application(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo,
 			User user, IRestService service) {
 		this(name, uuid, null, null, cartridge, null, applicationInfo, user, service);
 	}

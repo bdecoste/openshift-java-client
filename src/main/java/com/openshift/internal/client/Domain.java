@@ -29,12 +29,11 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  */
 public class Domain extends AbstractOpenShiftResource implements IDomain {
 
-	public static final String LINK_UPDATE = "UPDATE";
 	private String namespace;
 	private String rhcDomain;
 
-	public Domain(final String namespace, final String suffix, final Map<String, Link> links, final User user) {
-		super(user.service, links);
+	protected Domain(final String namespace, final String suffix, final Map<String, Link> links, final IRestService service) {
+		super(service, links);
 		this.namespace = namespace;
 		this.rhcDomain = suffix;
 	}
@@ -48,11 +47,10 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	}
 
 	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException {
-    	DomainResourceDTO domainDTO = execute(getLink(LINK_UPDATE), new ServiceParameter("namespace", namespace));
+    	DomainResourceDTO domainDTO = new UpdateDomainRequest().execute(namespace);
     	this.namespace = domainDTO.getNamespace();
     	this.rhcDomain = domainDTO.getSuffix();
-    	this.links.clear();
-    	this.links.putAll(domainDTO.getLinks());
+    	getLinks().putAll(domainDTO.getLinks());
 	}
 
 //	private void update(IDomain domain) throws OpenShiftException {
@@ -143,4 +141,15 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 //		}
 	}
 
+	private class UpdateDomainRequest extends ServiceRequest {
+
+		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
+			super("UPDATE", Domain.this);
+		}
+		
+		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
+			return execute(new ServiceParameter("namespace", namespace));
+		}
+	}
+	
 }

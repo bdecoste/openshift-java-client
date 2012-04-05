@@ -11,22 +11,20 @@
 package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author Xavier Coulon
+ * @author Andre Dietisheim
  * 
  */
 public class AbstractOpenShiftResource {
 
-	final Map<String, Link> links = new HashMap<String, Link>();
-
-	final IRestService service;
+	private Map<String, Link> links;
+	final private IRestService service;
 
 	public AbstractOpenShiftResource(final IRestService service) {
 		this(service, null);
@@ -34,23 +32,25 @@ public class AbstractOpenShiftResource {
 
 	public AbstractOpenShiftResource(final IRestService service, final Map<String, Link> links) {
 		this.service = service;
-		if (links != null) {
-			this.links.putAll(links);
+		this.links = links;
+	}
+
+	protected Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
+		return links;
+	}
+	
+	protected Link getLink(String linkName) throws SocketTimeoutException, OpenShiftException {
+		if (getLinks().isEmpty()) {
+			return null;
 		}
+		return getLinks().get(linkName);
 	}
-
-	// made protectedfor testing purpose, but not part of the public interface,
-	// though
-	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
-		return links.get(linkName);
+	
+	protected void setLinks(Map<String, Link> links) {
+		this.links = links;
 	}
-
-	<T> T execute(Link link, ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException {
-		assert link != null;
-		// avoid concurrency issues, to prevent reading the links map while it
-		// is still being retrieved
-		RestResponse response = service.execute(link, parameters);
-		return response.getData();
+	
+	protected IRestService getService() {
+		return service;
 	}
-
 }

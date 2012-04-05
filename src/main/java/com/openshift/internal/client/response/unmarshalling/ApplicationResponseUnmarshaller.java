@@ -80,7 +80,8 @@ public class ApplicationResponseUnmarshaller extends AbstractOpenShiftJsonRespon
 		} else if (cartridge instanceof RawCartridge) {
 			return new RawApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		} else {
-			return new Application(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
+			throw new UnsupportedOperationException();
+//			return new Application(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		}
 	}
 }

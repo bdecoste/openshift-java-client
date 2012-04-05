@@ -33,8 +33,6 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  */
 public class User extends AbstractOpenShiftResource implements IUser {
 
-	private static final String LINK_ADD_DOMAIN = "ADD_DOMAIN";
-	private static final String LINK_LIST_DOMAINS = "LIST_DOMAINS";
 	private String rhlogin;
 	private String password;
 	private String authKey;
@@ -51,18 +49,18 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	/**
-	 * Cause the underlying REST Service to call the root API in an asynchronous manner to avoid UI blockings.
-	 * 
-	 * @throws OpenShiftException
+	 * Cause the underlying REST Service to call the root API in an asynchronous
+	 * manner to avoid UI blockings.
+	 * @throws OpenShiftException 
 	 * @throws SocketTimeoutException 
 	 */
 	@Override
-	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
-		if (links.isEmpty()) {
-			Map<String, Link> apiLinks = execute(new Link("Get API", "/api", HttpMethod.GET));
-			this.links.putAll(apiLinks);
+	protected Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
+		if (super.getLinks() == null) {
+			Map<String, Link> apiLinks = new GetAPIRequest().execute();
+			setLinks(apiLinks);
 		}
-		return links.get(linkName);
+		return super.getLinks();
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -75,16 +73,16 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
-		if(hasDomain(name)) {
+		if (hasDomain(name)) {
 			throw new OpenShiftException("Domain {0} already exists", name);
 		}
-		
-		final DomainResourceDTO domainDTO = execute(getLink(LINK_ADD_DOMAIN), new ServiceParameter("namespace", name));
-		IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), this);
+
+		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(name);
+		IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), getService());
 		this.domains.add(domain);
 		return domain;
 	}
-	
+
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		// setSshKey(key);
@@ -106,29 +104,27 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
 		if (this.domains == null) {
 			this.domains = new ArrayList<IDomain>();
-			List<DomainResourceDTO> domainDTOs = execute(getLink(LINK_LIST_DOMAINS));
+			List<DomainResourceDTO> domainDTOs = new ListDomainsRequest().execute();
 			for (DomainResourceDTO domainDTO : domainDTOs) {
-				IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), this);
+				IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), getService());
 				this.domains.add(domain);
 			}
 		}
 		return domains;
 	}
-	
+
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
-		for(IDomain domain : getDomains()) {
-			if(domain.getNamespace().equals(namespace)) {
+		for (IDomain domain : getDomains()) {
+			if (domain.getNamespace().equals(namespace)) {
 				return domain;
 			}
 		}
 		return null;
 	}
 
-	
 	boolean hasDomain(String name) throws OpenShiftException, SocketTimeoutException {
 		return getDomain(name) != null;
 	}
-	
 
 	// public IDomain getDomain() throws OpenShiftException {
 	// if (domain == null
@@ -241,6 +237,39 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		this.sshKey = null;
 		this.userInfo = null;
 		getUserInfo();
+	}
+
+	private class GetAPIRequest extends ServiceRequest {
+
+		public GetAPIRequest() {
+			super(new Link("Get API", "/api", HttpMethod.GET), User.this);
+		}
+
+		public Map<String, Link> execute() throws SocketTimeoutException, OpenShiftException {
+			return super.execute();
+		}
+	}
+
+	private class AddDomainRequest extends ServiceRequest {
+
+		public AddDomainRequest() throws SocketTimeoutException, OpenShiftException {
+			super("ADD_DOMAIN", User.this);
+		}
+
+		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
+			return execute(new ServiceParameter("namespace", namespace));
+		}
+	}
+	
+	private class ListDomainsRequest extends ServiceRequest {
+
+		public ListDomainsRequest() throws SocketTimeoutException, OpenShiftException {
+			super("LIST_DOMAINS", User.this);
+		}
+
+		public List<DomainResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
+			return super.execute();
+		}
 	}
 
 }
