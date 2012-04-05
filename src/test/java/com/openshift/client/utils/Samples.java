@@ -57,7 +57,7 @@ public enum Samples {
 	REMOVE_DOMAIN_EXISTING_JSON("remove-domain-existing.json"),
 	REMOVE_DOMAIN_UNEXISTING_JSON("remove-domain-unexisting.json"),
 	UPDATE_USER_KEY_JSON("update-user-key.json"),
-	UPDATE_DOMAIN_NAMESPACE("update-domain-namespace");
+	UPDATE_DOMAIN_NAMESPACE("update-domain-namespace.json");
 
 	private static final String SAMPLES_FOLDER = "/samples/";
 
