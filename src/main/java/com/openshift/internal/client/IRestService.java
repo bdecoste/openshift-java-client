@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 
@@ -25,13 +23,13 @@ import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 public interface IRestService {
 
 	public abstract RestResponse execute(Link link)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException;
+			throws OpenShiftException, SocketTimeoutException;
 
 	public RestResponse execute(Link link, ServiceParameter... serviceParameters)
-			throws SocketTimeoutException, MalformedURLException, UnsupportedEncodingException, OpenShiftException;
+			throws SocketTimeoutException, OpenShiftException;
 
 	public abstract RestResponse execute(Link link, Map<String, Object> parameters)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException;
+			throws OpenShiftException, SocketTimeoutException;
 
 	public abstract void setProxySet(boolean proxySet);
 
