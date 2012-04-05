@@ -21,21 +21,23 @@ public class OpenShiftEndpointException extends OpenShiftException {
 	private static final long serialVersionUID = 1L;
 
 	private String url;
-	private RestResponse restResponse;
+	private String response;
 	
-	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) throws OpenShiftException {
-		this(url, cause, ResourceDTOFactory.get(cause.getMessage()), message, arguments);
+	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) {
+		this(url, cause, null, message, arguments);
 	}
 
-	public OpenShiftEndpointException(String url, Throwable cause, RestResponse restResponse,
-			String message, Object... arguments) {
+	public OpenShiftEndpointException(String url, Throwable cause, String response, String message, Object... arguments) {
 		super(cause, message, arguments);
-		this.restResponse = restResponse;
+		this.response = response;
 		this.url = url;
 	}
 		
-	public RestResponse getRestResponse() {
-		return restResponse;
+	public RestResponse getRestResponse() throws OpenShiftException {
+		if (response == null) {
+			return null;
+		}
+		return ResourceDTOFactory.get(response);
 	}
 
 	protected String getUrl() {
