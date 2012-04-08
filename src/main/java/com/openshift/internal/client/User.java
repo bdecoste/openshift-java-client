@@ -37,12 +37,12 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private String password;
 	private String authKey;
 	private String authIV;
-	private ISSHPublicKey sshKey;
+	private List<ISSHPublicKey> sshKeys;
 	private List<IDomain> domains;
 	private UserInfo userInfo;
 	private List<ICartridge> cartridges;
 	private List<IEmbeddableCartridge> embeddableCartridges;
-	private List<IApplication> applications = new ArrayList<IApplication>();
+	private List<IApplication> applications;
 
 	public User(IRestService service) throws FileNotFoundException, IOException, OpenShiftException {
 		super(service);
@@ -102,7 +102,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// }
 
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
-		if (this.domains == null) {
+		if (domains == null) {
 			this.domains = new ArrayList<IDomain>();
 			List<DomainResourceDTO> domainDTOs = new ListDomainsRequest().execute();
 			for (DomainResourceDTO domainDTO : domainDTOs) {
@@ -164,6 +164,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// }
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException {
+		if (sshK)
 		throw new UnsupportedOperationException();
 	}
 
@@ -234,7 +235,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 
 	public void refresh() throws OpenShiftException {
 		this.domains = null;
-		this.sshKey = null;
+		this.sshKeys = null;
 		this.userInfo = null;
 		getUserInfo();
 	}
@@ -272,4 +273,16 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		}
 	}
 
+	private class GetSShKeysRequest extends ServiceRequest {
+
+		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {
+			super("GET", User.this);
+		}
+
+		public List<DomainResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
+			return super.execute();
+		}
+	}
+	
+	
 }
