@@ -25,11 +25,12 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_CARTRIDGE = "cartridge";
 	public static final String PROPERTY_CARTS = "carts";
 	public static final String PROPERTY_CONSUMED_GEARS = "consumed_gears";
+	public static final String PROPERTY_CONTENT = "content";
 	public static final String PROPERTY_DATA = "data";
-	public static final String PROPERTY_KEYS = "keys";
-	public static final String PROPERTY_KEY = "key";
 	public static final String PROPERTY_DEBUG = "debug";
+	public static final String PROPERTY_DEFAULT_VALUE = "default_value";
 	public static final String PROPERTY_DELETE = "delete";
+	public static final String PROPERTY_DESCRIPTION = "description";
 	public static final String PROPERTY_DOMAIN = "domain";
 	public static final String PROPERTY_DOMAINS = "domains";
 	public static final String PROPERTY_DOMAIN_ID = "domain_id";
@@ -40,6 +41,8 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_HREF = "href";
 	public static final String PROPERTY_INFO = "info";
 	public static final String PROPERTY_KEY_TYPE = "key_type";
+	public static final String PROPERTY_KEYS = "keys";
+	public static final String PROPERTY_KEY = "key";
 	public static final String PROPERTY_LOGIN = "login";
 	public static final String PROPERTY_LINKS = "links";
 	public static final String PROPERTY_MESSAGES = "messages";
