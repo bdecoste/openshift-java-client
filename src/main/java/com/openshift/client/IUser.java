@@ -43,6 +43,8 @@ public interface IUser {
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException;
 
+	public void addSshKey(ISSHPublicKey key) throws OpenShiftException;
+
 	public List<ICartridge> getCartridges() throws OpenShiftException;
 
 	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException;

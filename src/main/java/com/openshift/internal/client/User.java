@@ -164,8 +164,11 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// }
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException {
-		if (sshK)
 		throw new UnsupportedOperationException();
+	}
+
+	public void addSshKey(ISSHPublicKey key) {
+		
 	}
 
 	public String getRhlogin() {
@@ -214,10 +217,6 @@ public class User extends AbstractOpenShiftResource implements IUser {
 			}
 		}
 		return matchingCartridge;
-	}
-
-	public void setSshPublicKey(ISSHPublicKey key) {
-		this.sshKey = key;
 	}
 
 	protected UserInfo refreshUserInfo() throws OpenShiftException {
