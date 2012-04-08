@@ -40,7 +40,7 @@ public class AbstractOpenShiftResource {
 	}
 	
 	protected Link getLink(String linkName) throws SocketTimeoutException, OpenShiftException {
-		if (getLinks().isEmpty()) {
+		if (links == null) {
 			return null;
 		}
 		return getLinks().get(linkName);
