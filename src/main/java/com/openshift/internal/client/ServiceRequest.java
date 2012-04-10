@@ -43,6 +43,9 @@ public class ServiceRequest {
 		if (link != null) {
 			return link;
 		} else {
+			if (resource == null) {
+				return null;
+			}
 			return resource.getLink(linkName);
 		}
 	}

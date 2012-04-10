@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.openshift.client.HttpMethod;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
@@ -26,7 +24,6 @@ import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author André Dietisheim
@@ -39,28 +36,14 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private String authIV;
 	private List<ISSHPublicKey> sshKeys;
 	private List<IDomain> domains;
-	private UserInfo userInfo;
 	private List<ICartridge> cartridges;
 	private List<IEmbeddableCartridge> embeddableCartridges;
 	private List<IApplication> applications;
-
+	private API api;
+	
 	public User(IRestService service) throws FileNotFoundException, IOException, OpenShiftException {
 		super(service);
-	}
-
-	/**
-	 * Cause the underlying REST Service to call the root API in an asynchronous
-	 * manner to avoid UI blockings.
-	 * @throws OpenShiftException 
-	 * @throws SocketTimeoutException 
-	 */
-	@Override
-	protected Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
-		if (super.getLinks() == null) {
-			Map<String, Link> apiLinks = new GetAPIRequest().execute();
-			setLinks(apiLinks);
-		}
-		return super.getLinks();
+		this.api = new API(service);
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -219,41 +202,15 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		return matchingCartridge;
 	}
 
-	protected UserInfo refreshUserInfo() throws OpenShiftException {
-		this.userInfo = null;
-		return getUserInfo();
-	}
-
-	protected UserInfo getUserInfo() throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// if (userInfo == null) {
-		// this.userInfo = service.getUserInfo(this);
-		// }
-		// return userInfo;
-	}
-
 	public void refresh() throws OpenShiftException {
 		this.domains = null;
 		this.sshKeys = null;
-		this.userInfo = null;
-		getUserInfo();
-	}
-
-	private class GetAPIRequest extends ServiceRequest {
-
-		public GetAPIRequest() {
-			super(new Link("Get API", "/api", HttpMethod.GET), User.this);
-		}
-
-		public Map<String, Link> execute() throws SocketTimeoutException, OpenShiftException {
-			return super.execute();
-		}
 	}
 
 	private class AddDomainRequest extends ServiceRequest {
 
 		public AddDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super("ADD_DOMAIN", User.this);
+			super("ADD_DOMAIN", api);
 		}
 
 		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
@@ -264,7 +221,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private class ListDomainsRequest extends ServiceRequest {
 
 		public ListDomainsRequest() throws SocketTimeoutException, OpenShiftException {
-			super("LIST_DOMAINS", User.this);
+			super("LIST_DOMAINS", api);
 		}
 
 		public List<DomainResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
@@ -275,7 +232,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private class GetSShKeysRequest extends ServiceRequest {
 
 		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {
-			super("GET", User.this);
+			super("GET", api);
 		}
 
 		public List<DomainResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {

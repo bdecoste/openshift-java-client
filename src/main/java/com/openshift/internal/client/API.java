@@ -13,48 +13,35 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 
+import com.openshift.client.HttpMethod;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
-/**
- * @author Xavier Coulon
- * @author Andre Dietisheim
- * 
- */
-public abstract class AbstractOpenShiftResource {
+public class API extends AbstractOpenShiftResource {
 
-	private Map<String, Link> links;
-	final private IRestService service;
-
-	protected AbstractOpenShiftResource(final IRestService service) {
-		this(service, null);
+	public API(IRestService service) {
+		super(service);
 	}
 
-	protected AbstractOpenShiftResource(final IRestService service, final Map<String, Link> links) {
-		this.service = service;
-		this.links = links;
-	}
-
+	@Override
 	protected Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
-		return links;
-	}
-	
-	protected Link getLink(String linkName) throws SocketTimeoutException, OpenShiftException {
-		if (getLinks() == null) {
-			return null;
+		if (!areLinksLoaded()) {
+			Map<String, Link> links = new GetAPIRequest().execute();
+			setLinks(links);
 		}
-		return getLinks().get(linkName);
+		return super.getLinks();
 	}
-	
-	protected boolean areLinksLoaded() {
-		return links != null;
+
+
+	private class GetAPIRequest extends ServiceRequest {
+
+		public GetAPIRequest() {
+			super(new Link("Get API", "/api", HttpMethod.GET), API.this);
+		}
+
+		public Map<String, Link> execute() throws SocketTimeoutException, OpenShiftException {
+			return super.execute();
+		}
 	}
-	
-	protected void setLinks(Map<String, Link> links) {
-		this.links = links;
-	}
-	
-	protected IRestService getService() {
-		return service;
-	}
+
 }
