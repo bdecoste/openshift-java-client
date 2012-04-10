@@ -17,6 +17,9 @@ import com.openshift.client.HttpMethod;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
+/**
+ * @author Andre Dietisheim
+ */
 public class API extends AbstractOpenShiftResource {
 
 	public API(IRestService service) {
@@ -43,5 +46,4 @@ public class API extends AbstractOpenShiftResource {
 			return super.execute();
 		}
 	}
-
 }
