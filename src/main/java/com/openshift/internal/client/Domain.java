@@ -32,6 +32,10 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private String namespace;
 	private String rhcDomain;
 
+	protected Domain(final DomainResourceDTO dto, IRestService service) {
+		this(dto.getNamespace(), dto.getSuffix(), dto.getLinks(), service);
+	}
+	
 	protected Domain(final String namespace, final String suffix, final Map<String, Link> links, final IRestService service) {
 		super(service, links);
 		this.namespace = namespace;
