@@ -37,6 +37,7 @@ public class Cartridge implements ICartridge {
 	protected IUser user;
 	protected String name;
 	
+	@Deprecated
 	public Cartridge(IOpenShiftService service, IUser user) {
 		this.service = service;
 		this.user = user;

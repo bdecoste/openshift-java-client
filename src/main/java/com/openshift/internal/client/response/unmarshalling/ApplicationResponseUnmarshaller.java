@@ -65,20 +65,6 @@ public class ApplicationResponseUnmarshaller extends AbstractOpenShiftJsonRespon
 			return new JBossASApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		} else if (cartridge instanceof RubyCartridge) {
 			return new RubyApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof PythonCartridge) {
-			return new PythonApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof PHPCartridge) {
-			return new PHPApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof PerlCartridge) {
-			return new PerlApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof NodeJSCartridge) {
-			return new NodeJSApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof JenkinsCartridge) {
-			return new JenkinsApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof HAProxyCartridge) {
-			return new HAProxyApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
-		} else if (cartridge instanceof RawCartridge) {
-			return new RawApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		} else {
 			return new Application(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		}

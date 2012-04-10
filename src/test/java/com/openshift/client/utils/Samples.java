@@ -36,6 +36,8 @@ public enum Samples {
 	GET_APPCARTRIDGES_WITH1ELEMENT_JSON("get-appcartridges-with1element.json"),
 	GET_APPCARTRIDGES_WITH2ELEMENTS_JSON("get-appcartridges-with2elements.json"),
 	GET_APPGEARS_WITH3COMPONENTS_JSON("get-appgears-with3components.json"),
+	GET_APPLICATIONS_WITHNOAPP_JSON("get-applications-withnoapp.json"),
+	GET_APPLICATIONS_WITH1APP_JSON("get-applications-with1app.json"),
 	GET_APPLICATIONS_WITH2APPS_JSON("get-applications-with2apps.json"),
 	GET_APPLICATIONS_WITH4APPS_JSON("get-applications-with4apps.json"),
 	GET_APPLICATION_WITH1CARTRIDGE_JSON("get-application-with1Cartridge.json"),

@@ -73,20 +73,12 @@ public class EmbeddableCartridge extends Cartridge implements IEmbeddableCartrid
 		this.application = application;
 	}
 
-	public EmbeddableCartridge(String name, String url) {
-		this(name, url, null);
-	}
-
-	public EmbeddableCartridge(String name, String url, Application application) {
+	public EmbeddableCartridge(final String name, final String info, final Application application) {
 		this(name, application);
-		this.url = url;
+		this.url = info;
 	}
 
 	public String getUrl() throws OpenShiftException {
-		if (url == null) {
-			EmbeddableCartridgeInfo cartridgeInfo = getApplicationInfo().getEmbeddedCartridge(getName());
-			update(cartridgeInfo);
-		}
 		return url;
 	}
 
@@ -103,29 +95,8 @@ public class EmbeddableCartridge extends Cartridge implements IEmbeddableCartrid
 		return creationLog;
 	}
 	
-	protected ApplicationInfo getApplicationInfo() throws OpenShiftException {
-		if (application == null) {
-			throw new OpenShiftException(
-					MessageFormat.format("Could not get application info for cartridge {0}, no application was set to it", getName()));
-		}
-		return application.getApplicationInfo();
-	}
 	
-	protected void setApplication(Application application) {
-		this.application = application;
-	}
 	
-	protected String getCartridgeName(String cartridgeType) throws OpenShiftException {
-		List<IEmbeddableCartridge> cartridges = service.getEmbeddableCartridges(user);
-		
-		Iterator<IEmbeddableCartridge> i = cartridges.iterator();
-		while (i.hasNext()){
-			IEmbeddableCartridge cartridge = i.next();
-			if (cartridge.getName().contains(cartridgeType))
-				return cartridge.getName();
-		}
-		
-		throw new OpenShiftException("No cartridge found for type " + cartridgeType);
-	}
+	
 
 }

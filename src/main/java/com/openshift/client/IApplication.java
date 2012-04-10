@@ -157,7 +157,7 @@ public interface IApplication {
 	 * 
 	 * @throws OpenShiftException
 	 */
-	public Date getCreationTime() throws OpenShiftException;
+	public String getCreationTime() throws OpenShiftException;
 
 	/**
 	 * Destroys this application (and removes it from the list of available applications)
@@ -229,6 +229,6 @@ public interface IApplication {
 	 */
 	public boolean waitForAccessible(long timeout) throws OpenShiftException;
 
-	public IUser getUser();
+	public IDomain getDomain();
 	
 }

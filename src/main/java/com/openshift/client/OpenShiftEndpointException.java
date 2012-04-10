@@ -20,14 +20,14 @@ public class OpenShiftEndpointException extends OpenShiftException {
 
 	private static final long serialVersionUID = 1L;
 
-	private String url;
-	private String response;
+	private final String url;
+	private final String response;
 	
-	public OpenShiftEndpointException(String url, Throwable cause, String message, Object... arguments) {
+	public OpenShiftEndpointException(final String url, final Throwable cause, final String message, final Object... arguments) {
 		this(url, cause, null, message, arguments);
 	}
 
-	public OpenShiftEndpointException(String url, Throwable cause, String response, String message, Object... arguments) {
+	public OpenShiftEndpointException(final String url, final Throwable cause, final String response, final String message, final Object... arguments) {
 		super(cause, message, arguments);
 		this.response = response;
 		this.url = url;

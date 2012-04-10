@@ -12,14 +12,18 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import com.openshift.client.Cartridge;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
+import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
@@ -30,13 +34,19 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
 public class Domain extends AbstractOpenShiftResource implements IDomain {
 
 	public static final String LINK_UPDATE = "UPDATE";
+	private static final String LINK_LIST_APPLICATIONS = "LIST_APPLICATIONS";
+	private static final String LINK_DELETE = "LIST_DELETE";
 	private String namespace;
 	private String rhcDomain;
+	/** Applications for the domain. */
+	private List<IApplication> applications = null;
+	private final User user;
 
 	public Domain(final String namespace, final String suffix, final Map<String, Link> links, final User user) {
-		super(user.service, links);
+		super(user.getService(), links);
 		this.namespace = namespace;
 		this.rhcDomain = suffix;
+		this.user = user;
 	}
 
 	public String getNamespace() {
@@ -47,12 +57,19 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 		return rhcDomain;
 	}
 
+	/**
+	 * @return the user
+	 */
+	protected final User getUser() {
+		return user;
+	}
+
 	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException {
     	DomainResourceDTO domainDTO = execute(getLink(LINK_UPDATE), new ServiceParameter("namespace", namespace));
     	this.namespace = domainDTO.getNamespace();
     	this.rhcDomain = domainDTO.getSuffix();
-    	this.links.clear();
-    	this.links.putAll(domainDTO.getLinks());
+    	this.getLinks().clear();
+    	this.getLinks().putAll(domainDTO.getLinks());
 	}
 
 //	private void update(IDomain domain) throws OpenShiftException {
@@ -77,14 +94,6 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	}
 
 	public IApplication getApplicationByName(String name) throws OpenShiftException {
-		return getApplicationByName(name, getApplications());
-	}
-
-	public boolean hasApplication(String name) throws OpenShiftException {
-		return getApplicationByName(name) != null;
-	}
-
-	private IApplication getApplicationByName(String name, Collection<IApplication> applications) {
 		IApplication matchingApplication = null;
 		for (IApplication application : applications) {
 			if (name.equals(application.getName())) {
@@ -95,9 +104,13 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 		return matchingApplication;
 	}
 
+	public boolean hasApplication(String name) throws OpenShiftException {
+		return getApplicationByName(name) != null;
+	}
+
 	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
 		List<IApplication> matchingApplications = new ArrayList<IApplication>();
-		for (IApplication application : getApplications()) {
+		for (IApplication application : this.applications) {
 			if (cartridge.equals(application.getCartridge())) {
 				matchingApplications.add(application);
 			}
@@ -120,17 +133,29 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 //		this.userInfo.removeApplicationInfo(application.getName());
 	}
 
-	public void destroy() throws OpenShiftException {
-    	throw new UnsupportedOperationException();
-    	//    	getInternalUser().destroyDomain();
+	public void destroy() throws OpenShiftException, SocketTimeoutException {
+		destroy(false);
     }
 
-	public List<IApplication> getApplications() throws OpenShiftException {
-    	throw new UnsupportedOperationException();
-//		if (getUserInfo().getApplicationInfos().size() > applications.size()) {
-//			update(getUserInfo().getApplicationInfos());
-//		}
-//		return Collections.unmodifiableList(applications);
+	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
+		execute(getLink(LINK_DELETE));
+    }
+	
+	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
+		if (this.applications == null) {
+			this.applications = new ArrayList<IApplication>();
+			List<ApplicationResourceDTO> applicationDTOs = execute(getLink(LINK_LIST_APPLICATIONS));
+			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
+				ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
+				Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(), applicationDTO.getCreationTime(), cartridge, applicationDTO.getLinks(), this);
+				for(Entry<String, String> entry : applicationDTO.getEmbeddedCartridges().entrySet()) {
+					IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridge(entry.getKey(), entry.getValue(), application);
+					application.addEmbbedCartridge(embeddableCartridge);
+				}
+				this.applications.add(application);
+			}
+		}
+		return Collections.unmodifiableList(applications);
 	}
     
 	private void update(List<ApplicationInfo> applicationInfos) {

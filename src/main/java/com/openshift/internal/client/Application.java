@@ -11,59 +11,51 @@
 package com.openshift.internal.client;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.openshift.client.ApplicationLogReader;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
+import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author André Dietisheim
  */
-public class Application extends UserInfoAware implements IApplication {
+public class Application extends AbstractOpenShiftResource implements IApplication {
 
 	private static final String GIT_URI_PATTERN = "ssh://{0}@{1}-{2}.{3}/~/git/{1}.git/";
 	private static final String APPLICATION_URL_PATTERN = "https://{0}-{1}.{2}/";
 	private static final String DEFAULT_LOGREADER = "defaultLogReader";
 
-	protected String name;
-	protected ICartridge cartridge;
-	private List<IEmbeddableCartridge> embeddedCartridges;
-	protected IRestService service;
+	private final String uuid;
+	private final String name;
+	private final String creationTime;
+	private final ICartridge cartridge;
+	private final List<IEmbeddableCartridge> embeddedCartridges = new ArrayList<IEmbeddableCartridge>();
 	private HashMap<String, ApplicationLogReader> logReaders = new HashMap<String, ApplicationLogReader>();
-	private String healthCheckPath;
-	private ApplicationInfo applicationInfo;
-	private String creationLog;
-	private String uuid;
+	//TODO : replace when pubsub/notification is available ?
+	private final String creationLog;
+	private final Domain domain;
 
-	public Application(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			User user, IRestService service) {
-		this(name, uuid, creationLog, healthCheckPath, cartridge, new ArrayList<IEmbeddableCartridge>(), null, user,
-				service);
+	public Application(final String name, final String uuid, final String creationTime, final ICartridge cartridge,  
+			final Map<String, Link> links, final Domain domain) {
+		this(name, uuid, creationTime, null, cartridge, links, domain);
 	}
 
-	public Application(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo,
-			User user, IRestService service) {
-		this(name, uuid, null, null, cartridge, null, applicationInfo, user, service);
-	}
-
-	protected Application(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			List<IEmbeddableCartridge> embeddedCartridges, ApplicationInfo applicationInfo, User user,
-			IRestService service) {
-		super(user);
+	public Application(final String name, final String uuid, final String creationTime, final String creationLog, final ICartridge cartridge,
+			final Map<String, Link> links, final Domain domain) {
+		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
-		this.healthCheckPath = healthCheckPath;
+		this.creationTime = creationTime;
 		this.creationLog = creationLog;
 		this.cartridge = cartridge;
-		this.embeddedCartridges = embeddedCartridges;
-		this.applicationInfo = applicationInfo;
-		this.service = service;
+		this.domain = domain;
 	}
 
 	public String getName() {
@@ -78,12 +70,16 @@ public class Application extends UserInfoAware implements IApplication {
 		return cartridge;
 	}
 
-	public Date getCreationTime() throws OpenShiftException {
-		return getApplicationInfo().getCreationTime();
+	public String getCreationTime() throws OpenShiftException {
+		return creationTime;
 	}
 
 	public String getCreationLog() {
 		return creationLog;
+	}
+	
+	public IDomain getDomain() {
+		return this.domain;
 	}
 
 	public void destroy() throws OpenShiftException {
@@ -188,10 +184,6 @@ public class Application extends UserInfoAware implements IApplication {
 	}
 
 	public List<IEmbeddableCartridge> getEmbeddedCartridges() throws OpenShiftException {
-		this.embeddedCartridges = new ArrayList<IEmbeddableCartridge>();
-		for (EmbeddableCartridgeInfo cartridgeInfo : getApplicationInfo().getEmbeddedCartridges()) {
-			embeddedCartridges.add(new EmbeddableCartridge(cartridgeInfo.getName(), this));
-		}
 		return embeddedCartridges;
 	}
 
@@ -210,29 +202,11 @@ public class Application extends UserInfoAware implements IApplication {
 		return embeddedCartridge;
 	}
 
-	protected IRestService getService() {
-		return service;
-	}
-
-	protected ApplicationInfo getApplicationInfo() throws OpenShiftException {
-		if (applicationInfo == null) {
-			this.applicationInfo = getUserInfo().getApplicationInfoByName(getName());
-			if (applicationInfo == null) {
-				throw new OpenShiftException("Could not find info for application {0}", getName());
-			}
-		}
-		return applicationInfo;
-	}
-
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 //		return service.waitForApplication(getHealthCheckUrl(), timeout, getHealthCheckResponse());
 	}
 
-	public IUser getUser() {
-		return getInternalUser();
-	}
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -259,4 +233,5 @@ public class Application extends UserInfoAware implements IApplication {
 	public String toString() {
 		return name;
 	}
+
 }

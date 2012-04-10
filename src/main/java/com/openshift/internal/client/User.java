@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,15 +36,10 @@ public class User extends AbstractOpenShiftResource implements IUser {
 
 	private static final String LINK_ADD_DOMAIN = "ADD_DOMAIN";
 	private static final String LINK_LIST_DOMAINS = "LIST_DOMAINS";
+
 	private String rhlogin;
-	private String password;
-	private String authKey;
-	private String authIV;
 	private ISSHPublicKey sshKey;
 	private List<IDomain> domains;
-	private UserInfo userInfo;
-	private List<ICartridge> cartridges;
-	private List<IEmbeddableCartridge> embeddableCartridges;
 	private List<IApplication> applications = new ArrayList<IApplication>();
 
 	public User(IRestService service) throws FileNotFoundException, IOException, OpenShiftException {
@@ -58,11 +54,11 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	 */
 	@Override
 	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
-		if (links.isEmpty()) {
+		if (getLinks().isEmpty()) {
 			Map<String, Link> apiLinks = execute(new Link("Get API", "/api", HttpMethod.GET));
-			this.links.putAll(apiLinks);
+			setLinks(apiLinks);
 		}
-		return links.get(linkName);
+		return super.getLink(linkName);
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -112,7 +108,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 				this.domains.add(domain);
 			}
 		}
-		return domains;
+		return Collections.unmodifiableList(domains);
 	}
 	
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
@@ -176,15 +172,15 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	public String getPassword() {
-		return password;
+		return null;//password;
 	}
 
 	public String getAuthKey() {
-		return authKey;
+		return null;//authKey;
 	}
 
 	public String getAuthIV() {
-		return authIV;
+		return null;//authIV;
 	}
 
 	public String getUUID() throws OpenShiftException {
@@ -223,24 +219,9 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		this.sshKey = key;
 	}
 
-	protected UserInfo refreshUserInfo() throws OpenShiftException {
-		this.userInfo = null;
-		return getUserInfo();
-	}
-
-	protected UserInfo getUserInfo() throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// if (userInfo == null) {
-		// this.userInfo = service.getUserInfo(this);
-		// }
-		// return userInfo;
-	}
-
 	public void refresh() throws OpenShiftException {
 		this.domains = null;
 		this.sshKey = null;
-		this.userInfo = null;
-		getUserInfo();
 	}
 
 }

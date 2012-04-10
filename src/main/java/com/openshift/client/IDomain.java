@@ -26,27 +26,40 @@ public interface IDomain {
 	// TODO: rename as 'suffix' to match the json messages ?
 	public String getRhcDomain() throws OpenShiftException;
 
-	public void destroy() throws OpenShiftException;
-	
 	/**
-	 * Waits for the domain to become accessible. A domain is considered as
-	 * accessible as soon as at least 1 application url in it resolves to a
-	 * valid ip address.
+	 * Destroys the current domain. This method works only if it has not application.
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public void destroy() throws OpenShiftException, SocketTimeoutException;
+
+	/**
+	 * Destroys the current domain, using the 'force' parameter to also destroy the domain applications. The domain cannot
+	 * be destroyed without setting 'force-true' if it still contains applications.
 	 * 
-	 * @return boolean true if at least 1 application within this domain
-	 *         resolves
+	 * @param force
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public void destroy(final boolean force) throws OpenShiftException, SocketTimeoutException;
+
+	/**
+	 * Waits for the domain to become accessible. A domain is considered as accessible as soon as at least 1 application
+	 * url in it resolves to a valid ip address.
+	 * 
+	 * @return boolean true if at least 1 application within this domain resolves
 	 * @throws OpenShiftException
 	 */
 	public boolean waitForAccessible(long timeout) throws OpenShiftException;
-	
+
 	public IApplication createApplication(String name, ICartridge cartridge) throws OpenShiftException;
 
-	public List<IApplication> getApplications() throws OpenShiftException;
+	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException;
 
 	public IApplication getApplicationByName(String name) throws OpenShiftException;
 
 	public boolean hasApplication(String name) throws OpenShiftException;
-		
+
 	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
 
 	public boolean hasApplication(ICartridge cartridge) throws OpenShiftException;

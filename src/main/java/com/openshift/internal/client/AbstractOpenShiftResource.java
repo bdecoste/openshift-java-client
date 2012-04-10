@@ -21,31 +21,85 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
+ * The Class AbstractOpenShiftResource.
+ *
  * @author Xavier Coulon
- * 
  */
 public class AbstractOpenShiftResource {
 
-	final Map<String, Link> links = new HashMap<String, Link>();
+	/** The links. */
+	private final Map<String, Link> links;
 
-	final IRestService service;
+	/** The service. */
+	private final IRestService service;
 
+	/**
+	 * Instantiates a new abstract open shift resource.
+	 *
+	 * @param service the service
+	 */
 	public AbstractOpenShiftResource(final IRestService service) {
 		this(service, null);
 	}
 
+	/**
+	 * Instantiates a new abstract open shift resource.
+	 *
+	 * @param service the service
+	 * @param links the links
+	 */
 	public AbstractOpenShiftResource(final IRestService service, final Map<String, Link> links) {
 		this.service = service;
-		if (links != null) {
-			this.links.putAll(links);
-		}
+		this.links = (links != null) ? links : new HashMap<String, Link>();
+	}
+
+	/**
+	 * Gets the links.
+	 *
+	 * @return the links
+	 */
+	final Map<String, Link> getLinks() {
+		return links;
+	}
+
+	void setLinks(final Map<String, Link> links) {
+		this.links.clear();
+		this.links.putAll(links);
+	}
+
+	
+	/**
+	 * Gets the service.
+	 *
+	 * @return the service
+	 */
+	protected final IRestService getService() {
+		return service;
 	}
 
 	// made protectedfor testing purpose, but not part of the public interface, though
+	/**
+	 * Gets the link.
+	 *
+	 * @param linkName the link name
+	 * @return the link
+	 * @throws OpenShiftException the open shift exception
+	 * @throws SocketTimeoutException the socket timeout exception
+	 */
 	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
 		return links.get(linkName);
 	}
 
+	/**
+	 * Execute.
+	 *
+	 * @param <T> the generic type
+	 * @param link the link
+	 * @param parameters the parameters
+	 * @return the t
+	 * @throws OpenShiftException the open shift exception
+	 * @throws SocketTimeoutException the socket timeout exception
+	 */
 	<T> T execute(Link link, ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException {
 		assert link != null;
 		// avoid concurrency issues, to prevent reading the links map while it is still being retrieved

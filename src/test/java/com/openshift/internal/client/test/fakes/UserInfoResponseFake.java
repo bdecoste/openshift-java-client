@@ -110,7 +110,7 @@ public class UserInfoResponseFake {
 					+ "}";
 	
 	public static IEmbeddableCartridge toEmbeddableCartridge(String name, String url) {
-		return new EmbeddableCartridge(name, url);
+		return null;//new EmbeddableCartridge(name, url);
 	}
 
 	public static List<IEmbeddableCartridge> toEmbeddableCartridges(IEmbeddableCartridge cartridge) {
@@ -125,7 +125,7 @@ public class UserInfoResponseFake {
 		}
 		List<IEmbeddableCartridge> list = new ArrayList<IEmbeddableCartridge>();
 		for (EmbeddableCartridgeInfo cartridgeInfo : cartridgeInfos) {
-			list.add(new EmbeddableCartridge(cartridgeInfo.getName(), cartridgeInfo.getUrl()));
+			//list.add(new EmbeddableCartridge(cartridgeInfo.getName(), cartridgeInfo.getUrl()));
 		}
 		return list;
 	}

@@ -11,9 +11,10 @@
 package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
+import java.util.List;
+import java.util.Map;
 
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.AbstractOpenShiftResource;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
 /**
@@ -35,4 +36,13 @@ public class LinkRetriever {
 		return ((AbstractOpenShiftResource)resource).getLink(linkName);
 	}
 
+	/**
+	 * Retrieves the links from the given resource.
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 * 
+	 */
+	public static Map<String, Link> retrieveLinks(final Object resource) throws OpenShiftException, SocketTimeoutException {
+		return ((AbstractOpenShiftResource)resource).getLinks();
+	}
 }
