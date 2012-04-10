@@ -21,19 +21,19 @@ import com.openshift.client.HttpMethod;
  */
 public class Link {
 
-	/** The rel. */
+	/** The related resource (destination) this link points to */
 	private final String rel;
 	
-	/** The href. */
+	/** The url/href this link point to. */
 	private final String href;
 	
-	/** The http method. */
+	/** The http method that this link operates on. */
 	private final HttpMethod httpMethod;
 	
-	/** The required params. */
+	/** The required params of this link. */
 	private final List<LinkParameter> requiredParams;
 	
-	/** The optional params. */
+	/** The optional params of this link. */
 	private final List<LinkParameter> optionalParams;
 	
 	public Link(final String rel, final String href, final HttpMethod httpMethod) {
@@ -46,11 +46,11 @@ public class Link {
 	}
 	
 	/**
-	 * Instantiates a new link.
+	 * Instantiates a new Link object.
 	 *
-	 * @param rel the rel
-	 * @param href the href
-	 * @param httpMethod the http method
+	 * @param rel the related resource this link points to
+	 * @param href the href the url/href this link points to
+	 * @param httpMethod the http method that this link operates on
 	 * @param requiredParams the required params
 	 * @param optionalParams the optional params
 	 */
@@ -64,7 +64,7 @@ public class Link {
 	}
 
 	/**
-	 * Gets the rel.
+	 * Gets the related resource (destination) this link points to.
 	 *
 	 * @return the rel
 	 */
@@ -73,7 +73,7 @@ public class Link {
 	}
 
 	/**
-	 * Gets the href.
+	 * Gets the url/href this link points to.
 	 *
 	 * @return the href
 	 */
@@ -82,7 +82,7 @@ public class Link {
 	}
 
 	/**
-	 * Gets the http method.
+	 * Gets the http method this link operates on.
 	 *
 	 * @return the httpMethod
 	 */
@@ -108,4 +108,12 @@ public class Link {
 		return optionalParams;
 	}
 
+	@Override
+	public String toString() {
+		return "Link [rel=" + rel 
+				+ ", href=" + href 
+				+ ", httpMethod=" + httpMethod 
+				+ ", requiredParams=" + requiredParams  
+				+ ", optionalParams=" + optionalParams + "]";
+	}
 }
