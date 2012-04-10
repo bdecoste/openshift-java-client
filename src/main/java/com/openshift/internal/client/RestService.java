@@ -65,11 +65,11 @@ public class RestService implements IRestService {
 	}
 
 	public RestResponse execute(Link link)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException {
+			throws OpenShiftException, SocketTimeoutException {
 		return execute(link, (Map<String, Object>) null);
 	}
 
-	public RestResponse execute(Link link, ServiceParameter...serviceParameters) throws SocketTimeoutException, MalformedURLException, UnsupportedEncodingException, OpenShiftException {
+	public RestResponse execute(Link link, ServiceParameter...serviceParameters) throws SocketTimeoutException, OpenShiftException {
 		return execute(link, toMap(serviceParameters));
 	}
 
@@ -82,7 +82,7 @@ public class RestService implements IRestService {
 	}
 
 	public RestResponse execute(Link link, Map<String, Object> parameters)
-			throws OpenShiftException, MalformedURLException, UnsupportedEncodingException, SocketTimeoutException {
+			throws OpenShiftException, SocketTimeoutException {
 		validateParameters(parameters, link);
 		try {
 			HttpMethod httpMethod = link.getHttpMethod();
@@ -95,6 +95,10 @@ public class RestService implements IRestService {
 			throw new NotFoundOpenShiftException(link.getHref(), e);
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new OpenShiftException(e, e.getMessage());
+		} catch (MalformedURLException e) {
+			throw new OpenShiftException(e, e.getMessage());
 		}
 	}
 

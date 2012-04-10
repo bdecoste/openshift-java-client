@@ -48,6 +48,7 @@ import org.jboss.dmr.Property;
 
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftRequestParameterException;
+import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * A factory for creating DTO objects.
@@ -67,9 +68,9 @@ public class ResourceDTOFactory {
 	 */
 	public static RestResponse get(final String content) throws OpenShiftException {
 		final ModelNode rootNode = getModelNode(content);
-		final String type = rootNode.get("type").asString();
-		final String status = rootNode.get("status").asString();
-		final List<String> messages = createMessages(rootNode.get("messages"));
+		final String type = rootNode.get(IOpenShiftJsonConstants.PROPERTY_TYPE).asString();
+		final String status = rootNode.get(IOpenShiftJsonConstants.PROPERTY_STATUS).asString();
+		final List<String> messages = createMessages(rootNode.get(IOpenShiftJsonConstants.PROPERTY_MESSAGES));
 
 		final EnumDataType dataType = EnumDataType.safeValueOf(type);
 		// the response is after an error, only the messages are relevant
@@ -195,9 +196,9 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createKey(keyNode.get(PROPERTY_DATA));
 		}
-		final String name = getAsString(keyNode, "name");
-		final String type = getAsString(keyNode, "type");
-		final String content = getAsString(keyNode, "content");
+		final String name = getAsString(keyNode, IOpenShiftJsonConstants.PROPERTY_NAME);
+		final String type = getAsString(keyNode, IOpenShiftJsonConstants.PROPERTY_TYPE);
+		final String content = getAsString(keyNode, IOpenShiftJsonConstants.PROPERTY_CONTENT);
 		final Map<String, Link> links = createLinks(keyNode.get(PROPERTY_LINKS));
 		return new KeyResourceDTO(name, type, content, links);
 	}
@@ -489,10 +490,10 @@ public class ResourceDTOFactory {
 	 * @throws OpenShiftRequestParameterException
 	 */
 	private static LinkParameter createLinkParameter(ModelNode linkParamNode) throws OpenShiftRequestParameterException {
-		final String description = linkParamNode.get("description").asString();
-		final String type = linkParamNode.get("type").asString();
-		final String defaultValue = linkParamNode.get("default_value").asString();
-		final String name = linkParamNode.get("name").asString();
+		final String description = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_DESCRIPTION).asString();
+		final String type = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_TYPE).asString();
+		final String defaultValue = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_DEFAULT_VALUE).asString();
+		final String name = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_NAME).asString();
 		return new LinkParameter(name, type, defaultValue, description, createValidOptions(linkParamNode));
 	}
 

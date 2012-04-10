@@ -65,7 +65,7 @@ public class RestServiceTest {
 	}
 	
 	@Test(expected=OpenShiftException.class)
-	public void throwsIfRequiredParameterMissing() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException {
+	public void throwsIfRequiredParameterMissing() throws OpenShiftException, SocketTimeoutException {
 		// operation
 		LinkParameter parameter = new LinkParameter("required string parameter", LinkParameterType.STRING, null, null, null);
 		Link link = new Link("1 required parameter", "/dummy", HttpMethod.GET, Arrays.asList(parameter), null);
@@ -73,14 +73,14 @@ public class RestServiceTest {
 	}
 	
 	@Test
-	public void shouldNotThrowIfNoReqiredParameter() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException {
+	public void shouldNotThrowIfNoReqiredParameter() throws OpenShiftException, SocketTimeoutException {
 		// operation
 		Link link = new Link("0 required parameter", "/dummy", HttpMethod.GET, null, null);
 		service.execute(link, new HashMap<String, Object>());
 	}
 
 	@Test
-	public void shouldGetIfGetHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldGetIfGetHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.GET, null, null));
 		// verifications
@@ -88,7 +88,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldPostIfPostHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldPostIfPostHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.POST, null, null));
 		// verifications
@@ -96,7 +96,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldPutIfPutHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldPutIfPutHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.PUT, null, null));
 		// verifications
@@ -104,7 +104,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldDeleteIfDeleteHttpMethod() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldDeleteIfDeleteHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.DELETE, null, null));
 		// verifications
@@ -112,7 +112,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldNotAddServerToAbsUrl() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldNotAddServerToAbsUrl() throws OpenShiftException, SocketTimeoutException, HttpClientException, MalformedURLException {
 		// operation
 		String url = "http://www.redhat.com";
 		service.execute(new Link("0 required parameter", url, HttpMethod.GET, null, null));
@@ -122,7 +122,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldAddServerToPath() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldAddServerToPath() throws OpenShiftException, SocketTimeoutException, HttpClientException, MalformedURLException {
 		// operation
 		String url = "/adietisheim-redhat";
 		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
@@ -132,7 +132,7 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldNotAddBrokerPathIfPresent() throws MalformedURLException, UnsupportedEncodingException, OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldNotAddBrokerPathIfPresent() throws OpenShiftException, SocketTimeoutException, HttpClientException, MalformedURLException {
 		// operation
 		String url = "/broker/rest/adietisheim-redhat";
 		service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));

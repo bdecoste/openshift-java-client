@@ -41,6 +41,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	//TODO : replace when pubsub/notification is available ?
 	private final String creationLog;
 	private final Domain domain;
+	private String healthCheckPath;
 
 	public Application(final String name, final String uuid, final String creationTime, final ICartridge cartridge,  
 			final Map<String, Link> links, final Domain domain) {

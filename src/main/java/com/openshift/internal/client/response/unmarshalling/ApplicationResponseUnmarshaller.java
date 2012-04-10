@@ -12,28 +12,13 @@ package com.openshift.internal.client.response.unmarshalling;
 
 import org.jboss.dmr.ModelNode;
 
-import com.openshift.client.HAProxyCartridge;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IUser;
 import com.openshift.client.JBossCartridge;
-import com.openshift.client.JenkinsCartridge;
-import com.openshift.client.NodeJSCartridge;
-import com.openshift.client.PHPCartridge;
-import com.openshift.client.PerlCartridge;
-import com.openshift.client.PythonCartridge;
-import com.openshift.client.RawCartridge;
 import com.openshift.client.RubyCartridge;
-import com.openshift.internal.client.Application;
-import com.openshift.internal.client.HAProxyApplication;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.JBossASApplication;
-import com.openshift.internal.client.JenkinsApplication;
-import com.openshift.internal.client.NodeJSApplication;
-import com.openshift.internal.client.PHPApplication;
-import com.openshift.internal.client.PerlApplication;
-import com.openshift.internal.client.PythonApplication;
-import com.openshift.internal.client.RawApplication;
 import com.openshift.internal.client.RubyApplication;
 import com.openshift.internal.client.User;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
@@ -62,11 +47,12 @@ public class ApplicationResponseUnmarshaller extends AbstractOpenShiftJsonRespon
 		String uuid = getDataNodeProperty(IOpenShiftJsonConstants.PROPERTY_UUID, node);
 		
 		if (cartridge instanceof JBossCartridge) {
-			return new JBossASApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
+			return null;//new JBossASApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		} else if (cartridge instanceof RubyCartridge) {
-			return new RubyApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
+			return null;//new RubyApplication(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		} else {
-			return new Application(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
+			throw new UnsupportedOperationException();
+//			return new Application(applicationName, uuid, creationLog, healthCheckPath, cartridge, user, service);
 		}
 	}
 }

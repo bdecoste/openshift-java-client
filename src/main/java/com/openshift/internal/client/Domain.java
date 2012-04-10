@@ -33,7 +33,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  */
 public class Domain extends AbstractOpenShiftResource implements IDomain {
 
-	public static final String LINK_UPDATE = "UPDATE";
+	private static final String LINK_UPDATE = "UPDATE";
 	private static final String LINK_LIST_APPLICATIONS = "LIST_APPLICATIONS";
 	private static final String LINK_DELETE = "LIST_DELETE";
 	private String namespace;
@@ -65,17 +65,12 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	}
 
 	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException {
-    	DomainResourceDTO domainDTO = execute(getLink(LINK_UPDATE), new ServiceParameter("namespace", namespace));
+    	DomainResourceDTO domainDTO = new UpdateDomainRequest().execute(namespace);
     	this.namespace = domainDTO.getNamespace();
     	this.rhcDomain = domainDTO.getSuffix();
     	this.getLinks().clear();
     	this.getLinks().putAll(domainDTO.getLinks());
 	}
-
-//	private void update(IDomain domain) throws OpenShiftException {
-//		this.namespace = domain.getNamespace();
-//		this.rhcDomain = domain.getRhcDomain();
-//	}
 
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
     	throw new UnsupportedOperationException();
@@ -138,13 +133,13 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
     }
 
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
-		execute(getLink(LINK_DELETE));
+		new DeleteDomainRequest().execute();
     }
 	
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
 		if (this.applications == null) {
 			this.applications = new ArrayList<IApplication>();
-			List<ApplicationResourceDTO> applicationDTOs = execute(getLink(LINK_LIST_APPLICATIONS));
+			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
 				ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
 				Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(), applicationDTO.getCreationTime(), cartridge, applicationDTO.getLinks(), this);
@@ -168,4 +163,37 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 //		}
 	}
 
+	private class ListApplicationsRequest extends ServiceRequest {
+
+		public ListApplicationsRequest() throws SocketTimeoutException, OpenShiftException {
+			super("UPDATE", Domain.this);
+		}
+		
+		public List<ApplicationResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
+			return execute();
+		}
+	}
+	
+	private class UpdateDomainRequest extends ServiceRequest {
+
+		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
+			super("UPDATE", Domain.this);
+		}
+		
+		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
+			return execute(new ServiceParameter("namespace", namespace));
+		}
+	}
+	
+	private class DeleteDomainRequest extends ServiceRequest {
+		public DeleteDomainRequest() throws SocketTimeoutException, OpenShiftException {
+			super("LINK_DELETE", Domain.this);
+		}
+		
+		public void execute() throws SocketTimeoutException, OpenShiftException {
+			execute();
+		}
+
+	}
+	
 }

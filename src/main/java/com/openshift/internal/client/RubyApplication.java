@@ -11,10 +11,12 @@
 package com.openshift.internal.client;
 
 import java.util.Calendar;
+import java.util.Map;
 
 import com.openshift.client.ICartridge;
 import com.openshift.client.IRubyApplication;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author William DeCoste
@@ -22,14 +24,17 @@ import com.openshift.client.OpenShiftException;
  */
 public class RubyApplication extends Application implements IRubyApplication {
 
-	public RubyApplication(String name, String uuid, String creationLog, String healthCheckPath, ICartridge cartridge,
-			User user, IRestService service) {
-		super(name, uuid, creationLog, healthCheckPath, cartridge, user, service);
+	
+	public RubyApplication(String name, String uuid, String creationTime, ICartridge cartridge,
+			Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, cartridge, links, domain);
+		// TODO Auto-generated constructor stub
 	}
 
-	public RubyApplication(String name, String uuid, ICartridge cartridge, ApplicationInfo applicationInfo, User user,
-			IRestService service) {
-		super(name, uuid, cartridge, applicationInfo, user, service);
+	public RubyApplication(String name, String uuid, String creationTime, String creationLog, ICartridge cartridge,
+			Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, creationLog, cartridge, links, domain);
+		// TODO Auto-generated constructor stub
 	}
 
 	public String threadDump() throws OpenShiftException {

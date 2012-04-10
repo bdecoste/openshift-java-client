@@ -24,8 +24,9 @@ import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
  * The Class AbstractOpenShiftResource.
  *
  * @author Xavier Coulon
+ * @author Andre Dietisheim
  */
-public class AbstractOpenShiftResource {
+public abstract class AbstractOpenShiftResource {
 
 	/** The links. */
 	private final Map<String, Link> links;
@@ -57,8 +58,10 @@ public class AbstractOpenShiftResource {
 	 * Gets the links.
 	 *
 	 * @return the links
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
 	 */
-	final Map<String, Link> getLinks() {
+	Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
 		return links;
 	}
 
@@ -77,7 +80,7 @@ public class AbstractOpenShiftResource {
 		return service;
 	}
 
-	// made protectedfor testing purpose, but not part of the public interface, though
+	// made protected for testing purpose, but not part of the public interface, though
 	/**
 	 * Gets the link.
 	 *
@@ -86,8 +89,11 @@ public class AbstractOpenShiftResource {
 	 * @throws OpenShiftException the open shift exception
 	 * @throws SocketTimeoutException the socket timeout exception
 	 */
-	protected Link getLink(String linkName) throws OpenShiftException, SocketTimeoutException {
-		return links.get(linkName);
+	protected Link getLink(String linkName) throws SocketTimeoutException, OpenShiftException {
+		if (getLinks() == null) {
+			return null;
+		}
+		return getLinks().get(linkName);
 	}
 
 	/**
@@ -99,7 +105,6 @@ public class AbstractOpenShiftResource {
 	 * @return the t
 	 * @throws OpenShiftException the open shift exception
 	 * @throws SocketTimeoutException the socket timeout exception
-	 */
 	<T> T execute(Link link, ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException {
 		assert link != null;
 		// avoid concurrency issues, to prevent reading the links map while it is still being retrieved
@@ -111,7 +116,14 @@ public class AbstractOpenShiftResource {
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, "Failed to execute {0} {1}", link.getHttpMethod().name(), link.getHref());
 		}
-
 	}
-
+	 */
+	
+	
+	
+	protected boolean areLinksLoaded() {
+		return links != null;
+	}
+	
+	
 }
