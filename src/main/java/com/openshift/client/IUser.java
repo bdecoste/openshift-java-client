@@ -41,7 +41,7 @@ public interface IUser {
 	
 	public boolean hasDomain() throws OpenShiftException;
 
-	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException;
+	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
 
 	public void addSshKey(ISSHPublicKey key) throws OpenShiftException;
 

@@ -23,7 +23,9 @@ import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.SSHPublicKey;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
+import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 
 /**
  * @author André Dietisheim
@@ -146,8 +148,13 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// return sshKey;
 	// }
 
-	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException {
-		throw new UnsupportedOperationException();
+	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException {
+		if (sshKeys == null) {
+			for (KeyResourceDTO keyDTO : new GetSShKeysRequest().execute()) {
+				sshKeys.add(new SSHPublicKey(keyDTO.getContent(), keyDTO.getType()));
+			}
+		}
+		return sshKeys;
 	}
 
 	public void addSshKey(ISSHPublicKey key) {
@@ -232,10 +239,10 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private class GetSShKeysRequest extends ServiceRequest {
 
 		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {
-			super("GET", api);
+			super("LIST_KEYS", User.this);
 		}
 
-		public List<DomainResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
+		public List<KeyResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
 			return super.execute();
 		}
 	}
