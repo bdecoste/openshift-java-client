@@ -55,8 +55,9 @@ public class ServiceRequest {
 		if (link == null) {
 			throw new OpenShiftException("Could not request resource, no link present");
 		}
-		// avoid concurrency issues, to prevent reading the links map while it
-		// is still being retrieved
+		if (resource == null) {
+			throw new OpenShiftException("Could not request resource, no service available");
+		}
 		RestResponse response = resource.getService().execute(link, parameters);
 		return response.getData();
 	}
