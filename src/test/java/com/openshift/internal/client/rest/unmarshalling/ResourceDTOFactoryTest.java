@@ -70,7 +70,7 @@ public class ResourceDTOFactoryTest {
 		// verifications
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.user);
 		UserResourceDTO userResourceDTO = response.getData();
-		assertThat(userResourceDTO.getRhLogin()).isEqualTo("xcoulon+test@redhat.com");
+		assertThat(userResourceDTO.getRhLogin()).isEqualTo("foobar+test@redhat.com");
 		assertThat(userResourceDTO.getLinks()).hasSize(3);
 	}
 
@@ -151,11 +151,10 @@ public class ResourceDTOFactoryTest {
 		assertThat(domainDTOs).hasSize(1);
 		final DomainResourceDTO domainDTO = domainDTOs.get(0);
 		assertThat(domainDTO.getNamespace()).isEqualTo("foobar");
-		assertThat(domainDTO.getNamespace()).isEqualTo("stg.rhcloud.com");
-		assertThat(domainDTO.getLinks()).hasSize(7);
+		assertThat(domainDTO.getLinks()).hasSize(6);
 		final Link link = domainDTO.getLink(ADD_APPLICATION);
 		assertThat(link).isNotNull();
-		assertThat(link.getHref()).isEqualTo("/domains/xcoulon/applications");
+		assertThat(link.getHref()).isEqualTo("/domains/foobar/applications");
 		assertThat(link.getRel()).isEqualTo("Create new application");
 		assertThat(link.getHttpMethod()).isEqualTo(HttpMethod.POST);
 		final List<LinkParameter> requiredParams = link.getRequiredParams();
@@ -186,8 +185,8 @@ public class ResourceDTOFactoryTest {
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.domain);
 		final DomainResourceDTO domain = response.getData();
 		assertNotNull(domain);
-		assertThat(domain.getNamespace()).isEqualTo("xcoulon");
-		assertThat(domain.getLinks()).hasSize(7);
+		assertThat(domain.getNamespace()).isEqualTo("foobar");
+		assertThat(domain.getLinks()).hasSize(6);
 	}
 
 	@Test
