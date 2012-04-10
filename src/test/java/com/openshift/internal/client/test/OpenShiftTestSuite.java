@@ -13,6 +13,8 @@ package com.openshift.internal.client.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.openshift.client.SSHKeyTest;
+
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
