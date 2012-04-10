@@ -10,35 +10,52 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import static com.openshift.client.utils.FileUtils.createRandomTempFile;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.ISSHPublicKey;
-import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
-import com.openshift.client.SSHKeyPair;
-import com.openshift.client.SSHKeyType;
-import com.openshift.client.SSHPublicKey;
+import com.openshift.client.utils.Samples;
+import com.openshift.internal.client.RestService;
+import com.openshift.internal.client.httpclient.HttpClientException;
 
 public class SSHKeyTest {
 
 	private static final String SSH_RSA = "ssh-rsa";
 	private static final String SSH_DSA = "ssh-dss";
 	private static final String PASSPHRASE = "12345";
+	private IHttpClient mockClient;
+	private IUser user;
 
+	@Before
+	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
+		mockClient = mock(IHttpClient.class);
+		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/broker/rest/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/broker/rest/user/keys"))).thenReturn(Samples.GET_USER_KEYS_MULTIPLE_JSON.getContentAsString());
+		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient)).build();
+
+	}
+	
 	@Test
 	public void canCreatePublicKey() throws Exception {
-		String publicKeyPath = createTempFile().getAbsolutePath();
-		String privateKeyPath = createTempFile().getAbsolutePath();
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyPair sshKey = SSHKeyPair.create(PASSPHRASE, privateKeyPath, publicKeyPath);
 		String publicKey = sshKey.getPublicKey();
 		assertNotNull(sshKey.getKeyType());
@@ -52,8 +69,8 @@ public class SSHKeyTest {
 
 	@Test
 	public void canLoadKeyPair() throws Exception {
-		String publicKeyPath = createTempFile().getAbsolutePath();
-		String privateKeyPath = createTempFile().getAbsolutePath();
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyPair.create(PASSPHRASE, privateKeyPath, publicKeyPath);
 
 		SSHKeyPair sshKey = SSHKeyPair.load(privateKeyPath, publicKeyPath);
@@ -69,8 +86,8 @@ public class SSHKeyTest {
 
 	@Test
 	public void canLoadPublicKey() throws Exception {
-		String publicKeyPath = createTempFile().getAbsolutePath();
-		String privateKeyPath = createTempFile().getAbsolutePath();
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyPair.create(PASSPHRASE, privateKeyPath, publicKeyPath);
 
 		ISSHPublicKey sshKey = new SSHPublicKey(new File(publicKeyPath));
@@ -89,8 +106,8 @@ public class SSHKeyTest {
 
 	@Test
 	public void canLoadKeyPairDsa() throws Exception {
-		String publicKeyPath = createTempFile().getAbsolutePath();
-		String privateKeyPath = createTempFile().getAbsolutePath();
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		createDsaKeyPair(publicKeyPath, privateKeyPath);
 
 		SSHKeyPair sshKey = SSHKeyPair.load(privateKeyPath, publicKeyPath);
@@ -106,8 +123,8 @@ public class SSHKeyTest {
 
 	@Test
 	public void canLoadPublicKeyDsa() throws Exception {
-		String publicKeyPath = createTempFile().getAbsolutePath();
-		String privateKeyPath = createTempFile().getAbsolutePath();
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		createDsaKeyPair(publicKeyPath, privateKeyPath);
 
 		ISSHPublicKey sshKey = new SSHPublicKey(new File(publicKeyPath));
@@ -135,6 +152,12 @@ public class SSHKeyTest {
 		SSHKeyType.getByTypeId("dummy");
 	}
 
+	@Test
+	public void shouldUnmarshallSSHKeysResponse() throws SocketTimeoutException, OpenShiftException {
+		List<ISSHPublicKey> sshKeys = user.getSshKeys();
+		assertThat(sshKeys).isNotNull().isNotEmpty();
+	}
+	
 	private void createDsaKeyPair(String publicKeyPath, String privateKeyPath) throws IOException, JSchException {
 		KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.DSA, 1024);
 		keyPair.setPassphrase(PASSPHRASE);
@@ -142,7 +165,5 @@ public class SSHKeyTest {
 		keyPair.writePrivateKey(privateKeyPath);
 	}
 
-	private File createTempFile() throws IOException {
-		return File.createTempFile(String.valueOf(System.currentTimeMillis()), null);
-	}
+	
 }

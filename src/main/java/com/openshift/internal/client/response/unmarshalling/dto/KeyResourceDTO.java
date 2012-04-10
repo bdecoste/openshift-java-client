@@ -17,14 +17,13 @@ import java.util.Map;
  */
 public class KeyResourceDTO extends BaseResourceDTO {
 
-	
 	/** The name. */
 	private final String name;
 
 	/** The type. */
 	private final String type;
 	
-	/** The content. */
+	/** The public key content. */
 	private final String content;
 	
 	/**

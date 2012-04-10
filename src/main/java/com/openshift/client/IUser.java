@@ -39,7 +39,7 @@ public interface IUser {
 	
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException;
 	
-	public boolean hasDomain() throws OpenShiftException;
+	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException;
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
 

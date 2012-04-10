@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 import com.openshift.internal.client.utils.StreamUtils;
 
 /**
@@ -29,8 +30,12 @@ public class SSHPublicKey implements ISSHPublicKey {
 	private String publicKey;
 	private SSHKeyType keyType;
 
-	public SSHPublicKey(File publicKeyFilePath) throws IOException, OpenShiftException {
-		initializePublicKey(publicKeyFilePath);
+	public SSHPublicKey(File publicKeyFile) throws IOException, OpenShiftException {
+		initializePublicKey(publicKeyFile);
+	}
+
+	public SSHPublicKey(KeyResourceDTO dto) throws OpenShiftUnknonwSSHKeyTypeException {
+		this(dto.getContent(), dto.getType());
 	}
 
 	public SSHPublicKey(String publicKey, String keyTypeId) throws OpenShiftUnknonwSSHKeyTypeException {

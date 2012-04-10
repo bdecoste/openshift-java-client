@@ -10,10 +10,10 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMapOf;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,7 +26,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.LinkRetriever;
@@ -42,35 +41,6 @@ public class UserTest {
 
 	private IUser user;
 	private IHttpClient mockClient;
-
-	/**
-	 * Custom Mockito Matcher that verifies that the given URL ends with a given suffix.
-	 * 
-	 * @author Xavier Coulon
-	 * 
-	 */
-	class UrlEndsWithMatcher extends ArgumentMatcher<URL> {
-
-		private final String urlSuffix;
-
-		public UrlEndsWithMatcher(final String urlSuffix) {
-			this.urlSuffix = urlSuffix;
-		}
-
-		@Override
-		public boolean matches(Object argument) {
-			if(argument == null) {
-				return false;
-			}
-			URL url = (URL) argument;
-			return url.toExternalForm().endsWith(urlSuffix);
-		}
-	}
-
-	/** More friendly way to call the {@link UrlEndsWithMatcher}. */
-	private URL urlEndsWith(String suffix) {
-		return argThat(new UrlEndsWithMatcher(suffix));
-	}
 
 	@Before
 	public void setup() throws Throwable {
