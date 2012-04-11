@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface IUser {
 
-	public String getRhlogin();
+	public String getRhlogin() throws SocketTimeoutException, OpenShiftException;
 
 	public String getPassword();
 	
@@ -28,8 +28,6 @@ public interface IUser {
 	public String getAuthIV();
 
 	public boolean isValid() throws OpenShiftException;
-
-	public String getUUID() throws OpenShiftException;
 
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
 
