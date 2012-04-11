@@ -22,6 +22,7 @@ import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author André Dietisheim
@@ -99,8 +100,8 @@ public class User implements IUser {
 		return getAPI().getUser().getSSHKeys();
 	}
 
-	public void addSshKey(ISSHPublicKey key) {
-
+	public void addSshKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+		getAPI().getUser().addSSHKey(name, key);
 	}
 
 	public String getRhlogin() throws SocketTimeoutException, OpenShiftException {
@@ -150,12 +151,13 @@ public class User implements IUser {
 		throw new UnsupportedOperationException();
 	}
 
+	@SuppressWarnings("unchecked")
 	private API getAPI() throws SocketTimeoutException, OpenShiftException {
 		if (api == null) {
 			@SuppressWarnings("unchecked")
-			Map<String, Link> apiLinks =
-					(Map<String, Link>) service.execute(new Link("Get API", "/api", HttpMethod.GET));
-			this.api = new API(service, apiLinks);
+			RestResponse response = 
+					(RestResponse) service.execute(new Link("Get API", "/api", HttpMethod.GET));
+			this.api = new API(service, (Map<String, Link>)response.getData());
 		}
 		return api;
 	}
