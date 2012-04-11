@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
+import com.openshift.internal.client.AbstractSSHKey;
 import com.openshift.internal.client.utils.StreamUtils;
 
 /**
@@ -29,21 +29,16 @@ public class SSHPublicKey extends AbstractSSHKey {
 
 	private String publicKey;
 	
-	public SSHPublicKey(KeyResourceDTO dto) throws OpenShiftUnknonwSSHKeyTypeException {
-		this(dto.getType(), dto.getContent());
+	public SSHPublicKey(File publicKeyFile) throws FileNotFoundException, OpenShiftException, IOException {
+		super(null, (SSHKeyType) null);
+		init(publicKeyFile);
 	}
-
-	public SSHPublicKey(String keyType, String publicKey) throws OpenShiftUnknonwSSHKeyTypeException {
-		super(null, keyType);
-		this.publicKey = publicKey;
-	}
-
 
 	public String getPublicKey() {
 		return publicKey;
 	}
 	
-	public static SSHPublicKey create(File publicKeyFile) throws OpenShiftException, FileNotFoundException, IOException {
+	public void init(File publicKeyFile) throws OpenShiftException, FileNotFoundException, IOException {
 		String keyWithIdAndComment = StreamUtils.readToString(new FileReader(publicKeyFile));
 		Matcher matcher = PUBLICKEY_PATTERN.matcher(keyWithIdAndComment);
 		if (!matcher.find()
@@ -51,10 +46,8 @@ public class SSHPublicKey extends AbstractSSHKey {
 			throw new OpenShiftException("Could not load public key from file \"{0}\"", publicKeyFile.getAbsolutePath());
 		}
 
-		String keyType = matcher.group(1);
-		String publicKey = matcher.group(2);
-
-		return new SSHPublicKey(keyType, publicKey);
+		setKeyType(matcher.group(1));
+		this.publicKey = matcher.group(2);
 	}
 
 }

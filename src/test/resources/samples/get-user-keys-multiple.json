@@ -111,7 +111,7 @@
             },
             "name":"default2",
             "content":"AAAB",
-            "type":"ssh-rsa"
+            "type":"ssh-dss"
         }
     ],
     "messages":[

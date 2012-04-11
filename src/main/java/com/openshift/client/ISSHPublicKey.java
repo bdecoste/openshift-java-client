@@ -31,7 +31,7 @@ public interface ISSHPublicKey {
 	 *         comment)
 	 * @throws OpenShiftException
 	 */
-	public String getPublicKey() throws OpenShiftException;
+	public String getPublicKey();
 
 	/**
 	 * Returns the type of the key (ssh-rsa or ssh-dss)

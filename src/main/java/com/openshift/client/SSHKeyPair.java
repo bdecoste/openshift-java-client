@@ -14,6 +14,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 import com.openshift.client.utils.Base64Coder;
+import com.openshift.internal.client.AbstractSSHKey;
 
 /**
  * @author André Dietisheim
@@ -93,7 +94,7 @@ public class SSHKeyPair extends AbstractSSHKey {
 		}
 	}
 
-	public String getPublicKey() throws OpenShiftException {
+	public String getPublicKey() {
 		return new String(Base64Coder.encode(keyPair.getPublicKeyBlob()));
 	}
 

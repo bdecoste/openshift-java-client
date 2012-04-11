@@ -8,9 +8,11 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
-import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
+import com.openshift.client.ISSHPublicKey;
+import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
+import com.openshift.client.SSHKeyType;
 
 /**
  * @author Andre Dietisheim
@@ -19,10 +21,6 @@ public abstract class AbstractSSHKey implements ISSHPublicKey {
 
 	private String name;
 	private SSHKeyType keyType;
-
-	protected AbstractSSHKey(KeyResourceDTO dto) throws OpenShiftUnknonwSSHKeyTypeException {
-		this(dto.getName(), dto.getType());
-	}
 
 	protected AbstractSSHKey(String name, String sshKeyType) throws OpenShiftUnknonwSSHKeyTypeException {
 		this(name, SSHKeyType.getByTypeId(sshKeyType));
@@ -37,7 +35,7 @@ public abstract class AbstractSSHKey implements ISSHPublicKey {
 		return name;
 	}
 
-	public void setName(String name) {
+	protected void setName(String name) {
 		this.name = name;
 	}
 
@@ -45,6 +43,14 @@ public abstract class AbstractSSHKey implements ISSHPublicKey {
 		return keyType;
 	}
 
+	protected void setKeyType(String keyTypeId) throws OpenShiftUnknonwSSHKeyTypeException {
+		setKeyType(SSHKeyType.getByTypeId(keyTypeId));
+	}
+
+	protected void setKeyType(SSHKeyType keyType) {
+		this.keyType = keyType;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

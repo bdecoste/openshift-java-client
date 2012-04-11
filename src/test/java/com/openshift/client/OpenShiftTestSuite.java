@@ -15,6 +15,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+		// ConfigurationTest.class
 		HttpClientTest.class
 		, UserTest.class
 		, SSHKeyTest.class

@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2007 Red Hat, Inc. 
+ * Copyright (c) 2012 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -8,12 +8,12 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.test;
+package com.openshift.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -26,16 +26,12 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
 import com.openshift.client.configuration.DefaultConfiguration;
 import com.openshift.client.configuration.IOpenShiftConfiguration;
-import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.client.configuration.SystemConfiguration;
 import com.openshift.client.configuration.SystemProperties;
 import com.openshift.client.configuration.UserConfiguration;
 import com.openshift.internal.client.test.fakes.SystemConfigurationFake;
-import com.openshift.internal.client.test.fakes.TestUser;
 import com.openshift.internal.client.test.fakes.UserConfigurationFake;
 import com.openshift.internal.client.utils.StreamUtils;
 
