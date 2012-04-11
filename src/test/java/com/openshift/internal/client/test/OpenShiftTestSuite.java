@@ -18,16 +18,16 @@ import com.openshift.client.SSHKeyTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	ConfigurationTest.class,
-	ApplicationTest.class,
-	EmbedTest.class,
-	ApplicationLogReaderTest.class,
-	DomainTest.class,
-	UserInfoTest.class,
-	UserTest.class,
-	CartridgeTest.class,
-	EmbeddableCartridgeTest.class,
-	SSHKeyTest.class
+//	ConfigurationTest.class,
+//	ApplicationTest.class,
+//	EmbedTest.class,
+//	ApplicationLogReaderTest.class,
+//	DomainTest.class,
+//	UserInfoTest.class,
+//	UserTest.class,
+//	CartridgeTest.class,
+//	EmbeddableCartridgeTest.class,
+//	SSHKeyTest.class
 })
 /**
  * @author André Dietisheim
