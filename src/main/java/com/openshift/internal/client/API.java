@@ -78,7 +78,7 @@ public class API extends AbstractOpenShiftResource {
 		return getDomain(name) != null;
 	}
 
-	private class AddDomainRequest extends NamedLinkServiceRequest {
+	private class AddDomainRequest extends ServiceRequest {
 
 		public AddDomainRequest() throws SocketTimeoutException, OpenShiftException {
 			super("ADD_DOMAIN");
@@ -89,7 +89,7 @@ public class API extends AbstractOpenShiftResource {
 		}
 	}
 	
-	private class ListDomainsRequest extends NamedLinkServiceRequest {
+	private class ListDomainsRequest extends ServiceRequest {
 
 		public ListDomainsRequest() throws SocketTimeoutException, OpenShiftException {
 			super("LIST_DOMAINS");
@@ -100,7 +100,7 @@ public class API extends AbstractOpenShiftResource {
 		}
 	}
 
-	private class GetUserRequest extends NamedLinkServiceRequest {
+	private class GetUserRequest extends ServiceRequest {
 
 		public GetUserRequest() throws SocketTimeoutException, OpenShiftException {
 			super("GET_USER");

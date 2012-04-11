@@ -51,25 +51,11 @@ public abstract class AbstractOpenShiftResource {
 		return service;
 	}
 
-	protected class LinkServiceRequest {
-
-		private Link link;
-
-		protected LinkServiceRequest(Link link) {
-			this.link = link;
-		}
-			
-		public <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
-			RestResponse response = getService().execute(link, parameters);
-			return response.getData();
-		}
-	}
-
-	protected class NamedLinkServiceRequest {
+	protected class ServiceRequest {
 
 		private String linkName;
 
-		protected NamedLinkServiceRequest(String linkName) {
+		protected ServiceRequest(String linkName) {
 			this.linkName = linkName;
 		}
 		

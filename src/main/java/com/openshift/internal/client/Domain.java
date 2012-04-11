@@ -145,7 +145,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 //		}
 	}
 
-	private class UpdateDomainRequest extends NamedLinkServiceRequest {
+	private class UpdateDomainRequest extends ServiceRequest {
 
 		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
 			super("UPDATE");

@@ -26,7 +26,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
 /**
  * @author André Dietisheim
  */
-public class User extends AbstractOpenShiftResource implements IUser {
+public class User implements IUser {
 
 	private String rhlogin;
 	private String password;
@@ -35,9 +35,10 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private List<ICartridge> cartridges;
 	private List<IEmbeddableCartridge> embeddableCartridges;
 	private API api;
-	
+	private IRestService service;
+
 	public User(IRestService service) {
-		super(service);
+		this.service = service;
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -75,7 +76,6 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		return getAPI().getDomains();
 	}
 
-
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
 		return getAPI().getDomain(namespace);
 	}
@@ -100,7 +100,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	public void addSshKey(ISSHPublicKey key) {
-		
+
 	}
 
 	public String getRhlogin() {
@@ -154,24 +154,14 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	public void refresh() throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	private API getAPI() throws SocketTimeoutException, OpenShiftException {
 		if (api == null) {
-			this.api = new API(getService(), new GetAPIRequest().execute());
+			@SuppressWarnings("unchecked")
+			Map<String, Link> apiLinks =
+					(Map<String, Link>) service.execute(new Link("Get API", "/api", HttpMethod.GET));
+			this.api = new API(service, apiLinks);
 		}
 		return api;
 	}
-	
-	private class GetAPIRequest extends LinkServiceRequest {
-
-		public GetAPIRequest() {
-			super(new Link("Get API", "/api", HttpMethod.GET));
-		}
-
-		public Map<String, Link> execute() throws SocketTimeoutException, OpenShiftException {
-			return super.execute();
-		}
-	}
-	
-	
 }
