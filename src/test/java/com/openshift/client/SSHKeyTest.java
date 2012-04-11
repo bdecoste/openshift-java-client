@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
+import org.fest.assertions.AssertExtension;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -91,7 +92,7 @@ public class SSHKeyTest {
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyPair.create(PASSPHRASE, privateKeyPath, publicKeyPath);
 
-		ISSHPublicKey sshKey = SSHPublicKey.create(new File(publicKeyPath));
+		ISSHPublicKey sshKey = new SSHPublicKey(new File(publicKeyPath));
 		String publicKey = sshKey.getPublicKey();
 		assertNotNull(sshKey.getKeyType());
 		String keyType = sshKey.getKeyType().getTypeId();
@@ -128,7 +129,7 @@ public class SSHKeyTest {
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		createDsaKeyPair(publicKeyPath, privateKeyPath);
 
-		ISSHPublicKey sshKey = SSHPublicKey.create(new File(publicKeyPath));
+		ISSHPublicKey sshKey = new SSHPublicKey(new File(publicKeyPath));
 		String publicKey = sshKey.getPublicKey();
 		assertNotNull(sshKey.getKeyType());
 		String keyType = sshKey.getKeyType().getTypeId();
@@ -159,8 +160,10 @@ public class SSHKeyTest {
 				.thenReturn(Samples.GET_USER_KEYS_MULTIPLE_JSON.getContentAsString());
 		List<ISSHPublicKey> sshKeys = user.getSshKeys();
 		assertThat(sshKeys).hasSize(2);
-		assertThat(new SSHPublicKey("ssh-rsa", "AAAA")).isIn(sshKeys);
-		assertThat(new SSHPublicKey("ssh-rsa", "AAAB")).isIn(sshKeys);
+		assertThat(new SSHPublicKeyAssertion((ISSHPublicKey) sshKeys.get(0)))
+				.hasName("default").hasPublicKey("AAAA").isType("ssh-rsa");
+		assertThat(new SSHPublicKeyAssertion((ISSHPublicKey) sshKeys.get(1)))
+				.hasName("default2").hasPublicKey("AAAB").isType("ssh-dss");
 	}
 
 	private void createDsaKeyPair(String publicKeyPath, String privateKeyPath) throws IOException, JSchException {
@@ -170,4 +173,27 @@ public class SSHKeyTest {
 		keyPair.writePrivateKey(privateKeyPath);
 	}
 
+	private class SSHPublicKeyAssertion implements AssertExtension {
+
+		private ISSHPublicKey sshKey;
+
+		public SSHPublicKeyAssertion(ISSHPublicKey key) {
+			this.sshKey = key;
+		}
+
+		public SSHPublicKeyAssertion hasName(String name) {
+			assertEquals(sshKey.getName(), name);
+			return this;
+		}
+
+		public SSHPublicKeyAssertion hasPublicKey(String publicKey) {
+			assertEquals(sshKey.getPublicKey(), publicKey);
+			return this;
+		}
+
+		public SSHPublicKeyAssertion isType(String type) {
+			assertEquals(sshKey.getKeyType().getTypeId(), type);
+			return this;
+		}
+	}
 }

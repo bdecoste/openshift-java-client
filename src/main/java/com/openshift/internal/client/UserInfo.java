@@ -37,7 +37,7 @@ public class UserInfo {
 			throws OpenShiftUnknonwSSHKeyTypeException {
 		this.rhLogin = rhLogin;
 		this.uuid = uuid;
-		this.sshPublicKey = new SSHPublicKey(sshPublicKey, sshKeyType);
+//		this.sshPublicKey = new SSHPublicKey(sshPublicKey, sshKeyType);
 		this.rhcDomain = rhcDomain;
 		this.namespace = namespace;
 		this.applicationInfos = applicationInfos;

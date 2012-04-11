@@ -41,7 +41,7 @@ public interface IUser {
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
 
-	public void addSshKey(ISSHPublicKey key) throws OpenShiftException;
+	public void addSshKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
 
 	public List<ICartridge> getCartridges() throws OpenShiftException;
 

@@ -154,10 +154,9 @@ public class User implements IUser {
 	@SuppressWarnings("unchecked")
 	private API getAPI() throws SocketTimeoutException, OpenShiftException {
 		if (api == null) {
-			@SuppressWarnings("unchecked")
-			RestResponse response = 
+			RestResponse response =
 					(RestResponse) service.execute(new Link("Get API", "/api", HttpMethod.GET));
-			this.api = new API(service, (Map<String, Link>)response.getData());
+			this.api = new API(service, (Map<String, Link>) response.getData());
 		}
 		return api;
 	}

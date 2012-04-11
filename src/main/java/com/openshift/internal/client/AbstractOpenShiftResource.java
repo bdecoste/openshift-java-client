@@ -59,7 +59,7 @@ public abstract class AbstractOpenShiftResource {
 			this.linkName = linkName;
 		}
 		
-		public <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
+		protected <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
 			Link link = getLink(linkName);
 			RestResponse response = getService().execute(link, parameters);
 			return response.getData();

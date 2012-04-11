@@ -10,52 +10,17 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static com.openshift.internal.client.test.utils.ApplicationAsserts.assertApplicationUrl;
-import static com.openshift.internal.client.test.utils.ApplicationAsserts.assertGitUri;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.ApplicationLogReader;
-import com.openshift.client.Cartridge;
-import com.openshift.client.HAProxyCartridge;
-import com.openshift.client.IApplication;
-import com.openshift.client.ICartridge;
-import com.openshift.client.IHAProxyApplication;
-import com.openshift.client.IJBossASApplication;
-import com.openshift.client.IJenkinsApplication;
-import com.openshift.client.INodeJSApplication;
-import com.openshift.client.IPHPApplication;
-import com.openshift.client.IPerlApplication;
-import com.openshift.client.IPythonApplication;
-import com.openshift.client.IRawApplication;
-import com.openshift.client.IRubyApplication;
-import com.openshift.client.JBossCartridge;
-import com.openshift.client.JenkinsCartridge;
-import com.openshift.client.NodeJSCartridge;
+import com.jcraft.jsch.UserInfo;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
-import com.openshift.client.PHPCartridge;
-import com.openshift.client.PerlCartridge;
-import com.openshift.client.PythonCartridge;
-import com.openshift.client.RawCartridge;
-import com.openshift.client.RubyCartridge;
-import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.internal.client.ApplicationInfo;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.User;
-import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.test.fakes.TestUser;
-import com.openshift.internal.client.test.utils.ApplicationUtils;
 
 /**
  * @author André Dietisheim
