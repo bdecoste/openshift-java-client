@@ -45,13 +45,14 @@ public class SSHKeyTest {
 	@Before
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		mockClient = mock(IHttpClient.class);
-		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/broker/rest/api")))
+				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/broker/rest/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/broker/rest/user/keys"))).thenReturn(Samples.GET_USER_KEYS_MULTIPLE_JSON.getContentAsString());
-		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient)).build();
+		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient))
+				.build();
 
 	}
-	
+
 	@Test
 	public void canCreatePublicKey() throws Exception {
 		String publicKeyPath = createRandomTempFile().getAbsolutePath();
@@ -90,7 +91,7 @@ public class SSHKeyTest {
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyPair.create(PASSPHRASE, privateKeyPath, publicKeyPath);
 
-		ISSHPublicKey sshKey = new SSHPublicKey(new File(publicKeyPath));
+		ISSHPublicKey sshKey = SSHPublicKey.create(new File(publicKeyPath));
 		String publicKey = sshKey.getPublicKey();
 		assertNotNull(sshKey.getKeyType());
 		String keyType = sshKey.getKeyType().getTypeId();
@@ -127,7 +128,7 @@ public class SSHKeyTest {
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		createDsaKeyPair(publicKeyPath, privateKeyPath);
 
-		ISSHPublicKey sshKey = new SSHPublicKey(new File(publicKeyPath));
+		ISSHPublicKey sshKey = SSHPublicKey.create(new File(publicKeyPath));
 		String publicKey = sshKey.getPublicKey();
 		assertNotNull(sshKey.getKeyType());
 		String keyType = sshKey.getKeyType().getTypeId();
@@ -153,11 +154,15 @@ public class SSHKeyTest {
 	}
 
 	@Test
-	public void shouldUnmarshallSSHKeysResponse() throws SocketTimeoutException, OpenShiftException {
+	public void shouldUnmarshallSSHKeysResponse() throws HttpClientException, Throwable {
+		when(mockClient.get(urlEndsWith("/broker/rest/user/keys")))
+				.thenReturn(Samples.GET_USER_KEYS_MULTIPLE_JSON.getContentAsString());
 		List<ISSHPublicKey> sshKeys = user.getSshKeys();
-		assertThat(sshKeys).isNotNull().isNotEmpty();
+		assertThat(sshKeys).hasSize(2);
+		assertThat(new SSHPublicKey("ssh-rsa", "AAAA")).isIn(sshKeys);
+		assertThat(new SSHPublicKey("ssh-rsa", "AAAB")).isIn(sshKeys);
 	}
-	
+
 	private void createDsaKeyPair(String publicKeyPath, String privateKeyPath) throws IOException, JSchException {
 		KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.DSA, 1024);
 		keyPair.setPassphrase(PASSPHRASE);
@@ -165,5 +170,4 @@ public class SSHKeyTest {
 		keyPair.writePrivateKey(privateKeyPath);
 	}
 
-	
 }

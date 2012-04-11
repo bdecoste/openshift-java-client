@@ -18,7 +18,7 @@ import com.openshift.client.utils.Base64Coder;
 /**
  * @author André Dietisheim
  */
-public class SSHKeyPair implements ISSHPublicKey {
+public class SSHKeyPair extends AbstractSSHKey {
 
 	/**
 	 * the length of the key that is created when using #create. ssh-keygen uses
@@ -31,7 +31,6 @@ public class SSHKeyPair implements ISSHPublicKey {
 
 	private KeyPair keyPair;
 	private String privateKeyPath;
-	private SSHKeyType sSHKeyType;
 	private String publicKeyPath;
 
 	private SSHKeyPair(KeyPair keyPair, String privateKeyPath, String publicKeyPath, String keyTypeId)
@@ -39,9 +38,9 @@ public class SSHKeyPair implements ISSHPublicKey {
 		this(keyPair, privateKeyPath, publicKeyPath, SSHKeyType.getByTypeId(keyTypeId));
 	}
 
-	private SSHKeyPair(KeyPair keyPair, String privateKeyPath, String publicKeyPath, SSHKeyType sSHKeyType)
+	private SSHKeyPair(KeyPair keyPair, String privateKeyPath, String publicKeyPath, SSHKeyType sshKeyType)
 			throws OpenShiftException {
-		this.sSHKeyType = sSHKeyType;
+		super(null, sshKeyType);
 		this.keyPair = keyPair;
 		this.privateKeyPath = privateKeyPath;
 		this.publicKeyPath = publicKeyPath;
@@ -104,9 +103,5 @@ public class SSHKeyPair implements ISSHPublicKey {
 
 	public String getPublicKeyPath() {
 		return publicKeyPath;
-	}
-
-	public SSHKeyType getKeyType() {
-		return sSHKeyType;
 	}
 }
