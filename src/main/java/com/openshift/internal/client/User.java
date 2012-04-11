@@ -103,8 +103,8 @@ public class User implements IUser {
 
 	}
 
-	public String getRhlogin() {
-		return rhlogin;
+	public String getRhlogin() throws SocketTimeoutException, OpenShiftException {
+		return getAPI().getUser().getRhLogin();
 	}
 
 	public String getPassword() {
@@ -117,11 +117,6 @@ public class User implements IUser {
 
 	public String getAuthIV() {
 		return authIV;
-	}
-
-	public String getUUID() throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// return getUserInfo().getUuid();
 	}
 
 	public List<ICartridge> getCartridges() throws OpenShiftException {
