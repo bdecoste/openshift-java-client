@@ -10,25 +10,18 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.HttpMethod;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
-import com.openshift.client.SSHPublicKey;
-import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
 
 /**
  * @author André Dietisheim
@@ -39,15 +32,12 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	private String password;
 	private String authKey;
 	private String authIV;
-	private List<ISSHPublicKey> sshKeys;
-	private List<IDomain> domains;
 	private List<ICartridge> cartridges;
 	private List<IEmbeddableCartridge> embeddableCartridges;
 	private API api;
 	
-	public User(IRestService service) throws FileNotFoundException, IOException, OpenShiftException {
+	public User(IRestService service) {
 		super(service);
-		this.api = new API(service);
 	}
 
 	public boolean isValid() throws OpenShiftException {
@@ -60,14 +50,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
-		if (hasDomain(name)) {
-			throw new OpenShiftException("Domain {0} already exists", name);
-		}
-
-		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(name);
-		IDomain domain = new Domain(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), getService());
-		this.domains.add(domain);
-		return domain;
+		return getAPI().createDomain(name);
 	}
 
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException {
@@ -89,48 +72,13 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// }
 
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
-		if (this.domains == null) {
-			this.domains = loadDomains();
-		}
-		return this.domains;
+		return getAPI().getDomains();
 	}
 
-	private List<IDomain> loadDomains() throws SocketTimeoutException, OpenShiftException {
-		List<IDomain> domains = new ArrayList<IDomain>();
-		for (DomainResourceDTO domainDTO : new ListDomainsRequest().execute()) {
-			domains.add(new Domain(domainDTO, getService()));
-		}
-		return domains;
-	}
 
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
-		for (IDomain domain : getDomains()) {
-			if (domain.getNamespace().equals(namespace)) {
-				return domain;
-			}
-		}
-		return null;
+		return getAPI().getDomain(namespace);
 	}
-
-	boolean hasDomain(String name) throws OpenShiftException, SocketTimeoutException {
-		return getDomain(name) != null;
-	}
-
-	// public IDomain getDomain() throws OpenShiftException {
-	// if (domain == null
-	// && getUserInfo().hasDomain()) {
-	// try {
-	// this.domain = new Domain(
-	// getUserInfo().getNamespace()
-	// , getUserInfo().getRhcDomain()
-	// , this
-	// , service);
-	// } catch (NotFoundOpenShiftException e) {
-	// return null;
-	// }
-	// }
-	// return domain;
-	// }
 
 	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException {
 		return getDomains() != null;
@@ -148,18 +96,7 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	// }
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException {
-		if (this.sshKeys == null) {
-			this.sshKeys = loadKeys();
-		}
-		return this.sshKeys;
-	}
-
-	private List<ISSHPublicKey> loadKeys() throws SocketTimeoutException, OpenShiftException, OpenShiftUnknonwSSHKeyTypeException {
-		List<ISSHPublicKey> sshKeys = new ArrayList<ISSHPublicKey>();
-		for (KeyResourceDTO keyDTO : new GetSShKeysRequest().execute()) {
-			sshKeys.add(new SSHPublicKey(keyDTO.getContent(), keyDTO.getType()));
-		}
-		return sshKeys;
+		return getAPI().getUser().getSSHKeys();
 	}
 
 	public void addSshKey(ISSHPublicKey key) {
@@ -215,66 +152,26 @@ public class User extends AbstractOpenShiftResource implements IUser {
 	}
 
 	public void refresh() throws OpenShiftException {
-		this.domains = null;
-		this.sshKeys = null;
-	}
-
-	@Override
-	protected Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
-		if (super.getLinks() == null) {
-			UserResourceDTO userDTO = new GetUserRequest().execute();
-			update(userDTO);
-			setLinks(userDTO.getLinks());
-		}
-		return super.getLinks();
+		throw new UnsupportedOperationException();
 	}
 	
-	private void update(UserResourceDTO userDTO) {
-		this.rhlogin = userDTO.getRhLogin();
+	private API getAPI() throws SocketTimeoutException, OpenShiftException {
+		if (api == null) {
+			this.api = new API(getService(), new GetAPIRequest().execute());
+		}
+		return api;
 	}
+	
+	private class GetAPIRequest extends LinkServiceRequest {
 
-	private class AddDomainRequest extends ServiceRequest {
-
-		public AddDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super("ADD_DOMAIN", api);
+		public GetAPIRequest() {
+			super(new Link("Get API", "/api", HttpMethod.GET));
 		}
 
-		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
-			return execute(new ServiceParameter("namespace", namespace));
+		public Map<String, Link> execute() throws SocketTimeoutException, OpenShiftException {
+			return super.execute();
 		}
 	}
 	
-	private class ListDomainsRequest extends ServiceRequest {
-
-		public ListDomainsRequest() throws SocketTimeoutException, OpenShiftException {
-			super("LIST_DOMAINS", api);
-		}
-
-		public List<DomainResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
-			return super.execute();
-		}
-	}
-
-	private class GetUserRequest extends ServiceRequest {
-
-		public GetUserRequest() throws SocketTimeoutException, OpenShiftException {
-			super("GET_USER", api);
-		}
-
-		public UserResourceDTO execute() throws SocketTimeoutException, OpenShiftException {
-			return super.execute();
-		}
-	}
-
-	private class GetSShKeysRequest extends ServiceRequest {
-
-		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {
-			super("LIST_KEYS", User.this);
-		}
-
-		public List<KeyResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
-			return super.execute();
-		}
-	}
 	
 }

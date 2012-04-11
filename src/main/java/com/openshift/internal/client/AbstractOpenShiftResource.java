@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author Xavier Coulon
@@ -45,16 +46,39 @@ public abstract class AbstractOpenShiftResource {
 		}
 		return getLinks().get(linkName);
 	}
-	
-	protected boolean areLinksLoaded() {
-		return links != null;
-	}
-	
-	protected void setLinks(Map<String, Link> links) {
-		this.links = links;
-	}
-	
+		
 	protected IRestService getService() {
 		return service;
 	}
+
+	protected class LinkServiceRequest {
+
+		private Link link;
+
+		protected LinkServiceRequest(Link link) {
+			this.link = link;
+		}
+			
+		public <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
+			RestResponse response = getService().execute(link, parameters);
+			return response.getData();
+		}
+	}
+
+	protected class NamedLinkServiceRequest {
+
+		private String linkName;
+
+		protected NamedLinkServiceRequest(String linkName) {
+			this.linkName = linkName;
+		}
+		
+		public <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
+			Link link = getLink(linkName);
+			RestResponse response = getService().execute(link, parameters);
+			return response.getData();
+		}
+
+	}
+
 }

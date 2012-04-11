@@ -145,10 +145,10 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 //		}
 	}
 
-	private class UpdateDomainRequest extends ServiceRequest {
+	private class UpdateDomainRequest extends NamedLinkServiceRequest {
 
 		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super("UPDATE", Domain.this);
+			super("UPDATE");
 		}
 		
 		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
