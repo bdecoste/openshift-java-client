@@ -39,6 +39,9 @@ import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
 
+/**
+ * @author Andre Dietisheim
+ */
 public class SSHKeyTest {
 
 	private static final String SSH_RSA = "ssh-rsa";
@@ -195,32 +198,65 @@ public class SSHKeyTest {
 	}
 
 	@Test
-	public void shouldUpdateKeyType() throws SocketTimeoutException, HttpClientException, Throwable {
+	public void shouldUpdateKeyTypeAndPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		// pre-conditions
 		String keyName = "default";
 		String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
+		String newPublicKey = "AAAAB3Nza...";
+		
 		when(mockClient.get(urlEndsWith("/user/keys")))
 				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith(keyUrl)))
 				.thenReturn(Samples.UPDATE_USER_KEY_JSON.getContentAsString());
+
 		// operation
 		List<IOpenShiftSSHKey> keys = user.getSshKeys();
 		assertThat(keys).hasSize(1);
 		IOpenShiftSSHKey key = keys.get(0);
 		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
-		key.setKeyType(SSHKeyType.SSH_DSA);
+		key.setKeyType(SSHKeyType.SSH_DSA, newPublicKey);
+
 		// verification
 		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
+		assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("type", SSHKeyType.SSH_DSA.getTypeId());
+		parameterMap.put("type", SSH_DSA);
 		parameterMap.put("content", key.getPublicKey());
+		verify(mockClient).put(parameterMap, new URL(keyUrl));
+	}
+
+	@Test
+	public void shouldUpdatePublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
+		// pre-conditions
+		String keyName = "default";
+		String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
+		String newPublicKey = "AAAAB3Nza...";
+		when(mockClient.get(urlEndsWith("/user/keys")))
+				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
+		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith(keyUrl)))
+				.thenReturn(Samples.UPDATE_USER_KEY_RSA_JSON.getContentAsString());
+
+		// operation
+		List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		assertThat(keys).hasSize(1);
+		IOpenShiftSSHKey key = keys.get(0);
+		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+		assertThat(key.getPublicKey()).isNotEqualTo(newPublicKey);
+		key.setPublicKey(newPublicKey);
+
+		// verification
+		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+		assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
+		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("type", SSH_RSA);
+		parameterMap.put("content", newPublicKey);
 		verify(mockClient).put(parameterMap, new URL(keyUrl));
 	}
 
 	private void createDsaKeyPair(String publicKeyPath, String privateKeyPath) throws IOException, JSchException {
 		KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.DSA, 1024);
 		keyPair.setPassphrase(PASSPHRASE);
-		keyPair.writePublicKey(publicKeyPath, "created by " + IOpenShiftService.ID);
+		keyPair.writePublicKey(publicKeyPath, "created by " + IUser.ID);
 		keyPair.writePrivateKey(privateKeyPath);
 	}
 

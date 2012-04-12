@@ -30,7 +30,6 @@ import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
  */
 public class User implements IUser {
 
-	private String rhlogin;
 	private String password;
 	private String authKey;
 	private String authIV;

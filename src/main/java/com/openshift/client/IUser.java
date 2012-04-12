@@ -19,6 +19,8 @@ import java.util.List;
  */
 public interface IUser {
 
+	public static final String ID = "com.openshift.client";
+
 	public String getRhlogin() throws SocketTimeoutException, OpenShiftException;
 
 	public String getPassword();

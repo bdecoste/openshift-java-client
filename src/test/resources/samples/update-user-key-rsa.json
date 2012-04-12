@@ -51,7 +51,7 @@
                 ]
             }
         },
-        "type":"ssh-dss",
+        "type":"ssh-rsa",
         "name":"default",
         "content":"AAAAB3Nza..."
     },

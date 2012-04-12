@@ -22,8 +22,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
  */
 public interface IRestService {
 
-	public abstract RestResponse execute(Link link)
-			throws OpenShiftException, SocketTimeoutException;
+	public abstract RestResponse execute(Link link) throws OpenShiftException, SocketTimeoutException;
 
 	public RestResponse execute(Link link, ServiceParameter... serviceParameters)
 			throws SocketTimeoutException, OpenShiftException;

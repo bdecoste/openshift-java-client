@@ -24,8 +24,22 @@ public interface IOpenShiftSSHKey extends ISSHPublicKey {
 	 */
 	public String getName();
 	
+	/**
+	 * Sets the public key portion of this ssh key to the OpenShift PaaS.
+	 * 
+	 * @param publicKey the new public key porition of this key
+	 * @throws SocketTimeoutException
+	 * @throws OpenShiftException
+	 */
 	public void setPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftException;
 	
-	public void setKeyType(SSHKeyType type) throws SocketTimeoutException, OpenShiftException;
+	/**
+	 * Sets the new type and public key of this ssh key to the Openshift PaaS
+	 * @param type
+	 * @throws SocketTimeoutException
+	 * @throws OpenShiftException
+	 */
+	public void setKeyType(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException;
 
+	public void destroy() throws SocketTimeoutException, OpenShiftException;
 }
