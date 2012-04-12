@@ -17,11 +17,9 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.IOpenShiftService;
 import com.openshift.client.NotFoundOpenShiftException;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.test.fakes.TestUser;
 
 /**
  * @author André Dietisheim

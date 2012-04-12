@@ -11,8 +11,6 @@
 package com.openshift.internal.client.test;
 
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 
 import org.junit.Before;
@@ -21,12 +19,6 @@ import org.junit.Test;
 import com.openshift.client.IOpenShiftService;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
-import com.openshift.client.configuration.DefaultConfiguration;
-import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.client.configuration.SystemConfiguration;
-import com.openshift.client.configuration.UserConfiguration;
-import com.openshift.internal.client.test.fakes.TestUser;
 
 /**
  * @author William DeCoste

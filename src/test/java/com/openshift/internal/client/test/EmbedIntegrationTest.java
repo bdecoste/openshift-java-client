@@ -10,38 +10,13 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static com.openshift.internal.client.test.utils.EmbeddableCartridgeAsserts.assertThatContainsCartridge;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.IApplication;
-import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.client.IJenkinsApplication;
-import com.openshift.client.IOpenShiftService;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
-import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.internal.client.CronEmbeddableCartridge;
-import com.openshift.internal.client.EmbeddableCartridge;
-import com.openshift.internal.client.GenMMSAgentEmbeddableCartridge;
-import com.openshift.internal.client.JenkinsClientEmbeddableCartridge;
-import com.openshift.internal.client.MetricsEmbeddableCartridge;
-import com.openshift.internal.client.MongoEmbeddableCartridge;
-import com.openshift.internal.client.MySqlEmbeddableCartridge;
-import com.openshift.internal.client.PHPMyAdminEmbeddableCartridge;
-import com.openshift.internal.client.PostgresEmbeddableCartridge;
-import com.openshift.internal.client.RockMongoEmbeddableCartridge;
-import com.openshift.internal.client.test.fakes.TestUser;
-import com.openshift.internal.client.test.utils.ApplicationUtils;
 
 /**
  * @author André Dietisheim

@@ -10,30 +10,14 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import com.openshift.client.ApplicationLogReader;
-import com.openshift.client.IApplication;
-import com.openshift.client.ICartridge;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
-import com.openshift.client.configuration.DefaultConfiguration;
-import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.client.configuration.SystemConfiguration;
-import com.openshift.client.configuration.UserConfiguration;
-import com.openshift.internal.client.test.fakes.TestUser;
-import com.openshift.internal.client.test.utils.ApplicationUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.openshift.client.IOpenShiftService;
+import com.openshift.client.IUser;
+import com.openshift.client.OpenShiftException;
 
 /**
  * @author André Dietisheim
@@ -42,7 +26,7 @@ public class ApplicationLogReaderIntegrationTest {
 
 	private static final int LOGREADER_TIMEOUT = 10 * 1024;
 	private IOpenShiftService service;
-	private TestUser user;
+	private IUser user;
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {

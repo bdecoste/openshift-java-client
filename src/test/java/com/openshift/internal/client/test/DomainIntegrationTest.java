@@ -10,36 +10,19 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.IApplication;
-import com.openshift.client.IDomain;
 import com.openshift.client.IUser;
-import com.openshift.client.NotFoundOpenShiftException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftService;
-import com.openshift.client.SSHKeyPair;
-import com.openshift.client.configuration.DefaultConfiguration;
-import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.client.configuration.SystemConfiguration;
-import com.openshift.client.configuration.UserConfiguration;
-import com.openshift.internal.client.test.fakes.TestSSHKey;
-import com.openshift.internal.client.test.fakes.TestUser;
 
 public class DomainIntegrationTest {
 
 	private OpenShiftService service;
-	private TestUser user;
+	private IUser user;
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
@@ -116,7 +99,7 @@ public class DomainIntegrationTest {
 //		assertNotNull(domain);
 	}
 
-	private void ensureNoApplicationsExist(TestUser user) throws OpenShiftException {
+	private void ensureNoApplicationsExist(IUser user) throws OpenShiftException {
 //		try {
 //			List<IApplication> allApplications = new ArrayList<IApplication>();
 //			allApplications.addAll(user.getApplications());

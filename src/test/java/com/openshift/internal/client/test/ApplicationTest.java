@@ -10,54 +10,12 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static com.openshift.internal.client.test.utils.ApplicationAsserts.assertApplication;
-import static com.openshift.internal.client.test.utils.ApplicationAsserts.assertApplicationUrl;
-import static com.openshift.internal.client.test.utils.ApplicationAsserts.assertGitUri;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URLEncoder;
-import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.openshift.client.ApplicationLogReader;
-import com.openshift.client.IApplication;
-import com.openshift.client.ICartridge;
-import com.openshift.client.IDomain;
-import com.openshift.client.IHttpClient;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.IUser;
 import com.openshift.client.InvalidNameOpenShiftException;
-import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
-import com.openshift.client.configuration.DefaultConfiguration;
-import com.openshift.client.configuration.SystemConfiguration;
-import com.openshift.client.configuration.UserConfiguration;
-import com.openshift.internal.client.Application;
-import com.openshift.internal.client.ApplicationInfo;
-import com.openshift.internal.client.Domain;
-import com.openshift.internal.client.User;
-import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.httpclient.HttpClientException;
-import com.openshift.internal.client.request.ApplicationAction;
-import com.openshift.internal.client.request.ApplicationRequest;
-import com.openshift.internal.client.request.OpenShiftEnvelopeFactory;
-import com.openshift.internal.client.request.marshalling.ApplicationRequestJsonMarshaller;
-import com.openshift.internal.client.response.OpenShiftResponse;
-import com.openshift.internal.client.response.unmarshalling.ApplicationResponseUnmarshaller;
-import com.openshift.internal.client.response.unmarshalling.ApplicationStatusResponseUnmarshaller;
-import com.openshift.internal.client.response.unmarshalling.JsonSanitizer;
-import com.openshift.internal.client.test.fakes.ApplicationResponseFake;
-import com.openshift.internal.client.test.fakes.NoopHttpClientFake;
-import com.openshift.internal.client.test.fakes.NoopOpenShiftServiceFake;
-import com.openshift.internal.client.test.fakes.TestUser;
-import com.openshift.internal.client.test.fakes.UserFake;
 
 /**
  * @author André Dietisheim

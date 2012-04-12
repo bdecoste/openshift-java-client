@@ -24,6 +24,7 @@ import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.utils.Assert;
 
 /**
  * @author André Dietisheim
@@ -39,6 +40,7 @@ public class User implements IUser {
 	private IRestService service;
 
 	public User(IRestService service) {
+		Assert.isTrue(service != null);
 		this.service = service;
 	}
 
