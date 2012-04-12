@@ -185,7 +185,6 @@ public class SSHKeyTest {
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		createDsaKeyPair(publicKeyPath, privateKeyPath);
 		SSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
-		assertThat(publicKey.getName()).isNull();
 
 		// operation
 		user.addSshKey("default2", publicKey);

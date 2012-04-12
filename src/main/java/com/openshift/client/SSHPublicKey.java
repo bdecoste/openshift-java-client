@@ -34,7 +34,7 @@ public class SSHPublicKey extends AbstractSSHKey {
 	}
 	
 	public SSHPublicKey(File publicKeyFile) throws FileNotFoundException, OpenShiftException, IOException {
-		super(null, (SSHKeyType) null);
+		super(null);
 		init(publicKeyFile);
 	}
 
