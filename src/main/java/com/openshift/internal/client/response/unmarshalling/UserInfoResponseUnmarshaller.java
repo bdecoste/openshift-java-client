@@ -20,10 +20,10 @@ import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.jboss.dmr.ModelNode;
 
-import com.openshift.client.Cartridge;
 import com.openshift.client.ICartridge;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.internal.client.ApplicationInfo;
+import com.openshift.internal.client.Cartridge;
 import com.openshift.internal.client.EmbeddableCartridgeInfo;
 import com.openshift.internal.client.UserInfo;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;

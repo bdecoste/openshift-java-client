@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import java.net.SocketTimeoutException;
+
 import com.openshift.internal.client.EmbeddableCartridge;
 
 
@@ -19,13 +21,13 @@ import com.openshift.internal.client.EmbeddableCartridge;
 public interface IEmbeddableCartridge {
 
 	@Deprecated
-	public static final IEmbeddableCartridge PHPMYADMIN_34 = new EmbeddableCartridge("phpmyadmin-3.4");
+	public static final IEmbeddableCartridge PHPMYADMIN_34 = null;//new EmbeddableCartridge("phpmyadmin-3.4");
 	@Deprecated
-	public static final IEmbeddableCartridge MYSQL_51 = new EmbeddableCartridge("mysql-5.1");
+	public static final IEmbeddableCartridge MYSQL_51 = null;//new EmbeddableCartridge("mysql-5.1");
 	@Deprecated
-	public static final IEmbeddableCartridge JENKINS_14 = new EmbeddableCartridge("jenkins-client-1.4");
+	public static final IEmbeddableCartridge JENKINS_14 = null;//new EmbeddableCartridge("jenkins-client-1.4");
 	@Deprecated
-	public static final IEmbeddableCartridge METRICS_01 = new EmbeddableCartridge("metrics-0.1");
+	public static final IEmbeddableCartridge METRICS_01 = null;//new EmbeddableCartridge("metrics-0.1");
 
 	public String getName();
 
@@ -34,4 +36,14 @@ public interface IEmbeddableCartridge {
 	public String getCreationLog();
 	
 	public void setCreationLog(String creationLog);
+	
+	/**
+	 * Destroys this cartridge (and removes it from the list of existing cartridges)
+	 * 
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public void destroy() throws OpenShiftException, SocketTimeoutException;
+
+
 }

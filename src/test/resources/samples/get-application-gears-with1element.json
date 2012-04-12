@@ -1,12 +1,14 @@
 {
-    "status":"ok",
+    "version":"1.0",
     "messages":[
         
     ],
     "type":"gears",
+    "status":"ok",
     "data":[
         {
-            "uuid":"5229a2c0f1424aed90d4ca8f20c0f9a2",
+            "uuid":"f936d82ee6b146adbb18e3f41d922006",
+            "git_url":"ssh://f936d82ee6b146adbb18e3f41d922006@scalable-foobar.stg.rhcloud.com/~/git/scalable.git/",
             "components":[
                 {
                     "name":"jbossas-7",
@@ -26,9 +28,7 @@
                     "internal_port":null,
                     "proxy_host":null
                 }
-            ],
-            "git_url":"ssh://5229a2c0f1424aed90d4ca8f20c0f9a2@sample-foobar.stg.rhcloud.com/~/git/sample.git/"
+            ]
         }
-    ],
-    "version":"1.0"
+    ]
 }

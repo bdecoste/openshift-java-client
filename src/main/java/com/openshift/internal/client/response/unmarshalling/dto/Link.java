@@ -108,4 +108,14 @@ public class Link {
 		return optionalParams;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Link [rel=" + rel + ": " + httpMethod + " " + href + "]";
+	}
+	
+	
+
 }

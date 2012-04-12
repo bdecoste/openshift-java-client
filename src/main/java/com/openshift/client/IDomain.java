@@ -52,13 +52,36 @@ public interface IDomain {
 	 */
 	public boolean waitForAccessible(long timeout) throws OpenShiftException;
 
-	public IApplication createApplication(String name, ICartridge cartridge) throws OpenShiftException;
+	/**
+	 * Creates a new application with the given name and the given cartridge/framework. Optionally, adds scalability and
+	 * uses a specific nodeProfile, otherwise (ie, null values), uses default
+	 * 
+	 * @param name
+	 * @param cartridge
+	 * @param scale
+	 *            or null (will use default on openshift, ie, false)
+	 * @param nodeProfile
+	 *            ("small", "micro", "medium", "large", "exlarge", "jumbo") or null (will use default on openshift, ie,
+	 *            'small')
+	 * @return
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
+	 */
+	public IApplication createApplication(final String name, final String cartridge, final Boolean scale, final String nodeProfile) throws OpenShiftException, SocketTimeoutException;
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException;
+	
+	/**
+	 * Returns the list of cartridges that can be used to create a new application.
+	 * @return the list of cartridges that can be used to create a new application.
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public List<String> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException;
 
-	public IApplication getApplicationByName(String name) throws OpenShiftException;
+	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
-	public boolean hasApplication(String name) throws OpenShiftException;
+	public boolean hasApplication(String name) throws OpenShiftException, SocketTimeoutException;
 
 	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
 

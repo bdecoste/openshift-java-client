@@ -10,7 +10,7 @@
             "uuid":"78337de0b54047e0a8577b0697ace5d6",
             "links":{
                 "GET":{
-                    "href":"/domains/foobar/applications/sample1/gears",
+                    "href":"/domains/foobar/applications/sample/gears",
                     "required_params":[
                         
                     ],
@@ -21,7 +21,7 @@
                     ]
                 },
                 "FORCE_STOP":{
-                    "href":"/domains/foobar/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -37,7 +37,7 @@
                     ]
                 },
                 "STOP":{
-                    "href":"/domains/foobar/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -53,7 +53,7 @@
                     ]
                 },
                 "ADD_CARTRIDGE":{
-                    "href":"/domains/foobar/applications/sample1/cartridges",
+                    "href":"/domains/foobar/applications/sample/cartridges",
                     "required_params":[
                         {
                             "name":"cartridge",
@@ -79,7 +79,7 @@
                     ]
                 },
                 "LIST_CARTRIDGES":{
-                    "href":"/domains/foobar/applications/sample1/cartridges",
+                    "href":"/domains/foobar/applications/sample/cartridges",
                     "required_params":[
                         
                     ],
@@ -90,7 +90,7 @@
                     ]
                 },
                 "RESTART":{
-                    "href":"/domains/foobar/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -106,7 +106,7 @@
                     ]
                 },
                 "START":{
-                    "href":"/domains/foobar/applications/sample1/events",
+                    "href":"/domains/foobar/applications/sample/events",
                     "required_params":[
                         {
                             "name":"event",
@@ -122,7 +122,7 @@
                     ]
                 },
                 "DELETE":{
-                    "href":"/domains/foobar/applications/sample1",
+                    "href":"/domains/foobar/applications/sample",
                     "required_params":[
                         
                     ],

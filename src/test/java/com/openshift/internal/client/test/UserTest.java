@@ -32,7 +32,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.openshift.client.Cartridge;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
@@ -42,6 +41,7 @@ import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.RFC822DateUtils;
 import com.openshift.internal.client.ApplicationInfo;
+import com.openshift.internal.client.Cartridge;
 import com.openshift.internal.client.EmbeddableCartridgeInfo;
 import com.openshift.internal.client.User;
 import com.openshift.internal.client.UserInfo;

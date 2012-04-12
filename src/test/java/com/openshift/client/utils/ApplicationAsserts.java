@@ -15,6 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.net.SocketTimeoutException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,7 +44,7 @@ public class ApplicationAsserts {
 
 	public static void assertThatContainsApplication(String applicationName, List<IEmbeddableCartridge> embedded,
 			String uuid, String cartridgeName, String creationTime, List<IApplication> applications)
-			throws OpenShiftException {
+			throws OpenShiftException, SocketTimeoutException {
 		IApplication application = getApplication(applicationName, applications);
 		if (application == null) {
 			fail(MessageFormat.format("Could not find application with name \"{0}\"", applicationName));
@@ -87,7 +88,7 @@ public class ApplicationAsserts {
 
 	public static void assertApplication(String name, String uuid, String cartridgeName,
 			List<IEmbeddableCartridge> embedded, String creationTime, IApplication application)
-			throws OpenShiftException {
+			throws OpenShiftException, SocketTimeoutException {
 		assertApplication(name, uuid, cartridgeName, application);
 		assertEquals(embedded, application.getEmbeddedCartridges());
 		try {
@@ -99,7 +100,7 @@ public class ApplicationAsserts {
 
 	public static void assertApplication(String name, String creationLog, String uuid, String cartridgeName,
 			List<IEmbeddableCartridge> embedded, String creationTime, IApplication application)
-			throws OpenShiftException {
+			throws OpenShiftException, SocketTimeoutException {
 		assertApplication(name, uuid, cartridgeName, embedded, creationTime, application);
 		assertEquals(creationLog, application.getCreationLog());
 	}
@@ -124,7 +125,7 @@ public class ApplicationAsserts {
 		assertEquals(name, application.getName());
 		assertEquals(uuid, application.getUUID());
 		assertNotNull(application.getCartridge());
-		assertEquals(cartridgeName, application.getCartridge().getName());
+		assertEquals(cartridgeName, application.getCartridge());
 	}
 
 	public static void assertGitUri(String applicationName, String gitUri) {
@@ -163,7 +164,7 @@ public class ApplicationAsserts {
 	}
 
 	public static void assertThatContainsEmbeddableCartridge(IEmbeddableCartridge embeddableCartridge,
-			IApplication application) throws OpenShiftException {
+			IApplication application) throws OpenShiftException, SocketTimeoutException {
 		List<IEmbeddableCartridge> cartridges = application.getEmbeddedCartridges();
 		assertNotNull(cartridges);
 		assertTrue(cartridges.size() >= 1);

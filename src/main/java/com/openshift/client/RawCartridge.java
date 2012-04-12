@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import com.openshift.internal.client.Cartridge;
+
 
 /**
  * A cartridge that is available on the openshift server. This class is no enum

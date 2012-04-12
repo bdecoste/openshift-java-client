@@ -8,11 +8,17 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import com.openshift.client.ICartridge;
+import com.openshift.client.IOpenShiftService;
+import com.openshift.client.IUser;
+import com.openshift.client.JBossCartridge;
+import com.openshift.client.OpenShiftException;
 
 
 /**

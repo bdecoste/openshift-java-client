@@ -10,16 +10,12 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
+import java.net.SocketTimeoutException;
+import java.util.Map;
 
-import com.openshift.client.Cartridge;
-import com.openshift.client.ICartridge;
 import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * A cartridge that may be embedded into an application. This class is no enum
@@ -27,7 +23,9 @@ import com.openshift.client.OpenShiftException;
  * 
  * @author André Dietisheim
  */
-public class EmbeddableCartridge extends Cartridge implements IEmbeddableCartridge {
+public class EmbeddableCartridge extends AbstractOpenShiftResource implements IEmbeddableCartridge {
+	
+	public static final String EMBEDDED_TYPE = "embedded";
 	
 	protected static final String JENKINS_CLIENT = "jenkins-client";
 	protected static final String MYSQL = "mysql";
@@ -39,54 +37,55 @@ public class EmbeddableCartridge extends Cartridge implements IEmbeddableCartrid
 	protected static final String CRON = "cron";
 	protected static final String GEN_MMS_AGENT = "10gen-mms-agent";
 
+	private static final String LINK_DELETE_CARTRIDGE = "DELETE";
+
+	private final String name;
+	private final String info; // not supported yet
+	private final String type;
 	private String creationLog;
 	private String url;
-	private Application application;
+	private final Application application;
 	
-	public EmbeddableCartridge(IOpenShiftService service, IUser user) {
-		super(service, user);
-	}
-	
-	public EmbeddableCartridge(IOpenShiftService service, IUser user, Application application) {
-		super(service, user);
+	public EmbeddableCartridge(final String name, final String type, final Map<String, Link> links, final Application application) {
+		super(application.getService(), links);
+		this.name = name;
+		this.type = type;
+		this.info = null; // FIXME: see bugzilla 
 		this.application = application;
 	}
 	
-	public EmbeddableCartridge(IOpenShiftService service, IUser user, String url) {
-		super(service, user);
-		this.url = url;
-	}
-	
-	public EmbeddableCartridge(IOpenShiftService service, IUser user, String url, Application application) {
-		super(service, user);
-		this.url = url;
-		this.application = application;
+	/**
+	 * @return the name
+	 */
+	public final String getName() {
+		return name;
 	}
 
-
-	public EmbeddableCartridge(String name) {
-		this(name, (Application) null);
+	/**
+	 * @return the type
+	 */
+	protected final String getType() {
+		return type;
 	}
 
-	public EmbeddableCartridge(String name, Application application) {
-		super(name);
-		this.application = application;
+	/**
+	 * @return the info
+	 */
+	public final String getInfo() {
+		return info;
 	}
 
-	public EmbeddableCartridge(final String name, final String info, final Application application) {
-		this(name, application);
-		this.url = info;
+	/**
+	 * @return the application
+	 */
+	public final Application getApplication() {
+		return application;
 	}
 
 	public String getUrl() throws OpenShiftException {
 		return url;
 	}
 
-	protected void update(EmbeddableCartridgeInfo cartridgeInfo) throws OpenShiftException {
-		setName(cartridgeInfo.getName());
-		this.url = cartridgeInfo.getUrl();
-	}
-	
 	public void setCreationLog(String creationLog) {
 		this.creationLog = creationLog;
 	}
@@ -95,7 +94,29 @@ public class EmbeddableCartridge extends Cartridge implements IEmbeddableCartrid
 		return creationLog;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.openshift.client.IApplication#destroy()
+	 */
+	public void destroy() throws OpenShiftException, SocketTimeoutException {
+		new DeleteCartridgeRequest().execute();
+		application.removeEmbeddedCartridge(this);
+	}
 	
+	/**
+	 * The Class DeleteApplicationRequest.
+	 */
+	private class DeleteCartridgeRequest extends ServiceRequest {
+
+		/**
+		 * Instantiates a new delete application request.
+		 */
+		protected DeleteCartridgeRequest() {
+			super(LINK_DELETE_CARTRIDGE, EmbeddableCartridge.this);
+		}
+
+	}
+
+
 	
 	
 

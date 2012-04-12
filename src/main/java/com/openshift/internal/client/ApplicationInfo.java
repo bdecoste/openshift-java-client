@@ -18,6 +18,7 @@ import com.openshift.client.ICartridge;
 /**
  * @author André Dietisheim
  */
+@Deprecated
 public class ApplicationInfo {
 
 	private String name;

@@ -29,6 +29,6 @@ public class ListEmbeddableCartridgesResponseUnmarshaller extends AbstractListCa
 
 	protected IEmbeddableCartridge createCartridge(ModelNode cartridgeNode) {
 		String name = cartridgeNode.asString();
-		return new EmbeddableCartridge(name);
+		return null;// new EmbeddableCartridge(name);
 	}
 }

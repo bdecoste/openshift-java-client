@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.openshift.client.Cartridge;
 import com.openshift.client.ICartridge;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.Cartridge;
 import com.openshift.internal.client.request.ListCartridgesRequest;
 import com.openshift.internal.client.request.OpenShiftEnvelopeFactory;
 import com.openshift.internal.client.request.marshalling.ListCartridgesRequestJsonMarshaller;

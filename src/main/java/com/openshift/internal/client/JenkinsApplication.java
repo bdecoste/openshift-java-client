@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.ICartridge;
@@ -23,19 +24,20 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  */
 public class JenkinsApplication extends Application implements IJenkinsApplication {
 
-	public JenkinsApplication(String name, String uuid, String creationTime, ICartridge cartridge,
-			Map<String, Link> links, Domain domain) {
-		super(name, uuid, creationTime, cartridge, links, domain);
+
+	public JenkinsApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
+			String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
-	public JenkinsApplication(String name, String uuid, String creationTime, String creationLog, ICartridge cartridge,
-			Map<String, Link> links, Domain domain) {
-		super(name, uuid, creationTime, creationLog, cartridge, links, domain);
+	public JenkinsApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
+			String gitUrl, String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getHealthCheckUrl() throws OpenShiftException {
+	public String getHealthCheckUrl() {
 		return getApplicationUrl() + "login?from=%2F";
 	}
 	

@@ -94,6 +94,14 @@ public class User extends AbstractOpenShiftResource implements IUser {
 		}
 		return Collections.unmodifiableList(domains);
 	}
+	
+	/**
+	 * Removes the given domain from the user's list of existing domains
+	 * @param domain: the domain to remove
+	 */
+	protected void removeDomain(IDomain domain) {
+		this.domains.remove(domain);
+	}
 
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
 		for (IDomain domain : getDomains()) {

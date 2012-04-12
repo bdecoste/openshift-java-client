@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import static org.junit.Assert.fail;
+
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +34,13 @@ public class LinkRetriever {
 	 * @throws SocketTimeoutException 
 	 * 
 	 */
-	public static Link retrieveLink(final Object resource, final String linkName) throws OpenShiftException, SocketTimeoutException {
-		return ((AbstractOpenShiftResource)resource).getLink(linkName);
+	public static Link retrieveLink(final Object resource, final String linkName) {
+		try {
+			return ((AbstractOpenShiftResource)resource).getLink(linkName);
+		} catch (Exception e) {
+			fail("Failed to retrieve link for given resource: " + resource);
+		}
+		return null;
 	}
 
 	/**
@@ -42,7 +49,12 @@ public class LinkRetriever {
 	 * @throws SocketTimeoutException 
 	 * 
 	 */
-	public static Map<String, Link> retrieveLinks(final Object resource) throws OpenShiftException, SocketTimeoutException {
-		return ((AbstractOpenShiftResource)resource).getLinks();
+	public static Map<String, Link> retrieveLinks(final Object resource) {
+		try {
+			return ((AbstractOpenShiftResource)resource).getLinks();
+		} catch (Exception e) {
+			fail("Failed to retrieve links for given resource: " + resource);
+		}
+		return null;
 	}
 }

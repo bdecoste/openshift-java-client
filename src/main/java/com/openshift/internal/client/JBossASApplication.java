@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.ICartridge;
@@ -24,16 +25,15 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
 public class JBossASApplication extends Application implements IJBossASApplication {
 
 	
-
-	public JBossASApplication(String name, String uuid, String creationTime, ICartridge cartridge,
-			Map<String, Link> links, Domain domain) {
-		super(name, uuid, creationTime, cartridge, links, domain);
+	public JBossASApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
+			String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
-	public JBossASApplication(String name, String uuid, String creationTime, String creationLog, ICartridge cartridge,
-			Map<String, Link> links, Domain domain) {
-		super(name, uuid, creationTime, creationLog, cartridge, links, domain);
+	public JBossASApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
+			String gitUrl, String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -44,7 +44,7 @@ public class JBossASApplication extends Application implements IJBossASApplicati
 //		return "stdout.log";
 	}
 	
-	public String getHealthCheckUrl() throws OpenShiftException {
+	public String getHealthCheckUrl() {
 		return getApplicationUrl() + "/health";
 	}
 	

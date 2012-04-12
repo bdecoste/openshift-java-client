@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.openshift.client.ApplicationLogReader;
-import com.openshift.client.Cartridge;
 import com.openshift.client.HAProxyCartridge;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
@@ -51,6 +50,7 @@ import com.openshift.client.RawCartridge;
 import com.openshift.client.RubyCartridge;
 import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.internal.client.ApplicationInfo;
+import com.openshift.internal.client.Cartridge;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.User;
 import com.openshift.internal.client.UserInfo;

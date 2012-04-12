@@ -69,6 +69,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_USER_INFO = "user_info";
 	public static final String PROPERTY_UUID = "uuid";
 	public static final String PROPERTY_VALID_OPTIONS = "valid_options";
+	public static final String PROPERTY_APP_URL = "app_url";
 	public static final String PROPERTY_GIT_URL = "git_url";
 	public static final String PROPERTY_GEARS_COMPONENTS = "components";
 	

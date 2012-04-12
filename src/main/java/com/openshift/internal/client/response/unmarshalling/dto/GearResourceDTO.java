@@ -23,11 +23,11 @@ public class GearResourceDTO extends BaseResourceDTO {
 	/** The gears uuid. */
 	private final String uuid;
 	
-	/** The gears components. */
-	private final List<GearsComponent> components;
-	
 	/** The gears git url. */
 	private final String gitUrl;
+	
+	/** The gears components. */
+	private final List<GearComponentDTO> components;
 	
 	/**
 	 * Instantiates a new gears resource dto.
@@ -36,7 +36,7 @@ public class GearResourceDTO extends BaseResourceDTO {
 	 * @param components the components
 	 * @param gitUrl the git url
 	 */
-	public GearResourceDTO(final String uuid, final List<GearsComponent> components, final String gitUrl) {
+	public GearResourceDTO(final String uuid, final String gitUrl, final List<GearComponentDTO> components) {
 		super(new HashMap<String, Link>());
 		this.uuid = uuid;
 		this.components = components;
@@ -53,15 +53,6 @@ public class GearResourceDTO extends BaseResourceDTO {
 	}
 
 	/**
-	 * Gets the components.
-	 *
-	 * @return the components
-	 */
-	public final List<GearsComponent> getComponents() {
-		return components;
-	}
-
-	/**
 	 * Gets the git url.
 	 *
 	 * @return the gitUrl
@@ -70,5 +61,14 @@ public class GearResourceDTO extends BaseResourceDTO {
 		return gitUrl;
 	}
 
+	/**
+	 * Gets the components.
+	 *
+	 * @return the components
+	 */
+	public final List<GearComponentDTO> getComponents() {
+		return components;
+	}
+	
 
 }

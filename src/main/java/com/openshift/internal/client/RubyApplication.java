@@ -11,6 +11,7 @@
 package com.openshift.internal.client;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.ICartridge;
@@ -25,15 +26,15 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
 public class RubyApplication extends Application implements IRubyApplication {
 
 	
-	public RubyApplication(String name, String uuid, String creationTime, ICartridge cartridge,
-			Map<String, Link> links, Domain domain) {
-		super(name, uuid, creationTime, cartridge, links, domain);
+	public RubyApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
+			String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
-	public RubyApplication(String name, String uuid, String creationTime, String creationLog, ICartridge cartridge,
-			Map<String, Link> links, Domain domain) {
-		super(name, uuid, creationTime, creationLog, cartridge, links, domain);
+	public RubyApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
+			String gitUrl, String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 

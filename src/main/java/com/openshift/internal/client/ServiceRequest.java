@@ -50,15 +50,18 @@ public class ServiceRequest {
 		}
 	}
 	
-	public <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
-		Link link = getLink();
+	public <DTO> DTO execute(final ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
+		final Link link = getLink();
 		if (link == null) {
 			throw new OpenShiftException("Could not request resource, no link present");
 		}
 		// avoid concurrency issues, to prevent reading the links map while it
 		// is still being retrieved
-		RestResponse response = resource.getService().execute(link, parameters);
-		return response.getData();
+		final RestResponse response = resource.getService().execute(link, parameters);
+		if(response != null) {
+			return response.getData();
+		}
+		return null;
 	}
 
 }

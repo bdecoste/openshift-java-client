@@ -28,8 +28,8 @@ import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
  */
 public abstract class AbstractOpenShiftResource {
 
-	/** The links. */
-	private final Map<String, Link> links;
+	/** The links. Null means collection is not loaded yet. */
+	private Map<String, Link> links;
 
 	/** The service. */
 	private final IRestService service;
@@ -51,7 +51,7 @@ public abstract class AbstractOpenShiftResource {
 	 */
 	public AbstractOpenShiftResource(final IRestService service, final Map<String, Link> links) {
 		this.service = service;
-		this.links = (links != null) ? links : new HashMap<String, Link>();
+		this.links = links;
 	}
 
 	/**
@@ -66,8 +66,7 @@ public abstract class AbstractOpenShiftResource {
 	}
 
 	void setLinks(final Map<String, Link> links) {
-		this.links.clear();
-		this.links.putAll(links);
+		this.links = links;
 	}
 
 	

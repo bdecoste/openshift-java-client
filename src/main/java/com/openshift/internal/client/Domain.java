@@ -15,17 +15,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import com.openshift.client.Cartridge;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
-import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
 
 
 /**
@@ -33,12 +31,14 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  */
 public class Domain extends AbstractOpenShiftResource implements IDomain {
 
-	private static final String LINK_UPDATE = "UPDATE";
 	private static final String LINK_LIST_APPLICATIONS = "LIST_APPLICATIONS";
-	private static final String LINK_DELETE = "LIST_DELETE";
+	private static final String LINK_ADD_APPLICATION = "ADD_APPLICATION";
+	private static final String LINK_UPDATE = "UPDATE";
+	private static final String LINK_DELETE = "DELETE";
 	private String namespace;
 	private String rhcDomain;
 	/** Applications for the domain. */
+	//TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 	private final User user;
 
@@ -81,17 +81,27 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 //		return accessible;
 	}
 	
-	public IApplication createApplication(String name, ICartridge cartridge) throws OpenShiftException {
-    	throw new UnsupportedOperationException();
-//		IApplication application = service.createApplication(name, cartridge, this);
-//		add(application);
-//		return application;
+	public IApplication createApplication(String name, String cartridge, Boolean scale, String nodeProfile) throws OpenShiftException, SocketTimeoutException {
+		// check that an application with the same does not already exists, and btw, loads the list of applications if needed (lazy)
+		if(name == null) {
+			throw new OpenShiftException("Application name is mandatory but none was given.");
+		}
+		if(cartridge == null) {
+			throw new OpenShiftException("Application type is mandatory but none was given.");
+		}
+		if(hasApplication(name)) {
+			throw new OpenShiftException("Application with name '{0}' already exists.", name);
+		}
+		ApplicationResourceDTO applicationDTO = new CreateApplicationRequest().execute(name, cartridge, scale, nodeProfile);
+		Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(), applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(), applicationDTO.getGitUrl(), cartridge, applicationDTO.getAliases(), applicationDTO.getLinks(), this);
+		this.applications.add(application);
+		return application;
 	}
 
-	public IApplication getApplicationByName(String name) throws OpenShiftException {
+	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException {
 		IApplication matchingApplication = null;
-		for (IApplication application : applications) {
-			if (name.equals(application.getName())) {
+		for (IApplication application : getApplications()) {
+			if (application.getName().equals(name)) {
 				matchingApplication = application;
 				break;
 			}
@@ -99,7 +109,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 		return matchingApplication;
 	}
 
-	public boolean hasApplication(String name) throws OpenShiftException {
+	public boolean hasApplication(String name) throws OpenShiftException, SocketTimeoutException {
 		return getApplicationByName(name) != null;
 	}
 
@@ -134,6 +144,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
 		new DeleteDomainRequest().execute();
+		user.removeDomain(this);
     }
 	
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
@@ -141,16 +152,33 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 			this.applications = new ArrayList<IApplication>();
 			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
-				ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
-				Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(), applicationDTO.getCreationTime(), cartridge, applicationDTO.getLinks(), this);
-				for(Entry<String, String> entry : applicationDTO.getEmbeddedCartridges().entrySet()) {
-					IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridge(entry.getKey(), entry.getValue(), application);
-					application.addEmbbedCartridge(embeddableCartridge);
-				}
+				final Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(),
+						applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(),
+						applicationDTO.getGitUrl(), applicationDTO.getFramework(), applicationDTO.getAliases(),
+						applicationDTO.getLinks(), this);
 				this.applications.add(application);
 			}
 		}
 		return Collections.unmodifiableList(applications);
+	}
+	
+	protected void removeApplication(Application application) {
+		//TODO: can this collection be a null ? 
+		this.applications.remove(application);
+	}
+
+	public List<String> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException {
+		for(LinkParameter param : getLink(LINK_ADD_APPLICATION).getRequiredParams()) {
+			if(param.getName().equals("cartridge")) {
+				return param.getValidOptions();
+			}
+		}
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public String toString() {
+		return "Domain [" + namespace + "-" + rhcDomain + "]";
 	}
     
 	private void update(List<ApplicationInfo> applicationInfos) {
@@ -166,32 +194,39 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private class ListApplicationsRequest extends ServiceRequest {
 
 		public ListApplicationsRequest() throws SocketTimeoutException, OpenShiftException {
-			super("UPDATE", Domain.this);
+			super(LINK_LIST_APPLICATIONS, Domain.this);
 		}
 		
-		public List<ApplicationResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
-			return execute();
+	}
+	
+	private class CreateApplicationRequest extends ServiceRequest {
+
+		public CreateApplicationRequest() throws SocketTimeoutException, OpenShiftException {
+			super(LINK_ADD_APPLICATION, Domain.this);
 		}
+		
+		public ApplicationResourceDTO execute(final String name, final String cartridge, final Boolean scale, final String nodeProfile) throws SocketTimeoutException, OpenShiftException {
+			return super.execute(new ServiceParameter("name", name), new ServiceParameter("cartridge",
+					cartridge), new ServiceParameter("scale", scale), new ServiceParameter("nodeProfile",
+							nodeProfile));
+		}
+
 	}
 	
 	private class UpdateDomainRequest extends ServiceRequest {
 
 		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super("UPDATE", Domain.this);
+			super(LINK_UPDATE, Domain.this);
 		}
 		
 		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
-			return execute(new ServiceParameter("namespace", namespace));
+			return super.execute(new ServiceParameter("namespace", namespace));
 		}
 	}
 	
 	private class DeleteDomainRequest extends ServiceRequest {
 		public DeleteDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super("LINK_DELETE", Domain.this);
-		}
-		
-		public void execute() throws SocketTimeoutException, OpenShiftException {
-			execute();
+			super(LINK_DELETE, Domain.this);
 		}
 
 	}

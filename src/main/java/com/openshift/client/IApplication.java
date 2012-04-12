@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import java.util.Date;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 import com.openshift.internal.client.User;
@@ -31,34 +31,30 @@ public interface IApplication {
 	 * Returns the uuid of this application.
 	 * 
 	 * @return the uuid of this application.
-	 * @throws OpenShiftException
 	 */
-	public String getUUID() throws OpenShiftException;
+	public String getUUID();
 
 	/**
 	 * Returns the uri at which the git repository of this application may be reached at.
 	 * 
 	 * @return the uri of the git repo of this application.
-	 * @throws OpenShiftException
 	 */
-	public String getGitUri() throws OpenShiftException;
+	public String getGitUri();
 
 	/**
 	 * Returns the url at which this application may be reached at.
 	 * 
 	 * @return the url of this application.
-	 * @throws OpenShiftException
 	 */
-	public String getApplicationUrl() throws OpenShiftException;
+	public String getApplicationUrl();
 
 	/**
 	 * Returns the url at which this application may be checked for its health state.
 	 * 
 	 * @return the url at which the health state may be queried.
-	 * @throws OpenShiftException
 	 */
-	public String getHealthCheckUrl() throws OpenShiftException;
-	
+	public String getHealthCheckUrl();
+
 	public String getHealthCheckResponse() throws OpenShiftException;
 
 	/**
@@ -66,30 +62,29 @@ public interface IApplication {
 	 * 
 	 * @return the cartridge of this application
 	 * 
-	 * @see ICartridge
-	 * @see User#getCartridges()
 	 */
-	public ICartridge getCartridge();
+	public String getCartridge();
 
 	/**
-	 * Adds the given embeddable cartridge to this app.
+	 * Adds the given embeddable cartridge to this app, given its name.
 	 * 
 	 * @param embeddedCartridge
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 */
-	public void addEmbbedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException;
+	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException;
 
 	/**
-	 * Adds all given embeddable cartridges from this app.
+	 * Adds all given embeddable cartridges from this app, given their names.
 	 * 
 	 * @param embeddedCartridges
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 * 
-	 * @see IEmbeddableCartridge
-	 * @see #addEmbbedCartridge(IEmbeddableCartridge)
-	 * @see #removeEmbbedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public void addEmbbedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException;
+	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Removes the given cartridge from this app.
@@ -98,48 +93,52 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbbedCartridge(IEmbeddableCartridge)
-	 * @see #removeEmbbedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public void removeEmbbedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException;
+	public void removeEmbeddedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException;
 
 	/**
 	 * Removes all given cartridges from this app.
 	 * 
-	 * @param embeddedCartridges all cartridges that shall be removed.
+	 * @param embeddedCartridges
+	 *            all cartridges that shall be removed.
 	 * @throws OpenShiftException
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbbedCartridge(IEmbeddableCartridge)
-	 * @see #removeEmbbedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public void removeEmbbedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException;;
+	public void removeEmbddeedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException;;
 
 	/**
 	 * Returns all embedded cartridges.
 	 * 
 	 * @return all embedded cartridges.
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbbedCartridge(IEmbeddableCartridge)
-	 * @see #removeEmbbedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public List<IEmbeddableCartridge> getEmbeddedCartridges() throws OpenShiftException;
+	public List<IEmbeddableCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Returns <code>true</code> if this app has an embedded cartridge with the given name. Returns <code>false</code>
 	 * otherwise.
 	 * 
-	 * @param the name of the cartridge to look for
+	 * @param the
+	 *            name of the cartridge to look for
 	 * @return true if there's an embedded cartridge with the given name
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbbedCartridge(IEmbeddableCartridge)
-	 * @see #removeEmbbedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException;
+	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Returns the embedded cartridge with the given name. Returns <code>null</code> if none was found.
@@ -147,8 +146,20 @@ public interface IApplication {
 	 * @param cartridgeName
 	 * @return the embedded cartridge with the given name
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 */
-	public IEmbeddableCartridge getEmbeddedCartridge(String cartridgeName) throws OpenShiftException;
+	public IEmbeddableCartridge getEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException;
+
+	/**
+	 * Returns all gears.
+	 * 
+	 * @return all gears.
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
+	 * 
+	 * @see IApplicationGear
+	 */
+	public List<IApplicationGear> getGears() throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Returns the timestamp at which this app was created.
@@ -163,31 +174,46 @@ public interface IApplication {
 	 * Destroys this application (and removes it from the list of available applications)
 	 * 
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
 	 * 
 	 * @see IUser#getApplications()
 	 */
-	public void destroy() throws OpenShiftException;
+	public void destroy() throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Starts this application. Has no effect if this app is already running.
 	 * 
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
 	 */
-	public void start() throws OpenShiftException;
+	public void start() throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Restarts this application.
 	 * 
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
 	 */
-	public void restart() throws OpenShiftException;
+	public void restart() throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Stops this application.
 	 * 
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
 	 */
-	public void stop() throws OpenShiftException;
+	public void stop() throws OpenShiftException, SocketTimeoutException;
+
+	/**
+	 * Stops this application
+	 * 
+	 * @param force
+	 *            : true to force stop, false otherwise
+	 * 
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public void stop(boolean force) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Gets the log that was created when the application was created.
@@ -205,21 +231,21 @@ public interface IApplication {
 	 * @see ApplicationLogReader
 	 */
 	public ApplicationLogReader getLogReader() throws OpenShiftException;
-	
+
 	/**
 	 * Returns a reader that will allow you to read from the application log.
 	 * 
 	 * @param logFile
-	 * 			the log file
+	 *            the log file
 	 * @return a reader that you can read the log from
 	 * @throws OpenShiftException
 	 * 
 	 * @see ApplicationLogReader
 	 */
 	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException;
-	
+
 	/**
-	 * Waits for this application to become accessible on its public url. 
+	 * Waits for this application to become accessible on its public url.
 	 * 
 	 * @param timeout
 	 * @return
@@ -229,6 +255,75 @@ public interface IApplication {
 	 */
 	public boolean waitForAccessible(long timeout) throws OpenShiftException;
 
+	/**
+	 * Get the domain of the application.
+	 * @return the domain
+	 */
 	public IDomain getDomain();
+
+	/**
+	 * Expose application port
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void exposePort() throws SocketTimeoutException, OpenShiftException;
+
+	/**
+	 * Conceal application port
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void concealPort() throws SocketTimeoutException, OpenShiftException;
+
+	/**
+	 * Show application port
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void showPort() throws SocketTimeoutException, OpenShiftException;
+
+	/**
+	 * Scale down application
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void scaleDown() throws SocketTimeoutException, OpenShiftException;
+
+	/**
+	 * Scale up application
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void scaleUp() throws SocketTimeoutException, OpenShiftException;
+
+	/**
+	 * Add application alias
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void addAlias(String string) throws SocketTimeoutException, OpenShiftException;
+
+	/**
+	 * Retrieve all application aliases
+	 * @return application aliases in an unmodifiable collection
+	 */
+	public List<String> getAliases();
+
+	/**
+	 * Remove application alias
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public void removeAlias(String alias) throws SocketTimeoutException, OpenShiftException;
 	
+	
+	/**
+	 * Refresh the application but reloading its content from OpenShift. 
+	 * At the same time, this operation automatically set the embedded cartridges back to an 'unloaded' state.
+	 *  
+	 * @throws SocketTimeoutException
+	 * @throws OpenShiftException
+	 */
+	public void refresh() throws SocketTimeoutException, OpenShiftException;
+
 }

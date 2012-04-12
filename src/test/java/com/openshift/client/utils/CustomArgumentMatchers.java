@@ -5,9 +5,15 @@ import static org.mockito.Matchers.argThat;
 import java.net.URL;
 
 import org.mockito.ArgumentMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.openshift.client.DomainResourceTest;
 
 public class CustomArgumentMatchers {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomArgumentMatchers.class);
+	
 	/** More friendly way to call the {@link UrlEndsWithMatcher}. */
 	public static URL urlEndsWith(String suffix) {
 		return argThat(new UrlEndsWithMatcher(suffix));
@@ -33,7 +39,11 @@ public class CustomArgumentMatchers {
 				return false;
 			}
 			URL url = (URL) argument;
-			return url.toExternalForm().endsWith(urlSuffix);
+			final boolean match = url.toExternalForm().endsWith(urlSuffix);
+			if(match) {
+				LOGGER.info("Matching {}", urlSuffix);
+			}
+			return match;
 		}
 	}
 

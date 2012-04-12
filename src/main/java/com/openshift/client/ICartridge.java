@@ -10,10 +10,13 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import com.openshift.internal.client.Cartridge;
+
 
 /**
  * @author André Dietisheim
  */
+@Deprecated
 public interface ICartridge {
 
 	@Deprecated

@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.jboss.dmr.ModelNode;
 
-import com.openshift.client.Cartridge;
 import com.openshift.client.ICartridge;
+import com.openshift.internal.client.Cartridge;
 
 /**
  * @author André Dietisheim

@@ -38,11 +38,11 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/** the application's aliases. */
 	private final List<String> aliases;
 	
-	/** the application's embedded cartridges. */
-	private final Map<String, String> embeddedCartridges;
+	/** the application's URL. */
+	private final String applicationUrl;
 	
-	/** the application's gears. */
-	private final List<GearResourceDTO> gears;
+	/** the application's git repository URL. */
+	private final String gitUrl;
 	
 	/**
 	 * Instantiates a new application dto.
@@ -54,7 +54,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final List<String> aliases, final Map<String, String> embeddedCartridges, final List<GearResourceDTO> gears, final Map<String, Link> links) {
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final String applicationUrl, final String gitUrl, final List<String> aliases, final Map<String, Link> links) {
 		super(links);
 		this.framework = framework;
 		this.domainId = domainId;
@@ -62,8 +62,8 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 		this.name = name;
 		this.uuid = uuid;
 		this.aliases = aliases;
-		this.embeddedCartridges = embeddedCartridges;
-		this.gears = gears;
+		this.applicationUrl = applicationUrl;
+		this.gitUrl = gitUrl;
 	}
 
 	/**
@@ -112,26 +112,32 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	}
 
 	/**
+	 * @return the applicationUrl
+	 */
+	public final String getApplicationUrl() {
+		return applicationUrl;
+	}
+
+	/**
+	 * @return the gitUrl
+	 */
+	public final String getGitUrl() {
+		return gitUrl;
+	}
+
+	/**
 	 * @return the aliases
 	 */
 	public List<String> getAliases() {
 		return aliases;
 	}
 
-	/**
-	 * @return the embeddedCartridges
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
-	public Map<String, String> getEmbeddedCartridges() {
-		return embeddedCartridges;
+	@Override
+	public String toString() {
+		return "ApplicationResourceDTO [name=" + name + ", framework=" + framework + "]";
 	}
-
-	/**
-	 * @return the gears
-	 */
-	public List<GearResourceDTO> getGears() {
-		return gears;
-	}
-
-	
 
 }

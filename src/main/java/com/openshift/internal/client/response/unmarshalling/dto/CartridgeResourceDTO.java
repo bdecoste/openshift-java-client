@@ -25,7 +25,7 @@ public class CartridgeResourceDTO extends BaseResourceDTO {
 	/**
 	 * @param links
 	 */
-	public CartridgeResourceDTO(final String name, final String type, Map<String, Link> links) {
+	public CartridgeResourceDTO(final String name, final String type, final Map<String, Link> links) {
 		super(links);
 		this.name = name;
 		this.type = type;
@@ -43,6 +43,14 @@ public class CartridgeResourceDTO extends BaseResourceDTO {
 	 */
 	public String getType() {
 		return type;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CartridgeResourceDTO [name=" + name + ", type=" + type + "]";
 	}
 
 }

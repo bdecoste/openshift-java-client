@@ -13,6 +13,7 @@ package com.openshift.client;
 import static com.openshift.client.IRestServiceTestConstants.CLIENT_ID;
 import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
+import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_REST_API_JSON;
@@ -21,10 +22,12 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.CoreMatchers.is;
 
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -32,10 +35,19 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.openshift.client.utils.StateVerifier;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
+import com.openshift.internal.client.httpclient.BadRequestException;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
 
@@ -45,14 +57,32 @@ import com.openshift.internal.client.httpclient.UnauthorizedException;
  */
 public class DomainResourceTest {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DomainResourceTest.class);
+
 	private IUser user;
 	private IHttpClient mockClient;
+
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
+
+	@Rule
+	public ErrorCollector errorCollector = new ErrorCollector();
 
 	@Before
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
 		this.user = new UserBuilder().configure(new RestService(CLIENT_ID, mockClient)).build();
+	}
+
+	private static <T> Answer<?> print(final String msg) {
+		return new Answer<T>() {
+
+			public T answer(InvocationOnMock invocation) throws Throwable {
+				LOGGER.info(msg);
+				return null;
+			}
+		};
 	}
 
 	@Test
@@ -77,12 +107,13 @@ public class DomainResourceTest {
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
 
-	@Test(expected = InvalidCredentialsOpenShiftException.class)
+	@Test
 	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException,
 			HttpClientException {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/api")))
 				.thenThrow(new UnauthorizedException("invalid mock credentials", null));
+		expectedException.expect(InvalidCredentialsOpenShiftException.class);
 		// operation
 		user.getDomains();
 		// verifications
@@ -114,36 +145,36 @@ public class DomainResourceTest {
 	}
 
 	@Test
-	public void shouldDestroyDomainWithNoApp() throws Throwable {
+	public void shouldDestroyDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains"))).thenReturn(ADD_DOMAIN_JSON.getContentAsString());
+		when(mockClient.delete(urlEndsWith("/domains"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
 		// operation
-		user.getDomain("foobar").destroy();
+		final IDomain domain = user.getDomain("foobar");
+		domain.destroy();
 		// verifications
-		fail("not implemented yet: missing json response");
+		assertThat(user.getDomain("foobar")).isNull();
+		assertThat(user.getDomains()).isEmpty();
 	}
 
 	@Test
 	public void shouldNotDestroyDomainWithApp() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains"))).thenReturn(ADD_DOMAIN_JSON.getContentAsString());
+		final BadRequestException badRequestException = new BadRequestException(
+				"Domain contains applications. Delete applications first or set force to true.", null);
+		when(mockClient.delete(urlEndsWith("/domains/foobar"))).thenThrow(badRequestException);
 		// operation
-		user.getDomain("foobar").destroy();
+		final IDomain domain = user.getDomain("foobar");
+		try {
+			domain.destroy();
+			fail("Expected an exception here..");
+		} catch(OpenShiftEndpointException e) {
+			assertThat(e.getCause()).isInstanceOf(BadRequestException.class);
+		}
 		// verifications
-		fail("not implemented yet: missing json response");
-	}
-
-	@Test
-	public void shouldForceDestroyExistingDomainWithApp() throws Throwable {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains"))).thenReturn(ADD_DOMAIN_JSON.getContentAsString());
-		// operation
-		user.getDomain("foobar").destroy();
-		// verifications
-		fail("not implemented yet: missing json response");
+		assertThat(domain).isNotNull();
+		assertThat(user.getDomains()).isNotEmpty().contains(domain);
 	}
 
 	@Test
