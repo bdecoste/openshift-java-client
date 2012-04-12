@@ -22,17 +22,21 @@ public class KeyResourceDTO extends BaseResourceDTO {
 
 	/** The type. */
 	private final String type;
-	
+
 	/** The public key content. */
 	private final String content;
-	
+
 	/**
 	 * Instantiates a new key resource dto.
-	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param content the content
-	 * @param links the links
+	 * 
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param content
+	 *            the content
+	 * @param links
+	 *            the links
 	 */
 	public KeyResourceDTO(final String name, final String type, final String content, final Map<String, Link> links) {
 		super(links);
@@ -42,30 +46,39 @@ public class KeyResourceDTO extends BaseResourceDTO {
 	}
 
 	/**
-	 * Gets the name.
-	 *
+	 * Returns the name.
+	 * 
 	 * @return the name
 	 */
 	public final String getName() {
 		return name;
 	}
-	
+
 	/**
-	 * Gets the type.
-	 *
+	 * Returns the type.
+	 * 
 	 * @return the type
 	 */
 	public final String getType() {
 		return type;
 	}
-	
+
 	/**
-	 * Gets the content.
-	 *
-	 * @return the content
+	 * Returns the public key content.
+	 * 
+	 * @return the public key content
 	 */
 	public final String getContent() {
 		return content;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "KeyResourceDTO ["
+				+ "name=" + name
+				+ ", type=" + type
+				+ ", content=" + content
+				+ "]";
+	}
+
 }
