@@ -12,7 +12,7 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 
-import com.openshift.client.ISSHPublicKey;
+import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
@@ -21,7 +21,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 /**
  * @author Andre Dietisheim
  */
-public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPublicKey {
+public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenShiftSSHKey {
 
 	private String name;
 	private SSHKeyType type;
@@ -34,8 +34,8 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 		this.publicKey = dto.getContent();
 	}
 
-	public void setType(SSHKeyType type) throws SocketTimeoutException, OpenShiftException {
-		new UpdateKeyTypeRequest().execute(type);
+	public void setKeyType(SSHKeyType type) throws SocketTimeoutException, OpenShiftException {
+		new UpdateKeyRequest().execute(type, getPublicKey());
 		this.type = type;
 	}
 	
@@ -48,7 +48,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 	}
 
 	public void setPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftException {
-		new UpdateKeyContentRequest().execute(publicKey);
+		new UpdateKeyRequest().execute(getKeyType(), publicKey);
 		this.publicKey = publicKey;
 	}
 
@@ -56,6 +56,14 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 		return publicKey;
 	}
 
+	protected void update(KeyResourceDTO dto) throws OpenShiftUnknonwSSHKeyTypeException {
+		if (dto == null) {
+			return;
+		}
+		this.type = SSHKeyType.getByTypeId(dto.getType());
+		this.publicKey = dto.getContent();
+	}
+	
 	public void destroy() throws SocketTimeoutException, OpenShiftException {
 		new DeleteKeyRequest().execute();
 		this.name = null;
@@ -63,25 +71,14 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 		this.publicKey = null;
 	}
 	
-	private class UpdateKeyTypeRequest extends ServiceRequest {
+	private class UpdateKeyRequest extends ServiceRequest {
 
-		private UpdateKeyTypeRequest() {
+		private UpdateKeyRequest() {
 			super("UPDATE");
 		}
 		
-		private void execute(SSHKeyType type) throws SocketTimeoutException, OpenShiftException {
-			execute(new ServiceParameter("type", type.getTypeId()));
-		}
-	}
-
-	private class UpdateKeyContentRequest extends ServiceRequest {
-
-		private UpdateKeyContentRequest() {
-			super("UPDATE");
-		}
-		
-		private void execute(String publicKey) throws SocketTimeoutException, OpenShiftException {
-			execute(new ServiceParameter("content", publicKey));
+		private void execute(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
+			execute(new ServiceParameter("content", publicKey), new ServiceParameter("type", type.getTypeId()));
 		}
 	}
 

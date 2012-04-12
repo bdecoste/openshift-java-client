@@ -31,7 +31,7 @@ public interface IUser {
 
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
 
-	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException;
+	public IDomain createDomain(String name, IOpenShiftSSHKey key) throws OpenShiftException;
 
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
 	
@@ -39,7 +39,7 @@ public interface IUser {
 	
 	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException;
 
-	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
+	public List<IOpenShiftSSHKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
 
 	public void addSshKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
 
