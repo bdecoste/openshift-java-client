@@ -14,11 +14,11 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
-import com.openshift.client.SSHPublicKey;
 import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
 import com.openshift.internal.client.utils.Assert;
@@ -29,7 +29,7 @@ import com.openshift.internal.client.utils.Assert;
 public class UserResource extends AbstractOpenShiftResource {
 
 	private String rhLogin;
-	private List<ISSHPublicKey> sshKeys;
+	private List<SSHKeyResource> sshKeys;
 
 	public UserResource(IRestService service, UserResourceDTO dto) {
 		super(service, dto.getLinks());
@@ -40,28 +40,47 @@ public class UserResource extends AbstractOpenShiftResource {
 		return rhLogin;
 	}
 
-	public List<ISSHPublicKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
+	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
 			OpenShiftException {
+		List<IOpenShiftSSHKey> keys = new ArrayList<IOpenShiftSSHKey>();
+		keys.addAll(getOrLoadSSHKeys());
+		return keys;
+	}
+
+	private List<SSHKeyResource> getOrLoadSSHKeys() throws SocketTimeoutException, OpenShiftException,
+			OpenShiftUnknonwSSHKeyTypeException {
 		if (sshKeys == null) {
 			this.sshKeys = loadKeys();
 		}
 		return sshKeys;
 	}
 
-	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
-		new AddSShKeyRequest().execute(key.getKeyType(), name, key.getPublicKey());
-		Assert.isTrue(key instanceof AbstractSSHKey);
-		AbstractSSHKey abstractSSHKey = (AbstractSSHKey) key;
-		abstractSSHKey.setName(name);
+	private List<SSHKeyResource> loadKeys() throws SocketTimeoutException, OpenShiftException,
+			OpenShiftUnknonwSSHKeyTypeException {
+		List<SSHKeyResource> keys = new ArrayList<SSHKeyResource>();
+		List<KeyResourceDTO> keyDTOs = new GetSShKeysRequest().execute();
+		for (KeyResourceDTO keyDTO : keyDTOs) {
+			keys.add(new SSHKeyResource(keyDTO, getService()));
+		}
+		return keys;
 	}
 
-	private List<ISSHPublicKey> loadKeys() throws SocketTimeoutException, OpenShiftException,
-			OpenShiftUnknonwSSHKeyTypeException {
-		List<ISSHPublicKey> sshKeys = new ArrayList<ISSHPublicKey>();
-		for (KeyResourceDTO keyDTO : new GetSShKeysRequest().execute()) {
-			sshKeys.add(new SSHKeyResource(keyDTO, getService()));
+	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+		KeyResourceDTO keyDTO = new AddSShKeyRequest().execute(key.getKeyType(), name, key.getPublicKey());
+
+		Assert.isTrue(key instanceof AbstractSSHKey);
+		((AbstractSSHKey) key).setName(name);
+
+		add(keyDTO);
+	}
+
+	private SSHKeyResource add(KeyResourceDTO keyDTO) throws OpenShiftUnknonwSSHKeyTypeException {
+		if (sshKeys == null) {
+			sshKeys = new ArrayList<SSHKeyResource>();
 		}
-		return sshKeys;
+		SSHKeyResource sshKey = new SSHKeyResource(keyDTO, getService());
+		sshKeys.add(sshKey);
+		return sshKey;
 	}
 
 	private class GetSShKeysRequest extends ServiceRequest {
@@ -81,7 +100,7 @@ public class UserResource extends AbstractOpenShiftResource {
 			super("ADD_KEY");
 		}
 
-		public List<KeyResourceDTO> execute(SSHKeyType type, String name, String content)
+		public KeyResourceDTO execute(SSHKeyType type, String name, String content)
 				throws SocketTimeoutException, OpenShiftException {
 			return super.execute(
 					new ServiceParameter("type", type.getTypeId())

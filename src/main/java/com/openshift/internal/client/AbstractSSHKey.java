@@ -19,24 +19,10 @@ import com.openshift.client.SSHKeyType;
  */
 public abstract class AbstractSSHKey implements ISSHPublicKey {
 
-	private String name;
 	private SSHKeyType keyType;
 
-	protected AbstractSSHKey(String name, String sshKeyType) throws OpenShiftUnknonwSSHKeyTypeException {
-		this(name, SSHKeyType.getByTypeId(sshKeyType));
-	}
-
-	protected AbstractSSHKey(String name, SSHKeyType sshKeyType) {
-		this.name = name;
+	protected AbstractSSHKey(SSHKeyType sshKeyType) {
 		this.keyType = sshKeyType;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	protected void setName(String name) {
-		this.name = name;
 	}
 
 	public SSHKeyType getKeyType() {
@@ -50,13 +36,12 @@ public abstract class AbstractSSHKey implements ISSHPublicKey {
 	protected void setKeyType(SSHKeyType keyType) {
 		this.keyType = keyType;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((keyType == null) ? 0 : keyType.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -71,20 +56,12 @@ public abstract class AbstractSSHKey implements ISSHPublicKey {
 		AbstractSSHKey other = (AbstractSSHKey) obj;
 		if (keyType != other.keyType)
 			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "AbstractSSHKey [" +
-				"name=" + name
-				+ ", keyType=" + keyType
-				+ "]";
+		return "AbstractSSHKey [keyType=" + keyType + "]";
 	}
 
 }

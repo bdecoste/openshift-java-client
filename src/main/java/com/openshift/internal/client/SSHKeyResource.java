@@ -12,7 +12,7 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 
-import com.openshift.client.ISSHPublicKey;
+import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
@@ -21,7 +21,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 /**
  * @author Andre Dietisheim
  */
-public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPublicKey {
+public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenShiftSSHKey {
 
 	private String name;
 	private SSHKeyType type;
@@ -34,9 +34,9 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 		this.publicKey = dto.getContent();
 	}
 
-	public void setType(SSHKeyType type) throws SocketTimeoutException, OpenShiftException {
-		new UpdateKeyTypeRequest().execute(type);
-		this.type = type;
+	public void setKeyType(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
+		KeyResourceDTO dto = new UpdateKeyRequest().execute(type, publicKey);
+		update(dto);
 	}
 	
 	public String getName() {
@@ -48,8 +48,8 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 	}
 
 	public void setPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftException {
-		new UpdateKeyContentRequest().execute(publicKey);
-		this.publicKey = publicKey;
+		KeyResourceDTO dto = new UpdateKeyRequest().execute(getKeyType(), publicKey);
+		update(dto);
 	}
 
 	public String getPublicKey() {
@@ -63,25 +63,22 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements ISSHPub
 		this.publicKey = null;
 	}
 	
-	private class UpdateKeyTypeRequest extends ServiceRequest {
-
-		private UpdateKeyTypeRequest() {
-			super("UPDATE");
+	protected void update(KeyResourceDTO dto) throws OpenShiftUnknonwSSHKeyTypeException {
+		if (dto == null) {
+			return;
 		}
-		
-		private void execute(SSHKeyType type) throws SocketTimeoutException, OpenShiftException {
-			execute(new ServiceParameter("type", type.getTypeId()));
-		}
+		this.type = SSHKeyType.getByTypeId(dto.getType());
+		this.publicKey = dto.getContent();
 	}
 
-	private class UpdateKeyContentRequest extends ServiceRequest {
+	private class UpdateKeyRequest extends ServiceRequest {
 
-		private UpdateKeyContentRequest() {
+		private UpdateKeyRequest() {
 			super("UPDATE");
 		}
 		
-		private void execute(String publicKey) throws SocketTimeoutException, OpenShiftException {
-			execute(new ServiceParameter("content", publicKey));
+		private KeyResourceDTO execute(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
+			return execute(new ServiceParameter("content", publicKey), new ServiceParameter("type", type.getTypeId()));
 		}
 	}
 

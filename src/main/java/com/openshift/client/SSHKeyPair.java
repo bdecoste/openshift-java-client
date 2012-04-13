@@ -41,7 +41,7 @@ public class SSHKeyPair extends AbstractSSHKey {
 
 	private SSHKeyPair(KeyPair keyPair, String privateKeyPath, String publicKeyPath, SSHKeyType sshKeyType)
 			throws OpenShiftException {
-		super(null, sshKeyType);
+		super(sshKeyType);
 		this.keyPair = keyPair;
 		this.privateKeyPath = privateKeyPath;
 		this.publicKeyPath = publicKeyPath;

@@ -401,7 +401,7 @@ public interface IOpenShiftService {
 	 * @see IDomain
 	 */
 	@Deprecated
-	public IDomain changeDomain(String name, ISSHPublicKey sshKey, IUser user) throws OpenShiftException;
+	public IDomain changeDomain(String name, IOpenShiftSSHKey sshKey, IUser user) throws OpenShiftException;
 
 	/**
 	 * Creates a domain (namespace) with the given name for the given user
@@ -424,7 +424,7 @@ public interface IOpenShiftService {
 	 * @see IDomain
 	 */
 	@Deprecated
-	public IDomain createDomain(String name, ISSHPublicKey sshKey, IUser user) throws OpenShiftException;
+	public IDomain createDomain(String name, IOpenShiftSSHKey sshKey, IUser user) throws OpenShiftException;
 
 	/**
 	 * Destroys the OpenShift domain associated to the given User.

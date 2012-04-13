@@ -18,19 +18,19 @@ import com.openshift.client.HttpMethod;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.utils.Assert;
 
 /**
  * @author André Dietisheim
  */
 public class User implements IUser {
 
-
-	private String rhlogin;
 	private String password;
 	private String authKey;
 	private String authIV;
@@ -39,6 +39,7 @@ public class User implements IUser {
 	private IRestService service;
 
 	public User(IRestService service) {
+		Assert.isTrue(service != null);
 		this.service = service;
 	}
 
@@ -55,7 +56,7 @@ public class User implements IUser {
 		return getAPI().createDomain(name);
 	}
 
-	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException {
+	public IDomain createDomain(String name, IOpenShiftSSHKey key) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		// setSshKey(key);
 		// this.domain = getService().createDomain(name, key, this);
@@ -85,18 +86,7 @@ public class User implements IUser {
 		return getDomains() != null;
 	}
 
-	// private void setSshKey(ISSHPublicKey key) {
-	// this.sshKey = key;
-	// }
-
-	// public ISSHPublicKey getSshKey() throws OpenShiftException {
-	// if (sshKey == null) {
-	// this.sshKey = getUserInfo().getSshPublicKey();
-	// }
-	// return sshKey;
-	// }
-
-	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException {
+	public List<IOpenShiftSSHKey> getSshKeys() throws OpenShiftException, SocketTimeoutException {
 		return getAPI().getUser().getSSHKeys();
 	}
 

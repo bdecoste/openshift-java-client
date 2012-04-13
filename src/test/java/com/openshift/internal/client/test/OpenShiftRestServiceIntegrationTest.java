@@ -10,25 +10,21 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftService;
-import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
-import com.openshift.internal.client.test.fakes.TestUser;
 
 public class OpenShiftRestServiceIntegrationTest {
 
 	private static final String PATH_DOMAINS = "domains";
 	
-	private TestUser user;
+	private IUser user;
 	private OpenShiftService service;
 
 	@Before

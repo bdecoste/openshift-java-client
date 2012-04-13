@@ -16,14 +16,6 @@ package com.openshift.client;
 public interface ISSHPublicKey {
 
 	/**
-	 * Returns the name that is used to store this key on OpenShift. Keys that
-	 * were not added to OpenShift so far, return <code>null</code>
-	 * 
-	 * @return
-	 */
-	public String getName();
-
-	/**
 	 * Returns the content of the public key (key content without ssh-rsa
 	 * identifier nor comment) of the ssh key
 	 * 

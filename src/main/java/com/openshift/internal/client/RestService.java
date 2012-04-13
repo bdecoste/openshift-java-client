@@ -176,6 +176,7 @@ public class RestService implements IRestService {
 
 	private boolean isEmptyString(LinkParameter parameter, Object parameterValue) {
 		return parameter.getType() == LinkParameterType.STRING
+				&& parameterValue instanceof String
 				&& StringUtils.isEmpty((String) parameterValue);
 	}
 

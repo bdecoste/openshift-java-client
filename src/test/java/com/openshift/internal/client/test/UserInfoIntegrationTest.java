@@ -10,31 +10,14 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.ICartridge;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.NotFoundOpenShiftException;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
-import com.openshift.client.configuration.DefaultConfiguration;
-import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.client.configuration.SystemConfiguration;
-import com.openshift.client.configuration.UserConfiguration;
-import com.openshift.internal.client.ApplicationInfo;
 import com.openshift.internal.client.User;
-import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.test.fakes.TestUser;
-import com.openshift.internal.client.test.utils.ApplicationInfoAsserts;
-import com.openshift.internal.client.test.utils.ApplicationUtils;
 
 /**
  * @author André Dietisheim

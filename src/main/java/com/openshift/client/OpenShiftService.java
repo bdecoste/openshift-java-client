@@ -325,11 +325,11 @@ public class OpenShiftService implements IOpenShiftService {
 		throw new UnsupportedOperationException();
 	}
 
-	public IDomain changeDomain(String name, ISSHPublicKey sshKey, IUser user) throws OpenShiftException {
+	public IDomain changeDomain(String name, IOpenShiftSSHKey sshKey, IUser user) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
 
-	public IDomain createDomain(String name, ISSHPublicKey sshKey, IUser user) throws OpenShiftException {
+	public IDomain createDomain(String name, IOpenShiftSSHKey sshKey, IUser user) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
 
