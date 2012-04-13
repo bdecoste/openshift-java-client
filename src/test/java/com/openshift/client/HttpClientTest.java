@@ -14,6 +14,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -26,11 +28,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.IHttpClient;
+import com.openshift.client.configuration.IOpenShiftConfiguration;
+import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.client.utils.Base64Coder;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
-import com.openshift.internal.client.test.fakes.ServerFake;
+import com.openshift.internal.client.test.fakes.HttpServerFake;
 
 public class HttpClientTest {
 
@@ -38,12 +41,12 @@ public class HttpClientTest {
 
 	private static final Pattern AUTHORIZATION_PATTERN = Pattern.compile("Authorization: Basic ([^\n]*)");
 
-	private ServerFake serverFake;
+	private HttpServerFake serverFake;
 	private IHttpClient httpClient;
 
 	@Before
 	public void setUp() throws MalformedURLException {
-		this.serverFake = new ServerFake();
+		this.serverFake = new HttpServerFake();
 		serverFake.start();
 		this.httpClient = new UrlConnectionHttpClientBuilder()
 				.setUserAgent("com.openshift.client.test")
@@ -111,6 +114,49 @@ public class HttpClientTest {
 		String response = httpClient.get(new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.indexOf(ACCEPT_APPLICATION_JSON) > 0);
+	}
+	
+	@Test
+	public void shouldEncodeParametersCorrectly() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
+		// pre-conditions
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		String key1 = "adietish";
+		String value1 = "redhat";
+		parameters.put(key1, value1);
+		String key2 = "xcoulon";
+		String value2 = "redhat";
+		parameters.put(key2, value2);
+		IOpenShiftConfiguration configuration = new OpenShiftConfiguration();
+		
+		IHttpClient httpClient = new UrlConnectionHttpClientBuilder.UrlConnectionHttpClient(
+				configuration.getRhlogin(), 
+				System.getProperty("password"), 
+				IRestServiceTestConstants.CLIENT_ID, 
+				false, 
+				UrlConnectionHttpClientBuilder.ACCEPT_APPLICATION_JSON) {
+			
+			@Override
+			protected String write(String data, String requestMethod, URL url) throws SocketTimeoutException,
+					HttpClientException {
+				return data;
+			}
+			
+		};
+		
+		// operation
+		String response = httpClient.post(parameters, new URL(serverFake.getUrl()));
+		
+		// verification
+		String[] entries = response.split(String.valueOf(IHttpClient.AMPERSAND));
+		assertEquals(2, entries.length);
+		String[] keyValuePair = entries[0].split(String.valueOf(IHttpClient.EQUALS));
+		assertEquals(2, keyValuePair.length);
+		assertEquals(key1, keyValuePair[0]);
+		assertEquals(value1, keyValuePair[1]);
+		keyValuePair = entries[1].split(String.valueOf(IHttpClient.EQUALS));
+		assertEquals(2, keyValuePair.length);
+		assertEquals(key2, keyValuePair[0]);
+		assertEquals(value2, keyValuePair[1]);
 	}
 
 }

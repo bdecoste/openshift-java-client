@@ -78,8 +78,7 @@ public class UrlConnectionHttpClientBuilder {
 		return new UrlConnectionHttpClient(username, password, userAgent, sslChecks, acceptedContentType);
 	}
 
-
-	private class UrlConnectionHttpClient implements IHttpClient {
+	public static class UrlConnectionHttpClient implements IHttpClient {
 
 		private static final String HTTP_METHOD_PUT = "PUT";
 		private static final String HTTP_METHOD_POST = "POST";

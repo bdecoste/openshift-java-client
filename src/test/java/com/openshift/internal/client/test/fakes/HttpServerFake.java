@@ -35,7 +35,7 @@ import com.openshift.internal.client.utils.StreamUtils;
 /**
  * @author André Dietisheim
  */
-public class ServerFake {
+public class HttpServerFake {
 
 	public static final int DEFAULT_PORT = 8181;
 
@@ -44,15 +44,15 @@ public class ServerFake {
 	private String response;
 	private ServerFakeSocket serverSocket;
 
-	public ServerFake(int port) {
+	public HttpServerFake(int port) {
 		this(port, null);
 	}
 
-	public ServerFake() {
+	public HttpServerFake() {
 		this(DEFAULT_PORT, null);
 	}
 
-	public ServerFake(String response) {
+	public HttpServerFake(String response) {
 		this(DEFAULT_PORT, response);
 	}
 
@@ -65,7 +65,7 @@ public class ServerFake {
 	 *            <code>null</code> the request string is returned.
 	 * @see ServerFakeSocket#getResponse(Socket)
 	 */
-	public ServerFake(int port, String response) {
+	public HttpServerFake(int port, String response) {
 		this.port = port;
 		this.response = response;
 	}
