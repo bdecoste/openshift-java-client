@@ -30,10 +30,10 @@ import org.junit.Test;
 
 import com.openshift.client.configuration.IOpenShiftConfiguration;
 import com.openshift.client.configuration.OpenShiftConfiguration;
+import com.openshift.client.fakes.HttpServerFake;
 import com.openshift.client.utils.Base64Coder;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
-import com.openshift.internal.client.test.fakes.HttpServerFake;
 
 public class HttpClientTest {
 

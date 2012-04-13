@@ -16,7 +16,7 @@
  * under the License.
  * 
  *************************************************************************/
-package com.openshift.internal.client.test.fakes;
+package com.openshift.client.fakes;
 
 import java.io.BufferedReader;
 import java.io.IOException;

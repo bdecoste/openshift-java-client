@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.test.fakes;
+package com.openshift.client.fakes;
 
 import java.io.File;
 import java.io.IOException;

@@ -24,6 +24,7 @@ import com.openshift.client.IOpenShiftService;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.SSHKeyPair;
 import com.openshift.client.SSHKeyType;
+import com.openshift.client.fakes.TestSSHKey;
 import com.openshift.internal.client.User;
 import com.openshift.internal.client.request.ChangeDomainRequest;
 import com.openshift.internal.client.request.CreateDomainRequest;
@@ -33,7 +34,6 @@ import com.openshift.internal.client.response.OpenShiftResponse;
 import com.openshift.internal.client.response.unmarshalling.DomainResponseUnmarshaller;
 import com.openshift.internal.client.response.unmarshalling.JsonSanitizer;
 import com.openshift.internal.client.test.fakes.NoopOpenShiftServiceFake;
-import com.openshift.internal.client.test.fakes.TestSSHKey;
 
 /**
  * @author André Dietisheim
