@@ -22,12 +22,10 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMapOf;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.CoreMatchers.is;
 
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -44,7 +42,6 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.openshift.client.utils.StateVerifier;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.BadRequestException;
@@ -72,7 +69,8 @@ public class DomainResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
-		this.user = new UserBuilder().configure(new RestService(CLIENT_ID, mockClient)).build();
+		this.user = new UserBuilder().configure(
+				new RestService(IRestServiceTestConstants.LIBRA_SERVER_STG, CLIENT_ID, mockClient)).build();
 	}
 
 	private static <T> Answer<?> print(final String msg) {

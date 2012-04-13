@@ -13,6 +13,8 @@ package com.openshift.client;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.openshift.client.configuration.IOpenShiftConfiguration;
+import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.User;
@@ -27,14 +29,20 @@ import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
  */
 public class UserBuilder {
 
-	private IRestService service;
+	protected IRestService service;
 
-	public UserBuilder configure(final String clientId, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
+	public UserBuilder configure(final String clientId, final String password) throws FileNotFoundException, IOException, OpenShiftException {
+		IOpenShiftConfiguration configuration = new OpenShiftConfiguration();
+		return configure(clientId, configuration.getRhlogin(), password, configuration.getLibraServer());
+	}
+
+	public UserBuilder configure(final String clientId, final String login, final String password, final String serverUrl) throws FileNotFoundException, IOException, OpenShiftException {
 		IHttpClient client = new UrlConnectionHttpClientBuilder().setCredentials(login, password).client();
-		this.service = new RestService(clientId, client);
+		this.service = new RestService(serverUrl, clientId, client);
 		return this;
 	}
 
+	
 	public UserBuilder configure(IRestService service) {
 		this.service = service;
 		return this;

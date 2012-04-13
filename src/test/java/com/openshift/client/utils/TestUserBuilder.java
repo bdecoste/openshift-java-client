@@ -13,9 +13,12 @@ package com.openshift.client.utils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.openshift.client.IHttpClient;
 import com.openshift.client.IRestServiceTestConstants;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.UserBuilder;
+import com.openshift.internal.client.RestService;
+import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 
 /**
  * User Builder, used to establish a connection and retrieve a user.
@@ -25,10 +28,11 @@ import com.openshift.client.UserBuilder;
  */
 public class TestUserBuilder extends UserBuilder {
 
+	private static String SYSPROP_PASSWORD = "password";
+	
 	public TestUserBuilder configure() throws FileNotFoundException, IOException, OpenShiftException {
 		return (TestUserBuilder) configure(
 				IRestServiceTestConstants.CLIENT_ID
-				, System.getProperty("RHLOGIN")
-				, System.getProperty("PASSWORD"));
+				, System.getProperty(SYSPROP_PASSWORD));
 	}
 }

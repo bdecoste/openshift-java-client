@@ -22,6 +22,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.IUser;
+import com.openshift.client.SSHKeyType;
 
 /**
  * @author Andre Dietisheim
@@ -53,6 +54,11 @@ public class SSHKeyTestUtils {
 
 		public SSHPublicKeyAssertion isType(String type) {
 			assertEquals(sshKey.getKeyType().getTypeId(), type);
+			return this;
+		}
+
+		public SSHPublicKeyAssertion isType(SSHKeyType type) {
+			assertEquals(sshKey.getKeyType(), type);
 			return this;
 		}
 	}

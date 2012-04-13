@@ -23,10 +23,6 @@ public class OpenShiftEndpointException extends OpenShiftException {
 	private final String url;
 	private final String response;
 	
-	public OpenShiftEndpointException(final String url, final Throwable cause, final String message, final Object... arguments) {
-		this(url, cause, null, message, arguments);
-	}
-
 	public OpenShiftEndpointException(final String url, final Throwable cause, final String response, final String message, final Object... arguments) {
 		super(cause, message, arguments);
 		this.response = response;

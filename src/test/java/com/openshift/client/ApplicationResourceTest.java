@@ -12,15 +12,18 @@ package com.openshift.client;
 
 import static com.openshift.client.IRestServiceTestConstants.CLIENT_ID;
 import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
-import static com.openshift.client.utils.Samples.*;
+import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_JSON;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
+import static com.openshift.client.utils.Samples.DELETE_APPLICATION_CARTRIDGE;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH1APP_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITHNOAPP_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH1ELEMENT;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH2ELEMENTS;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH2CARTRIDGES2ALIASES;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
@@ -54,7 +57,6 @@ import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.InternalServerErrorException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
 /**
  * @author Xavier Coulon
@@ -70,7 +72,8 @@ public class ApplicationResourceTest {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		IUser user = new UserBuilder().configure(new RestService(CLIENT_ID, mockClient)).build();
+		IUser user = new UserBuilder().configure(
+				new RestService(IRestServiceTestConstants.LIBRA_SERVER_STG, CLIENT_ID, mockClient)).build();
 		this.domain = user.getDomain("foobar");
 	}
 
@@ -452,7 +455,8 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
-		// simulate new content on openshift, that should be grabbed while doing a refresh()
+		// simulate new content on openshift, that should be grabbed while doing
+		// a refresh()
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
 		// operation
@@ -606,7 +610,8 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_GEARS_WITH1ELEMENT.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getGears()).hasSize(1);
-		// simulate new content on openshift, that should be grabbed while doing a refresh()
+		// simulate new content on openshift, that should be grabbed while doing
+		// a refresh()
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/gears"))).thenReturn(
 				GET_APPLICATION_GEARS_WITH2ELEMENTS.getContentAsString());
 		// operation

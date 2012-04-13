@@ -45,8 +45,13 @@ public class UserTest {
 	@Before
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
-		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
-		this.user = new UserBuilder().configure(new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient)).build();
+		when(mockClient.get(urlEndsWith("/broker/rest/api")))
+				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		this.user = new UserBuilder().configure(
+				new RestService(
+						IRestServiceTestConstants.LIBRA_SERVER_STG,
+						IRestServiceTestConstants.CLIENT_ID,
+						mockClient)).build();
 	}
 
 	@Test
@@ -73,16 +78,18 @@ public class UserTest {
 		verify(mockClient, times(2)).get(any(URL.class));
 	}
 
-	@Test(expected=InvalidCredentialsOpenShiftException.class)
-	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+	@Test(expected = InvalidCredentialsOpenShiftException.class)
+	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException,
+			HttpClientException {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/api"))).thenThrow(new UnauthorizedException("invalid mock credentials", null));
+		when(mockClient.get(urlEndsWith("/api")))
+				.thenThrow(new UnauthorizedException("invalid mock credentials", null));
 		// operation
 		user.getDomains();
 		// verifications
 		// expect an exception
 	}
-	
+
 	@Test
 	public void shouldCreateNewDomain() throws Throwable {
 		// pre-conditions
@@ -95,8 +102,8 @@ public class UserTest {
 		// verifications
 		assertThat(domain.getNamespace()).isEqualTo("foobar2");
 	}
-	
-	@Test(expected=OpenShiftException.class)
+
+	@Test(expected = OpenShiftException.class)
 	public void shouldNotRecreateExistingDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
@@ -125,7 +132,7 @@ public class UserTest {
 		assertThat(LinkRetriever.retrieveLink(updatedDomain, "UPDATE").getHref()).contains("/foobarbaz");
 		verify(mockClient, times(1)).put(anyMapOf(String.class, Object.class), any(URL.class));
 	}
-	
+
 	@Ignore
 	@Test
 	public void shouldLoadEmptyListOfApplications() throws Throwable {

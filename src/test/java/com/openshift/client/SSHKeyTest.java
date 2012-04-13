@@ -51,7 +51,7 @@ public class SSHKeyTest {
 		when(mockClient.get(urlEndsWith("/api")))
 				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
-		this.service = new RestService(IRestServiceTestConstants.CLIENT_ID, mockClient);
+		this.service = new RestService(IRestServiceTestConstants.LIBRA_SERVER_PROD, IRestServiceTestConstants.CLIENT_ID, mockClient);
 		this.user = new UserBuilder().configure(service).build();
 	}
 
@@ -180,14 +180,15 @@ public class SSHKeyTest {
 		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
 		SSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 
+		String keyName = "default2";
 		// operation
-		user.addSshKey("default2", publicKey);
+		user.addSshKey(keyName, publicKey);
 
 		// verifications
 		List<IOpenShiftSSHKey> keys = user.getSshKeys();
 		assertThat(keys).hasSize(1);
 		assertThat(new SSHPublicKeyAssertion(keys.get(0)))
-				.hasName("default2").hasPublicKey("AAAAB3Nz").isType("ssh-rsa");
+				.hasName(keyName).hasPublicKey("AAAAB3Nz").isType(SSHKeyTestUtils.SSH_RSA);
 	}
 
 	@Test

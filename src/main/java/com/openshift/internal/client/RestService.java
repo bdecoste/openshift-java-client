@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -26,7 +24,6 @@ import com.openshift.client.NotFoundOpenShiftException;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftRequestParameterException;
-import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
@@ -52,11 +49,6 @@ public class RestService implements IRestService {
 
 	private String baseUrl;
 	private IHttpClient client;
-
-	public RestService(String clientId, IHttpClient client) throws FileNotFoundException, IOException,
-			OpenShiftException {
-		this(new OpenShiftConfiguration().getLibraServer(), clientId, client);
-	}
 
 	public RestService(String baseUrl, String clientId, IHttpClient client) {
 		this.baseUrl = baseUrl;
@@ -94,7 +86,7 @@ public class RestService implements IRestService {
 		} catch (NotFoundException e) {
 			throw new NotFoundOpenShiftException(link.getHref(), e);
 		} catch (HttpClientException e) {
-			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage());
+			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage(), "Could not request {0}", link.getHref());
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, e.getMessage());
 		} catch (MalformedURLException e) {

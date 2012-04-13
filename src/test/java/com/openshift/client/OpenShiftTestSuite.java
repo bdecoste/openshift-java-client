@@ -16,8 +16,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	RestServiceTest.class,
 	DomainResourceTest.class,
 	ApplicationResourceTest.class,
+	UserTest.class,
 	SSHKeyTest.class
 })
 /**

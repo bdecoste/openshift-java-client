@@ -52,9 +52,9 @@ public class HttpParameters {
 	public String toUrlEncoded() throws UnsupportedEncodingException {
 		StringBuilder builder = new StringBuilder();
 		for (Entry<String, Object> entry : parameters.entrySet()) {
-			append(entry.getKey(), entry.getValue(), builder);
+			append(entry.getKey(), URLEncoder.encode(entry.getValue().toString(), UTF8), builder);
 		}
-		return URLEncoder.encode(builder.toString(), UTF8);
+		return builder.toString();
 	}
 
 	private void append(String name, Object value, StringBuilder builder) {
