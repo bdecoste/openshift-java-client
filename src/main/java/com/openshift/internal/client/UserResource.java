@@ -21,7 +21,6 @@ import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
 import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
-import com.openshift.internal.client.utils.Assert;
 
 /**
  * @author Andre Dietisheim
@@ -67,10 +66,6 @@ public class UserResource extends AbstractOpenShiftResource {
 
 	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
 		KeyResourceDTO keyDTO = new AddSShKeyRequest().execute(key.getKeyType(), name, key.getPublicKey());
-
-		Assert.isTrue(key instanceof AbstractSSHKey);
-		((AbstractSSHKey) key).setName(name);
-
 		add(keyDTO);
 	}
 
