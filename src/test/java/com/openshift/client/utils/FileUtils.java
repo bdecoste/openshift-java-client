@@ -43,4 +43,8 @@ public class FileUtils {
 			}
 		}
 	}
+	
+	public static File createRandomTempFile() throws IOException {
+		return File.createTempFile(String.valueOf(System.currentTimeMillis()), null);
+	}
 }

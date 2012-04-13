@@ -17,48 +17,37 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.openshift.internal.client.AbstractSSHKey;
 import com.openshift.internal.client.utils.StreamUtils;
 
 /**
  * @author André Dietisheim
  */
-public class SSHPublicKey implements ISSHPublicKey {
+public class SSHPublicKey extends AbstractSSHKey {
 
 	private static final Pattern PUBLICKEY_PATTERN = Pattern.compile("([^ ]+) ([^ ]+)( .+)*");
 
 	private String publicKey;
-	private SSHKeyType keyType;
-
-	public SSHPublicKey(File publicKeyFilePath) throws IOException, OpenShiftException {
-		initializePublicKey(publicKeyFilePath);
-	}
-
-	public SSHPublicKey(String publicKey, String keyTypeId) throws OpenShiftUnknonwSSHKeyTypeException {
-		this(publicKey, SSHKeyType.getByTypeId(keyTypeId));
-	}
-
-	public SSHPublicKey(String publicKey, SSHKeyType keyType) {
-		this.publicKey = publicKey;
-		this.keyType = keyType;
-	}
-
-	private void initializePublicKey(File file) throws OpenShiftException, FileNotFoundException, IOException {
-		String keyWithIdAndComment = StreamUtils.readToString(new FileReader(file));
-		Matcher matcher = PUBLICKEY_PATTERN.matcher(keyWithIdAndComment);
-		if (!matcher.find()
-				|| matcher.groupCount() < 1) {
-			throw new OpenShiftException("Could not load public key from file \"{0}\"", file.getAbsolutePath());
-		}
-
-		this.keyType = SSHKeyType.getByTypeId(matcher.group(1));
-		this.publicKey = matcher.group(2);
+	
+	public SSHPublicKey(File publicKeyFile) throws FileNotFoundException, OpenShiftException, IOException {
+		super(null, (SSHKeyType) null);
+		init(publicKeyFile);
 	}
 
 	public String getPublicKey() {
 		return publicKey;
 	}
+	
+	public void init(File publicKeyFile) throws OpenShiftException, FileNotFoundException, IOException {
+		String keyWithIdAndComment = StreamUtils.readToString(new FileReader(publicKeyFile));
+		Matcher matcher = PUBLICKEY_PATTERN.matcher(keyWithIdAndComment);
+		if (!matcher.find()
+				|| matcher.groupCount() < 1) {
+			throw new OpenShiftException("Could not load public key from file \"{0}\"", publicKeyFile.getAbsolutePath());
+		}
 
-	public SSHKeyType getKeyType() {
-		return keyType;
+		setKeyType(matcher.group(1));
+		this.publicKey = matcher.group(2);
 	}
+
 }

@@ -31,10 +31,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.HttpMethod;
-import com.openshift.client.IHttpClient;
-import com.openshift.client.OpenShiftEndpointException;
-import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
@@ -150,6 +146,7 @@ public class RestServiceTest {
 			// operation
 			String url = "/broker/rest/adietisheim-redhat";
 			service.execute(new Link("0 require parameter", url, HttpMethod.GET, null, null));
+			// verifications
 			fail("No OpenShiftEndPointException occurred");
 		} catch (OpenShiftEndpointException e) {
 			assertThat(e.getRestResponse()).isNotNull();

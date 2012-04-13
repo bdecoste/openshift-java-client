@@ -111,7 +111,7 @@ public class EmbeddableCartridge extends AbstractOpenShiftResource implements IE
 		 * Instantiates a new delete application request.
 		 */
 		protected DeleteCartridgeRequest() {
-			super(LINK_DELETE_CARTRIDGE, EmbeddableCartridge.this);
+			super(LINK_DELETE_CARTRIDGE);
 		}
 
 	}

@@ -148,7 +148,7 @@ public class DomainResourceTest {
 	public void shouldDestroyDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
+		when(mockClient.delete(urlEndsWith("/domains/foobar"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
 		// operation
 		final IDomain domain = user.getDomain("foobar");
 		domain.destroy();

@@ -614,7 +614,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new delete application request.
 		 */
 		protected DeleteApplicationRequest() {
-			super(LINK_DELETE_APPLICATION, Application.this);
+			super(LINK_DELETE_APPLICATION);
 		}
 
 	}
@@ -628,7 +628,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new start application request.
 		 */
 		protected StartApplicationRequest() {
-			super(LINK_START_APPLICATION, Application.this);
+			super(LINK_START_APPLICATION);
 		}
 
 		/**
@@ -656,7 +656,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new stop application request.
 		 */
 		protected StopApplicationRequest() {
-			super(LINK_STOP_APPLICATION, Application.this);
+			super(LINK_STOP_APPLICATION);
 		}
 
 		/**
@@ -685,7 +685,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new force stop application request.
 		 */
 		protected ForceStopApplicationRequest() {
-			super(LINK_FORCE_STOP_APPLICATION, Application.this);
+			super(LINK_FORCE_STOP_APPLICATION);
 		}
 
 		/**
@@ -714,7 +714,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new restart application request.
 		 */
 		protected RestartApplicationRequest() {
-			super(LINK_RESTART_APPLICATION, Application.this);
+			super(LINK_RESTART_APPLICATION);
 		}
 
 		/**
@@ -742,7 +742,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new expose port request.
 		 */
 		protected ExposePortRequest() {
-			super(LINK_EXPOSE_PORT, Application.this);
+			super(LINK_EXPOSE_PORT);
 		}
 
 		/**
@@ -770,7 +770,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new conceal port request.
 		 */
 		protected ConcealPortRequest() {
-			super(LINK_CONCEAL_PORT, Application.this);
+			super(LINK_CONCEAL_PORT);
 		}
 
 		/**
@@ -798,7 +798,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new show port request.
 		 */
 		protected ShowPortRequest() {
-			super(LINK_SHOW_PORT, Application.this);
+			super(LINK_SHOW_PORT);
 		}
 
 		/**
@@ -826,7 +826,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new scale up request.
 		 */
 		protected ScaleUpRequest() {
-			super(LINK_SCALE_UP, Application.this);
+			super(LINK_SCALE_UP);
 		}
 
 		/**
@@ -854,7 +854,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new scale down request.
 		 */
 		protected ScaleDownRequest() {
-			super(LINK_SCALE_DOWN, Application.this);
+			super(LINK_SCALE_DOWN);
 		}
 
 		/**
@@ -882,7 +882,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new adds the alias request.
 		 */
 		protected AddAliasRequest() {
-			super(LINK_ADD_ALIAS, Application.this);
+			super(LINK_ADD_ALIAS);
 		}
 
 		/**
@@ -912,7 +912,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new removes the alias request.
 		 */
 		protected RemoveAliasRequest() {
-			super(LINK_REMOVE_ALIAS, Application.this);
+			super(LINK_REMOVE_ALIAS);
 		}
 
 		/**
@@ -942,7 +942,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 		 * Instantiates a new adds the embedded cartridge request.
 		 */
 		protected AddEmbeddedCartridgeRequest() {
-			super(LINK_ADD_CARTRIDGE, Application.this);
+			super(LINK_ADD_CARTRIDGE);
 		}
 
 		/**
@@ -966,7 +966,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	private class ListEmbeddableCartridgesRequest extends ServiceRequest {
 
 		protected ListEmbeddableCartridgesRequest() {
-			super(LINK_LIST_CARTRIDGES, Application.this);
+			super(LINK_LIST_CARTRIDGES);
 		}
 
 		/**
@@ -980,7 +980,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	private class ListGearsRequest extends ServiceRequest {
 
 		protected ListGearsRequest() {
-			super(LINK_LIST_GEARS, Application.this);
+			super(LINK_LIST_GEARS);
 		}
 
 		/**

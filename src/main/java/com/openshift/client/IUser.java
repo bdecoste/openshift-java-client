@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface IUser {
 
-	public String getRhlogin();
+	public String getRhlogin() throws SocketTimeoutException, OpenShiftException;
 
 	public String getPassword();
 	
@@ -29,8 +29,6 @@ public interface IUser {
 
 	public boolean isValid() throws OpenShiftException;
 
-	public String getUUID() throws OpenShiftException;
-
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
 
 	public IDomain createDomain(String name, ISSHPublicKey key) throws OpenShiftException;
@@ -39,11 +37,11 @@ public interface IUser {
 	
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException;
 	
-	public boolean hasDomain() throws OpenShiftException;
+	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException;
 
 	public List<ISSHPublicKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
 
-	public void addSshKey(ISSHPublicKey key) throws OpenShiftException;
+	public void addSshKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
 
 	public List<ICartridge> getCartridges() throws OpenShiftException;
 

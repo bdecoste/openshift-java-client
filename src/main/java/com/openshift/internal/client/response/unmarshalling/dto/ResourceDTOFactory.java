@@ -72,7 +72,7 @@ public class ResourceDTOFactory {
 	 */
 	public static RestResponse get(final String content) throws OpenShiftException {
 		// in case the server answers with 'no-content'
-		if(content == null) {
+		if(content == null || content.length() == 0) {
 			return null;
 		}
 		LOGGER.trace("Unmarshalling response\n{}", content);

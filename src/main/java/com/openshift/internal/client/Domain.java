@@ -37,31 +37,29 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private static final String LINK_DELETE = "DELETE";
 	private String namespace;
 	private String rhcDomain;
+	/** root node in the business domain. */
+	private final API api; 
 	/** Applications for the domain. */
 	//TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
-	private final User user;
 
-	public Domain(final String namespace, final String suffix, final Map<String, Link> links, final User user) {
-		super(user.getService(), links);
+	public Domain(final String namespace, final String suffix, final Map<String, Link> links, final API api) {
+		super(api.getService(), links);
 		this.namespace = namespace;
 		this.rhcDomain = suffix;
-		this.user = user;
+		this.api = api;
 	}
-
+	
+	protected Domain(DomainResourceDTO domainDTO, final API api) {
+		this(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), api);
+	}
+	
 	public String getNamespace() {
 		return namespace;
 	}
 	
 	public String getRhcDomain() throws OpenShiftException {
 		return rhcDomain;
-	}
-
-	/**
-	 * @return the user
-	 */
-	protected final User getUser() {
-		return user;
 	}
 
 	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException {
@@ -144,7 +142,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
 		new DeleteDomainRequest().execute();
-		user.removeDomain(this);
+		api.removeDomain(this);
     }
 	
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
@@ -194,7 +192,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private class ListApplicationsRequest extends ServiceRequest {
 
 		public ListApplicationsRequest() throws SocketTimeoutException, OpenShiftException {
-			super(LINK_LIST_APPLICATIONS, Domain.this);
+			super(LINK_LIST_APPLICATIONS);
 		}
 		
 	}
@@ -202,7 +200,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private class CreateApplicationRequest extends ServiceRequest {
 
 		public CreateApplicationRequest() throws SocketTimeoutException, OpenShiftException {
-			super(LINK_ADD_APPLICATION, Domain.this);
+			super(LINK_ADD_APPLICATION);
 		}
 		
 		public ApplicationResourceDTO execute(final String name, final String cartridge, final Boolean scale, final String nodeProfile) throws SocketTimeoutException, OpenShiftException {
@@ -216,7 +214,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private class UpdateDomainRequest extends ServiceRequest {
 
 		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super(LINK_UPDATE, Domain.this);
+			super(LINK_UPDATE);
 		}
 		
 		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
@@ -226,7 +224,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	
 	private class DeleteDomainRequest extends ServiceRequest {
 		public DeleteDomainRequest() throws SocketTimeoutException, OpenShiftException {
-			super(LINK_DELETE, Domain.this);
+			super(LINK_DELETE);
 		}
 
 	}
