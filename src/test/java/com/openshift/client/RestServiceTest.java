@@ -31,6 +31,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
@@ -57,9 +58,11 @@ public class RestServiceTest {
 		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
 		when(clientMock.delete(any(URL.class))).thenReturn(jsonResponse);
 
+		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
+
 		this.service = new RestService(
-				IRestServiceTestConstants.LIBRA_SERVER_STG,
-				IRestServiceTestConstants.CLIENT_ID,
+				configuration.getStagingServer(),
+				configuration.getClientId(),
 				clientMock);
 	}
 

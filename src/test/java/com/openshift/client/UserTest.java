@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
@@ -47,10 +48,11 @@ public class UserTest {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
 				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		this.user = new UserBuilder().configure(
 				new RestService(
-						IRestServiceTestConstants.LIBRA_SERVER_STG,
-						IRestServiceTestConstants.CLIENT_ID,
+						configuration.getStagingServer(),
+						configuration.getClientId(),
 						mockClient)).build();
 	}
 

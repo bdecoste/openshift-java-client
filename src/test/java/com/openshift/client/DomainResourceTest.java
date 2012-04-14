@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.IRestServiceTestConstants.CLIENT_ID;
 import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
@@ -42,6 +41,7 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.BadRequestException;
@@ -69,8 +69,9 @@ public class DomainResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
+		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		this.user = new UserBuilder().configure(
-				new RestService(IRestServiceTestConstants.LIBRA_SERVER_STG, CLIENT_ID, mockClient)).build();
+				new RestService(configuration.getStagingServer(), configuration.getClientId(), mockClient)).build();
 	}
 
 	private static <T> Answer<?> print(final String msg) {

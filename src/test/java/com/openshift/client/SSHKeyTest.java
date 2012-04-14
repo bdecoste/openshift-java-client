@@ -30,6 +30,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.SSHKeyTestUtils.SSHPublicKeyAssertion;
 import com.openshift.client.utils.Samples;
@@ -51,7 +52,9 @@ public class SSHKeyTest {
 		when(mockClient.get(urlEndsWith("/api")))
 				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
-		this.service = new RestService(IRestServiceTestConstants.LIBRA_SERVER_PROD, IRestServiceTestConstants.CLIENT_ID, mockClient);
+		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
+		this.service = new RestService(
+				configuration.getStagingServer(), configuration.getClientId(), mockClient);
 		this.user = new UserBuilder().configure(service).build();
 	}
 

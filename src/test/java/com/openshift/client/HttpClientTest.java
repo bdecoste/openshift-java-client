@@ -28,10 +28,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.configuration.IOpenShiftConfiguration;
-import com.openshift.client.configuration.OpenShiftConfiguration;
 import com.openshift.client.fakes.HttpServerFake;
 import com.openshift.client.utils.Base64Coder;
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 
@@ -126,12 +125,13 @@ public class HttpClientTest {
 		String key2 = "xcoulon";
 		String value2 = "redhat";
 		parameters.put(key2, value2);
-		IOpenShiftConfiguration configuration = new OpenShiftConfiguration();
+		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		
+
 		IHttpClient httpClient = new UrlConnectionHttpClientBuilder.UrlConnectionHttpClient(
 				configuration.getRhlogin(), 
-				System.getProperty("password"), 
-				IRestServiceTestConstants.CLIENT_ID, 
+				configuration.getPassword(), 
+				configuration.getClientId(), 
 				false, 
 				UrlConnectionHttpClientBuilder.ACCEPT_APPLICATION_JSON) {
 			

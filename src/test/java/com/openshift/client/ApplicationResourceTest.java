@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.IRestServiceTestConstants.CLIENT_ID;
 import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE;
@@ -51,6 +50,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.internal.client.EmbeddableCartridge;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
@@ -72,8 +72,9 @@ public class ApplicationResourceTest {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		IUser user = new UserBuilder().configure(
-				new RestService(IRestServiceTestConstants.LIBRA_SERVER_STG, CLIENT_ID, mockClient)).build();
+				new RestService(configuration.getStagingServer(), configuration.getClientId(), mockClient)).build();
 		this.domain = user.getDomain("foobar");
 	}
 
