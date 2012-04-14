@@ -47,6 +47,11 @@ public class SSHKeyPair extends AbstractSSHKey {
 		this.publicKeyPath = publicKeyPath;
 	}
 
+	public static SSHKeyPair create(String passPhrase, String privateKeyPath, String publicKeyPath)
+			throws OpenShiftException {
+		return create(SSHKeyType.SSH_RSA, passPhrase, privateKeyPath, publicKeyPath);
+	}
+
 	/**
 	 * Creates private and public ssh-rsa keys and stores them to the given
 	 * paths. The key is created while using the given pass phrase.
@@ -61,7 +66,7 @@ public class SSHKeyPair extends AbstractSSHKey {
 	 * @throws OpenShiftException
 	 *             if the key could not be created
 	 */
-	public static SSHKeyPair create(String passPhrase, String privateKeyPath, String publicKeyPath)
+	public static SSHKeyPair create(SSHKeyType type, String passPhrase, String privateKeyPath, String publicKeyPath)
 			throws OpenShiftException {
 		try {
 			KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.RSA, KEYLENGTH);

@@ -43,11 +43,11 @@ public interface IUser {
 
 	public List<IOpenShiftSSHKey> getSSHKeys() throws OpenShiftException, SocketTimeoutException;
 
-	public void addSSHKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
+	public IOpenShiftSSHKey addSSHKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
 
-	public ISSHPublicKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 	
-	public ISSHPublicKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 
 	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 	

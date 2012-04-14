@@ -91,11 +91,11 @@ public class User implements IUser {
 		return getAPI().getUser().getSSHKeys();
 	}
 
-	public ISSHPublicKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		return getAPI().getUser().getSSHKeyByName(name);
 	}
 	
-	public ISSHPublicKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		return getAPI().getUser().getSSHKeyByPublicKey(publicKey);
 	}
 
@@ -107,8 +107,8 @@ public class User implements IUser {
 		return getAPI().getUser().hasSSHPublicKey(publicKey);
 	}
 
-	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
-		getAPI().getUser().addSSHKey(name, key);
+	public IOpenShiftSSHKey addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+		return getAPI().getUser().addSSHKey(name, key);
 	}
 
 	public String getRhlogin() throws SocketTimeoutException, OpenShiftException {

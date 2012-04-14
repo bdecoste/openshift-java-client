@@ -64,8 +64,8 @@ public class UserResource extends AbstractOpenShiftResource {
 		return keys;
 	}
 
-	public ISSHPublicKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
-		ISSHPublicKey matchingKey = null;
+	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		IOpenShiftSSHKey matchingKey = null;
 		if (name == null) {
 			return null;
 		}
@@ -79,8 +79,8 @@ public class UserResource extends AbstractOpenShiftResource {
 		return matchingKey;
 	}
 	
-	public ISSHPublicKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
-		ISSHPublicKey matchingKey = null;
+	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		IOpenShiftSSHKey matchingKey = null;
 		if (publicKey == null) {
 			return null;
 		}
@@ -102,9 +102,9 @@ public class UserResource extends AbstractOpenShiftResource {
 		return getSSHKeyByPublicKey(publicKey) != null;
 	}
 	
-	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+	public IOpenShiftSSHKey addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
 		KeyResourceDTO keyDTO = new AddSShKeyRequest().execute(key.getKeyType(), name, key.getPublicKey());
-		add(keyDTO);
+		return add(keyDTO);
 	}
 
 	private SSHKeyResource add(KeyResourceDTO keyDTO) throws OpenShiftUnknonwSSHKeyTypeException {

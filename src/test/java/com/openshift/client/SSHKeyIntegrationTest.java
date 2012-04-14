@@ -55,17 +55,35 @@ public class SSHKeyIntegrationTest {
 		int numOfKeys = user.getSSHKeys().size();
 
 		// operation
-		user.addSSHKey(keyName, publicKey);
+		IOpenShiftSSHKey key = user.addSSHKey(keyName, publicKey);
 
 		// verifications
-		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
-		assertThat(keys.size()).isEqualTo(numOfKeys + 1);
-		IOpenShiftSSHKey key = SSHKeyTestUtils.getKey(keyName, keys);
 		assertThat(
 				new SSHKeyTestUtils.SSHPublicKeyAssertion(key))
 				.hasName(keyName)
 				.hasPublicKey(publicKey.getPublicKey())
 				.isType(publicKey.getKeyType());
+		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
+		assertThat(keys.size()).isEqualTo(numOfKeys + 1);
+		IOpenShiftSSHKey keyInList = SSHKeyTestUtils.getKey(keyName, keys);
+		assertThat(key).isEqualTo(keyInList);
+	}
+
+	@Test
+	public void shouldReturnKeyForName() throws SocketTimeoutException, HttpClientException, Throwable {
+		// pre-conditions
+		String keyName = String.valueOf(System.currentTimeMillis());
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
+		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+
+		// operation
+		IOpenShiftSSHKey key = user.addSSHKey(keyName, publicKey);
+		IOpenShiftSSHKey keyByName = user.getSSHKeyByName(keyName);
+		
+		// verifications
+		assertThat(key).isEqualTo(keyByName);
 	}
 
 	@Test
@@ -76,23 +94,17 @@ public class SSHKeyIntegrationTest {
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
 		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
-		user.addSSHKey(keyName, publicKey);
+		assertThat(publicKey.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
+		IOpenShiftSSHKey key = user.addSSHKey(keyName, publicKey);
 
 		// operation
-		user.getSSHKeys();
-		// List<IOpenShiftSSHKey> keys = user.getSshKeys();
-		// assertThat(keys).hasSize(1);
-		// IOpenShiftSSHKey key = keys.get(0);
-		// assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
-		// key.setKeyType(SSHKeyType.SSH_DSA, newPublicKey);
-		//
-		// // verification
-		// assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
-		// assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
-		// HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		// parameterMap.put("type", SSH_DSA);
-		// parameterMap.put("content", key.getPublicKey());
-		// verify(mockClient).put(parameterMap, new URL(keyUrl));
+		SSHKeyPair keyPair = SSHKeyPair.create(
+				SSHKeyType.SSH_RSA, SSHKeyTestUtils.DEFAULT_PASSPHRASE, privateKeyPath, publicKeyPath);
+		key.setKeyType(SSHKeyType.SSH_RSA, keyPair.getPublicKey());
+
+		// verification
+		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+		assertThat(key.getPublicKey()).isEqualTo(keyPair.getPublicKey());
 	}
 
 	@Test

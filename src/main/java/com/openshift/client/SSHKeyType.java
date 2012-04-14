@@ -29,6 +29,25 @@ public enum SSHKeyType {
 		return typeId;
 	}
 
+	/**
+	 * Returns the JSch key pair constant for a given SSHKeyType.
+	 * 
+	 * @param type
+	 *            the SSHKeyType that the JSch KeyPair constant will get
+	 *            returned for
+	 * @return
+	 */
+	public int toJSchKeyType() {
+		switch (this) {
+		case SSH_RSA:
+			return KeyPair.RSA;
+		case SSH_DSA:
+			return KeyPair.DSA;
+		default:
+			return KeyPair.UNKNOWN;
+		}
+	}
+
 	public static SSHKeyType getByTypeId(String keyTypeId) throws OpenShiftUnknonwSSHKeyTypeException {
 		if (keyTypeId != null) {
 			for (SSHKeyType sSHKeyType : values()) {
@@ -39,7 +58,7 @@ public enum SSHKeyType {
 		}
 		throw new OpenShiftUnknonwSSHKeyTypeException("OpenShift does not support keys of type \"{0}\"", keyTypeId);
 	}
-	
+
 	public static SSHKeyType getByJSchKeyType(KeyPair keyPair) throws OpenShiftUnknonwSSHKeyTypeException {
 		return getByJSchKeyType(keyPair.getKeyType());
 	}
