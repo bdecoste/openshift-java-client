@@ -10,43 +10,12 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static com.openshift.internal.client.test.utils.ApplicationAsserts.assertApplication;
-import static com.openshift.internal.client.test.utils.CartridgeAsserts.assertThatContainsCartridge;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import com.openshift.client.IApplication;
-import com.openshift.client.ICartridge;
-import com.openshift.client.IDomain;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.ISSHPublicKey;
-import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.utils.RFC822DateUtils;
-import com.openshift.internal.client.ApplicationInfo;
-import com.openshift.internal.client.Cartridge;
-import com.openshift.internal.client.EmbeddableCartridgeInfo;
-import com.openshift.internal.client.User;
-import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.test.fakes.CartridgeResponseFake;
-import com.openshift.internal.client.test.fakes.UserInfoResponseFake;
 
 /**
  * @author André Dietisheim
