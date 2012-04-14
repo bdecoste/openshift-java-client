@@ -41,9 +41,17 @@ public interface IUser {
 	
 	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException;
 
-	public List<IOpenShiftSSHKey> getSshKeys() throws OpenShiftException, SocketTimeoutException;
+	public List<IOpenShiftSSHKey> getSSHKeys() throws OpenShiftException, SocketTimeoutException;
 
-	public void addSshKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
+	public void addSSHKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
+
+	public ISSHPublicKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	
+	public ISSHPublicKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+
+	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	
+	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 
 	public List<ICartridge> getCartridges() throws OpenShiftException;
 

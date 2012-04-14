@@ -22,6 +22,7 @@ import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.internal.client.utils.Assert;
@@ -86,11 +87,27 @@ public class User implements IUser {
 		return getDomains() != null;
 	}
 
-	public List<IOpenShiftSSHKey> getSshKeys() throws OpenShiftException, SocketTimeoutException {
+	public List<IOpenShiftSSHKey> getSSHKeys() throws OpenShiftException, SocketTimeoutException {
 		return getAPI().getUser().getSSHKeys();
 	}
 
-	public void addSshKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+	public ISSHPublicKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		return getAPI().getUser().getSSHKeyByName(name);
+	}
+	
+	public ISSHPublicKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		return getAPI().getUser().getSSHKeyByPublicKey(publicKey);
+	}
+
+	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		return getAPI().getUser().hasSSHKeyName(name);
+	}
+	
+	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		return getAPI().getUser().hasSSHPublicKey(publicKey);
+	}
+
+	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
 		getAPI().getUser().addSSHKey(name, key);
 	}
 

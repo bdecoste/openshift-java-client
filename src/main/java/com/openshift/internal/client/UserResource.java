@@ -64,6 +64,44 @@ public class UserResource extends AbstractOpenShiftResource {
 		return keys;
 	}
 
+	public ISSHPublicKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		ISSHPublicKey matchingKey = null;
+		if (name == null) {
+			return null;
+		}
+		
+		for (SSHKeyResource key : getOrLoadSSHKeys()) {
+			if (name.equals(key.getName())) {
+				matchingKey = key;
+				break;
+			}
+		}
+		return matchingKey;
+	}
+	
+	public ISSHPublicKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		ISSHPublicKey matchingKey = null;
+		if (publicKey == null) {
+			return null;
+		}
+		
+		for (SSHKeyResource key : getOrLoadSSHKeys()) {
+			if (publicKey.equals(key.getPublicKey())) {
+				matchingKey = key;
+				break;
+			}
+		}
+		return matchingKey;
+	}
+
+	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		return getSSHKeyByName(name) != null;
+	}
+	
+	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+		return getSSHKeyByPublicKey(publicKey) != null;
+	}
+	
 	public void addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
 		KeyResourceDTO keyDTO = new AddSShKeyRequest().execute(key.getKeyType(), name, key.getPublicKey());
 		add(keyDTO);

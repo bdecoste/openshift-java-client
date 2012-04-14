@@ -164,7 +164,7 @@ public class SSHKeyTest {
 		when(mockClient.get(urlEndsWith("/user/keys")))
 				.thenReturn(Samples.GET_USER_KEYS_MULTIPLE_JSON.getContentAsString());
 		// operation
-		List<IOpenShiftSSHKey> sshKeys = user.getSshKeys();
+		List<IOpenShiftSSHKey> sshKeys = user.getSSHKeys();
 		// verifications
 		assertThat(sshKeys).hasSize(2);
 		assertThat(new SSHPublicKeyAssertion(sshKeys.get(0)))
@@ -185,10 +185,10 @@ public class SSHKeyTest {
 
 		String keyName = "default2";
 		// operation
-		user.addSshKey(keyName, publicKey);
+		user.addSSHKey(keyName, publicKey);
 
 		// verifications
-		List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
 		assertThat(keys).hasSize(1);
 		assertThat(new SSHPublicKeyAssertion(keys.get(0)))
 				.hasName(keyName).hasPublicKey("AAAAB3Nz").isType(SSHKeyTestUtils.SSH_RSA);
@@ -207,7 +207,7 @@ public class SSHKeyTest {
 				.thenReturn(Samples.UPDATE_USER_KEY_JSON.getContentAsString());
 
 		// operation
-		List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
 		assertThat(keys).hasSize(1);
 		IOpenShiftSSHKey key = keys.get(0);
 		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
@@ -234,7 +234,7 @@ public class SSHKeyTest {
 				.thenReturn(Samples.UPDATE_USER_KEY_RSA_JSON.getContentAsString());
 
 		// operation
-		List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
 		assertThat(keys).hasSize(1);
 		IOpenShiftSSHKey key = keys.get(0);
 		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);

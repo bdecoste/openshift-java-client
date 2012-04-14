@@ -39,7 +39,7 @@ public class SSHKeyIntegrationTest {
 	public void shouldReturnExistingKeys() throws HttpClientException, Throwable {
 		// pre-conditions
 		// operation
-		List<IOpenShiftSSHKey> sshKeys = user.getSshKeys();
+		List<IOpenShiftSSHKey> sshKeys = user.getSSHKeys();
 		// verifications
 		assertThat(sshKeys).isNotNull();
 	}
@@ -51,75 +51,77 @@ public class SSHKeyIntegrationTest {
 		String publicKeyPath = createRandomTempFile().getAbsolutePath();
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
-		SSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
-		int numOfKeys = user.getSshKeys().size();
+		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+		int numOfKeys = user.getSSHKeys().size();
 
 		// operation
-		user.addSshKey(keyName, publicKey);
+		user.addSSHKey(keyName, publicKey);
 
 		// verifications
-		List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
 		assertThat(keys.size()).isEqualTo(numOfKeys + 1);
 		IOpenShiftSSHKey key = SSHKeyTestUtils.getKey(keyName, keys);
-		assertThat(new SSHKeyTestUtils.SSHPublicKeyAssertion(key))
-				.hasName(keyName).hasPublicKey(publicKey.getPublicKey()).isType(publicKey.getKeyType());
+		assertThat(
+				new SSHKeyTestUtils.SSHPublicKeyAssertion(key))
+				.hasName(keyName)
+				.hasPublicKey(publicKey.getPublicKey())
+				.isType(publicKey.getKeyType());
 	}
 
 	@Test
 	public void shouldUpdateKeyTypeAndPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
-//		// pre-conditions
-//		String keyName = "default";
-//		String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
-//		String newPublicKey = "AAAAB3Nza...";
-//
-//		when(mockClient.get(urlEndsWith("/user/keys")))
-//				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
-//		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith(keyUrl)))
-//				.thenReturn(Samples.UPDATE_USER_KEY_JSON.getContentAsString());
-//
-//		// operation
-//		List<IOpenShiftSSHKey> keys = user.getSshKeys();
-//		assertThat(keys).hasSize(1);
-//		IOpenShiftSSHKey key = keys.get(0);
-//		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
-//		key.setKeyType(SSHKeyType.SSH_DSA, newPublicKey);
-//
-//		// verification
-//		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
-//		assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
-//		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-//		parameterMap.put("type", SSH_DSA);
-//		parameterMap.put("content", key.getPublicKey());
-//		verify(mockClient).put(parameterMap, new URL(keyUrl));
+		// pre-conditions
+		String keyName = String.valueOf(System.currentTimeMillis());
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
+		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+		user.addSSHKey(keyName, publicKey);
+
+		// operation
+		user.getSSHKeys();
+		// List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		// assertThat(keys).hasSize(1);
+		// IOpenShiftSSHKey key = keys.get(0);
+		// assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+		// key.setKeyType(SSHKeyType.SSH_DSA, newPublicKey);
+		//
+		// // verification
+		// assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
+		// assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
+		// HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+		// parameterMap.put("type", SSH_DSA);
+		// parameterMap.put("content", key.getPublicKey());
+		// verify(mockClient).put(parameterMap, new URL(keyUrl));
 	}
 
 	@Test
 	public void shouldUpdatePublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
-//		// pre-conditions
-//		String keyName = "default";
-//		String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
-//		String newPublicKey = "AAAAB3Nza...";
-//		when(mockClient.get(urlEndsWith("/user/keys")))
-//				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
-//		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith(keyUrl)))
-//				.thenReturn(Samples.UPDATE_USER_KEY_RSA_JSON.getContentAsString());
-//
-//		// operation
-//		List<IOpenShiftSSHKey> keys = user.getSshKeys();
-//		assertThat(keys).hasSize(1);
-//		IOpenShiftSSHKey key = keys.get(0);
-//		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
-//		assertThat(key.getPublicKey()).isNotEqualTo(newPublicKey);
-//		key.setPublicKey(newPublicKey);
-//
-//		// verification
-//		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
-//		assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
-//		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-//		parameterMap.put("type", SSHKeyTestUtils.SSH_RSA);
-//		parameterMap.put("content", newPublicKey);
-//		verify(mockClient).put(parameterMap, new URL(keyUrl));
+		// // pre-conditions
+		// String keyName = "default";
+		// String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
+		// String newPublicKey = "AAAAB3Nza...";
+		// when(mockClient.get(urlEndsWith("/user/keys")))
+		// .thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
+		// when(mockClient.put(anyMapOf(String.class, Object.class),
+		// urlEndsWith(keyUrl)))
+		// .thenReturn(Samples.UPDATE_USER_KEY_RSA_JSON.getContentAsString());
+		//
+		// // operation
+		// List<IOpenShiftSSHKey> keys = user.getSshKeys();
+		// assertThat(keys).hasSize(1);
+		// IOpenShiftSSHKey key = keys.get(0);
+		// assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+		// assertThat(key.getPublicKey()).isNotEqualTo(newPublicKey);
+		// key.setPublicKey(newPublicKey);
+		//
+		// // verification
+		// assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+		// assertThat(key.getPublicKey()).isEqualTo(newPublicKey);
+		// HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+		// parameterMap.put("type", SSHKeyTestUtils.SSH_RSA);
+		// parameterMap.put("content", newPublicKey);
+		// verify(mockClient).put(parameterMap, new URL(keyUrl));
 	}
-
 
 }
