@@ -55,7 +55,7 @@ public class SSHKeyIntegrationTest {
 		int numOfKeys = user.getSSHKeys().size();
 
 		// operation
-		IOpenShiftSSHKey key = user.addSSHKey(keyName, publicKey);
+		IOpenShiftSSHKey key = user.putSSHKey(keyName, publicKey);
 
 		// verifications
 		assertThat(
@@ -79,7 +79,7 @@ public class SSHKeyIntegrationTest {
 		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 
 		// operation
-		IOpenShiftSSHKey key = user.addSSHKey(keyName, publicKey);
+		IOpenShiftSSHKey key = user.putSSHKey(keyName, publicKey);
 		IOpenShiftSSHKey keyByName = user.getSSHKeyByName(keyName);
 		
 		// verifications
@@ -95,7 +95,7 @@ public class SSHKeyIntegrationTest {
 		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
 		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 		assertThat(publicKey.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
-		IOpenShiftSSHKey key = user.addSSHKey(keyName, publicKey);
+		IOpenShiftSSHKey key = user.putSSHKey(keyName, publicKey);
 
 		// operation
 		SSHKeyPair keyPair = SSHKeyPair.create(

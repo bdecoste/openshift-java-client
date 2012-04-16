@@ -17,6 +17,7 @@ import java.util.List;
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.OpenShiftSSHKeyException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
 import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
@@ -42,11 +43,11 @@ public class UserResource extends AbstractOpenShiftResource {
 	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
 			OpenShiftException {
 		List<IOpenShiftSSHKey> keys = new ArrayList<IOpenShiftSSHKey>();
-		keys.addAll(getOrLoadSSHKeys());
+		keys.addAll(getCachedOrLoadSSHKeys());
 		return keys;
 	}
 
-	private List<SSHKeyResource> getOrLoadSSHKeys() throws SocketTimeoutException, OpenShiftException,
+	private List<SSHKeyResource> getCachedOrLoadSSHKeys() throws SocketTimeoutException, OpenShiftException,
 			OpenShiftUnknonwSSHKeyTypeException {
 		if (sshKeys == null) {
 			this.sshKeys = loadKeys();
@@ -64,13 +65,14 @@ public class UserResource extends AbstractOpenShiftResource {
 		return keys;
 	}
 
-	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException,
+			OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		IOpenShiftSSHKey matchingKey = null;
 		if (name == null) {
 			return null;
 		}
-		
-		for (SSHKeyResource key : getOrLoadSSHKeys()) {
+
+		for (SSHKeyResource key : getCachedOrLoadSSHKeys()) {
 			if (name.equals(key.getName())) {
 				matchingKey = key;
 				break;
@@ -78,14 +80,15 @@ public class UserResource extends AbstractOpenShiftResource {
 		}
 		return matchingKey;
 	}
-	
-	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+
+	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException,
+			OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		IOpenShiftSSHKey matchingKey = null;
 		if (publicKey == null) {
 			return null;
 		}
-		
-		for (SSHKeyResource key : getOrLoadSSHKeys()) {
+
+		for (SSHKeyResource key : getCachedOrLoadSSHKeys()) {
 			if (publicKey.equals(key.getPublicKey())) {
 				matchingKey = key;
 				break;
@@ -94,23 +97,43 @@ public class UserResource extends AbstractOpenShiftResource {
 		return matchingKey;
 	}
 
-	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
+			OpenShiftException {
 		return getSSHKeyByName(name) != null;
 	}
-	
-	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+
+	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException,
+			OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		return getSSHKeyByPublicKey(publicKey) != null;
 	}
-	
-	public IOpenShiftSSHKey addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+
+	/**
+	 * Adds the given ssh key with the given name. Key names and public keys
+	 * have to be unique. Throws OpenShiftSSHKeyException if either the key name
+	 * or the public key are already used.
+	 * 
+	 * @param name the name to identify the key
+	 * @param key the key to add
+	 * @return
+	 * @throws SocketTimeoutException
+	 * @throws OpenShiftException
+	 */
+	public IOpenShiftSSHKey putSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+		if (hasSSHKeyName(name)) {
+			throw new OpenShiftSSHKeyException(
+					"Could not add new key {0} with the name {1}. There already is a key for this name, key names must be unique.",
+					key.getPublicKey(), name);
+		}
+		if (hasSSHPublicKey(name)) {
+			throw new OpenShiftSSHKeyException(
+					"Could not add new key {0} with the name {1}. The key is already stored with a different name. Public key have to be unique.",
+					key.getPublicKey(), name);
+		}
 		KeyResourceDTO keyDTO = new AddSShKeyRequest().execute(key.getKeyType(), name, key.getPublicKey());
-		return add(keyDTO);
+		return put(keyDTO);
 	}
 
-	private SSHKeyResource add(KeyResourceDTO keyDTO) throws OpenShiftUnknonwSSHKeyTypeException {
-		if (sshKeys == null) {
-			sshKeys = new ArrayList<SSHKeyResource>();
-		}
+	private SSHKeyResource put(KeyResourceDTO keyDTO) throws OpenShiftUnknonwSSHKeyTypeException {
 		SSHKeyResource sshKey = new SSHKeyResource(keyDTO, getService());
 		sshKeys.add(sshKey);
 		return sshKey;

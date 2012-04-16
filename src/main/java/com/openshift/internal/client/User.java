@@ -107,8 +107,8 @@ public class User implements IUser {
 		return getAPI().getUser().hasSSHPublicKey(publicKey);
 	}
 
-	public IOpenShiftSSHKey addSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
-		return getAPI().getUser().addSSHKey(name, key);
+	public IOpenShiftSSHKey putSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+		return getAPI().getUser().putSSHKey(name, key);
 	}
 
 	public String getRhlogin() throws SocketTimeoutException, OpenShiftException {

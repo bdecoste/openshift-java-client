@@ -82,6 +82,15 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "SSHKeyResource ["
+				+ "name=" + name 
+				+ ", type=" + type 
+				+ ", publicKey=" + publicKey 
+				+ "]";
+	}
+
 	private class DeleteKeyRequest extends ServiceRequest {
 
 		private DeleteKeyRequest() {

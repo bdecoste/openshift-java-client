@@ -68,7 +68,8 @@ public class SSHKeyTest {
 		String keyType = sshKey.getKeyType().getTypeId();
 
 		assertNotNull(publicKey);
-		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_RSA)); // no identifier
+		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_RSA)); // no
+																	// identifier
 		assertTrue(!publicKey.contains(" ")); // no comment
 		assertEquals(SSHKeyType.SSH_RSA.getTypeId(), keyType);
 	}
@@ -85,7 +86,8 @@ public class SSHKeyTest {
 		String keyType = sshKey.getKeyType().getTypeId();
 
 		assertNotNull(publicKey);
-		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_RSA)); // no identifier
+		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_RSA)); // no
+																	// identifier
 		assertTrue(!publicKey.contains(" ")); // no comment
 		assertEquals(SSHKeyType.SSH_RSA.getTypeId(), keyType);
 	}
@@ -102,7 +104,8 @@ public class SSHKeyTest {
 		String keyType = sshKey.getKeyType().getTypeId();
 
 		assertNotNull(publicKey);
-		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_RSA)); // no identifier
+		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_RSA)); // no
+																	// identifier
 		assertTrue(!publicKey.contains(" ")); // no comment
 
 		SSHKeyPair keyPair = SSHKeyPair.load(privateKeyPath, publicKeyPath);
@@ -122,7 +125,8 @@ public class SSHKeyTest {
 		String keyType = sshKey.getKeyType().getTypeId();
 
 		assertNotNull(publicKey);
-		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_DSA)); // no identifier
+		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_DSA)); // no
+																	// identifier
 		assertTrue(!publicKey.contains(" ")); // no comment
 		assertEquals(SSHKeyType.SSH_DSA.getTypeId(), keyType);
 	}
@@ -139,7 +143,8 @@ public class SSHKeyTest {
 		String keyType = sshKey.getKeyType().getTypeId();
 
 		assertNotNull(publicKey);
-		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_DSA)); // no identifier
+		assertTrue(!publicKey.contains(SSHKeyTestUtils.SSH_DSA)); // no
+																	// identifier
 		assertTrue(!publicKey.contains(" ")); // no comment
 
 		SSHKeyPair keyPair = SSHKeyPair.load(privateKeyPath, publicKeyPath);
@@ -178,6 +183,8 @@ public class SSHKeyTest {
 		// pre-conditions
 		when(mockClient.post(anyMapOf(String.class, Object.class), urlEndsWith("/user/keys")))
 				.thenReturn(Samples.ADD_USER_KEY2_OK_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/user/keys")))
+				.thenReturn(Samples.GET_USER_KEYS_NONE_JSON.getContentAsString());
 		String publicKeyPath = createRandomTempFile().getAbsolutePath();
 		String privateKeyPath = createRandomTempFile().getAbsolutePath();
 		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
@@ -185,13 +192,15 @@ public class SSHKeyTest {
 
 		String keyName = "default2";
 		// operation
-		user.addSSHKey(keyName, publicKey);
+		user.putSSHKey(keyName, publicKey);
 
 		// verifications
 		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
 		assertThat(keys).hasSize(1);
 		assertThat(new SSHPublicKeyAssertion(keys.get(0)))
-				.hasName(keyName).hasPublicKey("AAAAB3Nz").isType(SSHKeyTestUtils.SSH_RSA);
+				.hasName(keyName)
+				.hasPublicKey("AAAAB3Nz")
+				.isType(SSHKeyTestUtils.SSH_RSA);
 	}
 
 	@Test
@@ -200,7 +209,7 @@ public class SSHKeyTest {
 		String keyName = "default";
 		String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
 		String newPublicKey = "AAAAB3Nza...";
-		
+
 		when(mockClient.get(urlEndsWith("/user/keys")))
 				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith(keyUrl)))
@@ -249,4 +258,40 @@ public class SSHKeyTest {
 		parameterMap.put("content", newPublicKey);
 		verify(mockClient).put(parameterMap, new URL(keyUrl));
 	}
+
+	@Test(expected = OpenShiftSSHKeyException.class)
+	public void shouldNotAddKeyWithExistingName() throws SocketTimeoutException, HttpClientException, Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/user/keys")))
+				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
+		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+		SSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+
+		// operation
+		assertThat(user.getSSHKeys()).hasSize(1);
+		String existingKeyName = user.getSSHKeys().get(0).getName();
+		user.putSSHKey(existingKeyName, publicKey);
+	}
+
+	@Test(expected = OpenShiftSSHKeyException.class)
+	public void shouldNotAddKeyTwice() throws SocketTimeoutException, HttpClientException, Throwable {
+		// pre-conditions
+		String keyName = "default";
+		String keyUrl = service.getServiceUrl() + "user/keys/" + keyName;
+		when(mockClient.get(urlEndsWith("/user/keys")))
+				.thenReturn(Samples.GET_USER_KEYS_SINGLE_JSON.getContentAsString());
+		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith(keyUrl)))
+				.thenReturn(Samples.UPDATE_USER_KEY_RSA_JSON.getContentAsString());
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
+		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+		SSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+
+		// operation
+		user.putSSHKey(keyName, publicKey);
+		user.putSSHKey("someOtherName", publicKey);
+	}
+
 }

@@ -27,7 +27,7 @@ public abstract class BaseResourceDTO {
 	 *
 	 * @param links the links
 	 */
-	public BaseResourceDTO(final Map<String, Link> links) {
+	protected BaseResourceDTO(final Map<String, Link> links) {
 		this.links = links;
 	}
 	

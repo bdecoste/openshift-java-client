@@ -17,6 +17,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.openshift.client.HttpMethod;
 import com.openshift.client.IHttpClient;
 import com.openshift.client.InvalidCredentialsOpenShiftException;
@@ -38,6 +41,8 @@ import com.openshift.internal.client.utils.StringUtils;
  * @author André Dietisheim
  */
 public class RestService implements IRestService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDTOFactory.class);
 
 	private static final String HTTP = "http";
 	private static final String SERVICE_PATH = "/broker/rest/";
