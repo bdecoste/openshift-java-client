@@ -14,15 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
 
 import com.openshift.client.utils.HostUtils;
 import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 import com.openshift.internal.client.response.OpenShiftResponse;
-import com.openshift.internal.client.response.unmarshalling.NakedResponseUnmarshaller;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.internal.client.utils.StreamUtils;
 import com.openshift.internal.client.utils.UrlBuilder;
@@ -154,9 +151,9 @@ public class OpenShiftService implements IOpenShiftService {
 //		}
 //	}
 
-	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
-		return new NakedResponseUnmarshaller().unmarshall(response);
-	}
+//	private OpenShiftResponse<Object> createNakedResponse(String response) throws OpenShiftException {
+//		return new NakedResponseUnmarshaller().unmarshall(response);
+//	}
 
 	public static String getVersion() {
 		if (version == null) {
