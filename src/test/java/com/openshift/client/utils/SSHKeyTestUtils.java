@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.client.utils;
 
+import static com.openshift.client.utils.FileUtils.createRandomTempFile;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -101,4 +102,10 @@ public class SSHKeyTestUtils {
 		keyPair.writePrivateKey(privateKeyPath);
 	}
 
+	public static String createDsaKeyPair() throws IOException, JSchException {
+		String publicKeyPath = createRandomTempFile().getAbsolutePath();
+		String privateKeyPath = createRandomTempFile().getAbsolutePath();
+		createDsaKeyPair(publicKeyPath, privateKeyPath);
+		return publicKeyPath;
+	}
 }

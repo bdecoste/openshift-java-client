@@ -48,9 +48,7 @@ public class SSHKeyIntegrationTest {
 	public void shouldAddKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		// pre-conditions
 		String keyName = String.valueOf(System.currentTimeMillis());
-		String publicKeyPath = createRandomTempFile().getAbsolutePath();
-		String privateKeyPath = createRandomTempFile().getAbsolutePath();
-		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+		String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
 		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 		int numOfKeys = user.getSSHKeys().size();
 
@@ -104,9 +102,7 @@ public class SSHKeyIntegrationTest {
 	public void shouldReturnKeyForName() throws SocketTimeoutException, HttpClientException, Throwable {
 		// pre-conditions
 		String keyName = String.valueOf(System.currentTimeMillis());
-		String publicKeyPath = createRandomTempFile().getAbsolutePath();
-		String privateKeyPath = createRandomTempFile().getAbsolutePath();
-		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+		String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
 		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 
 		// operation
