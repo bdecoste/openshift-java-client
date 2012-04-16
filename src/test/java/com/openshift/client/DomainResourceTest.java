@@ -129,6 +129,7 @@ public class DomainResourceTest {
 		final IDomain domain = user.createDomain("foobar2");
 		// verifications
 		assertThat(domain.getNamespace()).isEqualTo("foobar2");
+		assertThat(domain.getRhcDomain()).isEqualTo("stg.rhcloud.com");
 	}
 
 	@Test(expected = OpenShiftException.class)

@@ -11,7 +11,7 @@
 package com.openshift.client;
 
 import static com.openshift.client.utils.FileUtils.createRandomTempFile;
-import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
+import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

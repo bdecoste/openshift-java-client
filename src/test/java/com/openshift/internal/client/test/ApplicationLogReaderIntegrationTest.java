@@ -44,14 +44,14 @@ public class ApplicationLogReaderIntegrationTest {
 	 */
 	@Test
 	public void getStatusReturnsTheWholeLogIfNoNewLogEntryOnServer() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			String applicationStatus = service.getStatus(application.getName(), application.getCartridge(), user);
 //			String applicationStatus2 = service.getStatus(application.getName(), application.getCartridge(), user);
 //			assertEquals(applicationStatus, applicationStatus2);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
@@ -61,7 +61,7 @@ public class ApplicationLogReaderIntegrationTest {
 	 */
 	@Test
 	public void getStatusReturnsNewEntriesIfNewLogEntriesOnServer() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			String applicationStatus = service.getStatus(application.getName(), application.getCartridge(), user);
@@ -69,7 +69,7 @@ public class ApplicationLogReaderIntegrationTest {
 //			String applicationStatus2 = service.getStatus(application.getName(), application.getCartridge(), user);
 //			assertFalse(applicationStatus.equals(applicationStatus2));
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 

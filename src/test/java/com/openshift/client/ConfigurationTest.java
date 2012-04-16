@@ -31,8 +31,8 @@ import com.openshift.client.configuration.IOpenShiftConfiguration;
 import com.openshift.client.configuration.SystemConfiguration;
 import com.openshift.client.configuration.SystemProperties;
 import com.openshift.client.configuration.UserConfiguration;
-import com.openshift.internal.client.test.fakes.SystemConfigurationFake;
-import com.openshift.internal.client.test.fakes.UserConfigurationFake;
+import com.openshift.client.fakes.SystemConfigurationFake;
+import com.openshift.client.fakes.UserConfigurationFake;
 import com.openshift.internal.client.utils.StreamUtils;
 
 /**

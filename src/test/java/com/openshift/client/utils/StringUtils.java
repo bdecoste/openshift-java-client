@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2007 Red Hat, Inc. 
+ * Copyright (c) 2012 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -8,11 +8,15 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.test.fakes;
+package com.openshift.client.utils;
 
-public class OpenShiftCredentials {
+/**
+ * @author Andre Dietisheim
+ */
+public class StringUtils {
 
-	public static final String USERNAME = "toolsjboss@gmail.com";
-	public static final String PASSWORD = "1q2w3e";
-
+	public static String createRandomString() {
+		return String.valueOf(System.currentTimeMillis());
+	}
+	
 }

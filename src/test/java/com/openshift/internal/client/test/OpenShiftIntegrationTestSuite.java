@@ -20,11 +20,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//	ApplicationIntegrationTest.class,
+//	ApplicationResourceIntegrationTest.class,
 //	EmbedIntegrationTest.class,
 //	ApplicationLogReaderIntegrationTest.class,
 //	CartridgesIntegrationTest.class,
-//	DomainIntegrationTest.class,
+//	DomainResourceIntegrationTest.class,
 //	UserInfoIntegrationTest.class,
 //	UserIntegrationTest.class,
 //	CertTrustIntegrationTest.class

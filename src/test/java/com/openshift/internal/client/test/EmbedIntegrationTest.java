@@ -33,12 +33,12 @@ public class EmbedIntegrationTest {
 //		service = new OpenShiftService(TestUser.ID, new OpenShiftConfiguration().getLibraServer());
 //		service.setEnableSSLCertChecks(Boolean.parseBoolean(System.getProperty("enableSSLCertChecks")));
 //		user = new TestUser(service);
-//		application = service.createJBossASApplication(ApplicationUtils.createRandomApplicationName(), user );
+//		application = service.createJBossASApplication(ApplicationTestUtils.createRandomApplicationName(), user );
 	}
 
 	@After
 	public void tearDown() {
-//		ApplicationUtils.silentlyDestroyApplication(application.getName(), application.getCartridge(), user, service);
+//		ApplicationTestUtils.silentlyDestroyApplication(application.getName(), application.getCartridge(), user, service);
 	}
 
 	@Test
@@ -142,7 +142,7 @@ public class EmbedIntegrationTest {
 
 	@Test
 	public void canEmbedJenkins() throws Exception {
-//		ApplicationUtils.silentlyDestroyAnyJenkinsApplication(user);
+//		ApplicationTestUtils.silentlyDestroyAnyJenkinsApplication(user);
 //		String jenkinsAppName = "jenkins";
 //		IJenkinsApplication jenkins = null;
 //		try {
@@ -150,13 +150,13 @@ public class EmbedIntegrationTest {
 //			assertTrue(jenkins.waitForAccessible(WAIT_FOR_APPLICATION * 10));
 //			service.addEmbeddedCartridge(application.getName(), new JenkinsClientEmbeddableCartridge(service, user), user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(jenkinsAppName, jenkins.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(jenkinsAppName, jenkins.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void embeddedCartridgeHasUrl() throws OpenShiftException {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IApplication application = null;
 //		try {
 //			application = service.createJBossASApplication(applicationName, user);
@@ -166,7 +166,7 @@ public class EmbedIntegrationTest {
 //			assertNotNull(embeddedCartridge);
 //			assertNotNull(embeddedCartridge.getUrl());
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 

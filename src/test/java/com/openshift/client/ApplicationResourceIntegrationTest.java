@@ -8,8 +8,9 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.test;
+package com.openshift.client;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -17,7 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jcraft.jsch.UserInfo;
-import com.openshift.client.OpenShiftException;
+import com.openshift.client.utils.OpenShiftTestConfiguration;
+import com.openshift.client.utils.TestUserBuilder;
 import com.openshift.internal.client.ApplicationInfo;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.User;
@@ -25,23 +27,18 @@ import com.openshift.internal.client.User;
 /**
  * @author André Dietisheim
  */
-public class ApplicationIntegrationTest {
+public class ApplicationResourceIntegrationTest {
 	
 	private static final int WAIT_FOR_APPLICATION = 10 * 1024;
 
 	private IRestService service;
 
-	private User user;
+	private IUser user;
 	private User invalidUser;
 	
 	@Before
-	public void setUp() throws OpenShiftException, IOException {
-//		UserConfiguration userConfiguration = new UserConfiguration(new SystemConfiguration(new DefaultConfiguration()));
-//		service = new OpenShiftService(TestUser.ID, new OpenShiftConfiguration().getLibraServer());
-//		service.setEnableSSLCertChecks(Boolean.parseBoolean(System.getProperty("enableSSLCertChecks")));
-//		
-//		user = new TestUser(service);
-//		invalidUser = new TestUser("bogusPassword", service);
+	public void setUp() throws FileNotFoundException, IOException, OpenShiftException {
+		this.user = new TestUserBuilder().configure().build();
 	}
 	
 	@Test(expected=OpenShiftException.class)
@@ -54,20 +51,22 @@ public class ApplicationIntegrationTest {
 //			System.out.println("cartridge " + cartridge.getName());
 //		}
 //		
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		
 //		ICartridge bogus = new Cartridge("bogus-1.0");
 //		IApplication application = service.createApplication(applicationName, bogus, user);
 	}
 
-	//@Test(expected = InvalidCredentialsOpenShiftException.class)
+	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void createApplicationWithInvalidCredentialsThrowsException() throws Exception {
-//		service.createApplication(ApplicationUtils.createRandomApplicationName(), ICartridge.JBOSSAS_7, invalidUser);
+		IUser invalidUser = new TestUserBuilder().configure(
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").build();
+		//		service.createApplication(ApplicationTestUtils.createRandomApplicationName(), ICartridge.JBOSSAS_7, invalidUser);
 	}
 
 	@Test
 	public void canCreateJBossApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IJBossASApplication application = null;
 //		try {
 //			application = service.createJBossASApplication(applicationName, user);
@@ -78,13 +77,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreateRubyApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IRubyApplication application = null;
 //		try {
 //			application = service.createRubyApplication(applicationName, user);
@@ -95,13 +94,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreateHAProxyApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IHAProxyApplication application = null;
 //		try {
 //			application = service.createHAProxyApplication(applicationName, user);
@@ -112,13 +111,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canRawProxyApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IRawApplication application = null;
 //		try {
 //			application = service.createRawApplication(applicationName, user);
@@ -129,13 +128,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreatePythonApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IPythonApplication application = null;
 //		try {
 //			application = service.createPythonApplication(applicationName, user);
@@ -146,13 +145,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreatePHPApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IPHPApplication application = null;
 //		try {
 //			application = service.createPHPApplication(applicationName, user);
@@ -163,13 +162,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreatePerlApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IPerlApplication application = null;
 //		try {
 //			application = service.createPerlApplication(applicationName, user);
@@ -180,13 +179,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreateNodeJSApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		INodeJSApplication application = null;
 //		try {
 //			application = service.createNodeJSApplication(applicationName, user);
@@ -197,13 +196,13 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 	
 	@Test
 	public void canCreateJenkinsApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		IJenkinsApplication application = null;
 //		try {
 //			application = service.createJenkinsApplication(applicationName, user);
@@ -214,55 +213,55 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 
 
 	@Test
 	public void canDestroyApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		service.destroyApplication(applicationName, ICartridge.JBOSSAS_7, user);
 	}
 
 	@Test(expected = OpenShiftException.class)
 	public void createDuplicateApplicationThrowsException() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void canStopApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void canStartStoppedApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.startApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void canStartStartedApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			/**
 //			 * freshly created apps are started
@@ -274,13 +273,13 @@ public class ApplicationIntegrationTest {
 //			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.startApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void canStopStoppedApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			/**
 //			 * freshly created apps are started
@@ -293,13 +292,13 @@ public class ApplicationIntegrationTest {
 //			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void canRestartApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			/**
 //			 * freshly created apps are started
@@ -311,58 +310,58 @@ public class ApplicationIntegrationTest {
 //			service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			service.restartApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void canGetStatus() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			String applicationStatus = service.getStatus(application.getName(), application.getCartridge(), user);
 //			assertNotNull(applicationStatus);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void returnsValidGitUri() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			String gitUri = application.getGitUri();
 //			assertNotNull(gitUri);
 //			assertGitUri(applicationName, gitUri);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void returnsValidApplicationUrl() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			String applicationUrl = application.getApplicationUrl();
 //			assertNotNull(applicationUrl);
 //			assertApplicationUrl(applicationName, applicationUrl);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
 	@Test
 	public void returnsCreationTime() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = service.createApplication(applicationName, ICartridge.JBOSSAS_7, user);
 //			Date creationTime = application.getCreationTime();
 //			assertNotNull(creationTime);
 //			assertTrue(creationTime.compareTo(new Date()) == -1);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
 //		}
 	}
 
@@ -384,24 +383,24 @@ public class ApplicationIntegrationTest {
 //		String applicationName = null;
 //		String applicationName2 = null;
 //		try {
-//			applicationName = ApplicationUtils.createRandomApplicationName();
+//			applicationName = ApplicationTestUtils.createRandomApplicationName();
 //			IApplication application = user.createApplication(applicationName, ICartridge.JBOSSAS_7);
 //			Date creationTime = application.getCreationTime();
 //			assertNotNull(creationTime);
-//			applicationName2 = ApplicationUtils.createRandomApplicationName();
+//			applicationName2 = ApplicationTestUtils.createRandomApplicationName();
 //			IApplication application2 = user.createApplication(applicationName2, ICartridge.JBOSSAS_7);
 //			Date creationTime2 = application2.getCreationTime();
 //			assertNotNull(creationTime2);
 //			assertTrue(creationTime.compareTo(creationTime2) == -1);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName, user, service);
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName2, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName, user, service);
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName2, user, service);
 //		}
 	}
 	
 	@Test
 	public void canThreadDumpJBossApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		ApplicationLogReader reader = null;
 //		IJBossASApplication application = null;
 //		try {
@@ -420,7 +419,7 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //			
 //			if (reader != null)
 //				reader.close();
@@ -429,7 +428,7 @@ public class ApplicationIntegrationTest {
 	
 	@Test
 	public void canThreadDumpRackApplication() throws Exception {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		ApplicationLogReader reader = null;
 //		InputStream urlStream = null;
 //		IRubyApplication application = null;
@@ -460,7 +459,7 @@ public class ApplicationIntegrationTest {
 //			e.printStackTrace();
 //			throw e;
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //			
 //			if (reader != null)
 //				reader.close();
@@ -475,14 +474,14 @@ public class ApplicationIntegrationTest {
 //		String applicationName = null;
 //		IApplication application = null;
 //		try {
-//			applicationName = ApplicationUtils.createRandomApplicationName();
+//			applicationName = ApplicationTestUtils.createRandomApplicationName();
 //			application = service.createJBossASApplication(applicationName, user);
 //			assertNotNull(application);
 //			
 //			assertTrue(application.waitForAccessible(WAIT_FOR_APPLICATION));
 //			
 //		} finally {
-//			ApplicationUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
+//			ApplicationTestUtils.silentlyDestroyApplication(applicationName, application.getCartridge(), user, service);
 //		}
 	}
 }

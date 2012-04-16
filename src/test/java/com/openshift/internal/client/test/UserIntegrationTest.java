@@ -124,7 +124,7 @@ public class UserIntegrationTest {
 
 	@Test
 	public void canCreateApplication() throws OpenShiftException, IOException {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			Collection<IApplication> applications = user.getApplications();
 //			assertNotNull(applications);
@@ -134,7 +134,7 @@ public class UserIntegrationTest {
 //			assertEquals(numOfApplications + 1, applications.size());
 //			assertApplication(applicationName, ICartridge.JBOSSAS_7, application);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName,
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
 //					user,
 //					service);
 //		}
@@ -143,7 +143,7 @@ public class UserIntegrationTest {
 	@Test
 	public void canGetApplicationByName()
 			throws OpenShiftException, DatatypeConfigurationException, IOException {
-//		String applicationName = ApplicationUtils.createRandomApplicationName();
+//		String applicationName = ApplicationTestUtils.createRandomApplicationName();
 //		try {
 //			IApplication application = user.createApplication(applicationName,
 //					ICartridge.JBOSSAS_7);
@@ -152,7 +152,7 @@ public class UserIntegrationTest {
 //			assertNotNull(applicationFound);
 //			assertEquals(application, applicationFound);
 //		} finally {
-//			ApplicationUtils.silentlyDestroyAS7Application(applicationName,
+//			ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
 //					user,
 //					service);
 //		}
@@ -165,11 +165,11 @@ public class UserIntegrationTest {
 //		List<IApplication> toRemove = new ArrayList<IApplication>();
 //		try {
 //			IApplication application1 = user.createApplication(
-//					ApplicationUtils.createRandomApplicationName()
+//					ApplicationTestUtils.createRandomApplicationName()
 //					, ICartridge.JBOSSAS_7);
 //			toRemove.add(application1);
 //			IApplication application2 = user.createApplication(
-//					ApplicationUtils.createRandomApplicationName()
+//					ApplicationTestUtils.createRandomApplicationName()
 //					, ICartridge.JENKINS_14);
 //			toRemove.add(application2);
 //
@@ -179,7 +179,7 @@ public class UserIntegrationTest {
 //			assertEquals(currentAs7Apps + 1, applicationsFound.size());
 //		} finally {
 //			for (IApplication application : toRemove) {
-//				ApplicationUtils.silentlyDestroyApplication(
+//				ApplicationTestUtils.silentlyDestroyApplication(
 //						application.getName(),
 //						application.getCartridge(),
 //						user, service);

@@ -10,24 +10,11 @@
  ******************************************************************************/
 package com.openshift.internal.client.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.ApplicationLogReader;
-import com.openshift.client.ICartridge;
 import com.openshift.client.IOpenShiftService;
-import com.openshift.client.IUser;
-import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.Application;
-import com.openshift.internal.client.test.fakes.NoopOpenShiftServiceFake;
 
 /**
  * @author André Dietisheim
