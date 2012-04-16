@@ -28,6 +28,8 @@ public class TestUserBuilder extends UserBuilder {
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		return (TestUserBuilder) configure(
 				configuration.getClientId()
-				, configuration.getPassword());
+				, configuration.getRhlogin()
+				, configuration.getPassword()
+				, configuration.getLibraServer());
 	}
 }

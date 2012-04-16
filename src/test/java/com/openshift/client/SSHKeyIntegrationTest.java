@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
+import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.TestUserBuilder;
 import com.openshift.internal.client.httpclient.HttpClientException;
@@ -31,10 +32,24 @@ import com.openshift.internal.client.httpclient.HttpClientException;
 public class SSHKeyIntegrationTest {
 
 	private IUser user;
-
+	private IUser invalidUser;
+	
 	@Before
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		this.user = new TestUserBuilder().configure().build();
+		this.invalidUser = new TestUserBuilder().configure(
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").build();
+	}
+
+	@Test(expected = InvalidCredentialsOpenShiftException.class)
+	public void shouldThrowIfGetKeysWithInvalidCredentials() throws Exception {
+		invalidUser.getSSHKeys();
+	}
+	
+	@Test(expected = InvalidCredentialsOpenShiftException.class)
+	public void shouldThrowIfPutKeyWithInvalidCredentials() throws Exception {
+		SSHPublicKey key = new SSHPublicKey(SSHKeyTestUtils.createDsaKeyPair());
+		invalidUser.putSSHKey(SSHKeyTestUtils.createRandomKeyName(), key);
 	}
 
 	@Test
