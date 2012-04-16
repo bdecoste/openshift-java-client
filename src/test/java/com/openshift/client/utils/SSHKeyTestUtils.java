@@ -24,6 +24,7 @@ import com.jcraft.jsch.KeyPair;
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.IUser;
 import com.openshift.client.SSHKeyType;
+import com.openshift.internal.client.SSHKeyResource;
 
 /**
  * @author Andre Dietisheim
@@ -34,7 +35,7 @@ public class SSHKeyTestUtils {
 
 	public static final String SSH_RSA = "ssh-rsa";
 	public static final String SSH_DSA = "ssh-dss";
-	
+
 	public static class SSHPublicKeyAssertion implements AssertExtension {
 
 		private IOpenShiftSSHKey sshKey;
@@ -108,4 +109,20 @@ public class SSHKeyTestUtils {
 		createDsaKeyPair(publicKeyPath, privateKeyPath);
 		return publicKeyPath;
 	}
+
+	public static void silentlyDestroyKey(IOpenShiftSSHKey key) {
+		if (key == null) {
+			return;
+		}
+		try {
+			key.destroy();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String createRandomKeyName() {
+		return String.valueOf(System.currentTimeMillis());
+	}
+
 }

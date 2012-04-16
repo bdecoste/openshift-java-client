@@ -26,12 +26,14 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 	private String name;
 	private SSHKeyType type;
 	private String publicKey;
+	private UserResource user;
 
-	protected SSHKeyResource(KeyResourceDTO dto, IRestService service) throws OpenShiftUnknonwSSHKeyTypeException {
-		super(service, dto.getLinks());
+	protected SSHKeyResource(KeyResourceDTO dto, UserResource user) throws OpenShiftUnknonwSSHKeyTypeException {
+		super(user.getService(), dto.getLinks());
 		this.name = dto.getName();
 		this.type = SSHKeyType.getByTypeId(dto.getType());
 		this.publicKey = dto.getContent();
+		this.user = user;
 	}
 
 	public void setKeyType(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
@@ -58,6 +60,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 
 	public void destroy() throws SocketTimeoutException, OpenShiftException {
 		new DeleteKeyRequest().execute();
+		user.removeSSHKey(this);
 		this.name = null;
 		this.type = null;
 		this.publicKey = null;

@@ -60,7 +60,7 @@ public class UserResource extends AbstractOpenShiftResource {
 		List<SSHKeyResource> keys = new ArrayList<SSHKeyResource>();
 		List<KeyResourceDTO> keyDTOs = new GetSShKeysRequest().execute();
 		for (KeyResourceDTO keyDTO : keyDTOs) {
-			keys.add(new SSHKeyResource(keyDTO, getService()));
+			keys.add(new SSHKeyResource(keyDTO, this));
 		}
 		return keys;
 	}
@@ -134,11 +134,15 @@ public class UserResource extends AbstractOpenShiftResource {
 	}
 
 	private SSHKeyResource put(KeyResourceDTO keyDTO) throws OpenShiftUnknonwSSHKeyTypeException {
-		SSHKeyResource sshKey = new SSHKeyResource(keyDTO, getService());
+		SSHKeyResource sshKey = new SSHKeyResource(keyDTO, this);
 		sshKeys.add(sshKey);
 		return sshKey;
 	}
 
+	protected void removeSSHKey(SSHKeyResource key) {
+		sshKeys.remove(key);
+	}
+	
 	private class GetSShKeysRequest extends ServiceRequest {
 
 		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {
@@ -164,5 +168,4 @@ public class UserResource extends AbstractOpenShiftResource {
 					, new ServiceParameter("content", content));
 		}
 	}
-
 }

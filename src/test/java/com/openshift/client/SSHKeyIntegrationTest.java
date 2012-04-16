@@ -13,12 +13,14 @@ package com.openshift.client;
 import static com.openshift.client.utils.FileUtils.createRandomTempFile;
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.jcraft.jsch.JSchException;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.TestUserBuilder;
 import com.openshift.internal.client.httpclient.HttpClientException;
@@ -46,91 +48,157 @@ public class SSHKeyIntegrationTest {
 
 	@Test
 	public void shouldAddKey() throws SocketTimeoutException, HttpClientException, Throwable {
-		// pre-conditions
-		String keyName = String.valueOf(System.currentTimeMillis());
-		String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
-		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
-		int numOfKeys = user.getSSHKeys().size();
+		IOpenShiftSSHKey key = null;
+		try {
+			// pre-conditions
+			String keyName = String.valueOf(System.currentTimeMillis());
+			String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
+			ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+			int numOfKeys = user.getSSHKeys().size();
 
-		// operation
-		IOpenShiftSSHKey key = user.putSSHKey(keyName, publicKey);
+			// operation
+			key = user.putSSHKey(keyName, publicKey);
 
-		// verifications
-		assertThat(
-				new SSHKeyTestUtils.SSHPublicKeyAssertion(key))
-				.hasName(keyName)
-				.hasPublicKey(publicKey.getPublicKey())
-				.isType(publicKey.getKeyType());
-		List<IOpenShiftSSHKey> keys = user.getSSHKeys();
-		assertThat(keys.size()).isEqualTo(numOfKeys + 1);
-		IOpenShiftSSHKey keyInList = SSHKeyTestUtils.getKey(keyName, keys);
-		assertThat(key).isEqualTo(keyInList);
+			// verifications
+			assertThat(
+					new SSHKeyTestUtils.SSHPublicKeyAssertion(key))
+					.hasName(keyName)
+					.hasPublicKey(publicKey.getPublicKey())
+					.isType(publicKey.getKeyType());
+			List<IOpenShiftSSHKey> keys = user.getSSHKeys();
+			assertThat(keys.size()).isEqualTo(numOfKeys + 1);
+			IOpenShiftSSHKey keyInList = SSHKeyTestUtils.getKey(keyName, keys);
+			assertThat(key).isEqualTo(keyInList);
+		} finally {
+			SSHKeyTestUtils.silentlyDestroyKey(key);
+		}
 	}
 
 	@Test
 	public void shouldUpdatePublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
-		// pre-conditions
-		String keyName = String.valueOf(System.currentTimeMillis());
-		String publicKeyPath = createRandomTempFile().getAbsolutePath();
-		String privateKeyPath = createRandomTempFile().getAbsolutePath();
-		SSHKeyPair keyPair = SSHKeyPair.create(
-				SSHKeyType.SSH_RSA,
-				SSHKeyTestUtils.DEFAULT_PASSPHRASE,
-				privateKeyPath,
-				publicKeyPath);
-		IOpenShiftSSHKey key = user.putSSHKey(keyName, keyPair);
+		IOpenShiftSSHKey key = null;
+		try {
+			// pre-conditions
+			String keyName = String.valueOf(System.currentTimeMillis());
+			String publicKeyPath = createRandomTempFile().getAbsolutePath();
+			String privateKeyPath = createRandomTempFile().getAbsolutePath();
+			SSHKeyPair keyPair = SSHKeyPair.create(
+					SSHKeyType.SSH_RSA,
+					SSHKeyTestUtils.DEFAULT_PASSPHRASE,
+					privateKeyPath,
+					publicKeyPath);
+			key = user.putSSHKey(keyName, keyPair);
 
-		// operation
-		String publicKey = SSHKeyPair.create(
-				SSHKeyType.SSH_RSA,
-				SSHKeyTestUtils.DEFAULT_PASSPHRASE,
-				privateKeyPath,
-				publicKeyPath).getPublicKey();
-		key.setPublicKey(publicKey);
+			// operation
+			String publicKey = SSHKeyPair.create(
+					SSHKeyType.SSH_RSA,
+					SSHKeyTestUtils.DEFAULT_PASSPHRASE,
+					privateKeyPath,
+					publicKeyPath).getPublicKey();
+			key.setPublicKey(publicKey);
 
-		// verification
-		assertThat(key.getPublicKey()).isEqualTo(publicKey);
-		IOpenShiftSSHKey openshiftKey = user.getSSHKeyByName(keyName);
-		assertThat(
-				new SSHKeyTestUtils.SSHPublicKeyAssertion(openshiftKey))
-				.hasName(keyName)
-				.hasPublicKey(publicKey)
-				.isType(openshiftKey.getKeyType());
+			// verification
+			assertThat(key.getPublicKey()).isEqualTo(publicKey);
+			IOpenShiftSSHKey openshiftKey = user.getSSHKeyByName(keyName);
+			assertThat(
+					new SSHKeyTestUtils.SSHPublicKeyAssertion(openshiftKey))
+					.hasName(keyName)
+					.hasPublicKey(publicKey)
+					.isType(openshiftKey.getKeyType());
+		} finally {
+			SSHKeyTestUtils.silentlyDestroyKey(key);
+		}
+
 	}
 
 	@Test
 	public void shouldReturnKeyForName() throws SocketTimeoutException, HttpClientException, Throwable {
-		// pre-conditions
-		String keyName = String.valueOf(System.currentTimeMillis());
-		String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
-		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+		IOpenShiftSSHKey key = null;
+		try {
+			// pre-conditions
+			String keyName = String.valueOf(System.currentTimeMillis());
+			String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
+			ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 
-		// operation
-		IOpenShiftSSHKey key = user.putSSHKey(keyName, publicKey);
-		IOpenShiftSSHKey keyByName = user.getSSHKeyByName(keyName);
+			// operation
+			key = user.putSSHKey(keyName, publicKey);
+			IOpenShiftSSHKey keyByName = user.getSSHKeyByName(keyName);
 
-		// verifications
-		assertThat(key).isEqualTo(keyByName);
+			// verifications
+			assertThat(key).isEqualTo(keyByName);
+		} finally {
+			SSHKeyTestUtils.silentlyDestroyKey(key);
+		}
 	}
 
 	@Test
-	public void shouldUpdateKeyTypeAndPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
-		// pre-conditions
-		String keyName = String.valueOf(System.currentTimeMillis());
-		String publicKeyPath = createRandomTempFile().getAbsolutePath();
-		String privateKeyPath = createRandomTempFile().getAbsolutePath();
-		SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
-		ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
-		assertThat(publicKey.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
-		IOpenShiftSSHKey key = user.putSSHKey(keyName, publicKey);
-		SSHKeyPair keyPair = SSHKeyPair.create(
-				SSHKeyType.SSH_RSA, SSHKeyTestUtils.DEFAULT_PASSPHRASE, privateKeyPath, publicKeyPath);
+	public void shouldReturnKeyForPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
+		IOpenShiftSSHKey key = null;
+		try {
+			// pre-conditions
+			String keyName = String.valueOf(System.currentTimeMillis());
+			String publicKeyPath = SSHKeyTestUtils.createDsaKeyPair();
+			ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
 
-		// operation
-		key.setKeyType(SSHKeyType.SSH_RSA, keyPair.getPublicKey());
+			// operation
+			key = user.putSSHKey(keyName, publicKey);
+			IOpenShiftSSHKey keyByPublicKey = user.getSSHKeyByPublicKey(publicKey.getPublicKey());
 
-		// verification
-		assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
-		assertThat(key.getPublicKey()).isEqualTo(keyPair.getPublicKey());
+			// verifications
+			assertThat(key).isEqualTo(keyByPublicKey);
+		} finally {
+			SSHKeyTestUtils.silentlyDestroyKey(key);
+		}
+
 	}
+
+	
+	@Test
+	public void shouldUpdateKeyTypeAndPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
+		IOpenShiftSSHKey key = null;
+		try {
+			// pre-conditions
+			String keyName = String.valueOf(System.currentTimeMillis());
+			String publicKeyPath = createRandomTempFile().getAbsolutePath();
+			String privateKeyPath = createRandomTempFile().getAbsolutePath();
+			SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+			ISSHPublicKey publicKey = new SSHPublicKey(publicKeyPath);
+			assertThat(publicKey.getKeyType()).isEqualTo(SSHKeyType.SSH_DSA);
+			key = user.putSSHKey(keyName, publicKey);
+			SSHKeyPair keyPair = SSHKeyPair.create(
+					SSHKeyType.SSH_RSA, SSHKeyTestUtils.DEFAULT_PASSPHRASE, privateKeyPath, publicKeyPath);
+
+			// operation
+			key.setKeyType(SSHKeyType.SSH_RSA, keyPair.getPublicKey());
+
+			// verification
+			assertThat(key.getKeyType()).isEqualTo(SSHKeyType.SSH_RSA);
+			assertThat(key.getPublicKey()).isEqualTo(keyPair.getPublicKey());
+		} finally {
+			SSHKeyTestUtils.silentlyDestroyKey(key);
+		}
+	}
+	
+	@Test
+	public void shouldRemoveKey() throws IOException, JSchException, OpenShiftException {
+		IOpenShiftSSHKey key = null;
+		try {
+			// pre-conditions
+			String keyName = String.valueOf(System.currentTimeMillis());
+			String publicKeyPath = createRandomTempFile().getAbsolutePath();
+			String privateKeyPath = createRandomTempFile().getAbsolutePath();
+			SSHKeyTestUtils.createDsaKeyPair(publicKeyPath, privateKeyPath);
+			key = user.putSSHKey(keyName, new SSHPublicKey(publicKeyPath));
+			
+			// operation
+			key.destroy();
+			key = null;
+			
+			// verification
+			assertThat(user.getSSHKeyByName(keyName)).isNull();
+		} finally {
+			SSHKeyTestUtils.silentlyDestroyKey(key);
+		}
+	}
+	
 }
