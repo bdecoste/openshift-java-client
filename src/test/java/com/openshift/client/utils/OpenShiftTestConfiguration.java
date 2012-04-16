@@ -32,7 +32,7 @@ public class OpenShiftTestConfiguration extends OpenShiftConfiguration {
 	}
 	
 	public String getPassword() {
-		return (String) getProperties().get(KEY_PASSWORD);
+		return (String) System.getProperty(KEY_PASSWORD);
 	}
 	
 	public String getClientId() {
