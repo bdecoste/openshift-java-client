@@ -18,13 +18,11 @@ import java.util.List;
  */
 public interface IDomain {
 
-	public void setNamespace(String namespace) throws OpenShiftException, SocketTimeoutException;
+	public void setId(String namespace) throws OpenShiftException, SocketTimeoutException;
 
-	// TODO : rename as 'name' to match the json messages ?
-	public String getNamespace();
+	public String getId();
 
-	// TODO: rename as 'suffix' to match the json messages ?
-	public String getRhcDomain() throws OpenShiftException;
+	public String getSuffix() throws OpenShiftException;
 
 	/**
 	 * Destroys the current domain. This method works only if it has not application.

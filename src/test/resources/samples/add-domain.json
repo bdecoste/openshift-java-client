@@ -24,7 +24,7 @@
                 ],
                 "required_params":[
                     {
-                        "name":"namespace",
+                        "name":"id",
                         "valid_options":[
                             
                         ],
@@ -149,7 +149,7 @@
                 "rel":"Create new application"
             }
         },
-        "namespace":"foobar2"
+        "id":"foobar2"
     },
     "status":"created",
     "type":"domain"

@@ -102,7 +102,7 @@ public class UserTest {
 		// operation
 		final IDomain domain = user.createDomain("foobar2");
 		// verifications
-		assertThat(domain.getNamespace()).isEqualTo("foobar2");
+		assertThat(domain.getId()).isEqualTo("foobar2");
 	}
 
 	@Test(expected = OpenShiftException.class)
@@ -127,10 +127,10 @@ public class UserTest {
 				Samples.UPDATE_DOMAIN_NAMESPACE.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		domain.setNamespace("foobarbaz");
+		domain.setId("foobarbaz");
 		// verifications
 		final IDomain updatedDomain = user.getDomain("foobarbaz");
-		assertThat(updatedDomain.getNamespace()).isEqualTo("foobarbaz");
+		assertThat(updatedDomain.getId()).isEqualTo("foobarbaz");
 		assertThat(LinkRetriever.retrieveLink(updatedDomain, "UPDATE").getHref()).contains("/foobarbaz");
 		verify(mockClient, times(1)).put(anyMapOf(String.class, Object.class), any(URL.class));
 	}

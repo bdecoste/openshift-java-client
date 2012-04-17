@@ -20,6 +20,7 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
+import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * @author Andre Dietisheim
@@ -57,7 +58,7 @@ public class API extends AbstractOpenShiftResource {
 	
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
 		for (IDomain domain : getDomains()) {
-			if (domain.getNamespace().equals(namespace)) {
+			if (domain.getId().equals(namespace)) {
 				return domain;
 			}
 		}
@@ -94,7 +95,7 @@ public class API extends AbstractOpenShiftResource {
 		}
 
 		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
-			return execute(new ServiceParameter("namespace", namespace));
+			return execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_ID, namespace));
 		}
 	}
 	

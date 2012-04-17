@@ -25,7 +25,7 @@
                     ],
                     "required_params":[
                         {
-                            "name":"namespace",
+                            "name":"id",
                             "valid_options":[
                                 
                             ],
@@ -150,7 +150,7 @@
                     "rel":"Create new application"
                 }
             },
-            "namespace":"foobar"
+            "id":"foobar"
         },
         {
             "suffix":"stg.rhcloud.com",
@@ -173,7 +173,7 @@
                     ],
                     "required_params":[
                         {
-                            "name":"namespace",
+                            "name":"id",
                             "valid_options":[
                                 
                             ],
@@ -298,7 +298,7 @@
                     "rel":"Create new application"
                 }
             },
-            "namespace":"foobarbaz"
+            "id":"foobarbaz"
         }
     ],
     "status":"ok",

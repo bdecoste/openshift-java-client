@@ -25,7 +25,7 @@
                     ],
                     "required_params":[
                         {
-                            "name":"namespace",
+                            "name":"id",
                             "valid_options":[
                                 
                             ],
@@ -150,7 +150,7 @@
                     "rel":"Create new application"
                 }
             },
-            "namespace":"foobar"
+            "id":"foobar"
         }
     ],
     "status":"ok",

@@ -102,7 +102,7 @@
                 "href":"/domains/foobarbaz",
                 "required_params":[
                     {
-                        "name":"namespace",
+                        "name":"id",
                         "description":"Name of the domain",
                         "type":"string",
                         "valid_options":[
@@ -150,7 +150,7 @@
                 "method":"GET"
             }
         },
-        "namespace":"foobarbaz"
+        "id":"foobarbaz"
     },
     "version":"1.0"
 }

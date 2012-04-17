@@ -26,7 +26,7 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_METHOD;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAME;
-import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAMESPACE;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ID;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_OPTIONAL_PARAMS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_HOST;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_PORT;
@@ -292,7 +292,7 @@ public class ResourceDTOFactory {
 			// loop inside 'data' node
 			return createDomain(domainNode.get(PROPERTY_DATA));
 		}
-		final String namespace = getAsString(domainNode, PROPERTY_NAMESPACE);
+		final String namespace = getAsString(domainNode, PROPERTY_ID);
 		final String suffix = getAsString(domainNode, PROPERTY_SUFFIX);
 		final Map<String, Link> links = createLinks(domainNode.get(PROPERTY_LINKS));
 		return new DomainResourceDTO(namespace, suffix, links);

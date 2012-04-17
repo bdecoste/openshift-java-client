@@ -22,7 +22,7 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 public class DomainRequestJsonMarshaller extends AbstractJsonMarshaller<AbstractDomainRequest> {
 
 	protected void setJsonDataProperties(ModelNode node, AbstractDomainRequest request) throws OpenShiftException {
-		node.get(IOpenShiftJsonConstants.PROPERTY_NAMESPACE).set(request.getName());
+		node.get(IOpenShiftJsonConstants.PROPERTY_ID).set(request.getName());
 		node.get(IOpenShiftJsonConstants.PROPERTY_ALTER).set(String.valueOf(request.isAlter()));
 		node.get(IOpenShiftJsonConstants.PROPERTY_SSH).set(request.getSshKey().getPublicKey());
 		node.get(IOpenShiftJsonConstants.PROPERTY_KEY_TYPE).set(request.getSshKey().getKeyType().getTypeId());

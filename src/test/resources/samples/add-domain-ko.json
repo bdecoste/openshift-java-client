@@ -2,8 +2,8 @@
     "status":"unprocessable_entity",
     "messages":[
         {
-            "field":"namespace",
-            "text":"Namespace 'foobar' is already in use. Please choose another.",
+            "field":"id",
+            "text":"Id 'foobar' is already in use. Please choose another.",
             "severity":"error",
             "exit_code":103
         }

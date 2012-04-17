@@ -14,7 +14,7 @@
                     "valid_options":[
                         
                     ],
-                    "name":"namespace",
+                    "name":"id",
                     "description":"Name of the domain"
                 }
             ],

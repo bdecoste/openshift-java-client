@@ -39,7 +39,9 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_FRAMEWORK = "framework";
 	public static final String PROPERTY_HEALTH_CHECK_PATH = "health_check_path";
 	public static final String PROPERTY_HREF = "href";
+	public static final String PROPERTY_ID = "id";
 	public static final String PROPERTY_INFO = "info";
+	public static final String PROPERTY_INTERNAL_PORT = "internal_port";
 	public static final String PROPERTY_KEY_TYPE = "key_type";
 	public static final String PROPERTY_KEYS = "keys";
 	public static final String PROPERTY_KEY = "key";
@@ -49,10 +51,8 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_METHOD = "method";
 	public static final String PROPERTY_MAX_GEARS = "max_gears";
 	public static final String PROPERTY_NAME = "name";
-	public static final String PROPERTY_INTERNAL_PORT = "internal_port";
 	public static final String PROPERTY_PROXY_PORT = "proxy_port";
 	public static final String PROPERTY_PROXY_HOST = "proxy_host";
-	public static final String PROPERTY_NAMESPACE = "namespace";
 	public static final String PROPERTY_SUFFIX = "suffix";
 	public static final String PROPERTY_NODE_PROFILE = "node_profile";
 	public static final String PROPERTY_OPTIONAL_PARAMS = "optional_params";
@@ -61,6 +61,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_RESULT = "result";
 	public static final String PROPERTY_RHLOGIN = "rhlogin";
 	public static final String PROPERTY_RHC_DOMAIN = "rhc_domain";
+	public static final String PROPERTY_SCALE = "scale";
 	public static final String PROPERTY_SSH = "ssh";
 	public static final String PROPERTY_SSH_KEY = "ssh_key";
 	public static final String PROPERTY_SSH_TYPE = "ssh_type";

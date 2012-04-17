@@ -128,8 +128,8 @@ public class DomainResourceTest {
 		// operation
 		final IDomain domain = user.createDomain("foobar2");
 		// verifications
-		assertThat(domain.getNamespace()).isEqualTo("foobar2");
-		assertThat(domain.getRhcDomain()).isEqualTo("stg.rhcloud.com");
+		assertThat(domain.getId()).isEqualTo("foobar2");
+		assertThat(domain.getSuffix()).isEqualTo("stg.rhcloud.com");
 	}
 
 	@Test(expected = OpenShiftException.class)
@@ -178,17 +178,17 @@ public class DomainResourceTest {
 	}
 
 	@Test
-	public void shouldUpdateDomainNamespace() throws Throwable {
+	public void shouldUpdateDomainId() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
 				UPDATE_DOMAIN_NAMESPACE.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		domain.setNamespace("foobarbaz");
+		domain.setId("foobarbaz");
 		// verifications
 		final IDomain updatedDomain = user.getDomain("foobarbaz");
-		assertThat(updatedDomain.getNamespace()).isEqualTo("foobarbaz");
+		assertThat(updatedDomain.getId()).isEqualTo("foobarbaz");
 		assertThat(LinkRetriever.retrieveLink(updatedDomain, "UPDATE").getHref()).contains("/foobarbaz");
 		verify(mockClient, times(1)).put(anyMapOf(String.class, Object.class), any(URL.class));
 	}
