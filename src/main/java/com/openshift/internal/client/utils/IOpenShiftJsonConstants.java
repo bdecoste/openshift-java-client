@@ -37,6 +37,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_EMBEDDED = "embedded";
 	public static final String PROPERTY_EXIT_CODE = "exit_code";
 	public static final String PROPERTY_FIELD = "field";
+	public static final String PROPERTY_FORCE = "force";
 	public static final String PROPERTY_FRAMEWORK = "framework";
 	public static final String PROPERTY_HEALTH_CHECK_PATH = "health_check_path";
 	public static final String PROPERTY_HREF = "href";

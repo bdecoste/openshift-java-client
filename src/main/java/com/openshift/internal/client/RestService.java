@@ -127,7 +127,7 @@ public class RestService implements IRestService {
 		case PUT:
 			return client.put(parameters, url);
 		case DELETE:
-			return client.delete(url);
+			return client.delete(parameters, url);
 		default:
 			throw new OpenShiftException("Unexpected HTTP method {0}", httpMethod.toString());
 		}

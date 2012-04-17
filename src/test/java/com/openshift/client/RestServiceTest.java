@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import static com.openshift.client.utils.MockUtils.anyForm;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -26,7 +27,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,9 +57,9 @@ public class RestServiceTest {
 		this.clientMock = mock(IHttpClient.class);
 		String jsonResponse = "{}";
 		when(clientMock.get(any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.post(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.delete(any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.post(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.put(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.delete(anyForm(), any(URL.class))).thenReturn(jsonResponse);
 
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 
@@ -99,7 +99,7 @@ public class RestServiceTest {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.POST, null, null));
 		// verifications
-		verify(clientMock, times(1)).post(any(Map.class), any(URL.class));
+		verify(clientMock, times(1)).post(anyForm(), any(URL.class));
 	}
 
 	@Test
@@ -108,15 +108,15 @@ public class RestServiceTest {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.PUT, null, null));
 		// verifications
-		verify(clientMock, times(1)).put(any(Map.class), any(URL.class));
+		verify(clientMock, times(1)).put(anyForm(), any(URL.class));
 	}
 
 	@Test
-	public void shouldDeleteIfDeleteHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldDeleteIfDeleteHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.DELETE, null, null));
 		// verifications
-		verify(clientMock, times(1)).delete(any(URL.class));
+		verify(clientMock, times(1)).delete(anyForm(), any(URL.class));
 	}
 
 	@Test
@@ -171,7 +171,7 @@ public class RestServiceTest {
 	public void shouldGetMessageIfErrors() throws Throwable {
 		try {
 			// pre-conditions
-			when(clientMock.post(any(Map.class), any(URL.class)))
+			when(clientMock.post(anyForm(), any(URL.class)))
 					.thenThrow(new HttpClientException(Samples.POST_DOMAINS_NEWDOMAIN_KO.getContentAsString()));
 			// operation
 			service.execute(new Link("0 require parameter", "/broker/rest/domains", HttpMethod.POST, null, null));
