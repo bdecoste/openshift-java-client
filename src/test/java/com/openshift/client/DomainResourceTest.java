@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
