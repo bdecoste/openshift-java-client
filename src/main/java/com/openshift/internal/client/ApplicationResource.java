@@ -35,7 +35,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  * 
  * @author André Dietisheim
  */
-public class Application extends AbstractOpenShiftResource implements IApplication {
+public class ApplicationResource extends AbstractOpenShiftResource implements IApplication {
 
 	/** The Constant DEFAULT_LOGREADER. */
 	private static final String DEFAULT_LOGREADER = "defaultLogReader";
@@ -102,7 +102,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	private final String creationLog;
 
 	/** The domain. */
-	private final Domain domain;
+	private final DomainResource domain;
 
 	/** The application url. */
 	private final String applicationUrl;
@@ -146,9 +146,9 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	 * @param domain
 	 *            the domain
 	 */
-	public Application(final String name, final String uuid, final String creationTime, final String applicationUrl,
+	public ApplicationResource(final String name, final String uuid, final String creationTime, final String applicationUrl,
 			final String gitUrl, final String cartridge, final List<String> aliases, final Map<String, Link> links,
-			final Domain domain) {
+			final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 	}
 
@@ -176,9 +176,9 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	 * @param domain
 	 *            the domain
 	 */
-	public Application(final String name, final String uuid, final String creationTime, final String creationLog,
+	public ApplicationResource(final String name, final String uuid, final String creationTime, final String creationLog,
 			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
-			final Map<String, Link> links, final Domain domain) {
+			final Map<String, Link> links, final DomainResource domain) {
 		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
@@ -436,7 +436,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(embeddedCartridgeName);
-		addEmbeddedCartridge(new EmbeddableCartridge(embeddedCartridgeDTO.getName(), embeddedCartridgeDTO.getType(),
+		addEmbeddedCartridge(new EmbeddableCartridgeResource(embeddedCartridgeDTO.getName(), embeddedCartridgeDTO.getType(),
 				embeddedCartridgeDTO.getLinks(), this));
 	}
 
@@ -493,7 +493,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 			this.embeddedCartridges = new ArrayList<IEmbeddableCartridge>();
 			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridge(embeddableCartridgeDTO.getName(),
+				IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridgeResource(embeddableCartridgeDTO.getName(),
 						embeddableCartridgeDTO.getType(), embeddableCartridgeDTO.getLinks(), this);
 				this.embeddedCartridges.add(embeddableCartridge);
 			}
@@ -542,10 +542,10 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 			for (GearResourceDTO gearDTO : gearDTOs) {
 				final List<IApplicationGearComponent> components = new ArrayList<IApplicationGearComponent>();
 				for (GearComponentDTO gearComponentDTO : gearDTO.getComponents()) {
-					components.add(new ApplicationGearComponent(gearComponentDTO.getName(), gearComponentDTO
+					components.add(new ApplicationGearComponentResource(gearComponentDTO.getName(), gearComponentDTO
 							.getInternalPort(), gearComponentDTO.getProxyHost(), gearComponentDTO.getProxyPort()));
 				}
-				IApplicationGear gear = new ApplicationGear(gearDTO.getUuid(), gearDTO.getGitUrl(), components, this);
+				IApplicationGear gear = new ApplicationGearResource(gearDTO.getUuid(), gearDTO.getGitUrl(), components, this);
 				this.gears.add(gear);
 			}
 		}
@@ -588,7 +588,7 @@ public class Application extends AbstractOpenShiftResource implements IApplicati
 			return false;
 		if (getClass() != object.getClass())
 			return false;
-		Application other = (Application) object;
+		ApplicationResource other = (ApplicationResource) object;
 		if (name == null) {
 			if (other.name != null)
 				return false;

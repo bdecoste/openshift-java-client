@@ -14,7 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.UserBuilder;
+import com.openshift.client.OpenShiftConnectionManager;
 
 /**
  * User Builder, used to establish a connection and retrieve a user.
@@ -22,11 +22,11 @@ import com.openshift.client.UserBuilder;
  * @author Andre Dietisheim
  * 
  */
-public class TestUserBuilder extends UserBuilder {
+public class TestUserBuilder extends OpenShiftConnectionManager {
 
 	public TestUserBuilder configure() throws FileNotFoundException, IOException, OpenShiftException {
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		return (TestUserBuilder) configure(
+		return (TestUserBuilder) getConnection(
 				configuration.getClientId()
 				, configuration.getRhlogin()
 				, configuration.getPassword()

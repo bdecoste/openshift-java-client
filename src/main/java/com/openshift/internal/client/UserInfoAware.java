@@ -15,9 +15,9 @@ import com.openshift.client.OpenShiftException;
 public class UserInfoAware {
 
 	private UserInfo userInfo;
-	private User user;
+	private UserResource user;
 	
-	protected UserInfoAware(User user) {
+	protected UserInfoAware(UserResource user) {
 		this.user = user;
 	}
 
@@ -29,7 +29,7 @@ public class UserInfoAware {
 //		return userInfo;
 	}
 
-	protected User getInternalUser() {
+	protected UserResource getInternalUser() {
 		return user;
 	}
 	

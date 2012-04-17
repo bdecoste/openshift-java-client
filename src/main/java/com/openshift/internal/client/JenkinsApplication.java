@@ -22,17 +22,17 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  * @author William DeCoste
  * @author Andre Dietisheim
  */
-public class JenkinsApplication extends Application implements IJenkinsApplication {
+public class JenkinsApplication extends ApplicationResource implements IJenkinsApplication {
 
 
 	public JenkinsApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+			String cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
 	public JenkinsApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
-			String gitUrl, String cartridge, List<String> aliases, Map<String, Link> links, Domain domain) {
+			String gitUrl, String cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}

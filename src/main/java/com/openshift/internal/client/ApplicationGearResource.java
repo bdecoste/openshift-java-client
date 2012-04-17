@@ -20,7 +20,7 @@ import com.openshift.client.IApplicationGearComponent;
  * @author Xavier Coulon
  *
  */
-public class ApplicationGear extends AbstractOpenShiftResource implements IApplicationGear {
+public class ApplicationGearResource extends AbstractOpenShiftResource implements IApplicationGear {
 
 	/** The gear's uuid. */
 	private final String uuid;
@@ -32,9 +32,9 @@ public class ApplicationGear extends AbstractOpenShiftResource implements IAppli
 	private final List<IApplicationGearComponent> components;
 
 	/** the enclosing application. */
-	private final Application application;
+	private final ApplicationResource application;
 	
-	public ApplicationGear(final String uuid, final String gitUrl, final List<IApplicationGearComponent> components, final Application application) {
+	public ApplicationGearResource(final String uuid, final String gitUrl, final List<IApplicationGearComponent> components, final ApplicationResource application) {
 		super(application.getService());
 		this.uuid = uuid;
 		this.gitUrl = gitUrl;
@@ -66,7 +66,7 @@ public class ApplicationGear extends AbstractOpenShiftResource implements IAppli
 	/**
 	 * @return the application
 	 */
-	public final Application getApplication() {
+	public final ApplicationResource getApplication() {
 		return application;
 	}
 

@@ -14,8 +14,8 @@ import org.jboss.dmr.ModelNode;
 
 import com.openshift.client.IDomain;
 import com.openshift.client.IUser;
-import com.openshift.internal.client.Domain;
-import com.openshift.internal.client.User;
+import com.openshift.internal.client.DomainResource;
+import com.openshift.internal.client.UserResource;
 
 /**
  * @author André Dietisheim
@@ -23,11 +23,11 @@ import com.openshift.internal.client.User;
 public class DomainResponseUnmarshaller extends AbstractOpenShiftJsonResponseUnmarshaller<IDomain> {
 
 	private final String domainName;
-	private final User user;
+	private final UserResource user;
 	
 	public DomainResponseUnmarshaller(final String domainName, final IUser user) {
 		this.domainName = domainName;
-		this.user = (User) user;
+		this.user = (UserResource) user;
 	}
 
 	protected IDomain createOpenShiftObject(final ModelNode node) {

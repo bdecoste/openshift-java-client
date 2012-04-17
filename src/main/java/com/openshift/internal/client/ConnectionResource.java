@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.IDomain;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
@@ -25,23 +27,41 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 /**
  * @author Andre Dietisheim
  */
-public class API extends AbstractOpenShiftResource {
+public class ConnectionResource extends AbstractOpenShiftResource implements IOpenShiftConnection {
 
+	private final String login;
+	private final String password;
 	private List<IDomain> domains;
 	private UserResource user;
 	
-	public API(IRestService service, Map<String, Link> links) {
+	public ConnectionResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
 		super(service, links);
+		this.login = login;
+		this.password = password;
 	}
 
-	public UserResource getUser() throws SocketTimeoutException, OpenShiftException {
+	/**
+	 * @return the login
+	 */
+	protected final String getLogin() {
+		return login;
+	}
+
+	/**
+	 * @return the password
+	 */
+	protected final String getPassword() {
+		return password;
+	}
+
+	public IUser getUser() throws SocketTimeoutException, OpenShiftException {
 		if (user == null) {
-			this.user = new UserResource(getService(), new GetUserRequest().execute());
+			this.user = new UserResource(this, new GetUserRequest().execute(), this.password);
 		}
 		return this.user;
 	}
 	
-	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
+	protected List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
 		if (this.domains == null) {
 			this.domains = loadDomains();
 		}
@@ -51,12 +71,12 @@ public class API extends AbstractOpenShiftResource {
 	private List<IDomain> loadDomains() throws SocketTimeoutException, OpenShiftException {
 		List<IDomain> domains = new ArrayList<IDomain>();
 		for (DomainResourceDTO domainDTO : new ListDomainsRequest().execute()) {
-			domains.add(new Domain(domainDTO, this));
+			domains.add(new DomainResource(domainDTO, this));
 		}
 		return domains;
 	}
 	
-	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
+	protected IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
 		for (IDomain domain : getDomains()) {
 			if (domain.getId().equals(namespace)) {
 				return domain;
@@ -65,13 +85,13 @@ public class API extends AbstractOpenShiftResource {
 		return null;
 	}
 
-	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
+	protected IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
 		if (hasDomain(name)) {
 			throw new OpenShiftException("Domain {0} already exists", name);
 		}
 
 		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(name);
-		final IDomain domain = new Domain(domainDTO, this);
+		final IDomain domain = new DomainResource(domainDTO, this);
 		this.domains.add(domain);
 		return domain;
 	}
@@ -84,7 +104,7 @@ public class API extends AbstractOpenShiftResource {
 		this.domains.remove(domain);
 	}
 
-	private boolean hasDomain(String name) throws OpenShiftException, SocketTimeoutException {
+	protected boolean hasDomain(String name) throws OpenShiftException, SocketTimeoutException {
 		return getDomain(name) != null;
 	}
 

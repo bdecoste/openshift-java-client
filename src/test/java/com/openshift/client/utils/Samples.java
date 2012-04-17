@@ -59,7 +59,7 @@ public enum Samples {
 	DELETE_DOMAIN_JSON("delete-domain.json"),
 	DELETE_DOMAIN_KO_EXISTING_APPS_JSON("delete-domain-ko-existingapps.json"),
 	GET_REST_API_JSON("get-rest-api.json"),
-	GET_USER_JSON("get-user.json"),
+	GET_USER("get-user.json"),
 	GET_USER_KEY_DEFAULT_JSON("get-user-key-default.json"),
 	GET_USER_KEYS_MULTIPLE_JSON("get-user-keys-multiple.json"),
 	GET_USER_KEYS_NONE_JSON("get-user-keys-none.json"),

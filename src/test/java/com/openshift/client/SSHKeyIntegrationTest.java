@@ -37,9 +37,13 @@ public class SSHKeyIntegrationTest {
 	
 	@Before
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
-		this.user = new TestUserBuilder().configure().build();
-		this.invalidUser = new TestUserBuilder().configure(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").build();
+		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(
+				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
+				configuration.getLibraServer());
+		this.user = connection.getUser();
+		this.invalidUser = new TestUserBuilder().getConnection(
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 	}
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
