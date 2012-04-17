@@ -31,6 +31,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.utils.MessageAssert;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.IRestService;
@@ -40,6 +41,8 @@ import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.internal.client.response.unmarshalling.dto.LinkParameterType;
+import com.openshift.internal.client.response.unmarshalling.dto.Message;
+import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author Andre Dietisheim
@@ -69,7 +72,7 @@ public class RestServiceTest {
 	@Test(expected = OpenShiftException.class)
 	public void throwsIfRequiredParameterMissing() throws OpenShiftException, SocketTimeoutException {
 		// operation
-		LinkParameter parameter = 
+		LinkParameter parameter =
 				new LinkParameter("required string parameter", LinkParameterType.STRING, null, null, null);
 		Link link = new Link("1 required parameter", "/dummy", HttpMethod.GET, Arrays.asList(parameter), null);
 		service.execute(link, new HashMap<String, Object>());
@@ -91,7 +94,8 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldPostIfPostHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+	public void shouldPostIfPostHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException,
+			UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.POST, null, null));
 		// verifications
@@ -99,7 +103,8 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldPutIfPutHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+	public void shouldPutIfPutHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException,
+			UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.PUT, null, null));
 		// verifications
@@ -159,6 +164,30 @@ public class RestServiceTest {
 			fail("OpenShiftEndPointException expected, did not occurr");
 		} catch (OpenShiftEndpointException e) {
 			assertThat(e.getRestResponse()).isNotNull();
+		}
+	}
+
+	@Test
+	public void shouldGetMessageIfErrors() throws Throwable {
+		try {
+			// pre-conditions
+			when(clientMock.post(any(Map.class), any(URL.class)))
+					.thenThrow(new HttpClientException(Samples.POST_DOMAINS_NEWDOMAIN_KO.getContentAsString()));
+			// operation
+			service.execute(new Link("0 require parameter", "/broker/rest/domains", HttpMethod.POST, null, null));
+			// verifications
+			fail("OpenShiftEndPointException expected, did not occurr");
+		} catch (OpenShiftEndpointException e) {
+			RestResponse restResponse = e.getRestResponse();
+			assertThat(restResponse).isNotNull();
+			assertThat(restResponse.getMessages()).hasSize(1);
+			Message message = restResponse.getMessages().get(0);
+			assertThat(message).isNotNull();
+			assertThat(new MessageAssert(message))
+					.hasText("User already has a domain associated. Update the domain to modify.")
+					.hasSeverity("error")
+					.hasExitCode(102)
+					.hasParameter(null);
 		}
 	}
 }
