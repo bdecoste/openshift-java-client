@@ -132,13 +132,21 @@ public class ResourceDTOFactory {
 	}
 	
 	private static Message createMessage(ModelNode messageNode) {
-		String text = messageNode.get(IOpenShiftJsonConstants.PROPERTY_TEXT).asString();
-		String parameter = messageNode.get(IOpenShiftJsonConstants.PROPERTY_FIELD).asString();
+		String text = getString(messageNode.get(IOpenShiftJsonConstants.PROPERTY_TEXT));
+		String parameter = getString(messageNode.get(IOpenShiftJsonConstants.PROPERTY_FIELD));
 		int exitCode = messageNode.get(IOpenShiftJsonConstants.PROPERTY_EXIT_CODE).asInt();
-		String severity = messageNode.get(IOpenShiftJsonConstants.PROPERTY_SEVERITY).asString();
+		String severity = getString(messageNode.get(IOpenShiftJsonConstants.PROPERTY_SEVERITY));
 		return new Message(text, parameter, severity, exitCode);
 	}
 
+	private static String getString(ModelNode node) {
+		if (node == null
+				|| !node.isDefined()) {
+			return null;
+		}
+		return node.asString();
+	}
+	
 	/**
 	 * Gets the model node.
 	 * 
