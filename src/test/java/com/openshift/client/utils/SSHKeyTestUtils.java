@@ -24,7 +24,6 @@ import com.jcraft.jsch.KeyPair;
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.IUser;
 import com.openshift.client.SSHKeyType;
-import com.openshift.internal.client.SSHKeyResource;
 
 /**
  * @author Andre Dietisheim
