@@ -76,22 +76,22 @@ public class ConnectionResource extends AbstractOpenShiftResource implements IOp
 		return domains;
 	}
 	
-	protected IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
+	public IDomain getDomain(String id) throws OpenShiftException, SocketTimeoutException {
 		for (IDomain domain : getDomains()) {
-			if (domain.getId().equals(namespace)) {
+			if (domain.getId().equals(id)) {
 				return domain;
 			}
 		}
 		return null;
 	}
 
-	protected IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
-		if (hasDomain(name)) {
-			throw new OpenShiftException("Domain {0} already exists", name);
+	public IDomain createDomain(String id) throws OpenShiftException, SocketTimeoutException {
+		if (hasDomain(id)) {
+			throw new OpenShiftException("Domain {0} already exists", id);
 		}
 
-		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(name);
-		final IDomain domain = new DomainResource(domainDTO, this);
+		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(id);
+		final IDomain domain = new Domain(domainDTO, this);
 		this.domains.add(domain);
 		return domain;
 	}
