@@ -68,7 +68,7 @@ public enum Samples {
 	ADD_USER_KEY_OK_JSON("add-user-key-ok.json"),
 	DELETE_USER_KEY_KO_JSON("delete-user-key-ko.json"),
 	GET_REST_API_JSON("get-rest-api.json"),
-	GET_USER_JSON("get-user.json"),
+	GET_USER("get-user.json"),
 	GET_USER_KEY_DEFAULT_JSON("get-user-key-default.json"),
 	GET_USER_KEYS_MULTIPLE_JSON("get-user-keys-multiple.json"),
 	GET_USER_KEYS_NONE_JSON("get-user-keys-none.json"),

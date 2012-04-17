@@ -10,8 +10,9 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.FileUtils.createRandomTempFile;
 import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.FileUtils.createRandomTempFile;
+import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,7 +31,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.SSHKeyTestUtils.SSHPublicKeyAssertion;
 import com.openshift.client.utils.Samples;
@@ -49,13 +49,15 @@ public class SSHKeyTest {
 	@Before
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		mockClient = mock(IHttpClient.class);
-		when(mockClient.get(urlEndsWith("/api")))
-				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
-		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		this.service = new RestService(
-				configuration.getStagingServer(), configuration.getClientId(), mockClient);
-		this.user = new UserBuilder().configure(service).build();
+		when(mockClient.get(urlEndsWith("/broker/rest/api")))
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
+				Samples.GET_USER.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		this.service = new RestService("http://mock",
+				"clientId", mockClient);
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(service, "foo@redhat.com", "bar");
+		this.user = connection.getUser();
 	}
 
 	@Test

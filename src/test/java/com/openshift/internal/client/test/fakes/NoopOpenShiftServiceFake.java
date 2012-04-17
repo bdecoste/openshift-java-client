@@ -19,7 +19,7 @@ import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftService;
-import com.openshift.internal.client.Application;
+import com.openshift.internal.client.ApplicationResource;
 import com.openshift.internal.client.UserInfo;
 
 /**
@@ -39,7 +39,7 @@ public class NoopOpenShiftServiceFake extends OpenShiftService  {
 		throw new UnsupportedOperationException();
 	}
 
-	public Application createApplication(String name, ICartridge cartridge, IUser user) throws OpenShiftException {
+	public ApplicationResource createApplication(String name, ICartridge cartridge, IUser user) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
 

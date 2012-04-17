@@ -21,7 +21,7 @@ public interface IUser {
 
 	public static final String ID = "com.openshift.client";
 
-	public String getRhlogin() throws SocketTimeoutException, OpenShiftException;
+	public String getRhlogin();
 
 	public String getPassword();
 	
@@ -29,11 +29,7 @@ public interface IUser {
 	
 	public String getAuthIV();
 
-	public boolean isValid() throws OpenShiftException;
-
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
-
-	public IDomain createDomain(String name, IOpenShiftSSHKey key) throws OpenShiftException;
 
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
 	
@@ -52,12 +48,6 @@ public interface IUser {
 	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 	
 	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
-
-	public List<ICartridge> getCartridges() throws OpenShiftException;
-
-	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException;
-
-	public ICartridge getCartridgeByName(String name) throws OpenShiftException;
 
 	public void refresh() throws OpenShiftException;
 

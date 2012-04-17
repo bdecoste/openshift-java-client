@@ -10,6 +10,11 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,10 +24,12 @@ import org.junit.Test;
 
 import com.jcraft.jsch.UserInfo;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
+import com.openshift.client.utils.Samples;
 import com.openshift.client.utils.TestUserBuilder;
 import com.openshift.internal.client.ApplicationInfo;
 import com.openshift.internal.client.IRestService;
-import com.openshift.internal.client.User;
+import com.openshift.internal.client.RestService;
+import com.openshift.internal.client.UserResource;
 
 /**
  * @author André Dietisheim
@@ -34,11 +41,15 @@ public class ApplicationResourceIntegrationTest {
 	private IRestService service;
 
 	private IUser user;
-	private User invalidUser;
+	private UserResource invalidUser;
 	
 	@Before
 	public void setUp() throws FileNotFoundException, IOException, OpenShiftException {
-		this.user = new TestUserBuilder().configure().build();
+		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(
+				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
+				configuration.getLibraServer());
+		this.user = connection.getUser();
 	}
 	
 	@Test(expected=OpenShiftException.class)
@@ -59,8 +70,8 @@ public class ApplicationResourceIntegrationTest {
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void createApplicationWithInvalidCredentialsThrowsException() throws Exception {
-		IUser invalidUser = new TestUserBuilder().configure(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").build();
+		IUser invalidUser = new TestUserBuilder().getConnection(
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 		//		service.createApplication(ApplicationTestUtils.createRandomApplicationName(), ICartridge.JBOSSAS_7, invalidUser);
 	}
 

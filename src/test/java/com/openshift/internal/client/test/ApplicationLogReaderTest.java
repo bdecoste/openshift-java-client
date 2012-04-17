@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.openshift.client.IOpenShiftService;
-import com.openshift.internal.client.Application;
+import com.openshift.internal.client.ApplicationResource;
 
 /**
  * @author André Dietisheim
@@ -53,7 +53,7 @@ public class ApplicationLogReaderTest {
 
 	private String status = LOG_HEADER + INITIAL_LOG;
 	private IOpenShiftService statusService;
-	private Application application;
+	private ApplicationResource application;
 
 	@Before
 	public void setUp() {

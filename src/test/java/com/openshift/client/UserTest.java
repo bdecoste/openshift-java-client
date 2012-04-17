@@ -19,7 +19,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
@@ -27,12 +26,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
-import com.openshift.internal.client.httpclient.HttpClientException;
-import com.openshift.internal.client.httpclient.UnauthorizedException;
 
 /**
  * @author Xavier Coulon
@@ -47,75 +43,19 @@ public class UserTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
-		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		this.user = new UserBuilder().configure(
-				new RestService(
-						configuration.getStagingServer(),
-						configuration.getClientId(),
-						mockClient)).build();
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
+				Samples.GET_USER.getContentAsString());
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(new RestService("http://mock",
+				"clientId", mockClient), "foo@redhat.com", "bar");
+		this.user = connection.getUser();
 	}
 
 	@Test
-	public void shouldLoadEmptyListOfDomains() throws Throwable {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				Samples.GET_DOMAINS_NOEXISTING_JSON.getContentAsString());
-		// operation
-		final List<IDomain> domains = user.getDomains();
+	public void shouldLoadUser() throws Throwable {
 		// verifications
-		assertThat(domains).hasSize(0);
-		verify(mockClient, times(2)).get(any(URL.class));
-	}
-
-	@Test
-	public void shouldLoadSingleUserDomain() throws Throwable {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		// operation
-		final List<IDomain> domains = user.getDomains();
-		// verifications
-		assertThat(domains).hasSize(1);
-		verify(mockClient, times(2)).get(any(URL.class));
-	}
-
-	@Test(expected = InvalidCredentialsOpenShiftException.class)
-	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException,
-			HttpClientException {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/api")))
-				.thenThrow(new UnauthorizedException("invalid mock credentials", null));
-		// operation
-		user.getDomains();
-		// verifications
-		// expect an exception
-	}
-
-	@Test
-	public void shouldCreateNewDomain() throws Throwable {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				Samples.GET_DOMAINS_NOEXISTING_JSON.getContentAsString());
-		when(mockClient.post(anyMapOf(String.class, Object.class), urlEndsWith("/domains"))).thenReturn(
-				Samples.ADD_DOMAIN_JSON.getContentAsString());
-		// operation
-		final IDomain domain = user.createDomain("foobar2");
-		// verifications
-		assertThat(domain.getId()).isEqualTo("foobar2");
-	}
-
-	@Test(expected = OpenShiftException.class)
-	public void shouldNotRecreateExistingDomain() throws Throwable {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.post(anyMapOf(String.class, Object.class), urlEndsWith("/domains"))).thenReturn(
-				Samples.ADD_DOMAIN_JSON.getContentAsString());
-		// operation
-		user.createDomain("foobar");
-		// verifications
-		// expect an exception
+		assertThat(user.getRhlogin()).isEqualTo("foo@redhat.com");
+		assertThat(user.getPassword()).isEqualTo("bar");
 	}
 
 	@Test

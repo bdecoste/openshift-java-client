@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2012 Red Hat, Inc. 
+ * Copyright (c) 2011 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -14,8 +14,10 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.openshift.client.IDomain;
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.ISSHPublicKey;
+import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftSSHKeyException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
@@ -25,20 +27,60 @@ import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
- * @author Andre Dietisheim
+ * @author André Dietisheim
  */
-public class UserResource extends AbstractOpenShiftResource {
+public class UserResource extends AbstractOpenShiftResource implements IUser {
 
-	private String rhLogin;
+	private final ConnectionResource api;
+	private final String rhLogin;
+	private final String password;
+	
 	private List<SSHKeyResource> sshKeys;
 
-	public UserResource(IRestService service, UserResourceDTO dto) {
-		super(service, dto.getLinks());
+	public UserResource(final ConnectionResource api, final UserResourceDTO dto, final String password) {
+		super(api.getService(), dto.getLinks());
+		this.api = api;
 		this.rhLogin = dto.getRhLogin();
+		this.password = password;
 	}
 
-	public String getRhLogin() {
+	public String getRhlogin() {
 		return rhLogin;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getAuthKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getAuthIV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
+		return api.createDomain(name);
+	}
+
+	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
+		return api.getDomains();
+	}
+
+	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
+		return api.getDomain(namespace);
+	}
+
+	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException {
+		return (api.getDomains().size() > 0);
+	}
+
+	public void refresh() throws OpenShiftException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
@@ -169,4 +211,5 @@ public class UserResource extends AbstractOpenShiftResource {
 					, new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CONTENT, content));
 		}
 	}
+
 }

@@ -20,7 +20,7 @@ import com.openshift.client.RubyCartridge;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.JBossASApplication;
 import com.openshift.internal.client.RubyApplication;
-import com.openshift.internal.client.User;
+import com.openshift.internal.client.UserResource;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
@@ -28,7 +28,7 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
  */
 public class ApplicationResponseUnmarshaller extends AbstractOpenShiftJsonResponseUnmarshaller<IApplication> {
 
-	protected final User user;
+	protected final UserResource user;
 	protected final String applicationName;
 	protected final ICartridge cartridge;
 	protected final IRestService service;
@@ -37,7 +37,7 @@ public class ApplicationResponseUnmarshaller extends AbstractOpenShiftJsonRespon
 			final IRestService service) {
 		this.applicationName = applicationName;
 		this.cartridge = cartridge;
-		this.user = (User) user;
+		this.user = (UserResource) user;
 		this.service = service;
 	}
 

@@ -16,8 +16,8 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.openshift.internal.client.Application;
-import com.openshift.internal.client.User;
+import com.openshift.internal.client.ApplicationResource;
+import com.openshift.internal.client.UserResource;
 
 /**
  * @author André Dietisheim
@@ -30,18 +30,18 @@ public class ApplicationLogReader extends Reader {
 
 	private IOpenShiftService service;
 	private Reader logReader;
-	private Application application;
-	private User user;
+	private ApplicationResource application;
+	private UserResource user;
 	private String currentStatus;
 	private String logFile;
 
-	public ApplicationLogReader(Application application, User user, IOpenShiftService service) {
+	public ApplicationLogReader(ApplicationResource application, UserResource user, IOpenShiftService service) {
 		this.application = application;
 		this.user = user;
 		this.service = service;
 	}
 	
-	public ApplicationLogReader(Application application, User user, IOpenShiftService service, String logFile) {
+	public ApplicationLogReader(ApplicationResource application, UserResource user, IOpenShiftService service, String logFile) {
 		this.application = application;
 		this.user = user;
 		this.service = service;

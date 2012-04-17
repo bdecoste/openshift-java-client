@@ -32,9 +32,13 @@ public class DomainResourceIntegrationTest {
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
-		this.user = new TestUserBuilder().configure().build();
-		this.invalidUser = new TestUserBuilder().configure(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").build();
+		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(
+				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
+				configuration.getLibraServer());
+		this.user = connection.getUser();
+		this.invalidUser = new TestUserBuilder().getConnection(
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 
 		// ensureDomainExists(user);
 		// ensureNoApplicationsExist(user);

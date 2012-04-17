@@ -13,7 +13,7 @@ package com.openshift.internal.client.test.utils;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IOpenShiftService;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.User;
+import com.openshift.internal.client.UserResource;
 
 /**
  * @author André Dietisheim
@@ -25,21 +25,21 @@ public class ApplicationUtils {
 	}
 
 	@Deprecated
-	public static void silentlyDestroyAS7Application(String name, User user, IOpenShiftService service) {
+	public static void silentlyDestroyAS7Application(String name, UserResource user, IOpenShiftService service) {
 		silentlyDestroyApplication(name, ICartridge.JBOSSAS_7, user, service);
 	}
 	
 	@Deprecated
-	public static void silentlyDestroyRubyApplication(String name, User user, IOpenShiftService service) {
+	public static void silentlyDestroyRubyApplication(String name, UserResource user, IOpenShiftService service) {
 		silentlyDestroyApplication(name, ICartridge.RUBY_18, user, service);
 	}
 
 	@Deprecated
-	public static void silentlyDestroyJenkinsApplication(String name, User user, IOpenShiftService service) {
+	public static void silentlyDestroyJenkinsApplication(String name, UserResource user, IOpenShiftService service) {
 		silentlyDestroyApplication(name, ICartridge.JENKINS_14, user, service);
 	}
 
-	public static void silentlyDestroyApplication(String name, ICartridge cartridge, User user,
+	public static void silentlyDestroyApplication(String name, ICartridge cartridge, UserResource user,
 			IOpenShiftService service) {
 		try {
 			if (name == null) {
@@ -51,7 +51,7 @@ public class ApplicationUtils {
 		}
 	}
 
-	public static void silentlyDestroyAnyJenkinsApplication(User user) {
+	public static void silentlyDestroyAnyJenkinsApplication(UserResource user) {
 		throw new UnsupportedOperationException();
 //		try {
 //			for (IApplication application : user.getApplicationsByCartridge(ICartridge.JENKINS_14)) {
@@ -62,7 +62,7 @@ public class ApplicationUtils {
 //		}
 	}
 
-	public static void silentlyDestroyAllApplications(User user) {
+	public static void silentlyDestroyAllApplications(UserResource user) {
 		throw new UnsupportedOperationException();
 //		try {
 //			for (IApplication application : user.getApplications()) {

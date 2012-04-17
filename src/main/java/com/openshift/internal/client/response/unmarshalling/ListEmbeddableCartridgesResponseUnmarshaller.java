@@ -16,7 +16,7 @@ import java.util.List;
 import org.jboss.dmr.ModelNode;
 
 import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.internal.client.EmbeddableCartridge;
+import com.openshift.internal.client.EmbeddableCartridgeResource;
 
 /**
  * @author André Dietisheim

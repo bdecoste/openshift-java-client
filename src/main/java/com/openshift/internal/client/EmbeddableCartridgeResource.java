@@ -23,7 +23,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  * 
  * @author André Dietisheim
  */
-public class EmbeddableCartridge extends AbstractOpenShiftResource implements IEmbeddableCartridge {
+public class EmbeddableCartridgeResource extends AbstractOpenShiftResource implements IEmbeddableCartridge {
 	
 	public static final String EMBEDDED_TYPE = "embedded";
 	
@@ -44,9 +44,9 @@ public class EmbeddableCartridge extends AbstractOpenShiftResource implements IE
 	private final String type;
 	private String creationLog;
 	private String url;
-	private final Application application;
+	private final ApplicationResource application;
 	
-	public EmbeddableCartridge(final String name, final String type, final Map<String, Link> links, final Application application) {
+	public EmbeddableCartridgeResource(final String name, final String type, final Map<String, Link> links, final ApplicationResource application) {
 		super(application.getService(), links);
 		this.name = name;
 		this.type = type;
@@ -78,7 +78,7 @@ public class EmbeddableCartridge extends AbstractOpenShiftResource implements IE
 	/**
 	 * @return the application
 	 */
-	public final Application getApplication() {
+	public final ApplicationResource getApplication() {
 		return application;
 	}
 

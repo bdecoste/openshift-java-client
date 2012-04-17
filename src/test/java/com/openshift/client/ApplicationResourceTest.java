@@ -26,7 +26,6 @@ import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH2ELEM
 import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH2CARTRIDGES2ALIASES;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
-import static com.openshift.client.utils.Samples.GET_REST_API_JSON;
 import static com.openshift.client.utils.Samples.REMOVE_APPLICATION_ALIAS;
 import static com.openshift.client.utils.Samples.START_APPLICATION;
 import static com.openshift.client.utils.Samples.STOP_APPLICATION;
@@ -50,8 +49,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.openshift.client.utils.OpenShiftTestConfiguration;
-import com.openshift.internal.client.EmbeddableCartridge;
+import com.openshift.client.utils.Samples;
+import com.openshift.internal.client.EmbeddableCartridgeResource;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
@@ -70,11 +69,14 @@ public class ApplicationResourceTest {
 	@Before
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
-		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/broker/rest/api")))
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
+				Samples.GET_USER.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		IUser user = new UserBuilder().configure(
-				new RestService(configuration.getStagingServer(), configuration.getClientId(), mockClient)).build();
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(new RestService("http://mock",
+				"clientId", mockClient), "foo@redhat.com", "bar");
+		IUser user = connection.getUser();
 		this.domain = user.getDomain("foobar");
 	}
 
@@ -96,7 +98,8 @@ public class ApplicationResourceTest {
 		final List<IApplication> apps = domain.getApplications();
 		// verifications
 		assertThat(apps).isEmpty();
-		verify(mockClient, times(3)).get(any(URL.class));
+		// 4 calls: /API + /API/user + /API/domains + /API/domains/foobar/applications
+		verify(mockClient, times(4)).get(any(URL.class));
 	}
 
 	@Test
@@ -108,7 +111,9 @@ public class ApplicationResourceTest {
 		final List<IApplication> apps = domain.getApplications();
 		// verifications
 		assertThat(apps).hasSize(1);
-		verify(mockClient, times(3)).get(any(URL.class));
+		// 4 calls: /API + /API/user + /API/domains + /API/domains/foobar/applications
+		verify(mockClient, times(4)).get(any(URL.class));
+
 	}
 
 	@Test
@@ -120,7 +125,8 @@ public class ApplicationResourceTest {
 		final List<IApplication> apps = domain.getApplications();
 		// verifications
 		assertThat(apps).hasSize(2);
-		verify(mockClient, times(3)).get(any(URL.class));
+		// 4 calls: /API + /API/user + /API/domains + /API/domains/foobar/applications
+		verify(mockClient, times(4)).get(any(URL.class));
 	}
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
@@ -182,16 +188,21 @@ public class ApplicationResourceTest {
 		// expected exception
 	}
 
-	@Test(expected = OpenShiftException.class)
+	@Test
 	public void shouldNotRecreateExistingApplication() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		// operation
-		final IApplication app = domain.createApplication("sample", "jbossas-7", null, null);
+		try {
+			domain.createApplication("sample", "jbossas-7", null, null);
+			// expect an exception
+			fail("Expected exception here...");
+		} catch(OpenShiftException e) {
+			//OK
+		}
 		// verifications
-		// expect an exception
-		fail("should *also* verify that domain.applications size still equals 1");
+		assertThat(domain.getApplications()).hasSize(2);
 	}
 
 	@Test
@@ -495,7 +506,7 @@ public class ApplicationResourceTest {
 		assertThat(app.getEmbeddedCartridge("mysql-5.1")).satisfies(new Condition<Object>() {
 			@Override
 			public boolean matches(Object value) {
-				final EmbeddableCartridge cartridge = (EmbeddableCartridge) value;
+				final EmbeddableCartridgeResource cartridge = (EmbeddableCartridgeResource) value;
 				return cartridge.getName() != null && !LinkRetriever.retrieveLinks(cartridge).isEmpty();
 			}
 		});

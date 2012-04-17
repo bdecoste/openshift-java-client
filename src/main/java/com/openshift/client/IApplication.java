@@ -13,7 +13,7 @@ package com.openshift.client;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-import com.openshift.internal.client.User;
+import com.openshift.internal.client.UserResource;
 
 /**
  * @author André Dietisheim

@@ -13,7 +13,7 @@ package com.openshift.internal.client;
 import com.openshift.client.IApplicationGearComponent;
 
 
-public class ApplicationGearComponent extends AbstractOpenShiftResource implements IApplicationGearComponent {
+public class ApplicationGearComponentResource extends AbstractOpenShiftResource implements IApplicationGearComponent {
 
 	/** the component name. */
 	private final String name;
@@ -35,7 +35,7 @@ public class ApplicationGearComponent extends AbstractOpenShiftResource implemen
 	 * @param proxyPort the proxy port
 	 * @param proxyHost the proxy host
 	 */
-	public ApplicationGearComponent(final String name, final String internalPort, final String proxyHost, final String proxyPort) {
+	public ApplicationGearComponentResource(final String name, final String internalPort, final String proxyHost, final String proxyPort) {
 		super(null);
 		this.name = name;
 		this.internalPort = internalPort;
@@ -108,7 +108,7 @@ public class ApplicationGearComponent extends AbstractOpenShiftResource implemen
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		ApplicationGearComponent other = (ApplicationGearComponent) obj;
+		ApplicationGearComponentResource other = (ApplicationGearComponentResource) obj;
 		if (internalPort == null) {
 			if (other.internalPort != null) {
 				return false;

@@ -6,7 +6,7 @@
     "version":"1.0",
     "status":"ok",
     "data":{
-        "login":"foobar+test@redhat.com",
+        "login":"foo@redhat.com",
         "links":{
             "GET":{
                 "method":"GET",

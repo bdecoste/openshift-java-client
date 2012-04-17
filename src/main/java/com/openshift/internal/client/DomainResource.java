@@ -29,7 +29,7 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 /**
  * @author André Dietisheim
  */
-public class Domain extends AbstractOpenShiftResource implements IDomain {
+public class DomainResource extends AbstractOpenShiftResource implements IDomain {
 
 	private static final String LINK_LIST_APPLICATIONS = "LIST_APPLICATIONS";
 	private static final String LINK_ADD_APPLICATION = "ADD_APPLICATION";
@@ -38,19 +38,19 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 	private String id;
 	private String suffix;
 	/** root node in the business domain. */
-	private final API api;
+	private final ConnectionResource api;
 	/** Applications for the domain. */
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 
-	public Domain(final String namespace, final String suffix, final Map<String, Link> links, final API api) {
+	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final ConnectionResource api) {
 		super(api.getService(), links);
 		this.id = namespace;
 		this.suffix = suffix;
 		this.api = api;
 	}
 
-	protected Domain(DomainResourceDTO domainDTO, final API api) {
+	protected DomainResource(DomainResourceDTO domainDTO, final ConnectionResource api) {
 		this(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), api);
 	}
 
@@ -97,7 +97,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 		}
 		ApplicationResourceDTO applicationDTO = new CreateApplicationRequest().execute(name, cartridge, scale,
 				nodeProfile);
-		Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(),
+		ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
 				applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(), applicationDTO.getGitUrl(),
 				cartridge, applicationDTO.getAliases(), applicationDTO.getLinks(), this);
 		this.applications.add(application);
@@ -158,7 +158,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 			this.applications = new ArrayList<IApplication>();
 			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
-				final Application application = new Application(applicationDTO.getName(), applicationDTO.getUuid(),
+				final ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
 						applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(),
 						applicationDTO.getGitUrl(), applicationDTO.getFramework(), applicationDTO.getAliases(),
 						applicationDTO.getLinks(), this);
@@ -168,7 +168,7 @@ public class Domain extends AbstractOpenShiftResource implements IDomain {
 		return Collections.unmodifiableList(applications);
 	}
 
-	protected void removeApplication(Application application) {
+	protected void removeApplication(ApplicationResource application) {
 		// TODO: can this collection be a null ?
 		this.applications.remove(application);
 	}

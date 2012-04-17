@@ -15,7 +15,6 @@ import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
-import static com.openshift.client.utils.Samples.GET_REST_API_JSON;
 import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_ID;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -36,12 +35,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.openshift.client.utils.OpenShiftTestConfiguration;
+import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.BadRequestException;
@@ -68,20 +65,14 @@ public class DomainResourceTest {
 	@Before
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
-		when(mockClient.get(urlEndsWith("/broker/rest/api"))).thenReturn(GET_REST_API_JSON.getContentAsString());
-		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		this.user = new UserBuilder().configure(
-				new RestService(configuration.getStagingServer(), configuration.getClientId(), mockClient)).build();
-	}
-
-	private static <T> Answer<?> print(final String msg) {
-		return new Answer<T>() {
-
-			public T answer(InvocationOnMock invocation) throws Throwable {
-				LOGGER.info(msg);
-				return null;
-			}
-		};
+		when(mockClient.get(urlEndsWith("/broker/rest/api")))
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
+				Samples.GET_USER.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(new RestService("http://mock",
+				"clientId", mockClient), "foo@redhat.com", "bar");
+		this.user = connection.getUser();
 	}
 
 	@Test
@@ -92,7 +83,8 @@ public class DomainResourceTest {
 		final List<IDomain> domains = user.getDomains();
 		// verifications
 		assertThat(domains).hasSize(0);
-		verify(mockClient, times(2)).get(any(URL.class));
+		// 3 calls: /API + /API/user + /API/domains
+		verify(mockClient, times(3)).get(any(URL.class));
 	}
 
 	@Test
@@ -103,10 +95,12 @@ public class DomainResourceTest {
 		final List<IDomain> domains = user.getDomains();
 		// verifications
 		assertThat(domains).hasSize(1);
-		verify(mockClient, times(2)).get(any(URL.class));
+		// 3 calls: /API + /API/user + /API/domains
+		verify(mockClient, times(3)).get(any(URL.class));
 	}
 
 	@Test
+	@Ignore("Can't happen: user is already loaded with his credentials")
 	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException,
 			HttpClientException {
 		// pre-conditions

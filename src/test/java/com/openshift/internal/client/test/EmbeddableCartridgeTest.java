@@ -17,7 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.internal.client.EmbeddableCartridge;
+import com.openshift.internal.client.EmbeddableCartridgeResource;
 
 /**
  * @author André Dietisheim

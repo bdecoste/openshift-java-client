@@ -12,7 +12,7 @@ package com.openshift.client;
 
 import java.net.SocketTimeoutException;
 
-import com.openshift.internal.client.EmbeddableCartridge;
+import com.openshift.internal.client.EmbeddableCartridgeResource;
 
 
 /**
