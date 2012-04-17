@@ -55,7 +55,7 @@ public class HttpParameters {
 		}
 		StringBuilder builder = new StringBuilder();
 		for (Entry<String, Object> entry : parameters.entrySet()) {
-			append(entry.getKey(), URLEncoder.encode(entry.getValue().toString(), UTF8), builder);
+			append(entry.getKey(), URLEncoder.encode(String.valueOf(entry.getValue()), UTF8), builder);
 		}
 		return builder.toString();
 	}

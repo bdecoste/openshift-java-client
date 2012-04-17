@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -119,31 +120,56 @@ public class DomainResourceIntegrationTest {
 
 	@Test
 	public void shouldDeleteDomainWithoutApplications() throws Exception {
-			// pre-condition
-			DomainTestUtils.silentlyDestroyAllDomains(user);
-			String id = StringUtils.createRandomString();
-			IDomain domain = user.createDomain(id);
-		
-			// operation
-			domain.destroy();
-			
-			// verification
-			IDomain domainByNamespace = user.getDomain(id);
-			assertThat(domainByNamespace).isNull();
+		// pre-condition
+		DomainTestUtils.silentlyDestroyAllDomains(user);
+		String id = StringUtils.createRandomString();
+		IDomain domain = user.createDomain(id);
+
+		// operation
+		domain.destroy();
+
+		// verification
+		IDomain domainByNamespace = user.getDomain(id);
+		assertThat(domainByNamespace).isNull();
 	}
 
-	@Test(expected = OpenShiftException.class)
+	@Test
 	public void shouldNotDeleteDomainWithApplications() throws OpenShiftException, SocketTimeoutException {
 		IDomain domain = null;
 		try {
 			// pre-condition
 			domain = DomainTestUtils.getFirstDomainOrCreate(user);
 			ApplicationTestUtils.getOrCreateApplication(domain);
-			
+
 			// operation
 			domain.destroy();
+			fail("OpenShiftEndpointException did not occurr");
+		} catch (OpenShiftEndpointException e) {
+			// verification
+			assertThat(e.getRestResponse().getMessages().get(0).getExitCode()).isEqualTo(128);
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
 	}
+
+	@Test
+	public void shouldDeleteDomainWithApplications() throws OpenShiftException, SocketTimeoutException {
+		IDomain domain = null;
+		try {
+			// pre-condition
+			domain = DomainTestUtils.getFirstDomainOrCreate(user);
+			ApplicationTestUtils.getOrCreateApplication(domain);
+
+			// operation
+			domain.destroy(true);
+			
+			assertThat(domain.getId()).isEqualTo(null);
+			assertThat(domain.getSuffix()).isEqualTo(null);
+			assertThat(domain).isNotIn(user.getDomains());
+			domain = null;
+		} finally {
+			DomainTestUtils.silentlyDestroy(domain);
+		}
+	}
+
 }
