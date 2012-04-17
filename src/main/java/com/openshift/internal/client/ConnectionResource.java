@@ -12,6 +12,7 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class ConnectionResource extends AbstractOpenShiftResource implements IOp
 		if (this.domains == null) {
 			this.domains = loadDomains();
 		}
-		return this.domains;
+		return Collections.unmodifiableList(this.domains);
 	}
 
 	private List<IDomain> loadDomains() throws SocketTimeoutException, OpenShiftException {

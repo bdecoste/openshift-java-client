@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import static com.openshift.client.utils.MockUtils.anyForm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -79,8 +80,8 @@ public class HttpClientTest {
 	}
 
 	@Test
-	public void canDelete() throws SocketTimeoutException, HttpClientException, MalformedURLException {
-		String response = httpClient.delete(new URL(serverFake.getUrl()));
+	public void canDelete() throws SocketTimeoutException, HttpClientException, MalformedURLException, UnsupportedEncodingException {
+		String response = httpClient.delete(anyForm(), new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("DELETE"));
 	}

@@ -28,7 +28,6 @@ import com.openshift.client.utils.TestUserBuilder;
 public class DomainResourceIntegrationTest {
 
 	private IUser user;
-	private IUser invalidUser;
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
@@ -37,21 +36,15 @@ public class DomainResourceIntegrationTest {
 				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
-		this.invalidUser = new TestUserBuilder().getConnection(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 
 		// ensureDomainExists(user);
 		// ensureNoApplicationsExist(user);
 	}
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
-	public void shouldThrowIfGetDomainsWithInvalidCredentials() throws Exception {
-		invalidUser.getDomains();
-	}
-
-	@Test(expected = InvalidCredentialsOpenShiftException.class)
-	public void shouldThrowIfCreateDomainWithInvalidCredentials() throws Exception {
-		invalidUser.createDomain(String.valueOf(System.currentTimeMillis()));
+	public void shouldThrowInvalidCredentialsWhenConnectingWithInvalidCredentials() throws Exception {
+		new TestUserBuilder().getConnection(
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 	}
 
 	@Test

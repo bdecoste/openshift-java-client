@@ -146,10 +146,14 @@ public class UrlConnectionHttpClientBuilder {
 			return write(data, HTTP_METHOD_POST, url);
 		}
 
-		public String delete(URL url) throws HttpClientException, SocketTimeoutException {
-			return write(null, HTTP_METHOD_DELETE, url);
+		public String delete(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException {
+			return delete(new HttpParameters(parameters).toUrlEncoded(), url);
 		}
 				
+		protected String delete(String data, URL url) throws HttpClientException, SocketTimeoutException {
+			return write(data, HTTP_METHOD_DELETE, url);
+		}
+
 		protected String write(String data, String requestMethod, URL url) throws SocketTimeoutException, HttpClientException {
 			HttpURLConnection connection = null;
 			try {

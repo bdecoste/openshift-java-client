@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
@@ -142,7 +143,7 @@ public class DomainResourceTest {
 	public void shouldDestroyDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains/foobar"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
 		// operation
 		final IDomain domain = user.getDomain("foobar");
 		domain.destroy();
@@ -157,7 +158,7 @@ public class DomainResourceTest {
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		final BadRequestException badRequestException = new BadRequestException(
 				"Domain contains applications. Delete applications first or set force to true.", null);
-		when(mockClient.delete(urlEndsWith("/domains/foobar"))).thenThrow(badRequestException);
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenThrow(badRequestException);
 		// operation
 		final IDomain domain = user.getDomain("foobar");
 		try {

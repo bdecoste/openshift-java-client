@@ -149,7 +149,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
-		new DeleteDomainRequest().execute();
+		new DeleteDomainRequest().execute(force);
 		api.removeDomain(this);
 	}
 
@@ -232,6 +232,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			super(LINK_DELETE);
 		}
 
+		public void execute(boolean force) throws SocketTimeoutException, OpenShiftException {
+			super.execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_FORCE, force));
+		}
 	}
 
 }
