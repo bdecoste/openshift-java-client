@@ -20,13 +20,13 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEARS_COMPONENTS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GIT_URL;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ID;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INFO;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INTERNAL_PORT;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_METHOD;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_NAME;
-import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ID;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_OPTIONAL_PARAMS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_HOST;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_PORT;
@@ -79,7 +79,7 @@ public class ResourceDTOFactory {
 		final ModelNode rootNode = getModelNode(content);
 		final String type = rootNode.get(IOpenShiftJsonConstants.PROPERTY_TYPE).asString();
 		final String status = rootNode.get(IOpenShiftJsonConstants.PROPERTY_STATUS).asString();
-		final List<String> messages = createMessages(rootNode.get(IOpenShiftJsonConstants.PROPERTY_MESSAGES));
+		final List<Message> messages = createMessages(rootNode.get(IOpenShiftJsonConstants.PROPERTY_MESSAGES));
 
 		final EnumDataType dataType = EnumDataType.safeValueOf(type);
 		// the response is after an error, only the messages are relevant
@@ -121,14 +121,22 @@ public class ResourceDTOFactory {
 	 *            the messages node
 	 * @return the list< string>
 	 */
-	private static List<String> createMessages(ModelNode messagesNode) {
-		List<String> messages = new ArrayList<String>();
+	private static List<Message> createMessages(ModelNode messagesNode) {
+		List<Message> messages = new ArrayList<Message>();
 		if (messagesNode.getType() == ModelType.LIST) {
 			for (ModelNode messageNode : messagesNode.asList()) {
-				messages.add(messageNode.asString());
+				messages.add(createMessage(messageNode));
 			}
 		}
 		return messages;
+	}
+	
+	private static Message createMessage(ModelNode messageNode) {
+		String text = messageNode.get(IOpenShiftJsonConstants.PROPERTY_TEXT).asString();
+		String parameter = messageNode.get(IOpenShiftJsonConstants.PROPERTY_FIELD).asString();
+		int exitCode = messageNode.get(IOpenShiftJsonConstants.PROPERTY_EXIT_CODE).asInt();
+		String severity = messageNode.get(IOpenShiftJsonConstants.PROPERTY_SEVERITY).asString();
+		return new Message(text, parameter, severity, exitCode);
 	}
 
 	/**

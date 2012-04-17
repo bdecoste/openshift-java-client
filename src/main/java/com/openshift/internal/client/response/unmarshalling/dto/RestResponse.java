@@ -20,13 +20,13 @@ public class RestResponse {
 	/** The status. */
 	final String status;
 
-	/** The messages. */
-	final List<String> messages;
+	/** The messages in which the service reports errors. */
+	final List<Message> messages;
 
-	/** The data type. */
+	/** The type of the payload (data) in this response. */
 	final EnumDataType dataType;
 
-	/** The data. */
+	/** The payload (data). */
 	final Object data;
 
 	/**
@@ -37,7 +37,7 @@ public class RestResponse {
 	 * @param data the data
 	 * @param dataType the data type
 	 */
-	public RestResponse(final String status, final List<String> messages, final Object data, final EnumDataType dataType) {
+	public RestResponse(final String status, final List<Message> messages, final Object data, final EnumDataType dataType) {
 		this.status = status;
 		this.messages = messages;
 		this.data = data;
@@ -58,7 +58,7 @@ public class RestResponse {
 	 *
 	 * @return the messages
 	 */
-	public final List<String> getMessages() {
+	public final List<Message> getMessages() {
 		return messages;
 	}
 

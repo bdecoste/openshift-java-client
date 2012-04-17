@@ -33,6 +33,7 @@ import com.openshift.internal.client.httpclient.UnauthorizedException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.internal.client.response.unmarshalling.dto.LinkParameterType;
+import com.openshift.internal.client.response.unmarshalling.dto.Message;
 import com.openshift.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.internal.client.utils.StringUtils;
@@ -66,13 +67,14 @@ public class RestService implements IRestService {
 		return execute(link, (Map<String, Object>) null);
 	}
 
-	public RestResponse execute(Link link, ServiceParameter...serviceParameters) throws SocketTimeoutException, OpenShiftException {
+	public RestResponse execute(Link link, ServiceParameter... serviceParameters) throws SocketTimeoutException,
+			OpenShiftException {
 		return execute(link, toMap(serviceParameters));
 	}
 
 	private Map<String, Object> toMap(ServiceParameter... serviceParameters) {
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
-		for(ServiceParameter serviceParameter : serviceParameters) {
+		for (ServiceParameter serviceParameter : serviceParameters) {
 			parameterMap.put(serviceParameter.getKey(), serviceParameter.getValue());
 		}
 		return parameterMap;
@@ -91,11 +93,27 @@ public class RestService implements IRestService {
 		} catch (NotFoundException e) {
 			throw new NotFoundOpenShiftException(link.getHref(), e);
 		} catch (HttpClientException e) {
-			throw new OpenShiftEndpointException(link.getHref(), e, e.getMessage(), "Could not request {0}", link.getHref());
+			throw new OpenShiftEndpointException(
+					link.getHref(), e, e.getMessage(),
+					"Could not request {0}: {1}", link.getHref(), getResponseMessage(e));
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, e.getMessage());
 		} catch (MalformedURLException e) {
 			throw new OpenShiftException(e, e.getMessage());
+		}
+	}
+
+	private String getResponseMessage(HttpClientException clientException) {
+		try {
+			StringBuilder builder = new StringBuilder();
+			RestResponse restResponse = ResourceDTOFactory.get(clientException.getMessage());
+			for (Message message : restResponse.getMessages()) {
+				builder.append(message.toString()).append('\n');
+			}
+			return builder.toString();
+		} catch (OpenShiftException e) {
+			LOGGER.error(e.getMessage());
+			return null;
 		}
 	}
 
