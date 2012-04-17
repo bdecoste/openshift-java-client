@@ -36,9 +36,6 @@ public class DomainResourceIntegrationTest {
 				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
-
-		// ensureDomainExists(user);
-		// ensureNoApplicationsExist(user);
 	}
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
@@ -122,12 +119,10 @@ public class DomainResourceIntegrationTest {
 
 	@Test
 	public void shouldDeleteDomainWithoutApplications() throws Exception {
-		IDomain domain = null;
-		try {
 			// pre-condition
 			DomainTestUtils.silentlyDestroyAllDomains(user);
 			String id = StringUtils.createRandomString();
-			domain = user.createDomain(id);
+			IDomain domain = user.createDomain(id);
 		
 			// operation
 			domain.destroy();
@@ -135,9 +130,6 @@ public class DomainResourceIntegrationTest {
 			// verification
 			IDomain domainByNamespace = user.getDomain(id);
 			assertThat(domainByNamespace).isNull();
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
-		}
 	}
 
 	@Test(expected = OpenShiftException.class)
@@ -153,27 +145,5 @@ public class DomainResourceIntegrationTest {
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
-	}
-
-	private void ensureNoApplicationsExist(IUser user) throws OpenShiftException {
-		// try {
-		// List<IApplication> allApplications = new ArrayList<IApplication>();
-		// allApplications.addAll(user.getApplications());
-		// for (IApplication application : allApplications) {
-		// application.destroy();
-		// }
-		// } catch (NotFoundOpenShiftException e) {
-		// // no domain present, ignore
-		// }
-	}
-
-	private void ensureDomainExists(IUser user) throws OpenShiftException, IOException {
-		// try {
-		// user.getDomain();
-		// } catch (OpenShiftException e) {
-		// // no domain present
-		// SSHKeyPair sshKey = TestSSHKey.create();
-		// service.createDomain(createRandomString(), sshKey, user);
-		// }
 	}
 }
