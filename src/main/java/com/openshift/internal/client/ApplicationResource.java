@@ -21,6 +21,7 @@ import com.openshift.client.ApplicationLogReader;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.OpenShiftException;
@@ -124,6 +125,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IApplicationGear> gears = null;
 
+	protected ApplicationResource(ApplicationResourceDTO dto, String cartridge, DomainResource domain) {
+		this(dto.getName(), dto.getUuid(),dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(),
+		cartridge, dto.getAliases(), dto.getLinks(), domain);
+	}
 	/**
 	 * Instantiates a new application.
 	 * 
@@ -146,7 +151,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 *            the domain
 	 */
-	public ApplicationResource(final String name, final String uuid, final String creationTime, final String applicationUrl,
+	protected ApplicationResource(final String name, final String uuid, final String creationTime, final String applicationUrl,
 			final String gitUrl, final String cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, cartridge, aliases, links, domain);
@@ -176,7 +181,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 *            the domain
 	 */
-	public ApplicationResource(final String name, final String uuid, final String creationTime, final String creationLog,
+	protected ApplicationResource(final String name, final String uuid, final String creationTime, final String creationLog,
 			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
 		super(domain.getService(), links);

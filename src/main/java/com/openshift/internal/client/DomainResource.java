@@ -95,11 +95,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		if (hasApplication(name)) {
 			throw new OpenShiftException("Application with name '{0}' already exists.", name);
 		}
-		ApplicationResourceDTO applicationDTO = new CreateApplicationRequest().execute(name, cartridge, scale,
-				nodeProfile);
-		ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
-				applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(), applicationDTO.getGitUrl(),
-				cartridge, applicationDTO.getAliases(), applicationDTO.getLinks(), this);
+		ApplicationResourceDTO applicationDTO = 
+				new CreateApplicationRequest().execute(name, cartridge, scale, nodeProfile);
+		ApplicationResource application = new ApplicationResource(applicationDTO, cartridge, this);
 		this.applications.add(application);
 		return application;
 	}
