@@ -43,5 +43,5 @@ public interface IHttpClient {
 
 	public String put(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
 
-	public String delete(URL url) throws HttpClientException, SocketTimeoutException;
+	public String delete(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
 }

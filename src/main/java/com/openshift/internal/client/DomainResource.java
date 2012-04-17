@@ -38,7 +38,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	private String id;
 	private String suffix;
 	/** root node in the business domain. */
-	private final ConnectionResource api;
+	private final ConnectionResource connectionResource;
 	/** Applications for the domain. */
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
@@ -47,7 +47,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		super(api.getService(), links);
 		this.id = namespace;
 		this.suffix = suffix;
-		this.api = api;
+		this.connectionResource = api;
 	}
 
 	protected DomainResource(DomainResourceDTO domainDTO, final ConnectionResource api) {
@@ -95,11 +95,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		if (hasApplication(name)) {
 			throw new OpenShiftException("Application with name '{0}' already exists.", name);
 		}
-		ApplicationResourceDTO applicationDTO = new CreateApplicationRequest().execute(name, cartridge, scale,
-				nodeProfile);
-		ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
-				applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(), applicationDTO.getGitUrl(),
-				cartridge, applicationDTO.getAliases(), applicationDTO.getLinks(), this);
+		ApplicationResourceDTO applicationDTO = 
+				new CreateApplicationRequest().execute(name, cartridge, scale, nodeProfile);
+		ApplicationResource application = new ApplicationResource(applicationDTO, cartridge, this);
 		this.applications.add(application);
 		return application;
 	}
@@ -149,8 +147,10 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
-		new DeleteDomainRequest().execute();
-		api.removeDomain(this);
+		new DeleteDomainRequest().execute(force);
+		connectionResource.removeDomain(this);
+		this.id = null;
+		this.suffix = null;
 	}
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
@@ -232,6 +232,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			super(LINK_DELETE);
 		}
 
+		public void execute(boolean force) throws SocketTimeoutException, OpenShiftException {
+			super.execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_FORCE, force));
+		}
 	}
 
 }

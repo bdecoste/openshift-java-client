@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2007 Red Hat, Inc. 
+ * Copyright (c) 2012 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -7,21 +7,20 @@
  * 
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
- ******************************************************************************/ 
-package com.openshift.client;
+ ******************************************************************************/
+package com.openshift.client.utils;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import static org.mockito.Matchers.anyMapOf;
 
+import java.util.Map;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	SSHKeyIntegrationTest.class,
-	DomainResourceIntegrationTest.class
-})
 /**
- * @author André Dietisheim
+ * @author Andre Dietisheim
  */
-public class OpenShiftIntegrationTestSuite {
+public class MockUtils {
+
+	public static Map<String, Object> anyForm() {
+		return anyMapOf(String.class, Object.class);
+	}
 
 }

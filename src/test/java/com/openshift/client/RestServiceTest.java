@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import static com.openshift.client.utils.MockUtils.anyForm;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -26,11 +27,11 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.utils.MessageAssert;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.IRestService;
@@ -40,6 +41,8 @@ import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
 import com.openshift.internal.client.response.unmarshalling.dto.LinkParameterType;
+import com.openshift.internal.client.response.unmarshalling.dto.Message;
+import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
  * @author Andre Dietisheim
@@ -54,9 +57,9 @@ public class RestServiceTest {
 		this.clientMock = mock(IHttpClient.class);
 		String jsonResponse = "{}";
 		when(clientMock.get(any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.post(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.delete(any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.post(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.put(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.delete(anyForm(), any(URL.class))).thenReturn(jsonResponse);
 
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 
@@ -69,7 +72,7 @@ public class RestServiceTest {
 	@Test(expected = OpenShiftException.class)
 	public void throwsIfRequiredParameterMissing() throws OpenShiftException, SocketTimeoutException {
 		// operation
-		LinkParameter parameter = 
+		LinkParameter parameter =
 				new LinkParameter("required string parameter", LinkParameterType.STRING, null, null, null);
 		Link link = new Link("1 required parameter", "/dummy", HttpMethod.GET, Arrays.asList(parameter), null);
 		service.execute(link, new HashMap<String, Object>());
@@ -91,27 +94,29 @@ public class RestServiceTest {
 	}
 
 	@Test
-	public void shouldPostIfPostHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+	public void shouldPostIfPostHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException,
+			UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.POST, null, null));
 		// verifications
-		verify(clientMock, times(1)).post(any(Map.class), any(URL.class));
+		verify(clientMock, times(1)).post(anyForm(), any(URL.class));
 	}
 
 	@Test
-	public void shouldPutIfPutHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+	public void shouldPutIfPutHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException,
+			UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.PUT, null, null));
 		// verifications
-		verify(clientMock, times(1)).put(any(Map.class), any(URL.class));
+		verify(clientMock, times(1)).put(anyForm(), any(URL.class));
 	}
 
 	@Test
-	public void shouldDeleteIfDeleteHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException {
+	public void shouldDeleteIfDeleteHttpMethod() throws OpenShiftException, SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
 		// operation
 		service.execute(new Link("0 required parameter", "http://www.redhat.com", HttpMethod.DELETE, null, null));
 		// verifications
-		verify(clientMock, times(1)).delete(any(URL.class));
+		verify(clientMock, times(1)).delete(anyForm(), any(URL.class));
 	}
 
 	@Test
@@ -159,6 +164,30 @@ public class RestServiceTest {
 			fail("OpenShiftEndPointException expected, did not occurr");
 		} catch (OpenShiftEndpointException e) {
 			assertThat(e.getRestResponse()).isNotNull();
+		}
+	}
+
+	@Test
+	public void shouldGetMessageIfErrors() throws Throwable {
+		try {
+			// pre-conditions
+			when(clientMock.post(anyForm(), any(URL.class)))
+					.thenThrow(new HttpClientException(Samples.POST_DOMAINS_NEWDOMAIN_KO.getContentAsString()));
+			// operation
+			service.execute(new Link("0 require parameter", "/broker/rest/domains", HttpMethod.POST, null, null));
+			// verifications
+			fail("OpenShiftEndPointException expected, did not occurr");
+		} catch (OpenShiftEndpointException e) {
+			RestResponse restResponse = e.getRestResponse();
+			assertThat(restResponse).isNotNull();
+			assertThat(restResponse.getMessages()).hasSize(1);
+			Message message = restResponse.getMessages().get(0);
+			assertThat(message).isNotNull();
+			assertThat(new MessageAssert(message))
+					.hasText("User already has a domain associated. Update the domain to modify.")
+					.hasSeverity("error")
+					.hasExitCode(102)
+					.hasParameter(null);
 		}
 	}
 }

@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -28,7 +29,6 @@ import com.openshift.client.utils.TestUserBuilder;
 public class DomainResourceIntegrationTest {
 
 	private IUser user;
-	private IUser invalidUser;
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
@@ -37,21 +37,12 @@ public class DomainResourceIntegrationTest {
 				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
-		this.invalidUser = new TestUserBuilder().getConnection(
+	}
+
+	@Test(expected = InvalidCredentialsOpenShiftException.class)
+	public void shouldThrowInvalidCredentialsWhenConnectingWithInvalidCredentials() throws Exception {
+		new TestUserBuilder().getConnection(
 				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
-
-		// ensureDomainExists(user);
-		// ensureNoApplicationsExist(user);
-	}
-
-	@Test(expected = InvalidCredentialsOpenShiftException.class)
-	public void shouldThrowIfGetDomainsWithInvalidCredentials() throws Exception {
-		invalidUser.getDomains();
-	}
-
-	@Test(expected = InvalidCredentialsOpenShiftException.class)
-	public void shouldThrowIfCreateDomainWithInvalidCredentials() throws Exception {
-		invalidUser.createDomain(String.valueOf(System.currentTimeMillis()));
 	}
 
 	@Test
@@ -69,11 +60,11 @@ public class DomainResourceIntegrationTest {
 			DomainTestUtils.silentlyDestroyAllDomains(user);
 
 			// operation
-			String namespace = StringUtils.createRandomString();
-			domain = user.createDomain(namespace);
+			String id = StringUtils.createRandomString();
+			domain = user.createDomain(id);
 
 			// verification
-			assertThat(domain.getId()).isEqualTo(namespace);
+			assertThat(domain.getId()).isEqualTo(id);
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
@@ -87,12 +78,12 @@ public class DomainResourceIntegrationTest {
 			DomainTestUtils.silentlyDestroyAllDomains(user);
 
 			// operation
-			String namespace = StringUtils.createRandomString();
-			domain = user.createDomain(namespace);
+			String id = StringUtils.createRandomString();
+			domain = user.createDomain(id);
 
 			// verification
-			IDomain domainByNamespace = user.getDomain(namespace);
-			assertThat(domainByNamespace.getId()).isEqualTo(namespace);
+			IDomain domainByNamespace = user.getDomain(id);
+			assertThat(domainByNamespace.getId()).isEqualTo(id);
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
@@ -129,58 +120,56 @@ public class DomainResourceIntegrationTest {
 
 	@Test
 	public void shouldDeleteDomainWithoutApplications() throws Exception {
-		IDomain domain = null;
-		try {
-			// pre-condition
-			DomainTestUtils.silentlyDestroyAllDomains(user);
-			String namespace = StringUtils.createRandomString();
-			domain = user.createDomain(namespace);
-			
-			// operation
-			domain.destroy();
-			
-			// verification
-			IDomain domainByNamespace = user.getDomain(namespace);
-			assertThat(domainByNamespace).isNull();
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
-		}
+		// pre-condition
+		DomainTestUtils.silentlyDestroyAllDomains(user);
+		String id = StringUtils.createRandomString();
+		IDomain domain = user.createDomain(id);
+
+		// operation
+		domain.destroy();
+
+		// verification
+		IDomain domainByNamespace = user.getDomain(id);
+		assertThat(domainByNamespace).isNull();
 	}
 
-	@Test(expected = OpenShiftException.class)
+	@Test
 	public void shouldNotDeleteDomainWithApplications() throws OpenShiftException, SocketTimeoutException {
 		IDomain domain = null;
 		try {
 			// pre-condition
 			domain = DomainTestUtils.getFirstDomainOrCreate(user);
 			ApplicationTestUtils.getOrCreateApplication(domain);
-			
+
 			// operation
 			domain.destroy();
+			fail("OpenShiftEndpointException did not occurr");
+		} catch (OpenShiftEndpointException e) {
+			// verification
+			assertThat(e.getRestResponse().getMessages().get(0).getExitCode()).isEqualTo(128);
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
 	}
 
-	private void ensureNoApplicationsExist(IUser user) throws OpenShiftException {
-		// try {
-		// List<IApplication> allApplications = new ArrayList<IApplication>();
-		// allApplications.addAll(user.getApplications());
-		// for (IApplication application : allApplications) {
-		// application.destroy();
-		// }
-		// } catch (NotFoundOpenShiftException e) {
-		// // no domain present, ignore
-		// }
+	@Test
+	public void shouldDeleteDomainWithApplications() throws OpenShiftException, SocketTimeoutException {
+		IDomain domain = null;
+		try {
+			// pre-condition
+			domain = DomainTestUtils.getFirstDomainOrCreate(user);
+			ApplicationTestUtils.getOrCreateApplication(domain);
+
+			// operation
+			domain.destroy(true);
+			
+			assertThat(domain.getId()).isEqualTo(null);
+			assertThat(domain.getSuffix()).isEqualTo(null);
+			assertThat(domain).isNotIn(user.getDomains());
+			domain = null;
+		} finally {
+			DomainTestUtils.silentlyDestroy(domain);
+		}
 	}
 
-	private void ensureDomainExists(IUser user) throws OpenShiftException, IOException {
-		// try {
-		// user.getDomain();
-		// } catch (OpenShiftException e) {
-		// // no domain present
-		// SSHKeyPair sshKey = TestSSHKey.create();
-		// service.createDomain(createRandomString(), sshKey, user);
-		// }
-	}
 }

@@ -10,12 +10,13 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
+import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
-import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_NAMESPACE;
+import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_ID;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -35,8 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +143,7 @@ public class DomainResourceTest {
 	public void shouldDestroyDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains/foobar"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
 		// operation
 		final IDomain domain = user.getDomain("foobar");
 		domain.destroy();
@@ -159,7 +158,7 @@ public class DomainResourceTest {
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		final BadRequestException badRequestException = new BadRequestException(
 				"Domain contains applications. Delete applications first or set force to true.", null);
-		when(mockClient.delete(urlEndsWith("/domains/foobar"))).thenThrow(badRequestException);
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenThrow(badRequestException);
 		// operation
 		final IDomain domain = user.getDomain("foobar");
 		try {
@@ -178,7 +177,7 @@ public class DomainResourceTest {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
-				UPDATE_DOMAIN_NAMESPACE.getContentAsString());
+				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
 		domain.setId("foobarbaz");

@@ -36,6 +36,8 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_DOMAIN_ID = "domain_id";
 	public static final String PROPERTY_EMBEDDED = "embedded";
 	public static final String PROPERTY_EXIT_CODE = "exit_code";
+	public static final String PROPERTY_FIELD = "field";
+	public static final String PROPERTY_FORCE = "force";
 	public static final String PROPERTY_FRAMEWORK = "framework";
 	public static final String PROPERTY_HEALTH_CHECK_PATH = "health_check_path";
 	public static final String PROPERTY_HREF = "href";
@@ -62,10 +64,12 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_RHLOGIN = "rhlogin";
 	public static final String PROPERTY_RHC_DOMAIN = "rhc_domain";
 	public static final String PROPERTY_SCALE = "scale";
+	public static final String PROPERTY_SEVERITY = "severity";
 	public static final String PROPERTY_SSH = "ssh";
 	public static final String PROPERTY_SSH_KEY = "ssh_key";
 	public static final String PROPERTY_SSH_TYPE = "ssh_type";
 	public static final String PROPERTY_STATUS = "status";
+	public static final String PROPERTY_TEXT = "text";
 	public static final String PROPERTY_TYPE = "type";
 	public static final String PROPERTY_USER_INFO = "user_info";
 	public static final String PROPERTY_UUID = "uuid";

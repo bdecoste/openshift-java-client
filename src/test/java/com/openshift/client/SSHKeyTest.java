@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static com.openshift.client.utils.FileUtils.createRandomTempFile;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static org.fest.assertions.Assertions.assertThat;

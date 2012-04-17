@@ -12,6 +12,7 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class ConnectionResource extends AbstractOpenShiftResource implements IOp
 		if (this.domains == null) {
 			this.domains = loadDomains();
 		}
-		return this.domains;
+		return Collections.unmodifiableList(this.domains);
 	}
 
 	private List<IDomain> loadDomains() throws SocketTimeoutException, OpenShiftException {
@@ -76,21 +77,21 @@ public class ConnectionResource extends AbstractOpenShiftResource implements IOp
 		return domains;
 	}
 	
-	protected IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
+	public IDomain getDomain(String id) throws OpenShiftException, SocketTimeoutException {
 		for (IDomain domain : getDomains()) {
-			if (domain.getId().equals(namespace)) {
+			if (domain.getId().equals(id)) {
 				return domain;
 			}
 		}
 		return null;
 	}
 
-	protected IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
-		if (hasDomain(name)) {
-			throw new OpenShiftException("Domain {0} already exists", name);
+	public IDomain createDomain(String id) throws OpenShiftException, SocketTimeoutException {
+		if (hasDomain(id)) {
+			throw new OpenShiftException("Domain {0} already exists", id);
 		}
 
-		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(name);
+		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(id);
 		final IDomain domain = new DomainResource(domainDTO, this);
 		this.domains.add(domain);
 		return domain;

@@ -16,26 +16,26 @@ import com.openshift.client.HttpMethod;
 
 /**
  * The Class Link.
- *
+ * 
  * @author Xavier Coulon
  */
 public class Link {
 
 	/** The related resource (destination) this link points to */
 	private final String rel;
-	
+
 	/** The url/href this link point to. */
 	private final String href;
-	
+
 	/** The http method that this link operates on. */
 	private final HttpMethod httpMethod;
-	
+
 	/** The required params of this link. */
 	private final List<LinkParameter> requiredParams;
-	
+
 	/** The optional params of this link. */
 	private final List<LinkParameter> optionalParams;
-	
+
 	public Link(final String rel, final String href, final HttpMethod httpMethod) {
 		this(rel, href, httpMethod, null, null);
 	}
@@ -44,15 +44,20 @@ public class Link {
 			final List<LinkParameter> requiredParams, final List<LinkParameter> optionalParams) {
 		this(rel, href, HttpMethod.valueOf(httpMethod), requiredParams, optionalParams);
 	}
-	
+
 	/**
 	 * Instantiates a new Link object.
-	 *
-	 * @param rel the related resource this link points to
-	 * @param href the href the url/href this link points to
-	 * @param httpMethod the http method that this link operates on
-	 * @param requiredParams the required params
-	 * @param optionalParams the optional params
+	 * 
+	 * @param rel
+	 *            the related resource this link points to
+	 * @param href
+	 *            the href the url/href this link points to
+	 * @param httpMethod
+	 *            the http method that this link operates on
+	 * @param requiredParams
+	 *            the required params
+	 * @param optionalParams
+	 *            the optional params
 	 */
 	public Link(final String rel, final String href, final HttpMethod httpMethod,
 			final List<LinkParameter> requiredParams, final List<LinkParameter> optionalParams) {
@@ -65,7 +70,7 @@ public class Link {
 
 	/**
 	 * Gets the related resource (destination) this link points to.
-	 *
+	 * 
 	 * @return the rel
 	 */
 	public final String getRel() {
@@ -74,7 +79,7 @@ public class Link {
 
 	/**
 	 * Gets the url/href this link points to.
-	 *
+	 * 
 	 * @return the href
 	 */
 	public final String getHref() {
@@ -83,7 +88,7 @@ public class Link {
 
 	/**
 	 * Gets the http method this link operates on.
-	 *
+	 * 
 	 * @return the httpMethod
 	 */
 	public final HttpMethod getHttpMethod() {
@@ -92,7 +97,7 @@ public class Link {
 
 	/**
 	 * Gets the required params.
-	 *
+	 * 
 	 * @return the requiredParams
 	 */
 	public final List<LinkParameter> getRequiredParams() {
@@ -101,19 +106,19 @@ public class Link {
 
 	/**
 	 * Gets the optional params.
-	 *
+	 * 
 	 * @return the optionalParams
 	 */
 	public final List<LinkParameter> getOptionalParams() {
 		return optionalParams;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
 	public String toString() {
-		return "Link [rel=" + rel + ": " + httpMethod + " " + href + "]";
+		return "Link [" +
+				"rel=" + rel + ", "
+				+ "httpMethod=" + httpMethod + ", "
+				+ "href=" + href
+				+ "]";
 	}
-	
+
 }

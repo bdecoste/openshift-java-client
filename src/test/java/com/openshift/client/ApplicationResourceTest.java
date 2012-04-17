@@ -10,7 +10,8 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.CustomArgumentMatchers.urlEndsWith;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
+import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_JSON;
@@ -33,7 +34,6 @@ import static com.openshift.client.utils.Samples.STOP_FORCE_APPLICATION;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,7 +42,6 @@ import static org.mockito.Mockito.when;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import org.fest.assertions.Condition;
 import org.junit.Before;
@@ -85,10 +84,6 @@ public class ApplicationResourceTest {
 	 * 
 	 * @return
 	 */
-	private static Map<String, Object> anyForm() {
-		return anyMapOf(String.class, Object.class);
-	}
-
 	@Test
 	public void shouldLoadListOfApplicationsWithNoElement() throws Throwable {
 		// pre-conditions
@@ -549,14 +544,14 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"))).thenReturn(
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"))).thenReturn(
 				DELETE_APPLICATION_CARTRIDGE.getContentAsString());
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 		// operation
 		application.getEmbeddedCartridge("mysql-5.1").destroy();
 		// verifications
-		verify(mockClient, times(1)).delete(urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
+		verify(mockClient, times(1)).delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
 		assertThat(application.getEmbeddedCartridge("mysql-5.1")).isNull();
 		assertThat(application.getEmbeddedCartridges()).hasSize(1);
 	}
@@ -570,7 +565,7 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
-		when(mockClient.delete(urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"))).thenThrow(
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"))).thenThrow(
 				new SocketTimeoutException("mock..."));
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
@@ -583,7 +578,7 @@ public class ApplicationResourceTest {
 			// ok
 		}
 		// verifications
-		verify(mockClient, times(1)).delete(urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
+		verify(mockClient, times(1)).delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
 		assertThat(embeddedCartridge).isNotNull();
 		assertThat(application.getEmbeddedCartridges()).hasSize(2).contains(embeddedCartridge);
 	}
