@@ -40,7 +40,7 @@ public class DomainTestUtils {
 			return;
 		}
 		try {
-			domain.destroy();
+			domain.destroy(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
