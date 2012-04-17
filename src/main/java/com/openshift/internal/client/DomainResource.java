@@ -38,7 +38,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	private String id;
 	private String suffix;
 	/** root node in the business domain. */
-	private final ConnectionResource api;
+	private final ConnectionResource connectionResource;
 	/** Applications for the domain. */
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
@@ -47,7 +47,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		super(api.getService(), links);
 		this.id = namespace;
 		this.suffix = suffix;
-		this.api = api;
+		this.connectionResource = api;
 	}
 
 	protected DomainResource(DomainResourceDTO domainDTO, final ConnectionResource api) {
@@ -148,7 +148,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
 		new DeleteDomainRequest().execute(force);
-		api.removeDomain(this);
+		connectionResource.removeDomain(this);
+		this.id = null;
+		this.suffix = null;
 	}
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {

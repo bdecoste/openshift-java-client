@@ -166,6 +166,7 @@ public class DomainResourceIntegrationTest {
 			assertThat(domain.getId()).isEqualTo(null);
 			assertThat(domain.getSuffix()).isEqualTo(null);
 			assertThat(domain).isNotIn(user.getDomains());
+			domain = null;
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
