@@ -69,11 +69,11 @@ public class DomainResourceIntegrationTest {
 			DomainTestUtils.silentlyDestroyAllDomains(user);
 
 			// operation
-			String namespace = StringUtils.createRandomString();
-			domain = user.createDomain(namespace);
+			String id = StringUtils.createRandomString();
+			domain = user.createDomain(id);
 
 			// verification
-			assertThat(domain.getId()).isEqualTo(namespace);
+			assertThat(domain.getId()).isEqualTo(id);
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
@@ -87,12 +87,12 @@ public class DomainResourceIntegrationTest {
 			DomainTestUtils.silentlyDestroyAllDomains(user);
 
 			// operation
-			String namespace = StringUtils.createRandomString();
-			domain = user.createDomain(namespace);
+			String id = StringUtils.createRandomString();
+			domain = user.createDomain(id);
 
 			// verification
-			IDomain domainByNamespace = user.getDomain(namespace);
-			assertThat(domainByNamespace.getId()).isEqualTo(namespace);
+			IDomain domainByNamespace = user.getDomain(id);
+			assertThat(domainByNamespace.getId()).isEqualTo(id);
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);
 		}
@@ -133,14 +133,14 @@ public class DomainResourceIntegrationTest {
 		try {
 			// pre-condition
 			DomainTestUtils.silentlyDestroyAllDomains(user);
-			String namespace = StringUtils.createRandomString();
-			domain = user.createDomain(namespace);
-			
+			String id = StringUtils.createRandomString();
+			domain = user.createDomain(id);
+		
 			// operation
 			domain.destroy();
 			
 			// verification
-			IDomain domainByNamespace = user.getDomain(namespace);
+			IDomain domainByNamespace = user.getDomain(id);
 			assertThat(domainByNamespace).isNull();
 		} finally {
 			DomainTestUtils.silentlyDestroy(domain);

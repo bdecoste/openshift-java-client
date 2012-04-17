@@ -178,7 +178,7 @@ public class DomainResourceTest {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
-				UPDATE_DOMAIN_NAMESPACE.getContentAsString());
+				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
 		domain.setId("foobarbaz");

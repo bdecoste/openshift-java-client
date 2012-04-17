@@ -59,7 +59,7 @@ public enum Samples {
 	GET_DOMAINS_NOEXISTING_JSON("get-domains-noexisting.json"),
 	REMOVE_DOMAIN_EXISTING_JSON("remove-domain-existing.json"),
 	REMOVE_DOMAIN_UNEXISTING_JSON("remove-domain-unexisting.json"),
-	UPDATE_DOMAIN_NAMESPACE("update-domain-namespace.json"),
+	UPDATE_DOMAIN_ID("update-domain-id.json"),
 	POST_DOMAINS_NEWDOMAIN_KO("post-domains-newdomain-ko.json"),	
 
 	// user
