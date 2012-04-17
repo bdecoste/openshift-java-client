@@ -16,7 +16,7 @@ import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_REST_API_JSON;
-import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_NAMESPACE;
+import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_ID;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -182,7 +182,7 @@ public class DomainResourceTest {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
-				UPDATE_DOMAIN_NAMESPACE.getContentAsString());
+				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
 		domain.setId("foobarbaz");

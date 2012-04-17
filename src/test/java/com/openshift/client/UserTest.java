@@ -124,7 +124,7 @@ public class UserTest {
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
 				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
-				Samples.UPDATE_DOMAIN_NAMESPACE.getContentAsString());
+				Samples.UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
 		domain.setId("foobarbaz");
