@@ -16,7 +16,7 @@ import java.util.Map;
 
 import com.openshift.client.configuration.IOpenShiftConfiguration;
 import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.internal.client.ConnectionResource;
+import com.openshift.internal.client.APIResource;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
@@ -30,14 +30,14 @@ import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
  * @author Andre Dietisheim
  * 
  */
-public class OpenShiftConnectionManager {
+public class OpenShiftConnectionFactory {
 
 	public IOpenShiftConnection getConnection(final String clientId, final String password) throws FileNotFoundException, IOException, OpenShiftException {
 		IOpenShiftConfiguration configuration = new OpenShiftConfiguration();
-		return getConnection(clientId, configuration.getRhlogin(), password, configuration.getLibraServer());
+		return create(clientId, configuration.getRhlogin(), password, configuration.getLibraServer());
 	}
 
-	public IOpenShiftConnection getConnection(final String clientId, final String login, final String password, final String serverUrl) throws FileNotFoundException, IOException, OpenShiftException {
+	public IOpenShiftConnection create(final String clientId, final String login, final String password, final String serverUrl) throws FileNotFoundException, IOException, OpenShiftException {
 		final IHttpClient httpClient = new UrlConnectionHttpClientBuilder().setCredentials(login, password).client();
 		final IRestService service = new RestService(serverUrl, clientId, httpClient);
 		return getConnection(service, login, password);
@@ -47,7 +47,7 @@ public class OpenShiftConnectionManager {
 	protected IOpenShiftConnection getConnection(IRestService service, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
 		RestResponse response =
 				(RestResponse) service.execute(new Link("Get API", "/api", HttpMethod.GET));
-		return new ConnectionResource(login, password, service, (Map<String, Link>) response.getData());
+		return new APIResource(login, password, service, (Map<String, Link>) response.getData());
 	}
 
 	

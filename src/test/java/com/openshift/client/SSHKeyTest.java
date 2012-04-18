@@ -56,7 +56,7 @@ public class SSHKeyTest {
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		this.service = new RestService("http://mock",
 				"clientId", mockClient);
-		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(service, "foo@redhat.com", "bar");
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(service, "foo@redhat.com", "bar");
 		this.user = connection.getUser();
 	}
 

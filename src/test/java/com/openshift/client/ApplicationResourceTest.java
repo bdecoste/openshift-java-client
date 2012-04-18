@@ -73,7 +73,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(new RestService("http://mock",
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
 				"clientId", mockClient), "foo@redhat.com", "bar");
 		IUser user = connection.getUser();
 		this.domain = user.getDomain("foobar");
@@ -150,7 +150,7 @@ public class ApplicationResourceTest {
 		assertThat(app.getName()).isEqualTo("sample");
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");
 		assertThat(app.getCreationTime()).isNotNull();
-		assertThat(app.getGitUri()).isNotNull().startsWith("ssh://")
+		assertThat(app.getGitUrl()).isNotNull().startsWith("ssh://")
 				.endsWith("@sample-foobar.stg.rhcloud.com/~/git/sample.git/");
 		assertThat(app.getCartridge()).isEqualTo(cartridge);
 		assertThat(app.getUUID()).isNotNull();

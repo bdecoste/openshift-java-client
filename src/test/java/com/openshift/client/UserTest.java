@@ -37,7 +37,7 @@ public class UserTest {
 		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(new RestService("http://mock",
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
 				"clientId", mockClient), "foo@redhat.com", "bar");
 		this.user = connection.getUser();
 	}
