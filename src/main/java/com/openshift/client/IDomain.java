@@ -79,10 +79,10 @@ public interface IDomain {
 
 	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
-	public boolean hasApplication(String name) throws OpenShiftException, SocketTimeoutException;
+	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
-	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
+	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException;
 
-	public boolean hasApplication(ICartridge cartridge) throws OpenShiftException;
+	public boolean hasApplicationByCartridge(String cartridge) throws OpenShiftException;
 
 }

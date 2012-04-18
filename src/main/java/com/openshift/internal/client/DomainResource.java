@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.IApplication;
-import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
@@ -92,7 +91,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		if (cartridge == null) {
 			throw new OpenShiftException("Application type is mandatory but none was given.");
 		}
-		if (hasApplication(name)) {
+		if (hasApplicationByName(name)) {
 			throw new OpenShiftException("Application with name '{0}' already exists.", name);
 		}
 		ApplicationResourceDTO applicationDTO = 
@@ -113,11 +112,11 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return matchingApplication;
 	}
 
-	public boolean hasApplication(String name) throws OpenShiftException, SocketTimeoutException {
+	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException {
 		return getApplicationByName(name) != null;
 	}
 
-	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
+	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException {
 		List<IApplication> matchingApplications = new ArrayList<IApplication>();
 		for (IApplication application : this.applications) {
 			if (cartridge.equals(application.getCartridge())) {
@@ -127,7 +126,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return matchingApplications;
 	}
 
-	public boolean hasApplication(ICartridge cartridge) throws OpenShiftException {
+	public boolean hasApplicationByCartridge(String cartridge) throws OpenShiftException {
 		return getApplicationsByCartridge(cartridge).size() > 0;
 	}
 

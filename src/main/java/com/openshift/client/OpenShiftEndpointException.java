@@ -15,6 +15,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openshift.internal.client.response.unmarshalling.dto.Message;
 import com.openshift.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
@@ -51,7 +52,7 @@ public class OpenShiftEndpointException extends OpenShiftException {
 	/**
 	 * @return the server response messages after converting the response into a {@link RestResponse}. If the unmarshalling fails, the returned list is <code>null</code>.
 	 */
-	public List<String> getRestResponseMessages() {
+	public List<Message> getRestResponseMessages() {
 		if (response == null) {
 			return null;
 		}

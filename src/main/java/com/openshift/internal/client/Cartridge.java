@@ -10,13 +10,7 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import com.openshift.client.ICartridge;
-import com.openshift.client.IOpenShiftService;
-import com.openshift.client.IUser;
 import com.openshift.client.JBossCartridge;
 import com.openshift.client.OpenShiftException;
 
@@ -39,24 +33,12 @@ public class Cartridge implements ICartridge {
 	protected static final String HAPROXY = "haproxy";
 	protected static final String RAW = "diy";
 
-	protected IOpenShiftService service;
-	protected IUser user;
-	protected String name;
-	
-	@Deprecated
-	public Cartridge(IOpenShiftService service, IUser user) {
-		this.service = service;
-		this.user = user;
-	}
+	private final String name;
 
 	public Cartridge(String name) {
 		this.name = name;
 	}
 
-	protected void setName(String name) {
-		this.name = name;
-	}
-	
 	public String getName() {
 		return name;
 	}

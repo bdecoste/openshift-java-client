@@ -95,7 +95,7 @@ public class RestService implements IRestService {
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(
 					link.getHref(), e, e.getMessage(),
-					"Could not request {0}: {1}", link.getHref(), getResponseMessage(e));
+					"Could not request {0}: {1}", link.getHref(), e.getMessage());
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, e.getMessage());
 		} catch (MalformedURLException e) {

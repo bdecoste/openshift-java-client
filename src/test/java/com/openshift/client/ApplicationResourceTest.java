@@ -496,7 +496,7 @@ public class ApplicationResourceTest {
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
-		app.addEmbeddedCartridge("mysql-5.1");
+		app.addEmbeddableCartridge("mysql-5.1");
 		// verifications
 		assertThat(app.getEmbeddedCartridge("mysql-5.1")).satisfies(new Condition<Object>() {
 			@Override
@@ -524,7 +524,7 @@ public class ApplicationResourceTest {
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
 		try {
-			app.addEmbeddedCartridge("mysql-5.1");
+			app.addEmbeddableCartridge("mysql-5.1");
 			fail("Expected an exception here...");
 		} catch (SocketTimeoutException e) {
 			// ok
