@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.openshift.client.ApplicationLogReader;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
@@ -259,28 +258,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		ApplicationResourceDTO applicationDTO = new RemoveAliasRequest().execute(alias);
 		this.aliases.clear();
 		this.aliases.addAll(applicationDTO.getAliases());
-	}
-
-	public ApplicationLogReader getLogReader() throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// ApplicationLogReader logReader = null;
-		// if (logReaders.get(DEFAULT_LOGREADER) == null) {
-		// logReader = new ApplicationLogReader(this, getInternalUser(),
-		// service);
-		// logReaders.put(DEFAULT_LOGREADER, logReader);
-		// }
-		// return logReader;
-	}
-
-	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// ApplicationLogReader logReader = null;
-		// if (logReaders.get(logFile) == null) {
-		// logReader = new ApplicationLogReader(this, getInternalUser(),
-		// service, logFile);
-		// logReaders.put(logFile, logReader);
-		// }
-		// return logReader;
 	}
 
 	public String getGitUrl() {

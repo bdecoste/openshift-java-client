@@ -221,28 +221,6 @@ public interface IApplication {
 	public String getCreationLog();
 
 	/**
-	 * Returns a reader that will allow you to read from the application log.
-	 * 
-	 * @return a reader that you can read the log from
-	 * @throws OpenShiftException
-	 * 
-	 * @see ApplicationLogReader
-	 */
-	public ApplicationLogReader getLogReader() throws OpenShiftException;
-
-	/**
-	 * Returns a reader that will allow you to read from the application log.
-	 * 
-	 * @param logFile
-	 *            the log file
-	 * @return a reader that you can read the log from
-	 * @throws OpenShiftException
-	 * 
-	 * @see ApplicationLogReader
-	 */
-	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException;
-
-	/**
 	 * Waits for this application to become accessible on its public url.
 	 * 
 	 * @param timeout

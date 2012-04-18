@@ -30,6 +30,8 @@ public class SSHKeyPair extends AbstractSSHKey {
 	 */
 	private static final int KEYLENGTH = 2048;
 
+	private static final String ID = "com.openshift.client.rest";
+
 	private KeyPair keyPair;
 	private String privateKeyPath;
 	private String publicKeyPath;
@@ -71,7 +73,7 @@ public class SSHKeyPair extends AbstractSSHKey {
 		try {
 			KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.RSA, KEYLENGTH);
 			keyPair.setPassphrase(passPhrase);
-			keyPair.writePublicKey(publicKeyPath, "created by " + IOpenShiftService.ID);
+			keyPair.writePublicKey(publicKeyPath, "created by " + ID);
 			keyPair.writePrivateKey(privateKeyPath);
 			return new SSHKeyPair(keyPair, privateKeyPath, publicKeyPath, SSHKeyType.SSH_RSA);
 		} catch (Exception e) {
