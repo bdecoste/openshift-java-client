@@ -454,7 +454,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		protected DeleteApplicationRequest() {
 			super(LINK_DELETE_APPLICATION);
 		}
-
 	}
 
 	private class StartApplicationRequest extends ServiceRequest {

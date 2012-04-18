@@ -38,19 +38,19 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	private String id;
 	private String suffix;
 	/** root node in the business domain. */
-	private final ConnectionResource connectionResource;
+	private final APIResource connectionResource;
 	/** Applications for the domain. */
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 
-	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final ConnectionResource api) {
+	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final APIResource api) {
 		super(api.getService(), links);
 		this.id = namespace;
 		this.suffix = suffix;
 		this.connectionResource = api;
 	}
 
-	protected DomainResource(DomainResourceDTO domainDTO, final ConnectionResource api) {
+	protected DomainResource(DomainResourceDTO domainDTO, final APIResource api) {
 		this(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), api);
 	}
 

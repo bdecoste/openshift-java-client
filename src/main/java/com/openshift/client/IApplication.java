@@ -13,8 +13,6 @@ package com.openshift.client;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-import com.openshift.internal.client.UserResource;
-
 /**
  * @author André Dietisheim
  */
@@ -39,7 +37,7 @@ public interface IApplication {
 	 * 
 	 * @return the uri of the git repo of this application.
 	 */
-	public String getGitUri();
+	public String getGitUrl();
 
 	/**
 	 * Returns the url at which this application may be reached at.
@@ -168,7 +166,7 @@ public interface IApplication {
 	 * 
 	 * @throws OpenShiftException
 	 */
-	public String getCreationTime() throws OpenShiftException;
+	public String getCreationTime();
 
 	/**
 	 * Destroys this application (and removes it from the list of available applications)

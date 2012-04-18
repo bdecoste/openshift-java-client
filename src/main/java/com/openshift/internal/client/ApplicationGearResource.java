@@ -13,8 +13,10 @@ package com.openshift.internal.client;
 import java.util.Collections;
 import java.util.List;
 
+import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
+import com.openshift.internal.client.response.unmarshalling.dto.GearResourceDTO;
 
 /**
  * @author Xavier Coulon
@@ -31,15 +33,20 @@ public class ApplicationGearResource extends AbstractOpenShiftResource implement
 	/** the gear's components. */
 	private final List<IApplicationGearComponent> components;
 
-	/** the enclosing application. */
-	private final ApplicationResource application;
+	/** the enclosing applicationResource. */
+	private final ApplicationResource applicationResource;
 	
-	public ApplicationGearResource(final String uuid, final String gitUrl, final List<IApplicationGearComponent> components, final ApplicationResource application) {
-		super(application.getService());
+	public ApplicationGearResource(final String uuid, final String gitUrl, final List<IApplicationGearComponent> components, final ApplicationResource applicationResource) {
+		super(applicationResource.getService());
 		this.uuid = uuid;
 		this.gitUrl = gitUrl;
 		this.components = components;
-		this.application = application;
+		this.applicationResource = applicationResource;
+	}
+
+	public ApplicationGearResource(GearResourceDTO gearDTO, List<IApplicationGearComponent> components,
+			ApplicationResource applicationResource) {
+		this(gearDTO.getUuid(), gearDTO.getGitUrl(), components, applicationResource);
 	}
 
 	/**
@@ -50,7 +57,7 @@ public class ApplicationGearResource extends AbstractOpenShiftResource implement
 	}
 
 	/**
-	 * @return the gitUrl
+	 * @return the url at which the git repo of this gear may be reached
 	 */
 	public final String getGitUrl() {
 		return gitUrl;
@@ -66,8 +73,8 @@ public class ApplicationGearResource extends AbstractOpenShiftResource implement
 	/**
 	 * @return the application
 	 */
-	public final ApplicationResource getApplication() {
-		return application;
+	public final IApplication getApplication() {
+		return applicationResource;
 	}
 
 

@@ -24,7 +24,7 @@ import com.jcraft.jsch.JSchException;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.StringUtils;
-import com.openshift.client.utils.TestUserBuilder;
+import com.openshift.client.utils.TestConnectionFactory;
 import com.openshift.internal.client.httpclient.HttpClientException;
 
 /**
@@ -38,11 +38,11 @@ public class SSHKeyIntegrationTest {
 	@Before
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().create(
 				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
-		this.invalidUser = new TestUserBuilder().getConnection(
+		this.invalidUser = new TestConnectionFactory().getConnection(
 				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 	}
 

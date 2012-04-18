@@ -28,14 +28,14 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 /**
  * @author Andre Dietisheim
  */
-public class ConnectionResource extends AbstractOpenShiftResource implements IOpenShiftConnection {
+public class APIResource extends AbstractOpenShiftResource implements IOpenShiftConnection {
 
 	private final String login;
 	private final String password;
 	private List<IDomain> domains;
 	private UserResource user;
 	
-	public ConnectionResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
+	public APIResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
 		super(service, links);
 		this.login = login;
 		this.password = password;
