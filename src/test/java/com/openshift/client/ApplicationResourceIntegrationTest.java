@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -49,6 +50,11 @@ public class ApplicationResourceIntegrationTest {
 		this.domain = DomainTestUtils.getFirstDomainOrCreate(user);
 	}
 
+	@AfterClass
+	public void cleanUo() {
+		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
+	}
+	
 	@Test
 	public void shouldCreateApplication() throws Exception {
 		String applicationName =
@@ -224,13 +230,27 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canDestroyApplication() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.destroyApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
+	public void shouldDestroyApplication() throws Exception {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		String applicationName = application.getName();
+		assertThat(applicationName).isNotEmpty();
+
+		// operation
+		assertThat(application).isNotNull();
+		application.destroy();
+
+		// verification
+		assertThat(new ApplicationAssert(application))
+				.hasName(null)
+				.hasUUID(null)
+				.hasCartridge(null)
+				.hasCreationTime(null)
+				.hasEmbeddableCartridges()
+				.hasGitUrl(null)
+				.hasApplicationUrl(null);
+
+		assertThat(domain.hasApplicationByName(applicationName)).isNull();
 	}
 
 	@Ignore

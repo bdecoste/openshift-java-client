@@ -285,6 +285,8 @@ public interface IApplication {
 	 */
 	public List<String> getAliases();
 
+	public boolean hasAlias(String name);
+	
 	/**
 	 * Remove application alias
 	 * @throws OpenShiftException 

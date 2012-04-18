@@ -27,7 +27,6 @@ import com.openshift.client.OpenShiftException;
  */
 public class ApplicationAssert implements AssertExtension {
 
-	
 	public static final Pattern APPLICATION_URL_REGEXP = Pattern.compile("https*://[^\\.]+\\..{2,3}");
 
 	private IApplication application;
@@ -40,7 +39,7 @@ public class ApplicationAssert implements AssertExtension {
 		assertEquals(name, application.getName());
 		return this;
 	}
-	
+
 	public ApplicationAssert hasUUID(String uuid) {
 		assertEquals(uuid, application.getUUID());
 		return this;
@@ -60,12 +59,12 @@ public class ApplicationAssert implements AssertExtension {
 		assertEquals(creationTime, application.getCreationTime());
 		return this;
 	}
-	
+
 	public ApplicationAssert hasGitUrl(String gitUrl) {
 		assertEquals(gitUrl, application.getGitUrl());
 		return this;
 	}
-	
+
 	public ApplicationAssert hasApplicationUrl(String applicationUrl) {
 		assertEquals(applicationUrl, application.getApplicationUrl());
 		return this;
@@ -76,14 +75,28 @@ public class ApplicationAssert implements AssertExtension {
 		return this;
 	}
 
-	public ApplicationAssert hasEmbeddableCartridges(String...embeddableCartridgeNames) throws SocketTimeoutException, OpenShiftException {
+	public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws SocketTimeoutException,
+			OpenShiftException {
 		if (embeddableCartridgeNames.length == 0) {
 			assertEquals(0, application.getEmbeddedCartridges().size());
 		}
-		
+
 		for (String cartridgeName : embeddableCartridgeNames) {
 			application.hasEmbeddedCartridge(cartridgeName);
 		}
+
+		return this;
+	}
+
+	public ApplicationAssert hasAlias(String... aliasNames) {
+		if (aliasNames.length == 0) {
+			assertEquals(0, application.getAliases().size());
+		}
+
+		for (String cartridgeName : aliasNames) {
+			assertTrue(application.hasAlias(cartridgeName));
+		}
+
 		return this;
 	}
 }

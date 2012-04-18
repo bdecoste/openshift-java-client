@@ -53,34 +53,34 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private static final String LINK_LIST_GEARS = "GET_GEARS";
 
 	/** The (unique) uuid of this application. */
-	private final String uuid;
+	private String uuid;
 
 	/** The name of this application. */
-	private final String name;
+	private String name;
 
 	/** The time at which this application was created. */
-	private final String creationTime;
+	private String creationTime;
 
 	/** The cartridge (application type/framework) of this application. */
 	private final String cartridge;
 
 	/** The creation log. */
-	private final String creationLog;
+	private String creationLog;
 
 	/** The domain this application belongs to. */
 	private final DomainResource domain;
 
 	/** The url of this application. */
-	private final String applicationUrl;
+	private String applicationUrl;
 
 	/** The pathat which the health of this application may be queried. */
 	private String healthCheckPath;
 
 	/** The url at which the git repo of this application may be reached. */
-	private final String gitUrl;
+	private String gitUrl;
 
 	/** The aliases of this application. */
-	private final List<String> aliases;
+	private List<String> aliases;
 
 	/**
 	 * List of configured embedded cartridges. <code>null</code> means list if
@@ -195,6 +195,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	public void destroy() throws OpenShiftException, SocketTimeoutException {
 		new DeleteApplicationRequest().execute();
 		domain.removeApplication(this);
+		this.name = null;
+		this.uuid = null;
+		this.creationTime = null;
+		this.cartridge = null;
+		this.applicationUrl = null;
+		this.gitUrl = null;
+		this.embeddedCartridges = null;
+		this.aliases = null;
+		this.gears = null;
 	}
 
 	public void start() throws OpenShiftException, SocketTimeoutException {
@@ -244,19 +253,26 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public void addAlias(String alias) throws SocketTimeoutException, OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new AddAliasRequest().execute(alias);
+		updateAliases(applicationDTO);
+
+	}
+
+	private void updateAliases(ApplicationResourceDTO applicationDTO) {
 		this.aliases.clear();
 		this.aliases.addAll(applicationDTO.getAliases());
-
 	}
 
 	public List<String> getAliases() {
 		return Collections.unmodifiableList(this.aliases);
 	}
 
+	public boolean hasAlias(String name) {
+		return aliases.contains(name);
+	}
+
 	public void removeAlias(String alias) throws SocketTimeoutException, OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new RemoveAliasRequest().execute(alias);
-		this.aliases.clear();
-		this.aliases.addAll(applicationDTO.getAliases());
+		updateAliases(applicationDTO);
 	}
 
 	public String getGitUrl() {
