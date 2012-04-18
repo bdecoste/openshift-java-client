@@ -13,7 +13,6 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -182,7 +181,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return cartridge;
 	}
 
-	public String getCreationTime() throws OpenShiftException {
+	public String getCreationTime() {
 		return creationTime;
 	}
 
@@ -283,7 +282,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		// return logReader;
 	}
 
-	public String getGitUri() {
+	public String getGitUrl() {
 		return this.gitUrl;
 	}
 
@@ -352,9 +351,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			this.embeddedCartridges = new ArrayList<IEmbeddableCartridge>();
 			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridgeResource(
-						embeddableCartridgeDTO.getName(),
-						embeddableCartridgeDTO.getType(), embeddableCartridgeDTO.getLinks(), this);
+				IEmbeddableCartridge embeddableCartridge =
+						new EmbeddableCartridgeResource(
+								embeddableCartridgeDTO.getName(),
+								embeddableCartridgeDTO.getType(),
+								embeddableCartridgeDTO.getLinks(),
+								this);
 				this.embeddedCartridges.add(embeddableCartridge);
 			}
 		}
@@ -394,11 +396,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			for (GearResourceDTO gearDTO : gearDTOs) {
 				final List<IApplicationGearComponent> components = new ArrayList<IApplicationGearComponent>();
 				for (GearComponentDTO gearComponentDTO : gearDTO.getComponents()) {
-					components.add(new ApplicationGearComponentResource(gearComponentDTO.getName(), gearComponentDTO
-							.getInternalPort(), gearComponentDTO.getProxyHost(), gearComponentDTO.getProxyPort()));
+					components.add(
+							new ApplicationGearComponentResource(gearComponentDTO));
 				}
-				IApplicationGear gear = new ApplicationGearResource(gearDTO.getUuid(), gearDTO.getGitUrl(), components,
-						this);
+				IApplicationGear gear =
+						new ApplicationGearResource(
+								gearDTO, components, this);
 				this.gears.add(gear);
 			}
 		}
