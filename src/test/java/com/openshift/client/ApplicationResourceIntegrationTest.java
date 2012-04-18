@@ -241,15 +241,6 @@ public class ApplicationResourceIntegrationTest {
 		application.destroy();
 
 		// verification
-		assertThat(new ApplicationAssert(application))
-				.hasName(null)
-				.hasUUID(null)
-				.hasCartridge(null)
-				.hasCreationTime(null)
-				.hasEmbeddableCartridges()
-				.hasGitUrl(null)
-				.hasApplicationUrl(null);
-
 		assertThat(domain.hasApplicationByName(applicationName)).isNull();
 	}
 

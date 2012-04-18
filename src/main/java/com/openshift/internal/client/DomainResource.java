@@ -148,8 +148,6 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
 		new DeleteDomainRequest().execute(force);
 		connectionResource.removeDomain(this);
-		this.id = null;
-		this.suffix = null;
 	}
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {

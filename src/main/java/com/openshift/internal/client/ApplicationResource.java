@@ -53,34 +53,34 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private static final String LINK_LIST_GEARS = "GET_GEARS";
 
 	/** The (unique) uuid of this application. */
-	private String uuid;
+	private final String uuid;
 
 	/** The name of this application. */
-	private String name;
+	private final String name;
 
 	/** The time at which this application was created. */
-	private String creationTime;
+	private final String creationTime;
 
 	/** The cartridge (application type/framework) of this application. */
-	private final String cartridge;
+	private final ICartridge cartridge;
 
 	/** The creation log. */
-	private String creationLog;
+	private final String creationLog;
 
 	/** The domain this application belongs to. */
 	private final DomainResource domain;
 
 	/** The url of this application. */
-	private String applicationUrl;
+	private final String applicationUrl;
 
 	/** The pathat which the health of this application may be queried. */
-	private String healthCheckPath;
+	private final String healthCheckPath;
 
 	/** The url at which the git repo of this application may be reached. */
-	private String gitUrl;
+	private final String gitUrl;
 
 	/** The aliases of this application. */
-	private List<String> aliases;
+	private final List<String> aliases;
 
 	/**
 	 * List of configured embedded cartridges. <code>null</code> means list if
@@ -153,9 +153,14 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the domain this application belongs to
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
+<<<<<<< HEAD
 			final String creationLog,
 			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
+=======
+			final String creationLog, final String applicationUrl, final String gitUrl, final ICartridge cartridge,
+			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
+>>>>>>> 235a91a... dont reset instance vars when destroying application/domain
 		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
@@ -164,6 +169,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.cartridge = cartridge;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
+		this.healthCheckPath = null;
 		this.domain = domain;
 		this.aliases = aliases;
 	}
@@ -195,15 +201,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	public void destroy() throws OpenShiftException, SocketTimeoutException {
 		new DeleteApplicationRequest().execute();
 		domain.removeApplication(this);
-		this.name = null;
-		this.uuid = null;
-		this.creationTime = null;
-		this.cartridge = null;
-		this.applicationUrl = null;
-		this.gitUrl = null;
-		this.embeddedCartridges = null;
-		this.aliases = null;
-		this.gears = null;
 	}
 
 	public void start() throws OpenShiftException, SocketTimeoutException {
