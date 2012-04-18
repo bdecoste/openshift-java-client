@@ -33,6 +33,7 @@ import com.openshift.client.configuration.SystemProperties;
 import com.openshift.client.configuration.UserConfiguration;
 import com.openshift.client.fakes.SystemConfigurationFake;
 import com.openshift.client.fakes.UserConfigurationFake;
+import com.openshift.internal.client.RestServiceProperties;
 import com.openshift.internal.client.utils.StreamUtils;
 
 /**
@@ -49,8 +50,10 @@ public class ConfigurationTest {
 
 	@Test
 	public void versionTest() throws OpenShiftException, IOException {
-		String version = OpenShiftService.getVersion();
+		// operation
+		String version = new RestServiceProperties().getVersion();
 	
+		// verification
 		assertNotNull(version);
 		assertFalse(version.contains("pom"));
 	}
@@ -69,6 +72,7 @@ public class ConfigurationTest {
 
 	@Test
 	public void canStoreUsername() throws OpenShiftException, IOException {
+		// pre-condition
 		UserConfigurationFake userConfiguration = new UserConfigurationFake() {
 
 			protected void initFile(Writer writer) throws IOException {
@@ -76,20 +80,25 @@ public class ConfigurationTest {
 			}
 
 		};
+		
+		// operation
 		userConfiguration.setRhlogin(ANOTHER_USERNAME);
 		userConfiguration.save();
-		final File userConfigurationFile = userConfiguration.getFile();
+
+		// verification
+		File userConfigurationFile = userConfiguration.getFile();
 		assertNotNull(userConfigurationFile);
 		String fileContent = StreamUtils.readToString(new FileReader(userConfigurationFile));
 		Pattern pattern = Pattern.compile(USERNAME_REGEX);
 		Matcher matcher = pattern.matcher(fileContent);
-		assertTrue(matcher.matches());
+		assertTrue(matcher.find());
 		assertEquals(1, matcher.groupCount());
 		assertEquals(ANOTHER_USERNAME, matcher.group(1));
 	}
 
 	@Test
 	public void canStoreAndReadUsername() throws OpenShiftException, IOException {
+		// pre-condition
 		UserConfigurationFake userConfiguration = new UserConfigurationFake() {
 
 			protected void initFile(Writer writer) throws IOException {
@@ -97,6 +106,8 @@ public class ConfigurationTest {
 			}
 		};
 		assertEquals(USERNAME, userConfiguration.getRhlogin());
+
+		// operation
 		userConfiguration.setRhlogin(ANOTHER_USERNAME);
 		userConfiguration.save();
 		final File userConfigurationFile = userConfiguration.getFile();
@@ -110,6 +121,8 @@ public class ConfigurationTest {
 			protected void initFile(File file) {
 			}
 		};
+		
+		// verification
 		assertEquals(ANOTHER_USERNAME, userConfiguration2.getRhlogin());
 	}
 	
