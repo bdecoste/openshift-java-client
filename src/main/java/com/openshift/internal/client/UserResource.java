@@ -70,6 +70,14 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return api.getDomains();
 	}
 
+	public IDomain getDefaultDomain() throws OpenShiftException, SocketTimeoutException {
+		final List<IDomain> domains = api.getDomains();
+		if(domains.size() > 0) {
+			return domains.get(0);
+		}
+		return null;
+	}
+
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
 		return api.getDomain(namespace);
 	}

@@ -21,7 +21,6 @@ import com.openshift.client.ApplicationLogReader;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
-import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.OpenShiftException;
@@ -438,7 +437,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * (non-Javadoc)
 	 * @see com.openshift.client.IApplication#addEmbeddedCartridge(java.lang.String)
 	 */
-	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
+	public void addEmbeddableCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(embeddedCartridgeName);
 		addEmbeddedCartridge(new EmbeddableCartridgeResource(embeddedCartridgeDTO.getName(), embeddedCartridgeDTO.getType(),
@@ -459,12 +458,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * (non-Javadoc)
 	 * @see com.openshift.client.IApplication#addEmbeddedCartridges(java.util.List)
 	 */
-	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
+	public void addEmbeddableCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
 			SocketTimeoutException {
 		for (String cartridge : embeddedCartridgeNames) {
 			// TODO: catch exceptions when removing cartridges, contine removing
 			// and report the exceptions that occurred<
-			addEmbeddedCartridge(cartridge);
+			addEmbeddableCartridge(cartridge);
 		}
 	}
 
@@ -480,7 +479,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * (non-Javadoc)
 	 * @see com.openshift.client.IApplication#removeEmbbedCartridges(java.util.List)
 	 */
-	public void removeEmbddeedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
+	public void removeEmbeddedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
 		for (IEmbeddableCartridge cartridge : embeddedCartridges) {
 			// TODO: catch exceptions when removing cartridges, contine removing
 			// and report the exceptions that occurred<

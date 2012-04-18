@@ -13,8 +13,6 @@ package com.openshift.client;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-import com.openshift.internal.client.UserResource;
-
 /**
  * @author André Dietisheim
  */
@@ -72,7 +70,7 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 */
-	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException;
+	public void addEmbeddableCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Adds all given embeddable cartridges from this app, given their names.
@@ -81,10 +79,10 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 * 
-	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddableCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException, SocketTimeoutException;
+	public void addEmbeddableCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Removes the given cartridge from this app.
@@ -93,7 +91,7 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddableCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
 	public void removeEmbeddedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException;
@@ -106,10 +104,10 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddableCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
-	public void removeEmbddeedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException;;
+	public void removeEmbeddedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException;;
 
 	/**
 	 * Returns all embedded cartridges.
@@ -119,7 +117,7 @@ public interface IApplication {
 	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddableCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
 	public List<IEmbeddableCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException;
@@ -135,7 +133,7 @@ public interface IApplication {
 	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IEmbeddableCartridge
-	 * @see #addEmbeddedCartridge(IEmbeddableCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddableCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddableCartridge)
 	 */
 	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException;

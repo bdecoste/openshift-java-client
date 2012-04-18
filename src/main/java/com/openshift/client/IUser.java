@@ -33,6 +33,8 @@ public interface IUser {
 
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
 	
+	public IDomain getDefaultDomain() throws OpenShiftException, SocketTimeoutException;
+	
 	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException;
 	
 	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException;
