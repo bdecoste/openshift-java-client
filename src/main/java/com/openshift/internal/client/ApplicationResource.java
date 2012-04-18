@@ -29,6 +29,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourc
 import com.openshift.internal.client.response.unmarshalling.dto.GearComponentDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.GearResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * The Class Application.
@@ -116,18 +117,24 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	/** The aliases. */
 	private final List<String> aliases;
 
-	/** List of configured embedded cartridges. <code>null</code> means list if not loaded yet. */
+	/**
+	 * List of configured embedded cartridges. <code>null</code> means list if
+	 * not loaded yet.
+	 */
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IEmbeddableCartridge> embeddedCartridges = null;
 
-	/** List of configured gears. <code>null</code> means list if not loaded yet. */
+	/**
+	 * List of configured gears. <code>null</code> means list if not loaded yet.
+	 */
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IApplicationGear> gears = null;
 
 	protected ApplicationResource(ApplicationResourceDTO dto, String cartridge, DomainResource domain) {
-		this(dto.getName(), dto.getUuid(),dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(),
-		cartridge, dto.getAliases(), dto.getLinks(), domain);
+		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(),
+				cartridge, dto.getAliases(), dto.getLinks(), domain);
 	}
+
 	/**
 	 * Instantiates a new application.
 	 * 
@@ -150,7 +157,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 *            the domain
 	 */
-	protected ApplicationResource(final String name, final String uuid, final String creationTime, final String applicationUrl,
+	protected ApplicationResource(final String name, final String uuid, final String creationTime,
+			final String applicationUrl,
 			final String gitUrl, final String cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, cartridge, aliases, links, domain);
@@ -180,7 +188,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 *            the domain
 	 */
-	protected ApplicationResource(final String name, final String uuid, final String creationTime, final String creationLog,
+	protected ApplicationResource(final String name, final String uuid, final String creationTime,
+			final String creationLog,
 			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
 		super(domain.getService(), links);
@@ -197,89 +206,50 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.openshift.client.IApplication#getName()
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getUUID()
-	 */
 	public String getUUID() {
 		return uuid;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getCartridge()
-	 */
 	public String getCartridge() {
 		return cartridge;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getCreationTime()
-	 */
 	public String getCreationTime() throws OpenShiftException {
 		return creationTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getCreationLog()
-	 */
 	public String getCreationLog() {
 		return creationLog;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getDomain()
-	 */
 	public IDomain getDomain() {
 		return this.domain;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#destroy()
-	 */
 	public void destroy() throws OpenShiftException, SocketTimeoutException {
 		new DeleteApplicationRequest().execute();
 		domain.removeApplication(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#start()
-	 */
 	public void start() throws OpenShiftException, SocketTimeoutException {
 		new StartApplicationRequest().execute();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#restart()
-	 */
 	public void restart() throws OpenShiftException, SocketTimeoutException {
 		new RestartApplicationRequest().execute();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#stop()
-	 */
 	public void stop() throws OpenShiftException, SocketTimeoutException {
 		stop(false);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#stop(boolean)
-	 */
 	public void stop(boolean force) throws OpenShiftException, SocketTimeoutException {
 		if (force) {
 			new ForceStopApplicationRequest().execute();
@@ -289,26 +259,14 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#exposePort()
-	 */
 	public void exposePort() throws SocketTimeoutException, OpenShiftException {
 		new ExposePortRequest().execute();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#concealPort()
-	 */
 	public void concealPort() throws SocketTimeoutException, OpenShiftException {
 		new ConcealPortRequest().execute();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#showPort()
-	 */
 	public void showPort() throws SocketTimeoutException, OpenShiftException {
 		new ShowPortRequest().execute();
 	}
@@ -319,29 +277,17 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @return the descriptor
 	 */
 	public void getDescriptor() {
-		throw new UnsupportedOperationException("Feature is not implemented yet");
+		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#scaleDown()
-	 */
 	public void scaleDown() throws SocketTimeoutException, OpenShiftException {
 		new ScaleDownRequest().execute();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#scaleUp()
-	 */
 	public void scaleUp() throws SocketTimeoutException, OpenShiftException {
 		new ScaleUpRequest().execute();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#addAlias(java.lang.String)
-	 */
 	public void addAlias(String alias) throws SocketTimeoutException, OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new AddAliasRequest().execute(alias);
 		this.aliases.clear();
@@ -349,98 +295,67 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getAliases()
-	 */
 	public List<String> getAliases() {
 		return Collections.unmodifiableList(this.aliases);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#removeAlias(java.lang.String)
-	 */
 	public void removeAlias(String alias) throws SocketTimeoutException, OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new RemoveAliasRequest().execute(alias);
 		this.aliases.clear();
 		this.aliases.addAll(applicationDTO.getAliases());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getLogReader()
-	 */
 	public ApplicationLogReader getLogReader() throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		// ApplicationLogReader logReader = null;
 		// if (logReaders.get(DEFAULT_LOGREADER) == null) {
-		// logReader = new ApplicationLogReader(this, getInternalUser(), service);
+		// logReader = new ApplicationLogReader(this, getInternalUser(),
+		// service);
 		// logReaders.put(DEFAULT_LOGREADER, logReader);
 		// }
 		// return logReader;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getLogReader(java.lang.String)
-	 */
 	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		// ApplicationLogReader logReader = null;
 		// if (logReaders.get(logFile) == null) {
-		// logReader = new ApplicationLogReader(this, getInternalUser(), service, logFile);
+		// logReader = new ApplicationLogReader(this, getInternalUser(),
+		// service, logFile);
 		// logReaders.put(logFile, logReader);
 		// }
 		// return logReader;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getGitUri()
-	 */
 	public String getGitUri() {
 		return this.gitUrl;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getApplicationUrl()
-	 */
 	public String getApplicationUrl() {
 		return applicationUrl;
 		// IDomain domain = getInternalUser().getDomain();
 		// if (domain == null) {
 		// return null;
 		// }
-		// return MessageFormat.format(APPLICATION_URL_PATTERN, name, domain.getNamespace(), domain.getRhcDomain());
+		// return MessageFormat.format(APPLICATION_URL_PATTERN, name,
+		// domain.getNamespace(), domain.getRhcDomain());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getHealthCheckUrl()
-	 */
 	public String getHealthCheckUrl() {
-		// throw new OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
+		// throw new
+		// OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getHealthCheckResponse()
-	 */
 	public String getHealthCheckResponse() throws OpenShiftException {
 		throw new OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#addEmbeddedCartridge(java.lang.String)
-	 */
-	public void addEmbeddableCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
+	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(embeddedCartridgeName);
-		addEmbeddedCartridge(new EmbeddableCartridgeResource(embeddedCartridgeDTO.getName(), embeddedCartridgeDTO.getType(),
+		addEmbeddedCartridge(new EmbeddableCartridgeResource(embeddedCartridgeDTO.getName(),
+				embeddedCartridgeDTO.getType(),
 				embeddedCartridgeDTO.getLinks(), this));
 	}
 
@@ -454,11 +369,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.embeddedCartridges.add(cartridge);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#addEmbeddedCartridges(java.util.List)
-	 */
-	public void addEmbeddableCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
+	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
 			SocketTimeoutException {
 		for (String cartridge : embeddedCartridgeNames) {
 			// TODO: catch exceptions when removing cartridges, contine removing
@@ -467,19 +378,11 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#removeEmbbedCartridge(com.openshift.client.IEmbeddableCartridge)
-	 */
 	public void removeEmbeddedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException {
 		this.embeddedCartridges.remove(embeddedCartridge);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#removeEmbbedCartridges(java.util.List)
-	 */
-	public void removeEmbeddedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
+	public void removeEmbddeedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
 		for (IEmbeddableCartridge cartridge : embeddedCartridges) {
 			// TODO: catch exceptions when removing cartridges, contine removing
 			// and report the exceptions that occurred<
@@ -487,17 +390,14 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getEmbeddedCartridges()
-	 */
 	public List<IEmbeddableCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
 		// load collection if necessary
 		if (embeddedCartridges == null) {
 			this.embeddedCartridges = new ArrayList<IEmbeddableCartridge>();
 			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridgeResource(embeddableCartridgeDTO.getName(),
+				IEmbeddableCartridge embeddableCartridge = new EmbeddableCartridgeResource(
+						embeddableCartridgeDTO.getName(),
 						embeddableCartridgeDTO.getType(), embeddableCartridgeDTO.getLinks(), this);
 				this.embeddedCartridges.add(embeddableCartridge);
 			}
@@ -505,18 +405,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return embeddedCartridges;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#hasEmbeddedCartridge(java.lang.String)
-	 */
 	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException {
 		return getEmbeddedCartridge(cartridgeName) != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#getEmbeddedCartridge(java.lang.String)
-	 */
 	public IEmbeddableCartridge getEmbeddedCartridge(String cartridgeName) throws OpenShiftException,
 			SocketTimeoutException {
 		IEmbeddableCartridge embeddedCartridge = null;
@@ -530,7 +422,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	/**
-	 * Gets the gears.
+	 * Returns the gears that this application is running on.
 	 * 
 	 * @return
 	 * 
@@ -549,20 +441,18 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 					components.add(new ApplicationGearComponentResource(gearComponentDTO.getName(), gearComponentDTO
 							.getInternalPort(), gearComponentDTO.getProxyHost(), gearComponentDTO.getProxyPort()));
 				}
-				IApplicationGear gear = new ApplicationGearResource(gearDTO.getUuid(), gearDTO.getGitUrl(), components, this);
+				IApplicationGear gear = new ApplicationGearResource(gearDTO.getUuid(), gearDTO.getGitUrl(), components,
+						this);
 				this.gears.add(gear);
 			}
 		}
 		return gears;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.client.IApplication#waitForAccessible(long)
-	 */
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
 		throw new UnsupportedOperationException();
-		// return service.waitForApplication(getHealthCheckUrl(), timeout, getHealthCheckResponse());
+		// return service.waitForApplication(getHealthCheckUrl(), timeout,
+		// getHealthCheckResponse());
 	}
 
 	public void refresh() throws SocketTimeoutException, OpenShiftException {
@@ -570,10 +460,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.gears = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -581,10 +468,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object object) {
 		if (this == object)
 			return true;
@@ -601,369 +485,185 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
 		return name;
 	}
 
-	/**
-	 * The Class DeleteApplicationRequest.
-	 */
 	private class DeleteApplicationRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new delete application request.
-		 */
 		protected DeleteApplicationRequest() {
 			super(LINK_DELETE_APPLICATION);
 		}
 
 	}
 
-	/**
-	 * The Class StartApplicationRequest.
-	 */
 	private class StartApplicationRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new start application request.
-		 */
 		protected StartApplicationRequest() {
 			super(LINK_START_APPLICATION);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "start"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_START));
 		}
 	}
 
-	/**
-	 * The Class StopApplicationRequest.
-	 */
 	private class StopApplicationRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new stop application request.
-		 */
 		protected StopApplicationRequest() {
 			super(LINK_STOP_APPLICATION);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "stop"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_STOP));
 		}
-
 	}
 
-	/**
-	 * The Class ForceStopApplicationRequest.
-	 */
 	private class ForceStopApplicationRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new force stop application request.
-		 */
 		protected ForceStopApplicationRequest() {
 			super(LINK_FORCE_STOP_APPLICATION);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "force-stop"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_FORCESTOP));
 		}
-
 	}
 
-	/**
-	 * The Class RestartApplicationRequest.
-	 */
 	private class RestartApplicationRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new restart application request.
-		 */
 		protected RestartApplicationRequest() {
 			super(LINK_RESTART_APPLICATION);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "restart"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_RESTART));
 		}
 	}
 
-	/**
-	 * The Class ExposePortRequest.
-	 */
 	private class ExposePortRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new expose port request.
-		 */
 		protected ExposePortRequest() {
 			super(LINK_EXPOSE_PORT);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "expose-port"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_EXPOSE_PORT));
 		}
 	}
 
-	/**
-	 * The Class ConcealPortRequest.
-	 */
 	private class ConcealPortRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new conceal port request.
-		 */
 		protected ConcealPortRequest() {
 			super(LINK_CONCEAL_PORT);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "conceal-port"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_CONCEAL_PORT));
 		}
 	}
 
-	/**
-	 * The Class ShowPortRequest.
-	 */
 	private class ShowPortRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new show port request.
-		 */
 		protected ShowPortRequest() {
 			super(LINK_SHOW_PORT);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "show-port"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_SHOW_PORT));
 		}
 	}
 
-	/**
-	 * The Class ScaleUpRequest.
-	 */
 	private class ScaleUpRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new scale up request.
-		 */
 		protected ScaleUpRequest() {
 			super(LINK_SCALE_UP);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "scale-up"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_SCALE_UP));
 		}
 	}
 
-	/**
-	 * The Class ScaleDownRequest.
-	 */
 	private class ScaleDownRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new scale down request.
-		 */
 		protected ScaleDownRequest() {
 			super(LINK_SCALE_DOWN);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "scale-down"));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_SCALE_DOWN));
 		}
 	}
 
-	/**
-	 * The Class AddAliasRequest.
-	 */
 	private class AddAliasRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new adds the alias request.
-		 */
 		protected AddAliasRequest() {
 			super(LINK_ADD_ALIAS);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @param alias
-		 *            the alias
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute(String alias) throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "add-alias"), new ServiceParameter("alias", alias));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
+							IOpenShiftJsonConstants.VALUE_ADD_ALIAS),
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_ALIAS, alias));
 		}
 	}
 
-	/**
-	 * The Class RemoveAliasRequest.
-	 */
 	private class RemoveAliasRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new removes the alias request.
-		 */
 		protected RemoveAliasRequest() {
 			super(LINK_REMOVE_ALIAS);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @param alias
-		 *            the alias
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute(String alias) throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("event", "remove-alias"), new ServiceParameter("alias", alias));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_EVENT, 
+							IOpenShiftJsonConstants.VALUE_REMOVE_ALIAS),
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_ALIAS, alias));
 		}
 	}
 
-	/**
-	 * The Class AddEmbeddedCartridgeRequest.
-	 */
 	private class AddEmbeddedCartridgeRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new adds the embedded cartridge request.
-		 */
 		protected AddEmbeddedCartridgeRequest() {
 			super(LINK_ADD_CARTRIDGE);
 		}
 
-		/**
-		 * Execute.
-		 * 
-		 * @param <DTO>
-		 *            the generic type
-		 * @param embeddedCartridgeName
-		 *            the embedded cartridge name
-		 * @return the dTO
-		 * @throws OpenShiftException
-		 *             the open shift exception
-		 * @throws SocketTimeoutException
-		 *             the socket timeout exception
-		 */
 		public <DTO> DTO execute(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
-			return super.execute(new ServiceParameter("cartridge", embeddedCartridgeName));
+			return super.execute(
+					new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, embeddedCartridgeName));
 		}
 	}
 
@@ -972,26 +672,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		protected ListEmbeddableCartridgesRequest() {
 			super(LINK_LIST_CARTRIDGES);
 		}
-
-		/**
-		 * Execute.
-		 */
-		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute();
-		}
 	}
 
 	private class ListGearsRequest extends ServiceRequest {
 
 		protected ListGearsRequest() {
 			super(LINK_LIST_GEARS);
-		}
-
-		/**
-		 * Execute.
-		 */
-		public <DTO> DTO execute() throws OpenShiftException, SocketTimeoutException {
-			return super.execute();
 		}
 	}
 
