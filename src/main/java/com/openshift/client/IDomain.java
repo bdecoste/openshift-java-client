@@ -22,7 +22,7 @@ public interface IDomain {
 
 	public String getId();
 
-	public String getSuffix() throws OpenShiftException;
+	public String getSuffix();
 
 	/**
 	 * Destroys the current domain. This method works only if it has not application.

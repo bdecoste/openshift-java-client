@@ -57,7 +57,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return id;
 	}
 
-	public String getSuffix() throws OpenShiftException {
+	public String getSuffix() {
 		return suffix;
 	}
 

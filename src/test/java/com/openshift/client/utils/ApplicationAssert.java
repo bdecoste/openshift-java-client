@@ -15,11 +15,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.SocketTimeoutException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.fest.assertions.AssertExtension;
 
 import com.openshift.client.IApplication;
+import com.openshift.client.ICartridge;
+import com.openshift.client.IDomain;
 import com.openshift.client.OpenShiftException;
 
 /**
@@ -27,8 +30,9 @@ import com.openshift.client.OpenShiftException;
  */
 public class ApplicationAssert implements AssertExtension {
 
-	public static final Pattern APPLICATION_URL_REGEXP = Pattern.compile("https*://[^\\.]+\\..{2,3}");
-
+	public static final Pattern APPLICATION_URL_REGEXP = Pattern.compile("https*://(.+)-([^\\.]+)\\.(.+)/");
+	public static final Pattern GIT_URL_REGEXP = Pattern.compile("ssh://(.+)@(.+)-([^\\.]+)\\.(.+)/~/git/(.+).git/");
+	
 	private IApplication application;
 
 	public ApplicationAssert(IApplication application) {
@@ -60,8 +64,26 @@ public class ApplicationAssert implements AssertExtension {
 		return this;
 	}
 
+	public ApplicationAssert hasValidCreationTime() {
+		assertNotNull(application.getCreationTime());
+		return this;
+	}
+
 	public ApplicationAssert hasGitUrl(String gitUrl) {
 		assertEquals(gitUrl, application.getGitUrl());
+		return this;
+	}
+
+	public ApplicationAssert hasValidGitUrl() {
+		Matcher matcher = GIT_URL_REGEXP.matcher(application.getGitUrl());
+		assertTrue(matcher.matches());
+		assertEquals(3, matcher.groupCount());
+		
+		assertEquals(application.getUUID(), matcher.group(0));
+		assertEquals(application.getName(), matcher.group(1));
+		assertEquals(application.getDomain().getSuffix(), matcher.group(3));
+		assertEquals(application.getName(), matcher.group(4));
+
 		return this;
 	}
 
@@ -71,7 +93,15 @@ public class ApplicationAssert implements AssertExtension {
 	}
 
 	public ApplicationAssert hasValidApplicationUrl() {
-		assertTrue(APPLICATION_URL_REGEXP.matcher(application.getApplicationUrl()).find());
+		Matcher matcher = APPLICATION_URL_REGEXP.matcher(application.getApplicationUrl());
+		assertTrue(matcher.matches());
+		assertEquals(3, matcher.groupCount());
+
+		assertEquals(application.getName(), matcher.group(1));
+		IDomain domain = application.getDomain();
+		assertEquals(domain.getId(), matcher.group(2));
+		assertEquals(domain.getSuffix(), matcher.group(3));
+		
 		return this;
 	}
 

@@ -13,8 +13,11 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
@@ -22,6 +25,7 @@ import com.openshift.client.IApplicationGearComponent;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.utils.RFC822DateUtils;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.GearComponentDTO;
@@ -59,7 +63,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final String name;
 
 	/** The time at which this application was created. */
-	private final String creationTime;
+	private final Date creationTime;
 
 	/** The cartridge (application type/framework) of this application. */
 	private final ICartridge cartridge;
@@ -121,6 +125,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the links
 	 * @param domain
 	 *            the domain this application belongs to
+	 * @throws DatatypeConfigurationException 
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
@@ -151,6 +156,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the links
 	 * @param domain
 	 *            the domain this application belongs to
+	 * @throws DatatypeConfigurationException 
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 <<<<<<< HEAD
@@ -164,7 +170,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
-		this.creationTime = creationTime;
+		this.creationTime = RFC822DateUtils.safeGetDate(creationTime);
 		this.creationLog = creationLog;
 		this.cartridge = cartridge;
 		this.applicationUrl = applicationUrl;
@@ -186,7 +192,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return cartridge;
 	}
 
-	public String getCreationTime() {
+	public Date getCreationTime() {
 		return creationTime;
 	}
 

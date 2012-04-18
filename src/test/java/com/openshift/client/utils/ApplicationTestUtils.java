@@ -14,6 +14,7 @@ import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 import com.openshift.client.IApplication;
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.OpenShiftException;
 
@@ -26,7 +27,7 @@ public class ApplicationTestUtils {
 		return String.valueOf(System.currentTimeMillis());
 	}
 
-	public static void silentlyDestroyApplication(IApplication application) {
+	public static void silentlyDestroy(IApplication application) {
 		try {
 			if (application == null) {
 				return;
@@ -53,6 +54,6 @@ public class ApplicationTestUtils {
 			return applicationIterator.next();
 		}
 		
-		return domain.createApplication(StringUtils.createRandomString(), "jbossas-7", null, null);
+		return domain.createApplication(StringUtils.createRandomString(), ICartridge.JBOSSAS_7, null, null);
 	}
 }

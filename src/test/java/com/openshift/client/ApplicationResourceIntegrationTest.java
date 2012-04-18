@@ -18,7 +18,6 @@ import java.net.MalformedURLException;
 
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jcraft.jsch.UserInfo;
@@ -33,9 +32,7 @@ import com.openshift.internal.client.ApplicationInfo;
  */
 public class ApplicationResourceIntegrationTest {
 
-	private static final int WAIT_FOR_APPLICATION = 10 * 1024;
-
-	private IDomain domain;
+	private static IDomain domain;
 
 	@Before
 	public void setUp() throws FileNotFoundException, IOException, OpenShiftException {
@@ -47,32 +44,29 @@ public class ApplicationResourceIntegrationTest {
 						configuration.getPassword(),
 						configuration.getLibraServer());
 		IUser user = connection.getUser();
-		this.domain = DomainTestUtils.getFirstDomainOrCreate(user);
+		domain = DomainTestUtils.getFirstDomainOrCreate(user);
 	}
 
 	@AfterClass
-	public void cleanUo() {
+	public static void cleanUp() {
 		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
 	}
-	
+
 	@Test
 	public void shouldCreateApplication() throws Exception {
 		String applicationName =
 				ApplicationTestUtils.createRandomApplicationName();
 		IApplication application = null;
-		String cartridgeName = "jbossas-7";
-		try {
-			application = domain.createApplication(
-					applicationName, cartridgeName, null, null);
-			assertThat(new ApplicationAssert(application))
-					.hasName(applicationName)
-					.hasUUID()
-					.hasCartridge(cartridgeName)
-					.hasValidApplicationUrl()
-					.hasEmbeddableCartridges();
-		} finally {
-			ApplicationTestUtils.silentlyDestroyApplication(application);
-		}
+		application = domain.createApplication(
+				applicationName, ICartridge.JBOSSAS_7, null, null);
+		assertThat(new ApplicationAssert(application))
+				.hasName(applicationName)
+				.hasUUID()
+				.hasCartridge(ICartridge.JBOSSAS_7)
+				.hasValidApplicationUrl()
+				.hasValidGitUrl()
+				.hasEmbeddableCartridges()
+				.hasAlias();
 	}
 
 	@Test
@@ -233,127 +227,77 @@ public class ApplicationResourceIntegrationTest {
 	public void shouldDestroyApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-		String applicationName = application.getName();
-		assertThat(applicationName).isNotEmpty();
+		assertThat(application.getName()).isNotEmpty();
 
 		// operation
-		assertThat(application).isNotNull();
 		application.destroy();
 
 		// verification
-		assertThat(domain.hasApplicationByName(applicationName)).isNull();
+		assertThat(domain.hasApplicationByName(application.getName())).isFalse();
 	}
 
-	@Ignore
 	@Test(expected = OpenShiftException.class)
 	public void createDuplicateApplicationThrowsException() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+		IApplication application2 = null;
+		try {
+			// pre-condition
+			IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+			assertThat(application.getName()).isNotEmpty();
+
+			// operation
+			application2 = domain.createApplication(application.getName(), ICartridge.JBOSSAS_7, null, null);
+		} finally {
+			ApplicationTestUtils.silentlyDestroy(application2);
+		}
 	}
 
 	@Test
 	public void canStopApplication() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+
+		// operation
+		application.stop();
 	}
 
 	@Test
 	public void canStartStoppedApplication() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		// service.startApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.stop();
+
+		// operation
+		application.start();
 	}
 
 	@Test
 	public void canStartStartedApplication() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// /**
-		// * freshly created apps are started
-		// *
-		// * @link
-		// * https://github.com/openshift/os-client-tools/blob/master/express
-		// * /doc/API
-		// */
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.startApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.start();
+
+		// operation
+		application.start();
 	}
 
 	@Test
 	public void canStopStoppedApplication() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// /**
-		// * freshly created apps are started
-		// *
-		// * @link
-		// * https://github.com/openshift/os-client-tools/blob/master/express
-		// * /doc/API
-		// */
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		// service.stopApplication(applicationName, ICartridge.JBOSSAS_7, user);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.stop();
+
+		// operation
+		application.stop();
 	}
 
 	@Test
 	public void canRestartApplication() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// /**
-		// * freshly created apps are started
-		// *
-		// * @link
-		// * https://github.com/openshift/os-client-tools/blob/master/express
-		// * /doc/API
-		// */
-		// service.createApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// service.restartApplication(applicationName, ICartridge.JBOSSAS_7,
-		// user);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.start();
+
+		// operation
+		application.restart();
 	}
 
 	@Test
@@ -366,22 +310,6 @@ public class ApplicationResourceIntegrationTest {
 		// String applicationStatus = service.getStatus(application.getName(),
 		// application.getCartridge(), user);
 		// assertNotNull(applicationStatus);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
-	}
-
-	@Test
-	public void returnsValidGitUri() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// IApplication application = service.createApplication(applicationName,
-		// ICartridge.JBOSSAS_7, user);
-		// String gitUri = application.getGitUri();
-		// assertNotNull(gitUri);
-		// assertGitUri(applicationName, gitUri);
 		// } finally {
 		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
 		// user, service);

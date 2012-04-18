@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import java.net.SocketTimeoutException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -166,7 +167,7 @@ public interface IApplication {
 	 * 
 	 * @throws OpenShiftException
 	 */
-	public String getCreationTime();
+	public Date getCreationTime();
 
 	/**
 	 * Destroys this application (and removes it from the list of available applications)
