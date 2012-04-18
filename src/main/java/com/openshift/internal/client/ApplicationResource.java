@@ -125,9 +125,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the domain this application belongs to
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl,
-			final String gitUrl, final String cartridge, final List<String> aliases, final Map<String, Link> links,
-			final DomainResource domain) {
+			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
+			final Map<String, Link> links, final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 	}
 
@@ -147,13 +146,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param gitUrl
 	 *            the git url
 	 * @param cartridge
-	 *            the cartridge
+	 *            the cartridge (type/framework)
 	 * @param aliases
 	 *            the aliases
 	 * @param links
 	 *            the links
 	 * @param domain
-	 *            the domain
+	 *            the domain this application belongs to
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 			final String creationLog,
@@ -171,11 +170,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.aliases = aliases;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.openshift.client.IApplication#getName()
-	 */
 	public String getName() {
 		return name;
 	}
@@ -238,11 +232,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		new ShowPortRequest().execute();
 	}
 
-	/**
-	 * Gets the descriptor.
-	 * 
-	 * @return the descriptor
-	 */
 	public void getDescriptor() {
 		throw new UnsupportedOperationException();
 	}
@@ -309,9 +298,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public String getHealthCheckUrl() {
-		// throw new
-		// OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public String getHealthCheckResponse() throws OpenShiftException {
@@ -319,18 +306,20 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
-		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
-				.execute(embeddedCartridgeName);
-		addEmbeddedCartridge(new EmbeddableCartridgeResource(embeddedCartridgeDTO.getName(),
+		final CartridgeResourceDTO embeddedCartridgeDTO =
+				new AddEmbeddedCartridgeRequest().execute(embeddedCartridgeName);
+		addEmbeddedCartridge(new EmbeddableCartridgeResource(
+				embeddedCartridgeDTO.getName(),
 				embeddedCartridgeDTO.getType(),
 				embeddedCartridgeDTO.getLinks(), this));
 	}
 
 	/**
-	 * Adds the embedded cartridge.
+	 * Adds the given embedded cartridge to this application.
 	 * 
 	 * @param cartridge
-	 *            the cartridge
+	 *            the embeddable cartridge that shall be added to this
+	 *            application
 	 */
 	protected void addEmbeddedCartridge(IEmbeddableCartridge cartridge) {
 		this.embeddedCartridges.add(cartridge);
@@ -615,7 +604,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		public <DTO> DTO execute(String alias) throws OpenShiftException, SocketTimeoutException {
 			return super.execute(
 					new ServiceParameter(
-							IOpenShiftJsonConstants.PROPERTY_EVENT, 
+							IOpenShiftJsonConstants.PROPERTY_EVENT,
 							IOpenShiftJsonConstants.VALUE_REMOVE_ALIAS),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_ALIAS, alias));
 		}
