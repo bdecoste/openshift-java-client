@@ -38,83 +38,50 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
  */
 public class ApplicationResource extends AbstractOpenShiftResource implements IApplication {
 
-	/** The Constant DEFAULT_LOGREADER. */
-	private static final String DEFAULT_LOGREADER = "defaultLogReader";
-
-	/** The Constant LINK_DELETE_APPLICATION. */
 	private static final String LINK_DELETE_APPLICATION = "DELETE";
-
-	/** The Constant LINK_START_APPLICATION. */
 	private static final String LINK_START_APPLICATION = "START";
-
-	/** The Constant LINK_STOP_APPLICATION. */
 	private static final String LINK_STOP_APPLICATION = "STOP";
-
-	/** The Constant LINK_FORCE_STOP_APPLICATION. */
 	private static final String LINK_FORCE_STOP_APPLICATION = "FORCE_STOP";
-
-	/** The Constant LINK_RESTART_APPLICATION. */
 	private static final String LINK_RESTART_APPLICATION = "RESTART";
-
-	/** The Constant LINK_SCALE_UP. */
 	private static final String LINK_SCALE_UP = "SCALE_UP";
-
-	/** The Constant LINK_SCALE_DOWN. */
 	private static final String LINK_SCALE_DOWN = "SCALE_DOWN";
-
-	/** The Constant LINK_SHOW_PORT. */
 	private static final String LINK_SHOW_PORT = "SHOW_PORT";
-
-	/** The Constant LINK_EXPOSE_PORT. */
 	private static final String LINK_EXPOSE_PORT = "EXPOSE_PORT";
-
-	/** The Constant LINK_CONCEAL_PORT. */
 	private static final String LINK_CONCEAL_PORT = "CONCEAL_PORT";
-
-	/** The Constant LINK_ADD_ALIAS. */
 	private static final String LINK_ADD_ALIAS = "ADD_ALIAS";
-
-	/** The Constant LINK_REMOVE_ALIAS. */
 	private static final String LINK_REMOVE_ALIAS = "REMOVE_ALIAS";
-
-	/** The Constant LINK_ADD_CARTRIDGE. */
 	private static final String LINK_ADD_CARTRIDGE = "ADD_CARTRIDGE";
-
 	private static final String LINK_LIST_CARTRIDGES = "LIST_CARTRIDGES";
-
 	private static final String LINK_LIST_GEARS = "GET_GEARS";
 
-	/** The application uuid. */
+	/** The (unique) uuid of this application. */
 	private final String uuid;
 
-	/** The application name. */
+	/** The name of this application. */
 	private final String name;
 
-	/** The application creation time. */
+	/** The time at which this application was created. */
 	private final String creationTime;
 
-	/** The application native cartridge. */
+	/** The cartridge (application type/framework) of this application. */
 	private final String cartridge;
 
-	/** The log readers. */
-	private HashMap<String, ApplicationLogReader> logReaders = new HashMap<String, ApplicationLogReader>();
-	// TODO : replace when pubsub/notification is available ?
 	/** The creation log. */
 	private final String creationLog;
 
-	/** The domain. */
+	/** The domain this application belongs to. */
 	private final DomainResource domain;
 
-	/** The application url. */
+	/** The url of this application. */
 	private final String applicationUrl;
 
-	/** The health check path. */
+	/** The pathat which the health of this application may be queried. */
 	private String healthCheckPath;
 
-	/** The git url. */
+	/** The url at which the git repo of this application may be reached. */
 	private final String gitUrl;
 
-	/** The aliases. */
+	/** The aliases of this application. */
 	private final List<String> aliases;
 
 	/**
@@ -149,13 +116,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param gitUrl
 	 *            the git url
 	 * @param cartridge
-	 *            the cartridge
+	 *            the cartridge (type/framework)
 	 * @param aliases
 	 *            the aliases
 	 * @param links
 	 *            the links
 	 * @param domain
-	 *            the domain
+	 *            the domain this application belongs to
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 			final String applicationUrl,
