@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.IApplication;
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
@@ -37,19 +38,19 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	private String id;
 	private String suffix;
 	/** root node in the business domain. */
-	private final ConnectionResource connectionResource;
+	private final APIResource connectionResource;
 	/** Applications for the domain. */
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 
-	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final ConnectionResource api) {
+	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final APIResource api) {
 		super(api.getService(), links);
 		this.id = namespace;
 		this.suffix = suffix;
 		this.connectionResource = api;
 	}
 
-	protected DomainResource(DomainResourceDTO domainDTO, final ConnectionResource api) {
+	protected DomainResource(DomainResourceDTO domainDTO, final APIResource api) {
 		this(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), api);
 	}
 
@@ -61,8 +62,8 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return suffix;
 	}
 
-	public void setId(String namespace) throws OpenShiftException, SocketTimeoutException {
-		DomainResourceDTO domainDTO = new UpdateDomainRequest().execute(namespace);
+	public void rename(String id) throws OpenShiftException, SocketTimeoutException {
+		DomainResourceDTO domainDTO = new UpdateDomainRequest().execute(id);
 		this.id = domainDTO.getNamespace();
 		this.suffix = domainDTO.getSuffix();
 		this.getLinks().clear();
@@ -81,7 +82,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		// return accessible;
 	}
 
-	public IApplication createApplication(String name, String cartridge, Boolean scale, String nodeProfile)
+	public IApplication createApplication(String name, ICartridge cartridge, Boolean scale, String nodeProfile)
 			throws OpenShiftException, SocketTimeoutException {
 		// check that an application with the same does not already exists, and
 		// btw, loads the list of applications if needed (lazy)
@@ -95,7 +96,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			throw new OpenShiftException("Application with name '{0}' already exists.", name);
 		}
 		ApplicationResourceDTO applicationDTO = 
-				new CreateApplicationRequest().execute(name, cartridge, scale, nodeProfile);
+				new CreateApplicationRequest().execute(name, cartridge.getName(), scale, nodeProfile);
 		ApplicationResource application = new ApplicationResource(applicationDTO, cartridge, this);
 		this.applications.add(application);
 		return application;
@@ -116,7 +117,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return getApplicationByName(name) != null;
 	}
 
-	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException {
+	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
 		List<IApplication> matchingApplications = new ArrayList<IApplication>();
 		for (IApplication application : this.applications) {
 			if (cartridge.equals(application.getCartridge())) {
@@ -126,7 +127,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return matchingApplications;
 	}
 
-	public boolean hasApplicationByCartridge(String cartridge) throws OpenShiftException {
+	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException {
 		return getApplicationsByCartridge(cartridge).size() > 0;
 	}
 
@@ -157,9 +158,10 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			this.applications = new ArrayList<IApplication>();
 			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
+				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
 				final ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
 						applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(),
-						applicationDTO.getGitUrl(), applicationDTO.getFramework(), applicationDTO.getAliases(),
+						applicationDTO.getGitUrl(), cartridge, applicationDTO.getAliases(),
 						applicationDTO.getLinks(), this);
 				this.applications.add(application);
 			}
@@ -172,13 +174,16 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		this.applications.remove(application);
 	}
 
-	public List<String> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException {
+	public List<ICartridge> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException {
+		final List<ICartridge> cartridges = new ArrayList<ICartridge>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getRequiredParams()) {
 			if (param.getName().equals("cartridge")) {
-				return param.getValidOptions();
+				for(String option : param.getValidOptions()) {
+					cartridges.add(new Cartridge(option));
+				}
 			}
 		}
-		return Collections.emptyList();
+		return cartridges;
 	}
 
 	@Override

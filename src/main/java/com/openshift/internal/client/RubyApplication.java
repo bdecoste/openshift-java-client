@@ -27,13 +27,13 @@ public class RubyApplication extends ApplicationResource implements IRubyApplica
 
 	
 	public RubyApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
+			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
 	public RubyApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
-			String gitUrl, String cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
+			String gitUrl, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}

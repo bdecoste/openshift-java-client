@@ -10,26 +10,32 @@
  ******************************************************************************/
 package com.openshift.client.utils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 
+import org.fest.assertions.AssertExtension;
+
+import com.openshift.client.IDomain;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftConnectionManager;
 
 /**
- * User Builder, used to establish a connection and retrieve a user.
- * 
  * @author Andre Dietisheim
- * 
  */
-public class TestUserBuilder extends OpenShiftConnectionManager {
+public class DomainAssert implements AssertExtension {
 
-	public TestUserBuilder configure() throws FileNotFoundException, IOException, OpenShiftException {
-		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		return (TestUserBuilder) getConnection(
-				configuration.getClientId()
-				, configuration.getRhlogin()
-				, configuration.getPassword()
-				, configuration.getLibraServer());
+	private IDomain domain;
+
+	public DomainAssert(IDomain domain) {
+		this.domain = domain;
 	}
+
+	public DomainAssert hasId(String id) {
+		assertEquals(domain.getId(), id);
+		return this;
+	}
+
+	public DomainAssert hasSuffix(String suffix) throws OpenShiftException {
+		assertEquals(domain.getSuffix(), suffix);
+		return this;
+	}
+
 }

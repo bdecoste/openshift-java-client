@@ -31,13 +31,13 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
  */
 public class UserResource extends AbstractOpenShiftResource implements IUser {
 
-	private final ConnectionResource api;
+	private final APIResource api;
 	private final String rhLogin;
 	private final String password;
 	
 	private List<SSHKeyResource> sshKeys;
 
-	public UserResource(final ConnectionResource api, final UserResourceDTO dto, final String password) {
+	public UserResource(final APIResource api, final UserResourceDTO dto, final String password) {
 		super(api.getService(), dto.getLinks());
 		this.api = api;
 		this.rhLogin = dto.getRhLogin();

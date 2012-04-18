@@ -25,12 +25,4 @@ public class RubyCartridge extends Cartridge {
 		super(name);
 	}
 	
-	public RubyCartridge(IOpenShiftService service, IUser user) throws OpenShiftException {
-		super(service, user);
-		
-		name = this.getCartridgeName(RUBY);
-	
-	}
-
-
 }

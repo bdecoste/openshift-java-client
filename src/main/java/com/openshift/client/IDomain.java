@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface IDomain {
 
-	public void setId(String namespace) throws OpenShiftException, SocketTimeoutException;
+	public void rename(String id) throws OpenShiftException, SocketTimeoutException;
 
 	public String getId();
 
@@ -65,7 +65,7 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 */
-	public IApplication createApplication(final String name, final String cartridge, final Boolean scale, final String nodeProfile) throws OpenShiftException, SocketTimeoutException;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final Boolean scale, final String nodeProfile) throws OpenShiftException, SocketTimeoutException;
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException;
 	
@@ -75,14 +75,14 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public List<String> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException;
+	public List<ICartridge> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException;
 
 	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
 	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
-	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException;
+	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
 
-	public boolean hasApplicationByCartridge(String cartridge) throws OpenShiftException;
+	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException;
 
 }

@@ -71,7 +71,7 @@ public class DomainResourceTest {
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(new RestService("http://mock",
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
 				"clientId", mockClient), "foo@redhat.com", "bar");
 		this.user = connection.getUser();
 	}
@@ -180,7 +180,7 @@ public class DomainResourceTest {
 				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		domain.setId("foobarbaz");
+		domain.rename("foobarbaz");
 		// verifications
 		final IDomain updatedDomain = user.getDomain("foobarbaz");
 		assertThat(updatedDomain.getId()).isEqualTo("foobarbaz");

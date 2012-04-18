@@ -37,7 +37,7 @@ public interface IApplication {
 	 * 
 	 * @return the uri of the git repo of this application.
 	 */
-	public String getGitUri();
+	public String getGitUrl();
 
 	/**
 	 * Returns the url at which this application may be reached at.
@@ -61,7 +61,7 @@ public interface IApplication {
 	 * @return the cartridge of this application
 	 * 
 	 */
-	public String getCartridge();
+	public ICartridge getCartridge();
 
 	/**
 	 * Adds the given embeddable cartridge to this app, given its name.
@@ -166,7 +166,7 @@ public interface IApplication {
 	 * 
 	 * @throws OpenShiftException
 	 */
-	public String getCreationTime() throws OpenShiftException;
+	public String getCreationTime();
 
 	/**
 	 * Destroys this application (and removes it from the list of available applications)

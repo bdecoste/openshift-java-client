@@ -24,7 +24,7 @@ import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.StringUtils;
-import com.openshift.client.utils.TestUserBuilder;
+import com.openshift.client.utils.TestConnectionFactory;
 
 public class DomainResourceIntegrationTest {
 
@@ -33,15 +33,18 @@ public class DomainResourceIntegrationTest {
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
 		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		final IOpenShiftConnection connection = new OpenShiftConnectionManager().getConnection(
-				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
+		final IOpenShiftConnection connection = 
+				new OpenShiftConnectionFactory().create(
+				configuration.getClientId(), 
+				configuration.getRhlogin(), 
+				configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
 	}
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void shouldThrowInvalidCredentialsWhenConnectingWithInvalidCredentials() throws Exception {
-		new TestUserBuilder().getConnection(
+		new TestConnectionFactory().getConnection(
 				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
 	}
 
@@ -98,7 +101,7 @@ public class DomainResourceIntegrationTest {
 
 			// operation
 			String namespace = StringUtils.createRandomString();
-			domain.setId(namespace);
+			domain.rename(namespace);
 
 			// verification
 			IDomain domainByNamespace = user.getDomain(namespace);
