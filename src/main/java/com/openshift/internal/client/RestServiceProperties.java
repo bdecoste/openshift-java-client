@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
 
-import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.utils.StreamUtils;
 
 /**
@@ -38,7 +37,7 @@ public class RestServiceProperties {
 
 	public String getVersion() {
 		if (version == null) {
-			userAgent = getStringProperty(KEY_VERSION);
+			version = getStringProperty(KEY_VERSION);
 		}
 		return version;
 	}
@@ -52,7 +51,7 @@ public class RestServiceProperties {
 	}
 
 	public String getUseragent(String id) {
-		return MessageFormat.format(getUseragentPattern(), id);
+		return MessageFormat.format(getUseragentPattern(), getVersion(), id);
 	}
 
 	protected String getUseragentPattern() {
