@@ -65,4 +65,8 @@ public class DomainTestUtils {
 		}
 		return domain;
 	}
+
+	public static String createRandomName() {
+		return String.valueOf(System.currentTimeMillis());
+	}
 }
