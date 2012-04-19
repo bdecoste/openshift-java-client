@@ -10,7 +10,7 @@
  ******************************************************************************/ 
 package com.openshift.internal.client.request;
 
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 
 /**
  * @author André Dietisheim
@@ -18,14 +18,14 @@ import com.openshift.client.IEmbeddableCartridge;
 public class EmbedRequest extends AbstractOpenShiftRequest {
 
 	private String name;
-	private IEmbeddableCartridge cartridge ;
+	private IEmbeddedCartridge cartridge ;
 	private EmbedAction action;
 
-	public EmbedRequest(String name, IEmbeddableCartridge cartridge, EmbedAction action, String username) {
+	public EmbedRequest(String name, IEmbeddedCartridge cartridge, EmbedAction action, String username) {
 		this(name, cartridge, action, username, false);
 	}
 
-	public EmbedRequest(String name, IEmbeddableCartridge cartridge, EmbedAction action, String username, boolean debug) {
+	public EmbedRequest(String name, IEmbeddedCartridge cartridge, EmbedAction action, String username, boolean debug) {
 		super(username, debug);
 		this.name = name;
 		this.cartridge = cartridge;
@@ -40,7 +40,7 @@ public class EmbedRequest extends AbstractOpenShiftRequest {
 		return name;
 	}
 
-	public IEmbeddableCartridge getEmbeddableCartridge() {
+	public IEmbeddedCartridge getEmbeddableCartridge() {
 		return cartridge;
 	}
 

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.EnumApplicationScale;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
@@ -82,7 +83,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		// return accessible;
 	}
 
-	public IApplication createApplication(String name, ICartridge cartridge, Boolean scale, String nodeProfile)
+	public IApplication createApplication(final String name, final ICartridge cartridge, final EnumApplicationScale scale, final String nodeProfile)
 			throws OpenShiftException, SocketTimeoutException {
 		// check that an application with the same does not already exists, and
 		// btw, loads the list of applications if needed (lazy)
@@ -96,7 +97,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			throw new OpenShiftException("Application with name '{0}' already exists.", name);
 		}
 		ApplicationResourceDTO applicationDTO = 
-				new CreateApplicationRequest().execute(name, cartridge.getName(), scale, nodeProfile);
+				new CreateApplicationRequest().execute(name, cartridge.getName(), (scale != null ? scale.getValue() : null), nodeProfile);
 		ApplicationResource application = new ApplicationResource(applicationDTO, cartridge, this);
 		this.applications.add(application);
 		return application;
@@ -182,6 +183,18 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return cartridges;
 	}
 
+	public List<String> getAvailableNodeProfiles() throws OpenShiftException, SocketTimeoutException {
+		final List<String> nodeProfiles = new ArrayList<String>();
+		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getOptionalParams()) {
+			if (param.getName().equals("node_profile")) {
+				for(String option : param.getValidOptions()) {
+					nodeProfiles.add(option);
+				}
+			}
+		}
+		return nodeProfiles;
+	}
+	
 	@Override
 	public String toString() {
 		return "Domain ["
@@ -204,7 +217,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			super(LINK_ADD_APPLICATION);
 		}
 
-		public ApplicationResourceDTO execute(final String name, final String cartridge, final Boolean scale,
+		public ApplicationResourceDTO execute(final String name, final String cartridge, final String scale,
 				final String nodeProfile) throws SocketTimeoutException, OpenShiftException {
 			return super.execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),

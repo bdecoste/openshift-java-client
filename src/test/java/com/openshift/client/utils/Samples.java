@@ -67,15 +67,17 @@ public enum Samples {
 	ADD_USER_KEY_KO_JSON("add-user-key-ko.json"),
 	ADD_USER_KEY_OK_JSON("add-user-key-ok.json"),
 	DELETE_USER_KEY_KO_JSON("delete-user-key-ko.json"),
-	GET_REST_API_JSON("get-rest-api.json"),
+	GET_REST_API("get-rest-api.json"),
 	GET_USER("get-user.json"),
 	GET_USER_KEY_DEFAULT_JSON("get-user-key-default.json"),
 	GET_USER_KEYS_MULTIPLE_JSON("get-user-keys-multiple.json"),
 	GET_USER_KEYS_NONE_JSON("get-user-keys-none.json"),
 	GET_USER_KEYS_SINGLE_JSON("get-user-keys-single.json"),
 	UPDATE_USER_KEY_JSON("update-user-key.json"),
-	UPDATE_USER_KEY_RSA_JSON("update-user-key-rsa.json");
-
+	UPDATE_USER_KEY_RSA_JSON("update-user-key-rsa.json"),
+	// pre-defined cartridges
+	GET_CARTRIDGES("get-cartridges.json");
+	
 	private static final String SAMPLES_FOLDER = "/samples/";
 
 	private String filePath;

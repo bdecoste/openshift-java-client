@@ -70,7 +70,7 @@ public class ApplicationResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		.thenReturn(Samples.GET_REST_API.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
@@ -146,7 +146,7 @@ public class ApplicationResourceTest {
 				ADD_APPLICATION_JSON.getContentAsString());
 		// operation
 		final ICartridge cartridge = new Cartridge("jbossas-7");
-		final IApplication app = domain.createApplication("sample", cartridge, null, null);
+		final IApplication app = domain.createApplication("sample", cartridge, EnumApplicationScale.DEFAULT, null);
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");
@@ -447,7 +447,7 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
-		final List<IEmbeddableCartridge> embeddedCartridges = app.getEmbeddedCartridges();
+		final List<IEmbeddedCartridge> embeddedCartridges = app.getEmbeddedCartridges();
 		// verifications
 		assertThat(embeddedCartridges).hasSize(2);
 	}
@@ -497,7 +497,7 @@ public class ApplicationResourceTest {
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
-		app.addEmbeddableCartridge("mysql-5.1");
+		app.addEmbeddedCartridge("mysql-5.1");
 		// verifications
 		assertThat(app.getEmbeddedCartridge("mysql-5.1")).satisfies(new Condition<Object>() {
 			@Override
@@ -525,7 +525,7 @@ public class ApplicationResourceTest {
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
 		try {
-			app.addEmbeddableCartridge("mysql-5.1");
+			app.addEmbeddedCartridge("mysql-5.1");
 			fail("Expected an exception here...");
 		} catch (SocketTimeoutException e) {
 			// ok
@@ -571,7 +571,7 @@ public class ApplicationResourceTest {
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 		// operation
-		final IEmbeddableCartridge embeddedCartridge = application.getEmbeddedCartridge("mysql-5.1");
+		final IEmbeddedCartridge embeddedCartridge = application.getEmbeddedCartridge("mysql-5.1");
 		try {
 			embeddedCartridge.destroy();
 			fail("Expected an exception here..");

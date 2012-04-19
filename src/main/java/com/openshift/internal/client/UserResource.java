@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.openshift.client.IDomain;
+import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.ISSHPublicKey;
 import com.openshift.client.IUser;
@@ -42,6 +43,10 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		this.api = api;
 		this.rhLogin = dto.getRhLogin();
 		this.password = password;
+	}
+	
+	public IOpenShiftConnection getConnection() {
+		return api;
 	}
 
 	public String getRhlogin() {

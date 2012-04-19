@@ -15,19 +15,19 @@ import java.util.List;
 
 import org.jboss.dmr.ModelNode;
 
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.internal.client.EmbeddableCartridgeResource;
 
 /**
  * @author André Dietisheim
  */
-public class ListEmbeddableCartridgesResponseUnmarshaller extends AbstractListCartridgesResponseUnmarshaller<IEmbeddableCartridge> {
+public class ListEmbeddableCartridgesResponseUnmarshaller extends AbstractListCartridgesResponseUnmarshaller<IEmbeddedCartridge> {
 
-	protected List<IEmbeddableCartridge> createOpenShiftObject(ModelNode responseNode) {
-		return createCartridgeList(responseNode, new ArrayList<IEmbeddableCartridge>());
+	protected List<IEmbeddedCartridge> createOpenShiftObject(ModelNode responseNode) {
+		return createCartridgeList(responseNode, new ArrayList<IEmbeddedCartridge>());
 	}
 
-	protected IEmbeddableCartridge createCartridge(ModelNode cartridgeNode) {
+	protected IEmbeddedCartridge createCartridge(ModelNode cartridgeNode) {
 		String name = cartridgeNode.asString();
 		return null;// new EmbeddableCartridge(name);
 	}
