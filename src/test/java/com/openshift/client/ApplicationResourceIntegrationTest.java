@@ -41,7 +41,7 @@ public class ApplicationResourceIntegrationTest {
 	public void setUp() throws FileNotFoundException, IOException, OpenShiftException {
 		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		final IOpenShiftConnection connection =
-				new OpenShiftConnectionFactory().create(
+				new OpenShiftConnectionFactory().getConnection(
 						configuration.getClientId(),
 						configuration.getRhlogin(),
 						configuration.getPassword(),

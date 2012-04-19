@@ -26,7 +26,7 @@ public class TestConnectionFactory extends OpenShiftConnectionFactory {
 
 	public TestConnectionFactory configure() throws FileNotFoundException, IOException, OpenShiftException {
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		return (TestConnectionFactory) create(
+		return (TestConnectionFactory) getConnection(
 				configuration.getClientId()
 				, configuration.getRhlogin()
 				, configuration.getPassword()
