@@ -47,13 +47,21 @@ public class ApplicationTestUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static IApplication getOrCreateApplication(IDomain domain) throws SocketTimeoutException, OpenShiftException {
-		Iterator<IApplication> applicationIterator = domain.getApplications().iterator();
-		if (applicationIterator.hasNext()) {
-			return applicationIterator.next();
-		}
-		
-		return domain.createApplication(StringUtils.createRandomString(), ICartridge.JBOSSAS_7, null, null);
+		return getOrCreateApplication(domain, ICartridge.JBOSSAS_7);
 	}
+
+	public static IApplication getOrCreateApplication(IDomain domain, ICartridge cartridge)
+			throws SocketTimeoutException, OpenShiftException {
+		for (Iterator<IApplication> it = domain.getApplications().iterator(); it.hasNext();) {
+			IApplication application = it.next();
+			if (cartridge.equals(application.getCartridge())) {
+				return application;
+			}
+		}
+
+		return domain.createApplication(StringUtils.createRandomString(), cartridge, null, null);
+	}
+
 }

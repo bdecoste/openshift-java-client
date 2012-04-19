@@ -95,7 +95,7 @@ public class RestService implements IRestService {
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(
 					link.getHref(), e, e.getMessage(),
-					"Could not request {0}: {1}", link.getHref(), e.getMessage());
+					"Could not request {0}: {1}", link.getHref(), getResponseMessage(e));
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, e.getMessage());
 		} catch (MalformedURLException e) {
@@ -112,8 +112,12 @@ public class RestService implements IRestService {
 			}
 			return builder.toString();
 		} catch (OpenShiftException e) {
+			// unexpected json content 
 			LOGGER.error(e.getMessage());
-			return null;
+			return clientException.getMessage();
+		} catch(IllegalArgumentException e) {
+			// not json
+			return clientException.getMessage();
 		}
 	}
 

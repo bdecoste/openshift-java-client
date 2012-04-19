@@ -78,7 +78,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final String applicationUrl;
 
 	/** The pathat which the health of this application may be queried. */
-	private final String healthCheckPath;
+	private final String healthCheckUrl;
 
 	/** The url at which the git repo of this application may be reached. */
 	private final String gitUrl;
@@ -101,7 +101,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	protected ApplicationResource(ApplicationResourceDTO dto, String cartridge, DomainResource domain) {
 		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(),
-				cartridge, dto.getAliases(), dto.getLinks(), domain);
+				dto.getHealthCheckPath(), cartridge, dto.getAliases(), dto.getLinks(), domain);
 	}
 
 	/**
@@ -128,9 +128,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException 
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
+			final String applicationUrl, final String gitUrl, String healthCheckPath, final ICartridge cartridge, final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
-		this(name, uuid, creationTime, null, applicationUrl, gitUrl, cartridge, aliases, links, domain);
+		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
 	}
 
 	/**
@@ -160,11 +160,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 <<<<<<< HEAD
+<<<<<<< HEAD
 			final String creationLog,
 			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
 =======
 			final String creationLog, final String applicationUrl, final String gitUrl, final ICartridge cartridge,
+=======
+			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final ICartridge cartridge, 
+>>>>>>> be45bab... implementing ApplicationResourceIntegrationTests, implemented IApplication#getHealthCheckUrl
 			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
 >>>>>>> 235a91a... dont reset instance vars when destroying application/domain
 		super(domain.getService(), links);
@@ -175,7 +179,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.cartridge = cartridge;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
-		this.healthCheckPath = null;
+		this.healthCheckUrl = applicationUrl + healthCheckPath;
 		this.domain = domain;
 		this.aliases = aliases;
 	}
@@ -293,11 +297,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public String getHealthCheckUrl() {
-		throw new UnsupportedOperationException();
+		return healthCheckUrl;
 	}
 
 	public String getHealthCheckResponse() throws OpenShiftException {
-		throw new OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
+		// TODO: implement
+		throw new UnsupportedOperationException();
 	}
 
 	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {

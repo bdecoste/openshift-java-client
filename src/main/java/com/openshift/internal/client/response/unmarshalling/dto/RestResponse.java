@@ -37,7 +37,7 @@ public class RestResponse {
 	 * @param data the data
 	 * @param dataType the data type
 	 */
-	public RestResponse(final String status, final List<Message> messages, final Object data, final EnumDataType dataType) {
+	protected RestResponse(final String status, final List<Message> messages, final Object data, final EnumDataType dataType) {
 		this.status = status;
 		this.messages = messages;
 		this.data = data;

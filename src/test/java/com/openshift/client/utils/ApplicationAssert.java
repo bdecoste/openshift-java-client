@@ -30,8 +30,8 @@ import com.openshift.client.OpenShiftException;
  */
 public class ApplicationAssert implements AssertExtension {
 
-	public static final Pattern APPLICATION_URL_REGEXP = Pattern.compile("https*://(.+)-([^\\.]+)\\.(.+)/");
-	public static final Pattern GIT_URL_REGEXP = Pattern.compile("ssh://(.+)@(.+)-([^\\.]+)\\.(.+)/~/git/(.+).git/");
+	public static final Pattern APPLICATION_URL_PATTERN = Pattern.compile("https*://(.+)-([^\\.]+)\\.(.+)/(.*)");
+	public static final Pattern GIT_URL_PATTERN = Pattern.compile("ssh://(.+)@(.+)-([^\\.]+)\\.(.+)/~/git/(.+).git/");
 	
 	private IApplication application;
 
@@ -64,7 +64,7 @@ public class ApplicationAssert implements AssertExtension {
 		return this;
 	}
 
-	public ApplicationAssert hasValidCreationTime() {
+	public ApplicationAssert hasCreationTime() {
 		assertNotNull(application.getCreationTime());
 		return this;
 	}
@@ -75,14 +75,14 @@ public class ApplicationAssert implements AssertExtension {
 	}
 
 	public ApplicationAssert hasValidGitUrl() {
-		Matcher matcher = GIT_URL_REGEXP.matcher(application.getGitUrl());
+		Matcher matcher = GIT_URL_PATTERN.matcher(application.getGitUrl());
 		assertTrue(matcher.matches());
-		assertEquals(3, matcher.groupCount());
+		assertEquals(5, matcher.groupCount());
 		
-		assertEquals(application.getUUID(), matcher.group(0));
-		assertEquals(application.getName(), matcher.group(1));
-		assertEquals(application.getDomain().getSuffix(), matcher.group(3));
-		assertEquals(application.getName(), matcher.group(4));
+		assertEquals(application.getUUID(), matcher.group(1));
+		assertEquals(application.getName(), matcher.group(2));
+		assertEquals(application.getDomain().getSuffix(), matcher.group(4));
+		assertEquals(application.getName(), matcher.group(5));
 
 		return this;
 	}
@@ -93,18 +93,36 @@ public class ApplicationAssert implements AssertExtension {
 	}
 
 	public ApplicationAssert hasValidApplicationUrl() {
-		Matcher matcher = APPLICATION_URL_REGEXP.matcher(application.getApplicationUrl());
+		assertApplicationUrl();
+		return this;
+	}
+
+	private void assertApplicationUrl() {
+		Matcher matcher = APPLICATION_URL_PATTERN.matcher(application.getApplicationUrl());
 		assertTrue(matcher.matches());
-		assertEquals(3, matcher.groupCount());
+		assertTrue(matcher.groupCount() >= 3);
 
 		assertEquals(application.getName(), matcher.group(1));
 		IDomain domain = application.getDomain();
 		assertEquals(domain.getId(), matcher.group(2));
 		assertEquals(domain.getSuffix(), matcher.group(3));
-		
+	}
+
+	public ApplicationAssert hasHealthCheckPath(String healthCheckPath) {
+		assertEquals(application.getHealthCheckUrl(), application.getApplicationUrl() + healthCheckPath);
 		return this;
 	}
 
+	public ApplicationAssert hasValidHealthCheckUrl() {
+		assertApplicationUrl();
+	
+		Matcher matcher = APPLICATION_URL_PATTERN.matcher(application.getHealthCheckUrl());
+		assertTrue(matcher.matches());
+		assertEquals(4, matcher.groupCount());
+
+		return this;
+	}
+	
 	public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws SocketTimeoutException,
 			OpenShiftException {
 		if (embeddableCartridgeNames.length == 0) {

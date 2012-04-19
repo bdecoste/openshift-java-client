@@ -18,9 +18,9 @@ import java.net.MalformedURLException;
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.jcraft.jsch.UserInfo;
 import com.openshift.client.utils.ApplicationAssert;
 import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
@@ -32,6 +32,8 @@ import com.openshift.internal.client.ApplicationInfo;
  */
 public class ApplicationResourceIntegrationTest {
 
+	private static final ICartridge NON_SCALABLE_CARTRIDGE = ICartridge.PERL_51;
+	
 	private static IDomain domain;
 
 	@Before
@@ -62,15 +64,17 @@ public class ApplicationResourceIntegrationTest {
 		assertThat(new ApplicationAssert(application))
 				.hasName(applicationName)
 				.hasUUID()
+				.hasCreationTime()
 				.hasCartridge(ICartridge.JBOSSAS_7)
 				.hasValidApplicationUrl()
 				.hasValidGitUrl()
+				.hasValidHealthCheckUrl()
 				.hasEmbeddableCartridges()
 				.hasAlias();
 	}
 
 	@Test
-	public void canCreateRubyApplication() throws Exception {
+	public void shouldCreateRubyApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IRubyApplication application = null;
@@ -89,7 +93,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canCreateHAProxyApplication() throws Exception {
+	public void shouldCreateHAProxyApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IHAProxyApplication application = null;
@@ -109,7 +113,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canRawProxyApplication() throws Exception {
+	public void shouldRawProxyApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IRawApplication application = null;
@@ -128,7 +132,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canCreatePythonApplication() throws Exception {
+	public void shouldCreatePythonApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IPythonApplication application = null;
@@ -147,7 +151,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canCreatePHPApplication() throws Exception {
+	public void shouldCreatePHPApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IPHPApplication application = null;
@@ -166,7 +170,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canCreatePerlApplication() throws Exception {
+	public void shouldCreatePerlApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IPerlApplication application = null;
@@ -185,7 +189,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canCreateNodeJSApplication() throws Exception {
+	public void shouldCreateNodeJSApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// INodeJSApplication application = null;
@@ -204,7 +208,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canCreateJenkinsApplication() throws Exception {
+	public void shouldCreateJenkinsApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// IJenkinsApplication application = null;
@@ -252,7 +256,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canStopApplication() throws Exception {
+	public void shouldStopApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 
@@ -261,7 +265,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canStartStoppedApplication() throws Exception {
+	public void shouldStartStoppedApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 		application.stop();
@@ -271,123 +275,152 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canStartStartedApplication() throws Exception {
+	public void shouldStartStartedApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 		application.start();
 
 		// operation
 		application.start();
+
+		// verification
+		// there's currently no API to verify the application state
 	}
 
 	@Test
-	public void canStopStoppedApplication() throws Exception {
+	public void shouldStopStoppedApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 		application.stop();
 
 		// operation
 		application.stop();
+
+		// verification
+		// there's currently no API to verify the application state
 	}
 
 	@Test
-	public void canRestartApplication() throws Exception {
+	public void shouldRestartStartedApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 		application.start();
 
 		// operation
 		application.restart();
+
+		// verification
+		// there's currently no API to verify the application state
 	}
 
 	@Test
-	public void canGetStatus() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// IApplication application = service.createApplication(applicationName,
-		// ICartridge.JBOSSAS_7, user);
-		// String applicationStatus = service.getStatus(application.getName(),
-		// application.getCartridge(), user);
-		// assertNotNull(applicationStatus);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+	public void shouldRestartStoppedApplication() throws Exception {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.stop();
+
+		// operation
+		application.restart();
+
+		// verification
+		// there's currently no API to verify the application state
 	}
 
 	@Test
-	public void returnsValidApplicationUrl() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// IApplication application = service.createApplication(applicationName,
-		// ICartridge.JBOSSAS_7, user);
-		// String applicationUrl = application.getApplicationUrl();
-		// assertNotNull(applicationUrl);
-		// assertApplicationUrl(applicationName, applicationUrl);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
+	public void shouldConcealPortApplication() throws Exception {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.start();
+
+		// operation
+		application.concealPort();
+
+		// verification
+		// there's currently no API to verify the application state
 	}
 
 	@Test
-	public void returnsCreationTime() throws Exception {
-		// String applicationName =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// try {
-		// IApplication application = service.createApplication(applicationName,
-		// ICartridge.JBOSSAS_7, user);
-		// Date creationTime = application.getCreationTime();
-		// assertNotNull(creationTime);
-		// assertTrue(creationTime.compareTo(new Date()) == -1);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// }
-	}
+	public void shouldExposePortApplication() throws Exception {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		application.start();
 
-	/**
-	 * This tests checks if the creation time is returned in the 2nd
-	 * application. The creation time is only available in the
-	 * {@link ApplicationInfo} which is held by the {@link UserInfo}. The
-	 * UserInfo is fetched when the 1st application is created and then stored.
-	 * The 2nd application has therefore to force the user to refresh the user
-	 * info.
-	 * 
-	 * @throws Exception
-	 * 
-	 * @see UserInfo
-	 * @see ApplicationInfo
-	 */
-	@Test
-	public void returnsCreationTimeOn2ndApplication() throws Exception {
-		// String applicationName = null;
-		// String applicationName2 = null;
-		// try {
-		// applicationName = ApplicationTestUtils.createRandomApplicationName();
-		// IApplication application = user.createApplication(applicationName,
-		// ICartridge.JBOSSAS_7);
-		// Date creationTime = application.getCreationTime();
-		// assertNotNull(creationTime);
-		// applicationName2 =
-		// ApplicationTestUtils.createRandomApplicationName();
-		// IApplication application2 = user.createApplication(applicationName2,
-		// ICartridge.JBOSSAS_7);
-		// Date creationTime2 = application2.getCreationTime();
-		// assertNotNull(creationTime2);
-		// assertTrue(creationTime.compareTo(creationTime2) == -1);
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName,
-		// user, service);
-		// ApplicationTestUtils.silentlyDestroyAS7Application(applicationName2,
-		// user, service);
-		// }
+		// operation
+		application.exposePort();
+
+		// verification
+		// there's currently no API to verify the application state
 	}
 
 	@Test
-	public void canThreadDumpJBossApplication() throws Exception {
+	@Ignore("Unused feature")
+	public void shouldGetApplicationDescriptor() throws Throwable {
+	}
+
+	@Test
+	@Ignore("Need higher quotas on stg")
+	public void shouldScaleDownApplication() throws Throwable {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+
+		// operation
+		application.scaleDown();
+
+		// verification
+		// there's currently no API to verify the application state
+	}
+
+	@Test(expected=OpenShiftEndpointException.class)
+	public void shouldNotScaleDownApplication() throws Throwable {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain, NON_SCALABLE_CARTRIDGE);
+
+		// operation
+		application.scaleDown();
+
+		// verification
+		// there's currently no API to verify the application state
+	}
+	
+	@Test(expected=OpenShiftEndpointException.class)
+	public void shouldNotScaleUpApplication() throws Throwable {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain, NON_SCALABLE_CARTRIDGE);
+
+		// operation
+		application.scaleUp();
+
+		// verification
+		// there's currently no API to verify the application state
+	}
+
+	@Test
+	public void shouldAddAliasToApplication() throws Throwable {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		String alias = String.valueOf(System.currentTimeMillis());
+		// operation
+		
+		application.addAlias(alias);
+		
+		// verification
+		assertThat(application.getAliases()).contains(alias);
+	}
+	
+	@Test(expected=OpenShiftEndpointException.class)
+	public void shouldNotAddExistingAliasToApplication() throws Throwable {
+		// pre-condition
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		String alias = String.valueOf(System.currentTimeMillis());
+		application.addAlias(alias);
+		assertThat(application.getAliases()).contains(alias);
+
+		// operation
+		application.addAlias(alias);
+	}
+	
+	@Test
+	public void shouldThreadDumpJBossApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// ApplicationLogReader reader = null;
@@ -420,7 +453,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canThreadDumpRackApplication() throws Exception {
+	public void shouldThreadDumpRackApplication() throws Exception {
 		// String applicationName =
 		// ApplicationTestUtils.createRandomApplicationName();
 		// ApplicationLogReader reader = null;
@@ -470,7 +503,7 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void canWaitForApplication() throws OpenShiftException, MalformedURLException, IOException {
+	public void shouldWaitForApplication() throws OpenShiftException, MalformedURLException, IOException {
 		// String applicationName = null;
 		// IApplication application = null;
 		// try {

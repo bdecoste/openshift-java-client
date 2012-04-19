@@ -155,10 +155,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			this.applications = new ArrayList<IApplication>();
 			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
-				final ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
-						applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(),
-						applicationDTO.getGitUrl(), applicationDTO.getFramework(), applicationDTO.getAliases(),
-						applicationDTO.getLinks(), this);
+				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
+				final ApplicationResource application = 
+						new ApplicationResource(applicationDTO, cartridge, this);
 				this.applications.add(application);
 			}
 		}

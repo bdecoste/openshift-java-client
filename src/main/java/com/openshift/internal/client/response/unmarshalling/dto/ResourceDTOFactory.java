@@ -19,6 +19,7 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_FRAMEWORK;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEARS_COMPONENTS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GIT_URL;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HEALTH_CHECK_PATH;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ID;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INFO;
@@ -362,9 +363,10 @@ public class ResourceDTOFactory {
 		final String applicationUrl = getAsString(appNode, PROPERTY_APP_URL);
 		final String gitUrl = getAsString(appNode, PROPERTY_GIT_URL);
 		final String domainId = getAsString(appNode, PROPERTY_DOMAIN_ID);
+		final String healthCheckPath = getAsString(appNode, PROPERTY_HEALTH_CHECK_PATH);
 		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS));
 		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES));
-		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, applicationUrl, gitUrl, aliases, links);
+		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, applicationUrl, gitUrl, healthCheckPath, aliases, links);
 	}
 
 	private static List<GearResourceDTO> createGears(ModelNode gearsNode) {
