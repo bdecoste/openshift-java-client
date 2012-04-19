@@ -32,6 +32,8 @@ import static com.openshift.client.utils.Samples.STOP_APPLICATION;
 import static com.openshift.client.utils.Samples.STOP_FORCE_APPLICATION;
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -70,11 +72,12 @@ public class ApplicationResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API.getContentAsString());
+				.thenReturn(Samples.GET_REST_API.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService(
+				"http://mock",
 				"clientId", mockClient), "foo@redhat.com", "bar");
 		IUser user = connection.getUser();
 		this.domain = user.getDomain("foobar");
@@ -94,7 +97,8 @@ public class ApplicationResourceTest {
 		final List<IApplication> apps = domain.getApplications();
 		// verifications
 		assertThat(apps).isEmpty();
-		// 4 calls: /API + /API/user + /API/domains + /API/domains/foobar/applications
+		// 4 calls: /API + /API/user + /API/domains +
+		// /API/domains/foobar/applications
 		verify(mockClient, times(4)).get(any(URL.class));
 	}
 
@@ -107,7 +111,8 @@ public class ApplicationResourceTest {
 		final List<IApplication> apps = domain.getApplications();
 		// verifications
 		assertThat(apps).hasSize(1);
-		// 4 calls: /API + /API/user + /API/domains + /API/domains/foobar/applications
+		// 4 calls: /API + /API/user + /API/domains +
+		// /API/domains/foobar/applications
 		verify(mockClient, times(4)).get(any(URL.class));
 
 	}
@@ -121,7 +126,8 @@ public class ApplicationResourceTest {
 		final List<IApplication> apps = domain.getApplications();
 		// verifications
 		assertThat(apps).hasSize(2);
-		// 4 calls: /API + /API/user + /API/domains + /API/domains/foobar/applications
+		// 4 calls: /API + /API/user + /API/domains +
+		// /API/domains/foobar/applications
 		verify(mockClient, times(4)).get(any(URL.class));
 	}
 
@@ -194,8 +200,8 @@ public class ApplicationResourceTest {
 			domain.createApplication("sample", new Cartridge("jbossas-7"), null, null);
 			// expect an exception
 			fail("Expected exception here...");
-		} catch(OpenShiftException e) {
-			//OK
+		} catch (OpenShiftException e) {
+			// OK
 		}
 		// verifications
 		assertThat(domain.getApplications()).hasSize(2);
@@ -545,14 +551,16 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
-		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"))).thenReturn(
-				DELETE_APPLICATION_CARTRIDGE.getContentAsString());
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1")))
+				.thenReturn(
+						DELETE_APPLICATION_CARTRIDGE.getContentAsString());
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 		// operation
 		application.getEmbeddedCartridge("mysql-5.1").destroy();
 		// verifications
-		verify(mockClient, times(1)).delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
+		verify(mockClient, times(1)).delete(anyForm(),
+				urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
 		assertThat(application.getEmbeddedCartridge("mysql-5.1")).isNull();
 		assertThat(application.getEmbeddedCartridges()).hasSize(1);
 	}
@@ -566,8 +574,9 @@ public class ApplicationResourceTest {
 				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
-		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"))).thenThrow(
-				new SocketTimeoutException("mock..."));
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1")))
+				.thenThrow(
+						new SocketTimeoutException("mock..."));
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 		// operation
@@ -579,7 +588,8 @@ public class ApplicationResourceTest {
 			// ok
 		}
 		// verifications
-		verify(mockClient, times(1)).delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
+		verify(mockClient, times(1)).delete(anyForm(),
+				urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1"));
 		assertThat(embeddedCartridge).isNotNull();
 		assertThat(application.getEmbeddedCartridges()).hasSize(2).contains(embeddedCartridge);
 	}
@@ -650,6 +660,27 @@ public class ApplicationResourceTest {
 	@Ignore
 	public void shouldNotifyAfterApplicationDestroyed() throws Throwable {
 		fail("not implemented yet");
+	}
+
+	@Test
+	public void shouldWaitForApplication() throws SocketTimeoutException, HttpClientException, Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications")))
+				.thenReturn(GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample")))
+				.thenReturn(GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+		when(mockClient.get(urlEndsWith("/health")))
+				.thenReturn("0");
+		long startTime = System.currentTimeMillis();
+		long timeout = 2 * 1024;
+		final IApplication app = domain.getApplicationByName("sample");
+
+		
+		// operation
+		boolean successfull = app.waitForAccessible(timeout);
+		
+		assertFalse(successfull);
+		assertTrue(System.currentTimeMillis() >= startTime + timeout);
 	}
 
 }

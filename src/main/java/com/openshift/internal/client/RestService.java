@@ -218,4 +218,8 @@ public class RestService implements IRestService {
 	public String getPlatformUrl() {
 		return baseUrl;
 	}
+	
+	protected IHttpClient getClient() {
+		return client;
+	}
 }

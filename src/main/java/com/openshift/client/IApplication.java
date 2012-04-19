@@ -54,8 +54,6 @@ public interface IApplication {
 	 */
 	public String getHealthCheckUrl();
 
-	public String getHealthCheckResponse() throws OpenShiftException;
-
 	/**
 	 * Returns the cartridge (application type) that this app is running on.
 	 * 

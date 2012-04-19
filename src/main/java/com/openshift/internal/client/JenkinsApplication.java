@@ -42,7 +42,7 @@ public class JenkinsApplication extends ApplicationResource implements IJenkinsA
 		return getApplicationUrl() + "login?from=%2F";
 	}
 
-	public String getHealthCheckResponse() throws OpenShiftException {
+	public String getHealthCheckSuccessResponse() throws OpenShiftException {
 		return "<html>";
 	}
 }
