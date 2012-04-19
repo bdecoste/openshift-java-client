@@ -27,11 +27,11 @@ import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.RFC822DateUtils;
-import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.GearComponentDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.GearResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.ApplicationResourceDTO;
+import com.openshift.internal.client.response.CartridgeResourceDTO;
+import com.openshift.internal.client.response.GearComponentDTO;
+import com.openshift.internal.client.response.GearResourceDTO;
+import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**

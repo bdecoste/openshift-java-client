@@ -20,10 +20,10 @@ import com.openshift.client.IDomain;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
+import com.openshift.internal.client.response.CartridgeResourceDTO;
+import com.openshift.internal.client.response.DomainResourceDTO;
+import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.UserResourceDTO;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**

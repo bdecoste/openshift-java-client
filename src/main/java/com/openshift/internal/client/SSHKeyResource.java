@@ -16,7 +16,7 @@ import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
-import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
+import com.openshift.internal.client.response.KeyResourceDTO;
 
 /**
  * @author Andre Dietisheim

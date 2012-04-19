@@ -15,9 +15,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.openshift.internal.client.response.unmarshalling.dto.Message;
-import com.openshift.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.response.Message;
+import com.openshift.internal.client.response.ResourceDTOFactory;
+import com.openshift.internal.client.response.RestResponse;
 
 /**
  * @author André Dietisheim

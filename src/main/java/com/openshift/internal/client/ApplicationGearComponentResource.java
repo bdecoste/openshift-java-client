@@ -11,7 +11,7 @@
 package com.openshift.internal.client;
 
 import com.openshift.client.IApplicationGearComponent;
-import com.openshift.internal.client.response.unmarshalling.dto.GearComponentDTO;
+import com.openshift.internal.client.response.GearComponentDTO;
 
 public class ApplicationGearComponentResource extends AbstractOpenShiftResource implements IApplicationGearComponent {
 

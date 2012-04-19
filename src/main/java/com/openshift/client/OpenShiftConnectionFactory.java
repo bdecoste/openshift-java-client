@@ -20,8 +20,8 @@ import com.openshift.internal.client.APIResource;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.RestResponse;
 
 /**
  * User Builder, used to establish a connection and retrieve a user.

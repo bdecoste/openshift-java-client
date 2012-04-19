@@ -16,7 +16,7 @@ import java.util.List;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
-import com.openshift.internal.client.response.unmarshalling.dto.GearResourceDTO;
+import com.openshift.internal.client.response.GearResourceDTO;
 
 /**
  * @author Xavier Coulon

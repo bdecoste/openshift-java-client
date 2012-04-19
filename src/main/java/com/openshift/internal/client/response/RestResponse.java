@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.response.unmarshalling.dto;
+package com.openshift.internal.client.response;
 
 import java.util.List;
 

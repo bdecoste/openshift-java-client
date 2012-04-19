@@ -8,9 +8,9 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.rest.unmarshalling;
+package com.openshift.internal.client.response;
 
-import static com.openshift.internal.client.response.unmarshalling.dto.ILinkNames.ADD_APPLICATION;
+import static com.openshift.internal.client.response.ILinkNames.ADD_APPLICATION;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -26,18 +26,18 @@ import org.junit.Test;
 
 import com.openshift.client.HttpMethod;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.EnumDataType;
-import com.openshift.internal.client.response.unmarshalling.dto.GearResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.GearComponentDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
-import com.openshift.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
-import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
+import com.openshift.internal.client.response.ApplicationResourceDTO;
+import com.openshift.internal.client.response.CartridgeResourceDTO;
+import com.openshift.internal.client.response.DomainResourceDTO;
+import com.openshift.internal.client.response.EnumDataType;
+import com.openshift.internal.client.response.GearComponentDTO;
+import com.openshift.internal.client.response.GearResourceDTO;
+import com.openshift.internal.client.response.KeyResourceDTO;
+import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.LinkParameter;
+import com.openshift.internal.client.response.ResourceDTOFactory;
+import com.openshift.internal.client.response.RestResponse;
+import com.openshift.internal.client.response.UserResourceDTO;
 
 public class ResourceDTOFactoryTest {
 

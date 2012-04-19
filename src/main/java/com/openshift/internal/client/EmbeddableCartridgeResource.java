@@ -15,7 +15,7 @@ import java.util.Map;
 
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.Link;
 
 /**
  * A cartridge that may be embedded into an application. This class is no enum

@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.response.unmarshalling.dto;
+package com.openshift.internal.client.response;
 
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ALIASES;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_APP_URL;

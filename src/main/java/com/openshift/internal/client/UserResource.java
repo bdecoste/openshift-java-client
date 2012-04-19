@@ -23,8 +23,8 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftSSHKeyException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
-import com.openshift.internal.client.response.unmarshalling.dto.KeyResourceDTO;
-import com.openshift.internal.client.response.unmarshalling.dto.UserResourceDTO;
+import com.openshift.internal.client.response.KeyResourceDTO;
+import com.openshift.internal.client.response.UserResourceDTO;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**

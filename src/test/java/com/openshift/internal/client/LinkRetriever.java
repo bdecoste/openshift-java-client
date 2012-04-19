@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.Link;
 
 /**
  * Utility class to validate that a link in a resources contains a given fragment.

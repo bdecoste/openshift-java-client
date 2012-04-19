@@ -17,7 +17,7 @@ import java.util.Map;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IRubyApplication;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
+import com.openshift.internal.client.response.Link;
 
 /**
  * @author William DeCoste

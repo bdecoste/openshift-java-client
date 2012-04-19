@@ -13,7 +13,7 @@ package com.openshift.client.utils;
 import static org.junit.Assert.assertEquals;
 import org.fest.assertions.AssertExtension;
 
-import com.openshift.internal.client.response.unmarshalling.dto.Message;
+import com.openshift.internal.client.response.Message;
 
 /**
  * @author Andre Dietisheim

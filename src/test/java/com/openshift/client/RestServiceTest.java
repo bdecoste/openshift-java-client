@@ -38,11 +38,11 @@ import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.NotFoundException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
-import com.openshift.internal.client.response.unmarshalling.dto.LinkParameterType;
-import com.openshift.internal.client.response.unmarshalling.dto.Message;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.LinkParameter;
+import com.openshift.internal.client.response.LinkParameterType;
+import com.openshift.internal.client.response.Message;
+import com.openshift.internal.client.response.RestResponse;
 
 /**
  * @author Andre Dietisheim

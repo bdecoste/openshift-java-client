@@ -30,12 +30,12 @@ import com.openshift.client.OpenShiftRequestParameterException;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.LinkParameter;
-import com.openshift.internal.client.response.unmarshalling.dto.LinkParameterType;
-import com.openshift.internal.client.response.unmarshalling.dto.Message;
-import com.openshift.internal.client.response.unmarshalling.dto.ResourceDTOFactory;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.LinkParameter;
+import com.openshift.internal.client.response.LinkParameterType;
+import com.openshift.internal.client.response.Message;
+import com.openshift.internal.client.response.ResourceDTOFactory;
+import com.openshift.internal.client.response.RestResponse;
 import com.openshift.internal.client.utils.StringUtils;
 
 /**

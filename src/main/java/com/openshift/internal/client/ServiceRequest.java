@@ -13,8 +13,8 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.response.unmarshalling.dto.Link;
-import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
+import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.RestResponse;
 
 /**
  * @author Andre Dietisheim
