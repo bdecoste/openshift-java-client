@@ -376,7 +376,7 @@ public class ApplicationResourceIntegrationTest {
 		try {
 			// pre-condition
 			application = domain.createApplication(
-					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, false, null);
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.DEFAULT, null);
 
 			// operation
 			application.scaleDown();
@@ -394,7 +394,7 @@ public class ApplicationResourceIntegrationTest {
 		try {
 			// pre-condition
 			application = domain.createApplication(
-					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, false, null);
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.DEFAULT, null);
 
 			// operation
 			application.scaleUp();
