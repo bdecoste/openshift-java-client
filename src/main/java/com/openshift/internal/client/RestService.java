@@ -200,11 +200,7 @@ public class RestService implements IRestService {
 	}
 
 	public void setProxySet(boolean proxySet) {
-		if (proxySet) {
-			System.setProperty(SYSPROPERTY_PROXY_SET, "true");
-		} else {
-			System.setProperty(SYSPROPERTY_PROXY_SET, "false");
-		}
+		System.setProperty(SYSPROPERTY_PROXY_SET, String.valueOf(proxySet));
 	}
 
 	public void setProxyHost(String proxyHost) {
