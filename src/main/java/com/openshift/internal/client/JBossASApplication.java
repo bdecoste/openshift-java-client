@@ -43,12 +43,8 @@ public class JBossASApplication extends ApplicationResource implements IJBossASA
 //		
 //		return "stdout.log";
 	}
-	
-	public String getHealthCheckUrl() {
-		return getApplicationUrl() + "/health";
-	}
-	
-	public String getHealthCheckResponse() throws OpenShiftException {
+		
+	public String getHealthCheckSuccessResponse() throws OpenShiftException {
 		return "1";
 	}
 

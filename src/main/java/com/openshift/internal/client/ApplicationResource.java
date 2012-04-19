@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,8 +27,10 @@ import com.openshift.client.IApplicationGearComponent;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddedCartridge;
+import com.openshift.client.IHttpClient;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.RFC822DateUtils;
+import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.CartridgeResourceDTO;
 import com.openshift.internal.client.response.GearComponentDTO;
@@ -40,6 +44,8 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
  * @author André Dietisheim
  */
 public class ApplicationResource extends AbstractOpenShiftResource implements IApplication {
+
+	private static final long APPLICATION_WAIT_RETRY_DELAY = 2 * 1024;
 
 	private static final String LINK_DELETE_APPLICATION = "DELETE";
 	private static final String LINK_START_APPLICATION = "START";
@@ -280,21 +286,14 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public String getApplicationUrl() {
 		return applicationUrl;
-		// IDomain domain = getInternalUser().getDomain();
-		// if (domain == null) {
-		// return null;
-		// }
-		// return MessageFormat.format(APPLICATION_URL_PATTERN, name,
-		// domain.getNamespace(), domain.getRhcDomain());
 	}
 
 	public String getHealthCheckUrl() {
 		return healthCheckUrl;
 	}
 
-	public String getHealthCheckResponse() throws OpenShiftException {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+	protected String getHealthCheckSuccessResponse() throws OpenShiftException {
+		return "1";
 	}
 
 	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
@@ -394,9 +393,29 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// return service.waitForApplication(getHealthCheckUrl(), timeout,
-		// getHealthCheckResponse());
+		try {
+			IHttpClient client = ((RestService) getService()).getClient();
+			String response = "";
+			long startTime = System.currentTimeMillis();
+			URL healthCheckUrl = new URL(getHealthCheckUrl());
+			while (!response.startsWith(getHealthCheckSuccessResponse())
+					&& System.currentTimeMillis() < startTime + timeout) {
+				try {
+					Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
+					response = client.get(healthCheckUrl);
+				} catch (HttpClientException e) {
+				}
+			}
+			
+			return response.startsWith(getHealthCheckSuccessResponse());
+		} catch (InterruptedException e) {
+			return false;
+		} catch (MalformedURLException e) {
+			throw new OpenShiftException(e, "Application URL {0} is invalid", healthCheckUrl);
+		} catch (SocketTimeoutException e) {
+			throw new OpenShiftException(e, "Could not reach {0}, connection timeouted", healthCheckUrl);
+		}
+
 	}
 
 	public void refresh() throws SocketTimeoutException, OpenShiftException {
