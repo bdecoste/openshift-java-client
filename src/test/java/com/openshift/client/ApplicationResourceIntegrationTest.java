@@ -11,14 +11,17 @@
 package com.openshift.client;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -47,8 +50,8 @@ public class ApplicationResourceIntegrationTest {
 		domain = DomainTestUtils.getFirstDomainOrCreate(user);
 	}
 
-	@AfterClass
-	public static void cleanUp() {
+	@BeforeClass
+	public static void init() {
 		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
 	}
 
@@ -56,8 +59,7 @@ public class ApplicationResourceIntegrationTest {
 	public void shouldCreateApplication() throws Exception {
 		String applicationName =
 				ApplicationTestUtils.createRandomApplicationName();
-		IApplication application = null;
-		application = domain.createApplication(
+		IApplication application = domain.createApplication(
 				applicationName, ICartridge.JBOSSAS_7, null, null);
 		assertThat(new ApplicationAssert(application))
 				.hasName(applicationName)
@@ -69,6 +71,34 @@ public class ApplicationResourceIntegrationTest {
 				.hasValidHealthCheckUrl()
 				.hasEmbeddableCartridges()
 				.hasAlias();
+	}
+
+	@Test
+	public void shouldListEmbeddedCartridges() throws SocketTimeoutException, OpenShiftException {
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		assertThat(application.getEmbeddedCartridges()).isNotNull();
+	}
+
+	@Test
+	public void shouldAddEmbeddedCartridge() throws SocketTimeoutException, OpenShiftException {
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		String mySqlName = "mysql-5.1";
+		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
+		assertNotNull(application.getEmbeddedCartridges());
+		assertTrue(application.getEmbeddedCartridges().size() > 1);
+		assertTrue(containsEmbeddedCartridge(mySqlName, application.getEmbeddedCartridges()));
+	}
+
+	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {
+		boolean found = false;
+		for (IEmbeddedCartridge cartridge : embeddedCartridges) {
+			if (cartridge != null
+					&& name.equals(cartridge.getName())) {
+				found = true;
+				break;
+			}
+		}
+		return found;
 	}
 
 	@Test
@@ -526,7 +556,7 @@ public class ApplicationResourceIntegrationTest {
 
 		// operation
 		boolean successfull = application.waitForAccessible(timeout);
-		
+
 		if (successfull) {
 			assertTrue(System.currentTimeMillis() <= startTime + timeout);
 		} else {
