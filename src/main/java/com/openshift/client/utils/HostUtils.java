@@ -15,6 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+/**
+ * @author Andre Dietisheim
+ */
 public class HostUtils {
 
 	public static boolean canResolv(String urlString) throws MalformedURLException {
