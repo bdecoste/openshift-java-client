@@ -31,8 +31,6 @@ import com.openshift.client.utils.OpenShiftTestConfiguration;
  */
 public class ApplicationResourceIntegrationTest {
 
-	private static final ICartridge NON_SCALABLE_CARTRIDGE = ICartridge.PERL_51;
-	
 	private static IDomain domain;
 
 	@Before
@@ -372,28 +370,40 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Test(expected=OpenShiftEndpointException.class)
+	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotScaleDownApplication() throws Throwable {
-		// pre-condition
-		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain, NON_SCALABLE_CARTRIDGE);
+		IApplication application = null;
+		try {
+			// pre-condition
+			application = domain.createApplication(
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, false, null);
 
-		// operation
-		application.scaleDown();
+			// operation
+			application.scaleDown();
 
-		// verification
-		// there's currently no API to verify the application state
+			// verification
+			// there's currently no API to verify the application state
+		} finally {
+			ApplicationTestUtils.silentlyDestroy(application);
+		}
 	}
-	
-	@Test(expected=OpenShiftEndpointException.class)
+
+	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotScaleUpApplication() throws Throwable {
-		// pre-condition
-		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain, NON_SCALABLE_CARTRIDGE);
+		IApplication application = null;
+		try {
+			// pre-condition
+			application = domain.createApplication(
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, false, null);
 
-		// operation
-		application.scaleUp();
+			// operation
+			application.scaleUp();
 
-		// verification
-		// there's currently no API to verify the application state
+			// verification
+			// there's currently no API to verify the application state
+		} finally {
+			ApplicationTestUtils.silentlyDestroy(application);
+		}
 	}
 
 	@Test
@@ -402,14 +412,14 @@ public class ApplicationResourceIntegrationTest {
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 		String alias = String.valueOf(System.currentTimeMillis());
 		// operation
-		
+
 		application.addAlias(alias);
-		
+
 		// verification
 		assertThat(application.getAliases()).contains(alias);
 	}
-	
-	@Test(expected=OpenShiftEndpointException.class)
+
+	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotAddExistingAliasToApplication() throws Throwable {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
