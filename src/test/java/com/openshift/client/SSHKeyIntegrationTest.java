@@ -38,7 +38,7 @@ public class SSHKeyIntegrationTest {
 	@Before
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().create(
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(
 				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
