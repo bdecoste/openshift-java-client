@@ -67,7 +67,7 @@ public class DomainResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		.thenReturn(Samples.GET_REST_API.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());

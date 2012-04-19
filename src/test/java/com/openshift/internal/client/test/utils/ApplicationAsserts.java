@@ -25,7 +25,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.RFC822DateUtils;
 
@@ -42,7 +42,7 @@ public class ApplicationAsserts {
 
 	public static final Pattern APPLICATION_URL_REGEXP = Pattern.compile("https*://(.+)-([^\\.]+)\\.(.+)/");
 
-	public static void assertThatContainsApplication(String applicationName, List<IEmbeddableCartridge> embedded,
+	public static void assertThatContainsApplication(String applicationName, List<IEmbeddedCartridge> embedded,
 			String uuid, String cartridgeName, String creationTime, List<IApplication> applications)
 			throws OpenShiftException, SocketTimeoutException {
 		IApplication application = getApplication(applicationName, applications);
@@ -87,7 +87,7 @@ public class ApplicationAsserts {
 	}
 
 	public static void assertApplication(String name, String uuid, String cartridgeName,
-			List<IEmbeddableCartridge> embedded, String creationTime, IApplication application)
+			List<IEmbeddedCartridge> embedded, String creationTime, IApplication application)
 			throws OpenShiftException, SocketTimeoutException {
 		assertApplication(name, uuid, cartridgeName, application);
 		assertEquals(embedded, application.getEmbeddedCartridges());
@@ -99,7 +99,7 @@ public class ApplicationAsserts {
 	}
 
 	public static void assertApplication(String name, String creationLog, String uuid, String cartridgeName,
-			List<IEmbeddableCartridge> embedded, String creationTime, IApplication application)
+			List<IEmbeddedCartridge> embedded, String creationTime, IApplication application)
 			throws OpenShiftException, SocketTimeoutException {
 		assertApplication(name, uuid, cartridgeName, embedded, creationTime, application);
 		assertEquals(creationLog, application.getCreationLog());
@@ -163,12 +163,12 @@ public class ApplicationAsserts {
 		assertEquals(rhcDomain, matcher.group(3));
 	}
 
-	public static void assertThatContainsEmbeddableCartridge(IEmbeddableCartridge embeddableCartridge,
+	public static void assertThatContainsEmbeddableCartridge(IEmbeddedCartridge embeddableCartridge,
 			IApplication application) throws OpenShiftException, SocketTimeoutException {
-		List<IEmbeddableCartridge> cartridges = application.getEmbeddedCartridges();
+		List<IEmbeddedCartridge> cartridges = application.getEmbeddedCartridges();
 		assertNotNull(cartridges);
 		assertTrue(cartridges.size() >= 1);
-		for (IEmbeddableCartridge embeddedCartridge : cartridges) {
+		for (IEmbeddedCartridge embeddedCartridge : cartridges) {
 			if (embeddableCartridge.equals(embeddedCartridge)) {
 				return;
 			}

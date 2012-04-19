@@ -16,16 +16,16 @@ import java.net.SocketTimeoutException;
 /**
  * @author André Dietisheim
  */
-public interface IEmbeddableCartridge {
+public interface IEmbeddedCartridge {
 
 	@Deprecated
-	public static final IEmbeddableCartridge PHPMYADMIN_34 = null;//new EmbeddableCartridge("phpmyadmin-3.4");
+	public static final IEmbeddedCartridge PHPMYADMIN_34 = null;//new EmbeddableCartridge("phpmyadmin-3.4");
 	@Deprecated
-	public static final IEmbeddableCartridge MYSQL_51 = null;//new EmbeddableCartridge("mysql-5.1");
+	public static final IEmbeddedCartridge MYSQL_51 = null;//new EmbeddableCartridge("mysql-5.1");
 	@Deprecated
-	public static final IEmbeddableCartridge JENKINS_14 = null;//new EmbeddableCartridge("jenkins-client-1.4");
+	public static final IEmbeddedCartridge JENKINS_14 = null;//new EmbeddableCartridge("jenkins-client-1.4");
 	@Deprecated
-	public static final IEmbeddableCartridge METRICS_01 = null;//new EmbeddableCartridge("metrics-0.1");
+	public static final IEmbeddedCartridge METRICS_01 = null;//new EmbeddableCartridge("metrics-0.1");
 
 	public String getName();
 

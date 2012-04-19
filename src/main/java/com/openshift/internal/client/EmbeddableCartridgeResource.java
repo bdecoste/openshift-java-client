@@ -13,7 +13,7 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.Link;
 
@@ -23,7 +23,7 @@ import com.openshift.internal.client.response.unmarshalling.dto.Link;
  * 
  * @author André Dietisheim
  */
-public class EmbeddableCartridgeResource extends AbstractOpenShiftResource implements IEmbeddableCartridge {
+public class EmbeddableCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
 	
 	public static final String EMBEDDED_TYPE = "embedded";
 	

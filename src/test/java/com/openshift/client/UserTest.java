@@ -43,7 +43,7 @@ public class UserTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		.thenReturn(Samples.GET_REST_API.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER.getContentAsString());
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",

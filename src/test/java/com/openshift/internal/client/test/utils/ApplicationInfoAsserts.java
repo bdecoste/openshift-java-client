@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.RFC822DateUtils;
 import com.openshift.internal.client.ApplicationInfo;
@@ -29,7 +29,7 @@ import com.openshift.internal.client.ApplicationInfo;
  */
 public class ApplicationInfoAsserts {
 
-	public static void assertThatContainsApplicationInfo(String applicationName, List<IEmbeddableCartridge> embedded,
+	public static void assertThatContainsApplicationInfo(String applicationName, List<IEmbeddedCartridge> embedded,
 			String applicationUUID,
 			String cartridgeName, String creationTime, List<ApplicationInfo> applicationInfos)
 			throws OpenShiftException {
@@ -55,7 +55,7 @@ public class ApplicationInfoAsserts {
 		return matchingApplicationInfo;
 	}
 
-	private static void assertApplicationInfo(List<IEmbeddableCartridge> embedded, String uuid, String cartridgeName,
+	private static void assertApplicationInfo(List<IEmbeddedCartridge> embedded, String uuid, String cartridgeName,
 			String creationTime, ApplicationInfo applicationInfo) throws OpenShiftException {
 		assertEquals(uuid, applicationInfo.getUuid());
 		assertNotNull(applicationInfo.getCartridge());
@@ -68,7 +68,7 @@ public class ApplicationInfoAsserts {
 		}
 	}
 
-	private static void assertEmbeddedCartridges(List<IEmbeddableCartridge> cartridges, ApplicationInfo applicationInfo) {
+	private static void assertEmbeddedCartridges(List<IEmbeddedCartridge> cartridges, ApplicationInfo applicationInfo) {
 		if (cartridges == null) {
 			// null in cartridges is equivalent to empty list
 			if (applicationInfo.getEmbeddedCartridges() != null

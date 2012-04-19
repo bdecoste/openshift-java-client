@@ -17,7 +17,7 @@ import java.util.List;
  * @author André Dietisheim
  */
 public interface IDomain {
-
+	
 	public void rename(String id) throws OpenShiftException, SocketTimeoutException;
 
 	public String getId();
@@ -65,7 +65,7 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 */
-	public IApplication createApplication(final String name, final ICartridge cartridge, final Boolean scale, final String nodeProfile) throws OpenShiftException, SocketTimeoutException;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final EnumApplicationScale scale, final String nodeProfile) throws OpenShiftException, SocketTimeoutException;
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException;
 	
@@ -77,6 +77,15 @@ public interface IDomain {
 	 */
 	public List<ICartridge> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException;
 
+	/**
+	 * Returns the list of node profiles that can be used to create a new application.
+	 * @return the list of node profiles that can be used to create a new application.
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public List<String> getAvailableNodeProfiles() throws OpenShiftException, SocketTimeoutException;
+	
+	
 	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
 	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;

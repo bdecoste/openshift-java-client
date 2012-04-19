@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import java.net.SocketTimeoutException;
+import java.util.List;
 
 /**
  * @author Xavier Coulon
@@ -25,4 +26,29 @@ public interface IOpenShiftConnection {
 	 * @throws SocketTimeoutException
 	 */
 	public IUser getUser() throws OpenShiftException, SocketTimeoutException;
+	
+	/**
+	 * Returns the domains associated with the current OpenShift connection.
+	 * @return the domains
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
+	
+	/**
+	 * Returns the available standalone cartridge names associated with the current OpenShift connection.
+	 * @return the available standalone cartridge names
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public List<String> getStandaloneCartridgeNames() throws OpenShiftException, SocketTimeoutException;
+	
+	/**
+	 * Returns the available embedded cartridge names associated with the current OpenShift connection.
+	 * @return the available embedded cartridge names
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public List<String> getEmbeddedCartridgeNames() throws OpenShiftException, SocketTimeoutException;
+
 }

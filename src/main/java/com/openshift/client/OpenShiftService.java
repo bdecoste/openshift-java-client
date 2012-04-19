@@ -190,7 +190,7 @@ public class OpenShiftService implements IOpenShiftService {
 		throw new UnsupportedOperationException();
 	}
 
-	public List<IEmbeddableCartridge> getEmbeddableCartridges(IUser user) throws OpenShiftException {
+	public List<IEmbeddedCartridge> getEmbeddableCartridges(IUser user) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -302,12 +302,12 @@ public class OpenShiftService implements IOpenShiftService {
 		throw new UnsupportedOperationException();
 	}
 
-	public IEmbeddableCartridge addEmbeddedCartridge(String applicationName, IEmbeddableCartridge cartridge, IUser user)
+	public IEmbeddedCartridge addEmbeddedCartridge(String applicationName, IEmbeddedCartridge cartridge, IUser user)
 			throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
 
-	public void removeEmbeddedCartridge(String applicationName, IEmbeddableCartridge cartridge, IUser user)
+	public void removeEmbeddedCartridge(String applicationName, IEmbeddedCartridge cartridge, IUser user)
 			throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		

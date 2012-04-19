@@ -76,11 +76,11 @@ public interface IOpenShiftService {
 	 * @return a list of embeddable cartridges
 	 * @throws OpenShiftException
 	 * 
-	 * @see #addEmbeddedCartridge(IApplication, IEmbeddableCartridge,
+	 * @see #addEmbeddedCartridge(IApplication, IEmbeddedCartridge,
 	 *      IUser)
 	 */
 	@Deprecated
-	public List<IEmbeddableCartridge> getEmbeddableCartridges(IUser user) throws OpenShiftException;
+	public List<IEmbeddedCartridge> getEmbeddableCartridges(IUser user) throws OpenShiftException;
 
 	/**
 	 * Creates an application with the given name and cartridge for the given
@@ -317,7 +317,7 @@ public interface IOpenShiftService {
 	 * @see #getEmbeddableCartridges(IUser)
 	 */
 	@Deprecated
-	public IEmbeddableCartridge addEmbeddedCartridge(String applicationName, IEmbeddableCartridge cartridge,
+	public IEmbeddedCartridge addEmbeddedCartridge(String applicationName, IEmbeddedCartridge cartridge,
 			IUser user)
 			throws OpenShiftException;
 
@@ -333,7 +333,7 @@ public interface IOpenShiftService {
 	 * @see #getEmbeddableCartridges(IUser)
 	 */
 	@Deprecated
-	public void removeEmbeddedCartridge(String applicationName, IEmbeddableCartridge cartridge,
+	public void removeEmbeddedCartridge(String applicationName, IEmbeddedCartridge cartridge,
 			IUser user) throws OpenShiftException;
 
 	

@@ -28,6 +28,8 @@ public interface IUser {
 	public String getAuthKey();
 	
 	public String getAuthIV();
+	
+	public IOpenShiftConnection getConnection();
 
 	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
 

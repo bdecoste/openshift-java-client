@@ -12,7 +12,7 @@ package com.openshift.internal.client.request.marshalling;
 
 import org.jboss.dmr.ModelNode;
 
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.internal.client.request.EmbedRequest;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
@@ -27,7 +27,7 @@ public class EmbedRequestJsonMarshaller extends AbstractJsonMarshaller<EmbedRequ
 		setStringProperty(IOpenShiftJsonConstants.PROPERTY_APP_NAME, request.getName(), node);
 	}
 
-	private String getCartridgeName(IEmbeddableCartridge cartridge) {
+	private String getCartridgeName(IEmbeddedCartridge cartridge) {
 		if (cartridge == null) {
 			return null;
 		}

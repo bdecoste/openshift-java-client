@@ -22,7 +22,7 @@ import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
@@ -89,7 +89,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * not loaded yet.
 	 */
 	// TODO: replace by a map indexed by cartridge names ?
-	private List<IEmbeddableCartridge> embeddedCartridges = null;
+	private List<IEmbeddedCartridge> embeddedCartridges = null;
 
 	/**
 	 * List of configured gears. <code>null</code> means list if not loaded yet.
@@ -305,7 +305,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		throw new OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
 	}
 
-	public void addEmbeddableCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
+	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(embeddedCartridgeName);
 		addEmbeddedCartridge(new EmbeddableCartridgeResource(
@@ -321,38 +321,30 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the embeddable cartridge that shall be added to this
 	 *            application
 	 */
-	protected void addEmbeddedCartridge(IEmbeddableCartridge cartridge) {
+	protected void addEmbeddedCartridge(IEmbeddedCartridge cartridge) {
 		this.embeddedCartridges.add(cartridge);
 	}
 
-	public void addEmbeddableCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
+	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
 			SocketTimeoutException {
 		for (String cartridge : embeddedCartridgeNames) {
 			// TODO: catch exceptions when removing cartridges, contine removing
 			// and report the exceptions that occurred<
-			addEmbeddableCartridge(cartridge);
+			addEmbeddedCartridge(cartridge);
 		}
 	}
 
-	public void removeEmbeddedCartridge(IEmbeddableCartridge embeddedCartridge) throws OpenShiftException {
+	protected void removeEmbeddedCartridge(IEmbeddedCartridge embeddedCartridge) throws OpenShiftException {
 		this.embeddedCartridges.remove(embeddedCartridge);
 	}
 
-	public void removeEmbeddedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
-		for (IEmbeddableCartridge cartridge : embeddedCartridges) {
-			// TODO: catch exceptions when removing cartridges, contine removing
-			// and report the exceptions that occurred<
-			removeEmbeddedCartridge(cartridge);
-		}
-	}
-
-	public List<IEmbeddableCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
+	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
 		// load collection if necessary
 		if (embeddedCartridges == null) {
-			this.embeddedCartridges = new ArrayList<IEmbeddableCartridge>();
+			this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
 			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddableCartridge embeddableCartridge =
+				IEmbeddedCartridge embeddableCartridge =
 						new EmbeddableCartridgeResource(
 								embeddableCartridgeDTO.getName(),
 								embeddableCartridgeDTO.getType(),
@@ -368,10 +360,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return getEmbeddedCartridge(cartridgeName) != null;
 	}
 
-	public IEmbeddableCartridge getEmbeddedCartridge(String cartridgeName) throws OpenShiftException,
+	public IEmbeddedCartridge getEmbeddedCartridge(String cartridgeName) throws OpenShiftException,
 			SocketTimeoutException {
-		IEmbeddableCartridge embeddedCartridge = null;
-		for (IEmbeddableCartridge cartridge : getEmbeddedCartridges()) {
+		IEmbeddedCartridge embeddedCartridge = null;
+		for (IEmbeddedCartridge cartridge : getEmbeddedCartridges()) {
 			if (cartridgeName.equals(cartridge.getName())) {
 				embeddedCartridge = cartridge;
 				break;

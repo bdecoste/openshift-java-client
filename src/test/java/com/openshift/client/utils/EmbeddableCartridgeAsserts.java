@@ -17,7 +17,7 @@ import static org.junit.Assert.fail;
 import java.text.MessageFormat;
 import java.util.List;
 
-import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 
 /**
@@ -25,27 +25,27 @@ import com.openshift.client.OpenShiftException;
  */
 public class EmbeddableCartridgeAsserts {
 
-	public static void assertThatContainsCartridge(String embeddableCartridgeName, String url, List<IEmbeddableCartridge> embeddableCartridges) throws OpenShiftException {
-		IEmbeddableCartridge cartridge = getEmbeddableCartridge(embeddableCartridgeName, embeddableCartridges);
+	public static void assertThatContainsCartridge(String embeddableCartridgeName, String url, List<IEmbeddedCartridge> embeddableCartridges) throws OpenShiftException {
+		IEmbeddedCartridge cartridge = getEmbeddableCartridge(embeddableCartridgeName, embeddableCartridges);
 		if (cartridge == null) {
 			fail(MessageFormat.format("Could not find embeddable cartridge with name \"{0}\"", embeddableCartridgeName));
 		}
 		assertEmbeddableCartridge(embeddableCartridgeName, url, cartridge);
 	}
 
-	public static void assertEmbeddableCartridge(String name, String creationLog, IEmbeddableCartridge cartridge) {
+	public static void assertEmbeddableCartridge(String name, String creationLog, IEmbeddedCartridge cartridge) {
 		assertNotNull(cartridge);
 		assertEquals(name, cartridge.getName());
 		assertEquals(creationLog, cartridge.getCreationLog());
 	}
 
-	public static void assertThatContainsCartridge(String applicationName, List<IEmbeddableCartridge> cartridges) {
+	public static void assertThatContainsCartridge(String applicationName, List<IEmbeddedCartridge> cartridges) {
 		assertNotNull(getEmbeddableCartridge(applicationName, cartridges));
 	}
 
-	private static IEmbeddableCartridge getEmbeddableCartridge(String name, List<IEmbeddableCartridge> cartridges) {
-		IEmbeddableCartridge matchingCartridge = null;
-		for (IEmbeddableCartridge cartridge : cartridges) {
+	private static IEmbeddedCartridge getEmbeddableCartridge(String name, List<IEmbeddedCartridge> cartridges) {
+		IEmbeddedCartridge matchingCartridge = null;
+		for (IEmbeddedCartridge cartridge : cartridges) {
 			if (name.equals(cartridge.getName())) {
 				matchingCartridge = cartridge;
 				break;
