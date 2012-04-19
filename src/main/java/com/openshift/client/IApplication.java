@@ -62,7 +62,7 @@ public interface IApplication {
 	 * @return the cartridge of this application
 	 * 
 	 */
-	public String getCartridge();
+	public ICartridge getCartridge();
 
 	/**
 	 * Adds the given embeddable cartridge to this app, given its name.

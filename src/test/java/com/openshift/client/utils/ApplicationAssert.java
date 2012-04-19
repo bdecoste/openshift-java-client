@@ -54,8 +54,8 @@ public class ApplicationAssert implements AssertExtension {
 		return this;
 	}
 
-	public ApplicationAssert hasCartridge(String cartridgeName) {
-		assertEquals(cartridgeName, application.getCartridge());
+	public ApplicationAssert hasCartridge(ICartridge cartridge) {
+		assertEquals(cartridge, application.getCartridge());
 		return this;
 	}
 

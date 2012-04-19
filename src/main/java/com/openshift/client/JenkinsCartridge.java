@@ -25,10 +25,4 @@ public class JenkinsCartridge extends Cartridge {
 		super(name);
 	}
 	
-	public JenkinsCartridge(IOpenShiftService service, IUser user) throws OpenShiftException {
-		super(service, user);
-		
-		name = this.getCartridgeName(JENKINS);
-	}
-
 }

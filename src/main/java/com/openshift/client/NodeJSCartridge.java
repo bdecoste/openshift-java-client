@@ -24,11 +24,5 @@ public class NodeJSCartridge extends Cartridge {
 	public NodeJSCartridge(String name) {
 		super(name);
 	}
-	
-	public NodeJSCartridge(IOpenShiftService service, IUser user) throws OpenShiftException {
-		super(service, user);
-		
-		name = this.getCartridgeName(NODEJS);
-	}
 
 }

@@ -22,6 +22,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.OpenShiftException;
@@ -99,7 +100,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IApplicationGear> gears = null;
 
-	protected ApplicationResource(ApplicationResourceDTO dto, String cartridge, DomainResource domain) {
+	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
 		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(),
 				dto.getHealthCheckPath(), cartridge, dto.getAliases(), dto.getLinks(), domain);
 	}
@@ -125,10 +126,11 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the links
 	 * @param domain
 	 *            the domain this application belongs to
-	 * @throws DatatypeConfigurationException 
+	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, String healthCheckPath, final ICartridge cartridge, final List<String> aliases,
+			final String applicationUrl, final String gitUrl, final String healthCheckPath, final ICartridge cartridge,
+			final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
 	}
@@ -156,21 +158,11 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the links
 	 * @param domain
 	 *            the domain this application belongs to
-	 * @throws DatatypeConfigurationException 
+	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-<<<<<<< HEAD
-<<<<<<< HEAD
-			final String creationLog,
-			final String applicationUrl, final String gitUrl, final String cartridge, final List<String> aliases,
-			final Map<String, Link> links, final DomainResource domain) {
-=======
-			final String creationLog, final String applicationUrl, final String gitUrl, final ICartridge cartridge,
-=======
-			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final ICartridge cartridge, 
->>>>>>> be45bab... implementing ApplicationResourceIntegrationTests, implemented IApplication#getHealthCheckUrl
-			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
->>>>>>> 235a91a... dont reset instance vars when destroying application/domain
+			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath,
+			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
 		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
@@ -192,7 +184,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return uuid;
 	}
 
-	public String getCartridge() {
+	public ICartridge getCartridge() {
 		return cartridge;
 	}
 
@@ -305,9 +297,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		throw new UnsupportedOperationException();
 	}
 
-	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
-		final CartridgeResourceDTO embeddedCartridgeDTO =
-				new AddEmbeddedCartridgeRequest().execute(embeddedCartridgeName);
+	public void addEmbeddableCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {
+		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
+				.execute(embeddedCartridgeName);
 		addEmbeddedCartridge(new EmbeddableCartridgeResource(
 				embeddedCartridgeDTO.getName(),
 				embeddedCartridgeDTO.getType(),
@@ -325,7 +317,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.embeddedCartridges.add(cartridge);
 	}
 
-	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
+	public void addEmbeddableCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException,
 			SocketTimeoutException {
 		for (String cartridge : embeddedCartridgeNames) {
 			// TODO: catch exceptions when removing cartridges, contine removing
@@ -338,7 +330,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.embeddedCartridges.remove(embeddedCartridge);
 	}
 
-	public void removeEmbddeedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
+	public void removeEmbeddedCartridges(List<IEmbeddableCartridge> embeddedCartridges) throws OpenShiftException {
 		for (IEmbeddableCartridge cartridge : embeddedCartridges) {
 			// TODO: catch exceptions when removing cartridges, contine removing
 			// and report the exceptions that occurred<

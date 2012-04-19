@@ -25,14 +25,9 @@ public class JBossCartridge extends Cartridge {
 		super(name);
 	}
 	
-	public JBossCartridge(IOpenShiftService service, IUser user) throws OpenShiftException {
-		super(service, user);
-		
-		name = this.getCartridgeName(JBOSS);
-	}
-
+	@Override
 	public String getLogLocation() {
-		return "/" + name + "/";
+		return "/" + getName() + "/";
 	}
 
 }

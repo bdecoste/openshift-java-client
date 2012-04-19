@@ -12,13 +12,22 @@ package com.openshift.client;
 
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.net.URL;
+import java.util.List;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.openshift.client.utils.Samples;
+import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 
 /**
@@ -58,7 +67,7 @@ public class UserTest {
 				Samples.UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		domain.setId("foobarbaz");
+		domain.rename("foobarbaz");
 		// verifications
 		final IDomain updatedDomain = user.getDomain("foobarbaz");
 		assertThat(updatedDomain.getId()).isEqualTo("foobarbaz");

@@ -25,7 +25,6 @@ import com.openshift.client.utils.ApplicationAssert;
 import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
-import com.openshift.internal.client.ApplicationInfo;
 
 /**
  * @author André Dietisheim
@@ -238,8 +237,10 @@ public class ApplicationResourceIntegrationTest {
 
 		// verification
 		assertThat(domain.hasApplicationByName(application.getName())).isFalse();
+
 	}
 
+	@Ignore
 	@Test(expected = OpenShiftException.class)
 	public void createDuplicateApplicationThrowsException() throws Exception {
 		IApplication application2 = null;
@@ -355,6 +356,7 @@ public class ApplicationResourceIntegrationTest {
 	@Test
 	@Ignore("Unused feature")
 	public void shouldGetApplicationDescriptor() throws Throwable {
+
 	}
 
 	@Test
@@ -417,8 +419,9 @@ public class ApplicationResourceIntegrationTest {
 
 		// operation
 		application.addAlias(alias);
+
 	}
-	
+
 	@Test
 	public void shouldThreadDumpJBossApplication() throws Exception {
 		// String applicationName =

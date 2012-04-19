@@ -92,7 +92,7 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		}
 
 		final DomainResourceDTO domainDTO = new AddDomainRequest().execute(id);
-		final IDomain domain = new Domain(domainDTO, this);
+		final IDomain domain = new DomainResource(domainDTO, this);
 		this.domains.add(domain);
 		return domain;
 	}

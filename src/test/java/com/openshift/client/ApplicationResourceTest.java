@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE;
@@ -31,6 +30,7 @@ import static com.openshift.client.utils.Samples.REMOVE_APPLICATION_ALIAS;
 import static com.openshift.client.utils.Samples.START_APPLICATION;
 import static com.openshift.client.utils.Samples.STOP_APPLICATION;
 import static com.openshift.client.utils.Samples.STOP_FORCE_APPLICATION;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -49,6 +49,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.openshift.client.utils.Samples;
+import com.openshift.internal.client.Cartridge;
 import com.openshift.internal.client.EmbeddableCartridgeResource;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
@@ -144,7 +145,7 @@ public class ApplicationResourceTest {
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				ADD_APPLICATION_JSON.getContentAsString());
 		// operation
-		final String cartridge = "jbossas-7";
+		final ICartridge cartridge = new Cartridge("jbossas-7");
 		final IApplication app = domain.createApplication("sample", cartridge, null, null);
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
@@ -166,7 +167,7 @@ public class ApplicationResourceTest {
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains"))).thenReturn(ADD_DOMAIN_JSON.getContentAsString());
 		// operation
-		domain.createApplication(null, "jbossas-7", null, null);
+		domain.createApplication(null, new Cartridge("jbossas-7"), null, null);
 		// verifications
 		// expected exception
 	}
@@ -190,7 +191,7 @@ public class ApplicationResourceTest {
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		// operation
 		try {
-			domain.createApplication("sample", "jbossas-7", null, null);
+			domain.createApplication("sample", new Cartridge("jbossas-7"), null, null);
 			// expect an exception
 			fail("Expected exception here...");
 		} catch(OpenShiftException e) {
@@ -476,9 +477,9 @@ public class ApplicationResourceTest {
 	public void shouldListAvailableCartridges() throws Throwable {
 		// pre-conditions
 		// operation
-		final List<String> availableCartridges = domain.getAvailableCartridges();
+		final List<ICartridge> availableCartridges = domain.getAvailableCartridges();
 		// verifications
-		assertThat(availableCartridges).containsExactly("nodejs-0.6", "jbossas-7", "python-2.6", "jenkins-1.4",
+		assertThat(availableCartridges).onProperty("name").containsExactly("nodejs-0.6", "jbossas-7", "python-2.6", "jenkins-1.4",
 				"ruby-1.8", "diy-0.1", "php-5.3", "perl-5.10");
 	}
 

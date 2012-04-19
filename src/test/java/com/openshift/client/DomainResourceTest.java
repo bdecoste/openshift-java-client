@@ -36,8 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -182,7 +180,7 @@ public class DomainResourceTest {
 				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		domain.setId("foobarbaz");
+		domain.rename("foobarbaz");
 		// verifications
 		final IDomain updatedDomain = user.getDomain("foobarbaz");
 		assertThat(updatedDomain.getId()).isEqualTo("foobarbaz");
