@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.test;
+package com.openshift.client;
 
 import static org.fest.assertions.Assertions.assertThat;
 

@@ -17,6 +17,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	SSHKeyIntegrationTest.class,
+	RestServicePropertiesIntegrationTest.class,
 	DomainResourceIntegrationTest.class,
 	ApplicationResourceIntegrationTest.class
 })

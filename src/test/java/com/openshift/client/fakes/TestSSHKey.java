@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.SSHKeyPair;
-import com.openshift.internal.client.test.utils.FileUtils;
+import com.openshift.client.utils.FileUtils;
 
 /**
  * @author André Dietisheim
