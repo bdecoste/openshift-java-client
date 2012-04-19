@@ -16,7 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
+import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
@@ -35,8 +37,8 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 	private final String password;
 	private List<IDomain> domains;
 	private UserResource user;
-	private final List<String> standaloneCartridgeNames = new ArrayList<String>();
-	private final List<String> embeddedCartridgeNames = new ArrayList<String>();
+	private final List<ICartridge> standaloneCartridgeNames = new ArrayList<ICartridge>();
+	private final List<IEmbeddableCartridge> embeddedCartridgeNames = new ArrayList<IEmbeddableCartridge>();
 	
 	
 	public APIResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
@@ -101,14 +103,14 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		return domain;
 	}
 	
-	public List<String> getStandaloneCartridgeNames() throws OpenShiftException, SocketTimeoutException {
+	public List<ICartridge> getStandaloneCartridges() throws OpenShiftException, SocketTimeoutException {
 		if(standaloneCartridgeNames.isEmpty()) {
 			retrieveCartridges();
 		}
 		return standaloneCartridgeNames;
 	}
 
-	public List<String> getEmbeddedCartridgeNames() throws OpenShiftException, SocketTimeoutException {
+	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException, SocketTimeoutException {
 		if(embeddedCartridgeNames.isEmpty()) {
 			retrieveCartridges();
 		}
@@ -119,9 +121,9 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		final List<CartridgeResourceDTO> cartridgeDTOs = new GetCartridgesRequest().execute();
 		for(CartridgeResourceDTO cartridgeDTO : cartridgeDTOs) {
 			if("standalone".equals(cartridgeDTO.getType())) {
-				this.standaloneCartridgeNames.add(cartridgeDTO.getName());
+				this.standaloneCartridgeNames.add(new Cartridge(cartridgeDTO.getName()));
 			} else if("embedded".equals(cartridgeDTO.getType())) {
-				this.embeddedCartridgeNames.add(cartridgeDTO.getName());
+				this.embeddedCartridgeNames.add(new EmbeddableCartridge(cartridgeDTO.getName()));
 			}
 		}
 	}

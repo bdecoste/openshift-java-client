@@ -36,19 +36,19 @@ public interface IOpenShiftConnection {
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
 	
 	/**
-	 * Returns the available standalone cartridge names associated with the current OpenShift connection.
-	 * @return the available standalone cartridge names
+	 * Returns the available standalone cartridges associated with the current OpenShift connection.
+	 * @return the available standalone cartridges
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public List<String> getStandaloneCartridgeNames() throws OpenShiftException, SocketTimeoutException;
+	public List<ICartridge> getStandaloneCartridges() throws OpenShiftException, SocketTimeoutException;
 	
 	/**
-	 * Returns the available embedded cartridge names associated with the current OpenShift connection.
-	 * @return the available embedded cartridge names
+	 * Returns the available embeddable cartridges associated with the current OpenShift connection.
+	 * @return the available embeddable cartridges 
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public List<String> getEmbeddedCartridgeNames() throws OpenShiftException, SocketTimeoutException;
+	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException, SocketTimeoutException;
 
 }

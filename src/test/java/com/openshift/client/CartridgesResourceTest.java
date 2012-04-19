@@ -50,7 +50,7 @@ import org.junit.Test;
 
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.Cartridge;
-import com.openshift.internal.client.EmbeddableCartridgeResource;
+import com.openshift.internal.client.EmbeddedCartridgeResource;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
@@ -88,17 +88,17 @@ public class CartridgesResourceTest {
 	public void shouldLoadListOfStandaloneCartridges() throws Throwable {
 		// pre-conditions
 		// operation
-		final List<String> cartridges = connection.getStandaloneCartridgeNames();
+		final List<ICartridge> cartridges = connection.getStandaloneCartridges();
 		// verifications
-		assertThat(cartridges).hasSize(8).contains("nodejs-0.6", "jbossas-7").excludes("mongodb-2.0", "mysql-5.1");
+		assertThat(cartridges).hasSize(8).onProperty("name").contains("nodejs-0.6", "jbossas-7").excludes("mongodb-2.0", "mysql-5.1");
 	}
 
 	@Test
 	public void shouldLoadListOfEmbeddedCartridges() throws Throwable {
 		// pre-conditions
 		// operation
-		final List<String> cartridges = connection.getEmbeddedCartridgeNames();
+		final List<IEmbeddableCartridge> cartridges = connection.getEmbeddableCartridges();
 		// verifications
-		assertThat(cartridges).hasSize(10).contains("mongodb-2.0", "mysql-5.1").excludes("nodejs-0.6", "jbossas-7");
+		assertThat(cartridges).hasSize(10).onProperty("name").contains("mongodb-2.0", "mysql-5.1").excludes("nodejs-0.6", "jbossas-7");
 	}
 }

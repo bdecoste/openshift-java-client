@@ -50,7 +50,7 @@ import org.junit.Test;
 
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.Cartridge;
-import com.openshift.internal.client.EmbeddableCartridgeResource;
+import com.openshift.internal.client.EmbeddedCartridgeResource;
 import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
@@ -497,12 +497,12 @@ public class ApplicationResourceTest {
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
-		app.addEmbeddedCartridge("mysql-5.1");
+		app.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 		// verifications
 		assertThat(app.getEmbeddedCartridge("mysql-5.1")).satisfies(new Condition<Object>() {
 			@Override
 			public boolean matches(Object value) {
-				final EmbeddableCartridgeResource cartridge = (EmbeddableCartridgeResource) value;
+				final EmbeddedCartridgeResource cartridge = (EmbeddedCartridgeResource) value;
 				return cartridge.getName() != null && !LinkRetriever.retrieveLinks(cartridge).isEmpty();
 			}
 		});
@@ -525,7 +525,7 @@ public class ApplicationResourceTest {
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
 		try {
-			app.addEmbeddedCartridge("mysql-5.1");
+			app.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 			fail("Expected an exception here...");
 		} catch (SocketTimeoutException e) {
 			// ok

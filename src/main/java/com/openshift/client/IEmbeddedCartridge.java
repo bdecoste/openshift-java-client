@@ -14,20 +14,10 @@ import java.net.SocketTimeoutException;
 
 
 /**
+ * Interface to designate a cartridge that has been added and configured
  * @author André Dietisheim
  */
-public interface IEmbeddedCartridge {
-
-	@Deprecated
-	public static final IEmbeddedCartridge PHPMYADMIN_34 = null;//new EmbeddableCartridge("phpmyadmin-3.4");
-	@Deprecated
-	public static final IEmbeddedCartridge MYSQL_51 = null;//new EmbeddableCartridge("mysql-5.1");
-	@Deprecated
-	public static final IEmbeddedCartridge JENKINS_14 = null;//new EmbeddableCartridge("jenkins-client-1.4");
-	@Deprecated
-	public static final IEmbeddedCartridge METRICS_01 = null;//new EmbeddableCartridge("metrics-0.1");
-
-	public String getName();
+public interface IEmbeddedCartridge extends IEmbeddableCartridge {
 
 	public String getUrl() throws OpenShiftException;
 	

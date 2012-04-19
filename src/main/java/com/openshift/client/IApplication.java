@@ -65,13 +65,13 @@ public interface IApplication {
 	public ICartridge getCartridge();
 
 	/**
-	 * Adds the given embedded cartridge to this app, given its name.
+	 * Adds the given embeddable cartridge to this application.
 	 * 
-	 * @param embeddedCartridge
+	 * @param cartridge
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 */
-	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException;
+	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Adds all given embedded cartridges from this app, given their names.
@@ -80,10 +80,10 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 * 
-	 * @see #addEmbeddedCartridge(IEmbeddedCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
-	public void addEmbeddedCartridges(List<String> embeddedCartridgeNames) throws OpenShiftException, SocketTimeoutException;
+	public List<IEmbeddedCartridge> addEmbeddableCartridges(List<IEmbeddableCartridge> cartridge) throws OpenShiftException, SocketTimeoutException;
 
 		/**
 	 * Returns all embedded cartridges.
@@ -93,13 +93,13 @@ public interface IApplication {
 	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IEmbeddedCartridge
-	 * @see #addEmbeddedCartridge(IEmbeddedCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
 	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException;
 
 	/**
-	 * Returns <code>true</code> if this app has an embedded cartridge with the given name. Returns <code>false</code>
+	 * Returns <code>true</code> if this application has an embedded cartridge. Returns <code>false</code>
 	 * otherwise.
 	 * 
 	 * @param the
@@ -109,13 +109,29 @@ public interface IApplication {
 	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IEmbeddedCartridge
-	 * @see #addEmbeddedCartridge(IEmbeddedCartridge)
+	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
+	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
+	 */
+	public boolean hasEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException, SocketTimeoutException;
+
+	/**
+	 * Returns <code>true</code> if this application has an embedded cartridge. Returns <code>false</code>
+	 * otherwise.
+	 * 
+	 * @param the
+	 *            name of the cartridge to look for
+	 * @return true if there's an embedded cartridge with the given name
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
+	 * 
+	 * @see IEmbeddedCartridge
+	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
 	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException;
 
 	/**
-	 * Returns the embedded cartridge with the given name. Returns <code>null</code> if none was found.
+	 * Returns the embedded cartridge given its name. Returns <code>null</code> if none was found.
 	 * 
 	 * @param cartridgeName
 	 * @return the embedded cartridge with the given name
@@ -123,6 +139,16 @@ public interface IApplication {
 	 * @throws SocketTimeoutException 
 	 */
 	public IEmbeddedCartridge getEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException;
+
+	/**
+	 * Returns the embedded cartridge. Returns <code>null</code> if none was found.
+	 * 
+	 * @param cartridge
+	 * @return the embedded cartridge
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
+	 */
+	public IEmbeddedCartridge getEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Returns all gears.

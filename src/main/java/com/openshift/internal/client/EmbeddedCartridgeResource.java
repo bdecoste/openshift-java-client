@@ -23,7 +23,7 @@ import com.openshift.internal.client.response.Link;
  * 
  * @author André Dietisheim
  */
-public class EmbeddableCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
+public class EmbeddedCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
 	
 	public static final String EMBEDDED_TYPE = "embedded";
 	
@@ -46,7 +46,7 @@ public class EmbeddableCartridgeResource extends AbstractOpenShiftResource imple
 	private String url;
 	private final ApplicationResource application;
 	
-	public EmbeddableCartridgeResource(final String name, final String type, final Map<String, Link> links, final ApplicationResource application) {
+	public EmbeddedCartridgeResource(final String name, final String type, final Map<String, Link> links, final ApplicationResource application) {
 		super(application.getService(), links);
 		this.name = name;
 		this.type = type;
