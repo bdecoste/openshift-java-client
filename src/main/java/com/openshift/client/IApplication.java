@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import java.net.SocketTimeoutException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -141,7 +142,7 @@ public interface IApplication {
 	 * 
 	 * @throws OpenShiftException
 	 */
-	public String getCreationTime();
+	public Date getCreationTime();
 
 	/**
 	 * Destroys this application (and removes it from the list of available applications)
@@ -194,28 +195,6 @@ public interface IApplication {
 	 * @return the log which reported the creation of this app
 	 */
 	public String getCreationLog();
-
-	/**
-	 * Returns a reader that will allow you to read from the application log.
-	 * 
-	 * @return a reader that you can read the log from
-	 * @throws OpenShiftException
-	 * 
-	 * @see ApplicationLogReader
-	 */
-	public ApplicationLogReader getLogReader() throws OpenShiftException;
-
-	/**
-	 * Returns a reader that will allow you to read from the application log.
-	 * 
-	 * @param logFile
-	 *            the log file
-	 * @return a reader that you can read the log from
-	 * @throws OpenShiftException
-	 * 
-	 * @see ApplicationLogReader
-	 */
-	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException;
 
 	/**
 	 * Waits for this application to become accessible on its public url.
@@ -282,6 +261,8 @@ public interface IApplication {
 	 */
 	public List<String> getAliases();
 
+	public boolean hasAlias(String name);
+	
 	/**
 	 * Remove application alias
 	 * @throws OpenShiftException 

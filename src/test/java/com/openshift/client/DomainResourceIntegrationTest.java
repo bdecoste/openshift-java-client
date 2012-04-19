@@ -33,12 +33,12 @@ public class DomainResourceIntegrationTest {
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
 		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		final IOpenShiftConnection connection = 
+		final IOpenShiftConnection connection =
 				new OpenShiftConnectionFactory().create(
-				configuration.getClientId(), 
-				configuration.getRhlogin(), 
-				configuration.getPassword(),
-				configuration.getLibraServer());
+						configuration.getClientId(),
+						configuration.getRhlogin(),
+						configuration.getPassword(),
+						configuration.getLibraServer());
 		this.user = connection.getUser();
 	}
 
@@ -165,9 +165,6 @@ public class DomainResourceIntegrationTest {
 
 			// operation
 			domain.destroy(true);
-			
-			assertThat(domain.getId()).isEqualTo(null);
-			assertThat(domain.getSuffix()).isEqualTo(null);
 			assertThat(domain).isNotIn(user.getDomains());
 			domain = null;
 		} finally {

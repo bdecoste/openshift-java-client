@@ -13,9 +13,6 @@ package com.openshift.client;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import com.openshift.internal.client.ApplicationInfo;
-import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 
 /**
@@ -455,8 +452,7 @@ public interface IOpenShiftService {
 	 * @see IUserInfo
 	 * @see ApplicationInfo
 	 */
-	@Deprecated
-	public UserInfo getUserInfo(IUser user) throws OpenShiftException;
+	//public UserInfo getUserInfo(IUser user) throws OpenShiftException;
 	
 	/**
 	 * Waits for the given application to become accessible on it's public url.

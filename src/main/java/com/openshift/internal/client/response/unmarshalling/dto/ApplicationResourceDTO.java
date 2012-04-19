@@ -44,6 +44,9 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/** the application's git repository URL. */
 	private final String gitUrl;
 	
+	/** the path at which this application may be queried for its health **/
+	private final String healthCheckPath;
+
 	/**
 	 * Instantiates a new application dto.
 	 *
@@ -54,16 +57,17 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final String applicationUrl, final String gitUrl, final List<String> aliases, final Map<String, Link> links) {
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases, final Map<String, Link> links) {
 		super(links);
 		this.framework = framework;
 		this.domainId = domainId;
 		this.creationTime = creationTime;
 		this.name = name;
 		this.uuid = uuid;
-		this.aliases = aliases;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
+		this.healthCheckPath = healthCheckPath;
+		this.aliases = aliases;
 	}
 
 	/**
@@ -116,6 +120,13 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 */
 	public final String getApplicationUrl() {
 		return applicationUrl;
+	}
+
+	/**
+	 * @return the path at which this application may be queried for its health
+	 */
+	public final String getHealthCheckPath() {
+		return healthCheckPath;
 	}
 
 	/**

@@ -21,6 +21,7 @@
         },
         "domain_id":"foobar",
         "app_url":"http://sample-foobar.stg.rhcloud.com/",
+		"health_check_path":"health",
         "links":{
             "RESTART":{
                 "href":"/domains/foobar/applications/sample/events",

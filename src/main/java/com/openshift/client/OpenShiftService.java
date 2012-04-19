@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Properties;
 
 import com.openshift.client.utils.HostUtils;
-import com.openshift.internal.client.UserInfo;
-import com.openshift.internal.client.response.OpenShiftResponse;
 import com.openshift.internal.client.response.unmarshalling.dto.RestResponse;
 import com.openshift.internal.client.utils.StreamUtils;
 import com.openshift.internal.client.utils.UrlBuilder;
@@ -331,10 +329,6 @@ public class OpenShiftService implements IOpenShiftService {
 	}
 
 	public void destroyDomain(String name, IUser user) throws OpenShiftException {
-		throw new UnsupportedOperationException();
-	}
-
-	public UserInfo getUserInfo(IUser user) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 	}
 

@@ -13,10 +13,12 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.openshift.client.ApplicationLogReader;
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
@@ -24,6 +26,7 @@ import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.utils.RFC822DateUtils;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.CartridgeResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.GearComponentDTO;
@@ -61,7 +64,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final String name;
 
 	/** The time at which this application was created. */
-	private final String creationTime;
+	private final Date creationTime;
 
 	/** The cartridge (application type/framework) of this application. */
 	private final ICartridge cartridge;
@@ -76,7 +79,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final String applicationUrl;
 
 	/** The pathat which the health of this application may be queried. */
-	private String healthCheckPath;
+	private final String healthCheckUrl;
 
 	/** The url at which the git repo of this application may be reached. */
 	private final String gitUrl;
@@ -99,7 +102,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
 		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(),
-				cartridge, dto.getAliases(), dto.getLinks(), domain);
+				dto.getHealthCheckPath(), cartridge, dto.getAliases(), dto.getLinks(), domain);
 	}
 
 	/**
@@ -123,11 +126,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the links
 	 * @param domain
 	 *            the domain this application belongs to
+	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, final ICartridge cartridge, final List<String> aliases,
+			final String applicationUrl, final String gitUrl, final String healthCheckPath, final ICartridge cartridge,
+			final List<String> aliases,
 			final Map<String, Link> links, final DomainResource domain) {
-		this(name, uuid, creationTime, null, applicationUrl, gitUrl, cartridge, aliases, links, domain);
+		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
 	}
 
 	/**
@@ -153,19 +158,20 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the links
 	 * @param domain
 	 *            the domain this application belongs to
+	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String creationLog,
-			final String applicationUrl, final String gitUrl, final ICartridge cartridge, final List<String> aliases,
-			final Map<String, Link> links, final DomainResource domain) {
+			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath,
+			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
 		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
-		this.creationTime = creationTime;
+		this.creationTime = RFC822DateUtils.safeGetDate(creationTime);
 		this.creationLog = creationLog;
 		this.cartridge = cartridge;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
+		this.healthCheckUrl = applicationUrl + healthCheckPath;
 		this.domain = domain;
 		this.aliases = aliases;
 	}
@@ -182,7 +188,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return cartridge;
 	}
 
-	public String getCreationTime() {
+	public Date getCreationTime() {
 		return creationTime;
 	}
 
@@ -246,41 +252,26 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public void addAlias(String alias) throws SocketTimeoutException, OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new AddAliasRequest().execute(alias);
+		updateAliases(applicationDTO);
+
+	}
+
+	private void updateAliases(ApplicationResourceDTO applicationDTO) {
 		this.aliases.clear();
 		this.aliases.addAll(applicationDTO.getAliases());
-
 	}
 
 	public List<String> getAliases() {
 		return Collections.unmodifiableList(this.aliases);
 	}
 
+	public boolean hasAlias(String name) {
+		return aliases.contains(name);
+	}
+
 	public void removeAlias(String alias) throws SocketTimeoutException, OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new RemoveAliasRequest().execute(alias);
-		this.aliases.clear();
-		this.aliases.addAll(applicationDTO.getAliases());
-	}
-
-	public ApplicationLogReader getLogReader() throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// ApplicationLogReader logReader = null;
-		// if (logReaders.get(DEFAULT_LOGREADER) == null) {
-		// logReader = new ApplicationLogReader(this, getInternalUser(),
-		// service);
-		// logReaders.put(DEFAULT_LOGREADER, logReader);
-		// }
-		// return logReader;
-	}
-
-	public ApplicationLogReader getLogReader(String logFile) throws OpenShiftException {
-		throw new UnsupportedOperationException();
-		// ApplicationLogReader logReader = null;
-		// if (logReaders.get(logFile) == null) {
-		// logReader = new ApplicationLogReader(this, getInternalUser(),
-		// service, logFile);
-		// logReaders.put(logFile, logReader);
-		// }
-		// return logReader;
+		updateAliases(applicationDTO);
 	}
 
 	public String getGitUrl() {
@@ -298,11 +289,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public String getHealthCheckUrl() {
-		throw new UnsupportedOperationException();
+		return healthCheckUrl;
 	}
 
 	public String getHealthCheckResponse() throws OpenShiftException {
-		throw new OpenShiftException("NOT SUPPORTED FOR GENERIC APPLICATION");
+		// TODO: implement
+		throw new UnsupportedOperationException();
 	}
 
 	public void addEmbeddedCartridge(String embeddedCartridgeName) throws OpenShiftException, SocketTimeoutException {

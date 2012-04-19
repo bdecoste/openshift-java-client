@@ -59,7 +59,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return id;
 	}
 
-	public String getSuffix() throws OpenShiftException {
+	public String getSuffix() {
 		return suffix;
 	}
 
@@ -118,7 +118,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return getApplicationByName(name) != null;
 	}
 
-	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
+	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException {
 		List<IApplication> matchingApplications = new ArrayList<IApplication>();
 		for (IApplication application : this.applications) {
 			if (cartridge.equals(application.getCartridge())) {
@@ -129,7 +129,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException {
-		return getApplicationsByCartridge(cartridge).size() > 0;
+		return getApplicationsByCartridge(cartridge.getName()).size() > 0;
 	}
 
 	protected void add(IApplication application) {
@@ -150,8 +150,6 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
 		new DeleteDomainRequest().execute(force);
 		connectionResource.removeDomain(this);
-		this.id = null;
-		this.suffix = null;
 	}
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
@@ -160,10 +158,8 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
 				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
-				final ApplicationResource application = new ApplicationResource(applicationDTO.getName(), applicationDTO.getUuid(),
-						applicationDTO.getCreationTime(), applicationDTO.getApplicationUrl(),
-						applicationDTO.getGitUrl(), cartridge, applicationDTO.getAliases(),
-						applicationDTO.getLinks(), this);
+				final ApplicationResource application = 
+						new ApplicationResource(applicationDTO, cartridge, this);
 				this.applications.add(application);
 			}
 		}

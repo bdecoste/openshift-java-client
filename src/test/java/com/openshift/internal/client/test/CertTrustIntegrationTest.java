@@ -16,7 +16,6 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.openshift.client.IOpenShiftService;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 
@@ -25,7 +24,6 @@ import com.openshift.client.OpenShiftException;
  */
 public class CertTrustIntegrationTest {
 	
-	private IOpenShiftService service;
 	private IUser user;
 	
 	@Before

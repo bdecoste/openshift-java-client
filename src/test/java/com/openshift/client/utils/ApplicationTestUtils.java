@@ -14,9 +14,9 @@ import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 import com.openshift.client.IApplication;
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.OpenShiftException;
-import com.openshift.internal.client.Cartridge;
 
 /**
  * @author André Dietisheim
@@ -27,7 +27,7 @@ public class ApplicationTestUtils {
 		return String.valueOf(System.currentTimeMillis());
 	}
 
-	public static void silentlyDestroyApplication(IApplication application) {
+	public static void silentlyDestroy(IApplication application) {
 		try {
 			if (application == null) {
 				return;
@@ -47,13 +47,21 @@ public class ApplicationTestUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static IApplication getOrCreateApplication(IDomain domain) throws SocketTimeoutException, OpenShiftException {
-		Iterator<IApplication> applicationIterator = domain.getApplications().iterator();
-		if (applicationIterator.hasNext()) {
-			return applicationIterator.next();
-		}
-		
-		return domain.createApplication(StringUtils.createRandomString(), new Cartridge("jbossas-7"), null, null);
+		return getOrCreateApplication(domain, ICartridge.JBOSSAS_7);
 	}
+
+	public static IApplication getOrCreateApplication(IDomain domain, ICartridge cartridge)
+			throws SocketTimeoutException, OpenShiftException {
+		for (Iterator<IApplication> it = domain.getApplications().iterator(); it.hasNext();) {
+			IApplication application = it.next();
+			if (cartridge.equals(application.getCartridge())) {
+				return application;
+			}
+		}
+
+		return domain.createApplication(StringUtils.createRandomString(), cartridge, null, null);
+	}
+
 }

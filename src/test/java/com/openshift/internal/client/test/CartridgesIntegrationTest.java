@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftService;
 
 /**
  * @author André Dietisheim

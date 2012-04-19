@@ -10,13 +10,13 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
 import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_ID;
+import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;

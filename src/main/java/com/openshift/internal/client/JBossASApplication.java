@@ -26,13 +26,13 @@ public class JBossASApplication extends ApplicationResource implements IJBossASA
 
 	
 	public JBossASApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, applicationUrl, gitUrl, cartridge, aliases, links, domain);
+			String healthCheckPath, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
 
 	public JBossASApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
-			String gitUrl, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
+			String gitUrl, String healthCheckPath, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub
 	}
