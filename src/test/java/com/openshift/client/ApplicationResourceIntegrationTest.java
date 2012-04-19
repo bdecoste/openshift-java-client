@@ -11,6 +11,7 @@
 package com.openshift.client;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -517,19 +518,19 @@ public class ApplicationResourceIntegrationTest {
 
 	@Test
 	public void shouldWaitForApplication() throws OpenShiftException, MalformedURLException, IOException {
-		// String applicationName = null;
-		// IApplication application = null;
-		// try {
-		// applicationName = ApplicationTestUtils.createRandomApplicationName();
-		// application = service.createJBossASApplication(applicationName,
-		// user);
-		// assertNotNull(application);
-		//
-		// assertTrue(application.waitForAccessible(WAIT_FOR_APPLICATION));
-		//
-		// } finally {
-		// ApplicationTestUtils.silentlyDestroyApplication(applicationName,
-		// application.getCartridge(), user, service);
-		// }
+		// pre-condition
+		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
+		long startTime = System.currentTimeMillis();
+		long timeout = 120 * 1024;
+		IApplication application = domain.createApplication("waittest", ICartridge.JBOSSAS_7, null, null);
+
+		// operation
+		boolean successfull = application.waitForAccessible(timeout);
+		
+		if (successfull) {
+			assertTrue(System.currentTimeMillis() <= startTime + timeout);
+		} else {
+			assertTrue(System.currentTimeMillis() >= startTime + timeout);
+		}
 	}
 }

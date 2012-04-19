@@ -672,14 +672,14 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/health")))
 				.thenReturn("0");
 		long startTime = System.currentTimeMillis();
-		long timeout = 2;
+		long timeout = 2 * 1024;
 		final IApplication app = domain.getApplicationByName("sample");
 
 		
 		// operation
-		boolean successful = app.waitForAccessible(timeout);
+		boolean successfull = app.waitForAccessible(timeout);
 		
-		assertFalse(successful);
+		assertFalse(successfull);
 		assertTrue(System.currentTimeMillis() >= startTime + timeout);
 	}
 
