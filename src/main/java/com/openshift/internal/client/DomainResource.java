@@ -20,6 +20,7 @@ import com.openshift.client.EnumApplicationScale;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
+import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.unmarshalling.dto.ApplicationResourceDTO;
 import com.openshift.internal.client.response.unmarshalling.dto.DomainResourceDTO;
@@ -71,6 +72,9 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		this.getLinks().putAll(domainDTO.getLinks());
 	}
 
+	public IUser getUser() throws SocketTimeoutException, OpenShiftException {
+		return connectionResource.getUser();
+	}
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
 		throw new UnsupportedOperationException();
 		// boolean accessible = true;
@@ -171,12 +175,12 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		this.applications.remove(application);
 	}
 
-	public List<ICartridge> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException {
-		final List<ICartridge> cartridges = new ArrayList<ICartridge>();
+	public List<String> getAvailableCartridgeNames() throws OpenShiftException, SocketTimeoutException {
+		final List<String> cartridges = new ArrayList<String>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getRequiredParams()) {
 			if (param.getName().equals("cartridge")) {
 				for(String option : param.getValidOptions()) {
-					cartridges.add(new Cartridge(option));
+					cartridges.add(option);
 				}
 			}
 		}

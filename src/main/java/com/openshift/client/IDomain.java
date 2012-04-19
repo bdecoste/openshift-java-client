@@ -18,12 +18,36 @@ import java.util.List;
  */
 public interface IDomain {
 	
-	public void rename(String id) throws OpenShiftException, SocketTimeoutException;
-
+	/**
+	 * @return the domain id (formerly known as 'namespace'). A unique litteral identifier on OpenShift.
+	 */
 	public String getId();
 
+	/**
+	 * The domain suffix is the host part eg: 'rhcloud.com')
+	 * @return
+	 */
 	public String getSuffix();
+	
+	
+	/**
+	 * Rename the current domain with the given id....
+	 * @param id
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public void rename(String id) throws OpenShiftException, SocketTimeoutException;
+	
+	/**
+	 * Returns the currently connected user that manages this domain.
+	 * 
+	 * @return
+	 * @throws OpenShiftException 
+	 * @throws SocketTimeoutException 
+	 */
+	public IUser getUser() throws SocketTimeoutException, OpenShiftException;
 
+	
 	/**
 	 * Destroys the current domain. This method works only if it has not application.
 	 * @throws OpenShiftException
@@ -75,7 +99,7 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public List<ICartridge> getAvailableCartridges() throws OpenShiftException, SocketTimeoutException;
+	public List<String> getAvailableCartridgeNames() throws OpenShiftException, SocketTimeoutException;
 
 	/**
 	 * Returns the list of node profiles that can be used to create a new application.

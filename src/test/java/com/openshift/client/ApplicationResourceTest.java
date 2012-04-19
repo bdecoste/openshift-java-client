@@ -477,9 +477,9 @@ public class ApplicationResourceTest {
 	public void shouldListAvailableCartridges() throws Throwable {
 		// pre-conditions
 		// operation
-		final List<ICartridge> availableCartridges = domain.getAvailableCartridges();
+		final List<String> availableCartridges = domain.getAvailableCartridgeNames();
 		// verifications
-		assertThat(availableCartridges).onProperty("name").containsExactly("nodejs-0.6", "jbossas-7", "python-2.6", "jenkins-1.4",
+		assertThat(availableCartridges).containsExactly("nodejs-0.6", "jbossas-7", "python-2.6", "jenkins-1.4",
 				"ruby-1.8", "diy-0.1", "php-5.3", "perl-5.10");
 	}
 
