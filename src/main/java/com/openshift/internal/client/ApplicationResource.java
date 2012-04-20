@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,6 +19,7 @@ import java.util.Map;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import com.openshift.client.HttpMethod;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
@@ -28,10 +27,9 @@ import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IEmbeddedCartridge;
-import com.openshift.client.IHttpClient;
+import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.RFC822DateUtils;
-import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.CartridgeResourceDTO;
 import com.openshift.internal.client.response.GearComponentDTO;
@@ -169,7 +167,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath,
-			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
+			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
+			final DomainResource domain) {
 		super(domain.getService(), links);
 		this.name = name;
 		this.uuid = uuid;
@@ -304,19 +303,21 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 *            the embeddable cartridge that shall be added to this
 	 *            application
 	 */
-	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException, SocketTimeoutException {
+	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge)
+			throws OpenShiftException, SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(cartridge.getName());
-		final EmbeddedCartridgeResource embeddedCartridge = new EmbeddedCartridgeResource(
-				embeddedCartridgeDTO.getName(),
-				embeddedCartridgeDTO.getType(),
-				embeddedCartridgeDTO.getLinks(), this);
-		this.embeddedCartridges.add(embeddedCartridge);
+		final EmbeddedCartridgeResource embeddedCartridge =
+				new EmbeddedCartridgeResource(
+						embeddedCartridgeDTO.getName(),
+						embeddedCartridgeDTO.getType(),
+						embeddedCartridgeDTO.getLinks(), this);
+		getEmbeddedCartridges().add(embeddedCartridge);
 		return embeddedCartridge;
 	}
 
-	public List<IEmbeddedCartridge> addEmbeddableCartridges(List<IEmbeddableCartridge> cartridges) throws OpenShiftException,
-			SocketTimeoutException {
+	public List<IEmbeddedCartridge> addEmbeddableCartridges(List<IEmbeddableCartridge> cartridges)
+			throws OpenShiftException, SocketTimeoutException {
 		final List<IEmbeddedCartridge> addedCartridge = new ArrayList<IEmbeddedCartridge>();
 		for (IEmbeddableCartridge cartridge : cartridges) {
 			// TODO: catch exceptions when removing cartridges, contine removing
@@ -328,6 +329,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	/**
 	 * "callback" from the embeddedCartridge once it has been destroyed.
+	 * 
 	 * @param embeddedCartridge
 	 * @throws OpenShiftException
 	 */
@@ -357,7 +359,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return getEmbeddedCartridge(cartridgeName) != null;
 	}
 
-	public boolean hasEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException, SocketTimeoutException {
+	public boolean hasEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException,
+			SocketTimeoutException {
 		return getEmbeddedCartridge(cartridge) != null;
 	}
 
@@ -375,7 +378,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the gears that this application is running on.
 	 * 
@@ -407,24 +410,22 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
 		try {
-			IHttpClient client = ((RestService) getService()).getClient();
 			String response = "";
 			long startTime = System.currentTimeMillis();
-			URL healthCheckUrl = new URL(getHealthCheckUrl());
 			while (!response.startsWith(getHealthCheckSuccessResponse())
 					&& System.currentTimeMillis() < startTime + timeout) {
 				try {
 					Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
-					response = client.get(healthCheckUrl);
-				} catch (HttpClientException e) {
+					response = getService().request(healthCheckUrl, HttpMethod.GET, null);
+				} catch (OpenShiftEndpointException e) {
+					throw e;
+				} catch (OpenShiftException e) {
 				}
 			}
-			
+
 			return response.startsWith(getHealthCheckSuccessResponse());
 		} catch (InterruptedException e) {
 			return false;
-		} catch (MalformedURLException e) {
-			throw new OpenShiftException(e, "Application URL {0} is invalid", healthCheckUrl);
 		} catch (SocketTimeoutException e) {
 			throw new OpenShiftException(e, "Could not reach {0}, connection timeouted", healthCheckUrl);
 		}
