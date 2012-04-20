@@ -13,6 +13,7 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 
+import com.openshift.client.HttpMethod;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.RestResponse;
@@ -22,12 +23,16 @@ import com.openshift.internal.client.response.RestResponse;
  */
 public interface IRestService {
 
-	public abstract RestResponse execute(Link link) throws OpenShiftException, SocketTimeoutException;
+	public abstract RestResponse request(Link link)
+			throws OpenShiftException, SocketTimeoutException;
 
-	public RestResponse execute(Link link, ServiceParameter... serviceParameters)
+	public RestResponse request(Link link, ServiceParameter... serviceParameters)
 			throws SocketTimeoutException, OpenShiftException;
 
-	public abstract RestResponse execute(Link link, Map<String, Object> parameters)
+	public abstract RestResponse request(Link link, Map<String, Object> parameters)
+			throws OpenShiftException, SocketTimeoutException;
+
+	public abstract String request(String url, HttpMethod httpMethod, Map<String, Object> parameters)
 			throws OpenShiftException, SocketTimeoutException;
 
 	public abstract void setProxySet(boolean proxySet);

@@ -25,6 +25,7 @@ import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
 import com.openshift.internal.client.response.KeyResourceDTO;
 import com.openshift.internal.client.response.UserResourceDTO;
+import com.openshift.internal.client.utils.CollectionUtils;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
@@ -35,7 +36,7 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	private final APIResource api;
 	private final String rhLogin;
 	private final String password;
-	
+
 	private List<SSHKeyResource> sshKeys;
 
 	public UserResource(final APIResource api, final UserResourceDTO dto, final String password) {
@@ -44,7 +45,7 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		this.rhLogin = dto.getRhLogin();
 		this.password = password;
 	}
-	
+
 	public IOpenShiftConnection getConnection() {
 		return api;
 	}
@@ -77,7 +78,7 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 
 	public IDomain getDefaultDomain() throws OpenShiftException, SocketTimeoutException {
 		final List<IDomain> domains = api.getDomains();
-		if(domains.size() > 0) {
+		if (domains.size() > 0) {
 			return domains.get(0);
 		}
 		return null;
@@ -93,14 +94,14 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 
 	public void refresh() throws OpenShiftException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
 			OpenShiftException {
 		List<IOpenShiftSSHKey> keys = new ArrayList<IOpenShiftSSHKey>();
 		keys.addAll(getCachedOrLoadSSHKeys());
-		return keys;
+		return CollectionUtils.toUnmodifiableCopy(keys);
 	}
 
 	private List<SSHKeyResource> getCachedOrLoadSSHKeys() throws SocketTimeoutException, OpenShiftException,
@@ -168,8 +169,10 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	 * have to be unique. Throws OpenShiftSSHKeyException if either the key name
 	 * or the public key are already used.
 	 * 
-	 * @param name the name to identify the key
-	 * @param key the key to add
+	 * @param name
+	 *            the name to identify the key
+	 * @param key
+	 *            the key to add
 	 * @return
 	 * @throws SocketTimeoutException
 	 * @throws OpenShiftException
@@ -198,7 +201,7 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	protected void removeSSHKey(SSHKeyResource key) {
 		sshKeys.remove(key);
 	}
-	
+
 	private class GetSShKeysRequest extends ServiceRequest {
 
 		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {

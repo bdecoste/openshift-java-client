@@ -12,7 +12,6 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,10 +25,12 @@ import com.openshift.internal.client.response.CartridgeResourceDTO;
 import com.openshift.internal.client.response.DomainResourceDTO;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.UserResourceDTO;
+import com.openshift.internal.client.utils.CollectionUtils;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * @author Andre Dietisheim
+ * @author Xavier Coulon
  */
 public class APIResource extends AbstractOpenShiftResource implements IOpenShiftConnection {
 
@@ -72,7 +73,7 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		if (this.domains == null) {
 			this.domains = loadDomains();
 		}
-		return Collections.unmodifiableList(this.domains);
+		return CollectionUtils.toUnmodifiableCopy(this.domains);
 	}
 
 	private List<IDomain> loadDomains() throws SocketTimeoutException, OpenShiftException {
@@ -114,12 +115,13 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		if(embeddedCartridgeNames.isEmpty()) {
 			retrieveCartridges();
 		}
-		return embeddedCartridgeNames;
+		return CollectionUtils.toUnmodifiableCopy(embeddedCartridgeNames);
 	}
 
 	private void retrieveCartridges() throws SocketTimeoutException, OpenShiftException {
 		final List<CartridgeResourceDTO> cartridgeDTOs = new GetCartridgesRequest().execute();
 		for(CartridgeResourceDTO cartridgeDTO : cartridgeDTOs) {
+			// TODO replace by enum (standalone, embedded)
 			if("standalone".equals(cartridgeDTO.getType())) {
 				this.standaloneCartridgeNames.add(new Cartridge(cartridgeDTO.getName()));
 			} else if("embedded".equals(cartridgeDTO.getType())) {

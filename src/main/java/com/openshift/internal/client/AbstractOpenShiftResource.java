@@ -133,7 +133,7 @@ public abstract class AbstractOpenShiftResource {
 
 		protected <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException {
 			Link link = getLink(linkName);
-			RestResponse response = getService().execute(link, parameters);
+			RestResponse response = getService().request(link, parameters);
 			// in some cases, there is not response body, just a return code to indicate that the operation was successful (e.g.: delete domain)
 			if (response == null) {
 				return null;

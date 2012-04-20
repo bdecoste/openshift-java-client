@@ -12,7 +12,6 @@ package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,7 @@ import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.DomainResourceDTO;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.LinkParameter;
+import com.openshift.internal.client.utils.CollectionUtils;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
@@ -167,7 +167,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 				this.applications.add(application);
 			}
 		}
-		return Collections.unmodifiableList(applications);
+		return CollectionUtils.toUnmodifiableCopy(applications);
 	}
 
 	protected void removeApplication(ApplicationResource application) {
@@ -178,6 +178,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	public List<String> getAvailableCartridgeNames() throws OpenShiftException, SocketTimeoutException {
 		final List<String> cartridges = new ArrayList<String>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getRequiredParams()) {
+			// TODO: extract "cartridge" to constant
 			if (param.getName().equals("cartridge")) {
 				for(String option : param.getValidOptions()) {
 					cartridges.add(option);

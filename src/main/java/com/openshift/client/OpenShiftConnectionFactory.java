@@ -83,7 +83,7 @@ public class OpenShiftConnectionFactory {
 	@SuppressWarnings("unchecked")
 	protected IOpenShiftConnection getConnection(IRestService service, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
 		RestResponse response =
-				(RestResponse) service.execute(new Link("Get API", "/api", HttpMethod.GET));
+				(RestResponse) service.request(new Link("Get API", "/api", HttpMethod.GET));
 		return new APIResource(login, password, service, (Map<String, Link>) response.getData());
 	}
 

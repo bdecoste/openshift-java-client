@@ -57,7 +57,7 @@ public class ServiceRequest {
 		}
 		// avoid concurrency issues, to prevent reading the links map while it
 		// is still being retrieved
-		final RestResponse response = resource.getService().execute(link, parameters);
+		final RestResponse response = resource.getService().request(link, parameters);
 		if(response != null) {
 			return response.getData();
 		}

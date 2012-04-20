@@ -62,14 +62,14 @@ public class RestService implements IRestService {
 		client.setUserAgent(new RestServiceProperties().getUseragent(clientId));
 	}
 
-	public RestResponse execute(Link link)
+	public RestResponse request(Link link)
 			throws OpenShiftException, SocketTimeoutException {
-		return execute(link, (Map<String, Object>) null);
+		return request(link, (Map<String, Object>) null);
 	}
 
-	public RestResponse execute(Link link, ServiceParameter... serviceParameters) throws SocketTimeoutException,
+	public RestResponse request(Link link, ServiceParameter... serviceParameters) throws SocketTimeoutException,
 			OpenShiftException {
-		return execute(link, toMap(serviceParameters));
+		return request(link, toMap(serviceParameters));
 	}
 
 	private Map<String, Object> toMap(ServiceParameter... serviceParameters) {
@@ -80,22 +80,25 @@ public class RestService implements IRestService {
 		return parameterMap;
 	}
 
-	public RestResponse execute(Link link, Map<String, Object> parameters)
+	public RestResponse request(Link link, Map<String, Object> parameters)
 			throws OpenShiftException, SocketTimeoutException {
 		validateParameters(parameters, link);
+		HttpMethod httpMethod = link.getHttpMethod();
+		String response = request(link.getHref(), httpMethod, parameters);
+		return ResourceDTOFactory.get(response);
+	}
+
+	public String request(String url, HttpMethod httpMethod, Map<String, Object> parameters) throws SocketTimeoutException, OpenShiftException {
 		try {
-			HttpMethod httpMethod = link.getHttpMethod();
-			URL url = getUrl(link.getHref());
-			String response = request(httpMethod, parameters, url);
-			return ResourceDTOFactory.get(response);
+			return request(getUrl(url), httpMethod, parameters);
 		} catch (UnauthorizedException e) {
-			throw new InvalidCredentialsOpenShiftException(link.getHref(), e);
+			throw new InvalidCredentialsOpenShiftException(url, e);
 		} catch (NotFoundException e) {
-			throw new NotFoundOpenShiftException(link.getHref(), e);
+			throw new NotFoundOpenShiftException(url, e);
 		} catch (HttpClientException e) {
 			throw new OpenShiftEndpointException(
-					link.getHref(), e, e.getMessage(),
-					"Could not request {0}: {1}", link.getHref(), getResponseMessage(e));
+					url, e, e.getMessage(),
+					"Could not request {0}: {1}", url, getResponseMessage(e));
 		} catch (UnsupportedEncodingException e) {
 			throw new OpenShiftException(e, e.getMessage());
 		} catch (MalformedURLException e) {
@@ -121,7 +124,7 @@ public class RestService implements IRestService {
 		}
 	}
 
-	private String request(HttpMethod httpMethod, Map<String, Object> parameters, URL url)
+	private String request(URL url, HttpMethod httpMethod, Map<String, Object> parameters)
 			throws HttpClientException, SocketTimeoutException, OpenShiftException, UnsupportedEncodingException {
 		switch (httpMethod) {
 		case GET:
@@ -217,9 +220,5 @@ public class RestService implements IRestService {
 
 	public String getPlatformUrl() {
 		return baseUrl;
-	}
-	
-	protected IHttpClient getClient() {
-		return client;
 	}
 }

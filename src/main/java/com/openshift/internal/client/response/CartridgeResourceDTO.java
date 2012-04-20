@@ -14,43 +14,34 @@ import java.util.Map;
 
 /**
  * @author Xavier Coulon
- *
+ * 
  */
 public class CartridgeResourceDTO extends BaseResourceDTO {
 
 	private final String name;
-	
+
 	private final String type;
-	
-	/**
-	 * @param links
-	 */
+
 	public CartridgeResourceDTO(final String name, final String type, final Map<String, Link> links) {
 		super(links);
 		this.name = name;
 		this.type = type;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return the type
-	 */
 	public String getType() {
 		return type;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "CartridgeResourceDTO [name=" + name + ", type=" + type + "]";
+		return "CartridgeResourceDTO ["
+				+ "name=" + name
+				+ ", type=" + type
+				+ "]";
 	}
 
 }

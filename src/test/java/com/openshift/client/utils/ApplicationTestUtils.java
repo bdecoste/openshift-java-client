@@ -39,6 +39,10 @@ public class ApplicationTestUtils {
 	}
 
 	public static void silentlyDestroyAllApplications(IDomain domain) {
+		if (domain == null) {
+			return;
+		}
+		
 		try {
 			for (IApplication application : domain.getApplications()) {
 				application.destroy();

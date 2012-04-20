@@ -11,6 +11,7 @@
 package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -35,6 +36,7 @@ import com.openshift.internal.client.response.CartridgeResourceDTO;
 import com.openshift.internal.client.response.GearComponentDTO;
 import com.openshift.internal.client.response.GearResourceDTO;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.utils.CollectionUtils;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
@@ -312,7 +314,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 						embeddedCartridgeDTO.getName(),
 						embeddedCartridgeDTO.getType(),
 						embeddedCartridgeDTO.getLinks(), this);
-		getEmbeddedCartridges().add(embeddedCartridge);
+		doGetEmbeddedCartridges().add(embeddedCartridge);
 		return embeddedCartridge;
 	}
 
@@ -337,7 +339,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.embeddedCartridges.remove(embeddedCartridge);
 	}
 
-	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
+	protected List<IEmbeddedCartridge> doGetEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
 		// load collection if necessary
 		if (embeddedCartridges == null) {
 			this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
@@ -353,6 +355,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			}
 		}
 		return embeddedCartridges;
+	}
+
+	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
+		return CollectionUtils.toUnmodifiableCopy(doGetEmbeddedCartridges());
 	}
 
 	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException {
@@ -418,7 +424,11 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 					Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
 					response = getService().request(healthCheckUrl, HttpMethod.GET, null);
 				} catch (OpenShiftEndpointException e) {
-					throw e;
+					// TODO: RestService should throw IOException, no nested
+					// cause check would be needed
+					if (!isUnknownHostException(e)) {
+						throw e;
+					}
 				} catch (OpenShiftException e) {
 				}
 			}
@@ -430,6 +440,11 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			throw new OpenShiftException(e, "Could not reach {0}, connection timeouted", healthCheckUrl);
 		}
 
+	}
+
+	private boolean isUnknownHostException(OpenShiftEndpointException e) {
+		return e.getCause() != null
+				&& e.getCause().getCause() instanceof UnknownHostException;
 	}
 
 	public void refresh() throws SocketTimeoutException, OpenShiftException {
