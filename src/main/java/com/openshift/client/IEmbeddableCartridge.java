@@ -18,16 +18,14 @@ import com.openshift.internal.client.EmbeddableCartridge;
  */
 public interface IEmbeddableCartridge {
 	
-	public static final EmbeddableCartridge PHPMYADMIN_34 = new EmbeddableCartridge("phpmyadmin-3.4");
+	public static final IEmbeddableCartridge PHPMYADMIN_34 = new EmbeddableCartridge("phpmyadmin-3.4");
 
-	public static final EmbeddableCartridge MYSQL_51 = new EmbeddableCartridge("mysql-5.1");
+	public static final IEmbeddableCartridge MYSQL_51 = new EmbeddableCartridge("mysql-5.1");
 
-	public static final EmbeddableCartridge JENKINS_14 = new EmbeddableCartridge("jenkins-client-1.4");
+	public static final IEmbeddableCartridge JENKINS_14 = new EmbeddableCartridge("jenkins-client-1.4");
 
-	public static final EmbeddableCartridge METRICS_01 = new EmbeddableCartridge("metrics-0.1");
+	public static final IEmbeddableCartridge METRICS_01 = new EmbeddableCartridge("metrics-0.1");
 
 	public String getName();
-
 	
-
 }
