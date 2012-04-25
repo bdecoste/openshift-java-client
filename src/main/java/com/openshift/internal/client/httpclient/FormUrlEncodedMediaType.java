@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2011 Red Hat, Inc. 
+ * Copyright (c) 2012 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -12,7 +12,6 @@ package com.openshift.internal.client.httpclient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,36 +20,21 @@ import com.openshift.client.IHttpClient;
 /**
  * @author Andre Dietisheim
  */
-public class HttpParameters {
+public class FormUrlEncodedMediaType implements IMediaType {
 
 	private static final String UTF8 = "UTF-8";
 
-	private Map<String, Object> parameters;
-
-	public HttpParameters() {
-		this.parameters = new HashMap<String, Object>();
+	public String getType() {
+		return IHttpClient.MEDIATYPE_APPLICATION_FORMURLENCODED;
 	}
 
-	protected HttpParameters(Map<String, Object> parameters) {
-		this.parameters = parameters;
+	public String encodeParameters(Map<String, Object> parameters) throws UnsupportedEncodingException {
+		return toUrlEncoded(parameters);
 	}
 
-
-	protected HttpParameters put(String key, Object value) {
-		parameters.put(key, value);
-		return this;
-	}
-	
-	public boolean containsKey(String key) {
-		return parameters.containsKey(key);
-	}
-		
-	public Object get(String key) {
-		return parameters.get(key); 
-	}
-
-	public String toUrlEncoded() throws UnsupportedEncodingException {
-		if (parameters == null) {
+	private String toUrlEncoded(Map<String, Object> parameters) throws UnsupportedEncodingException {
+		if (parameters == null
+				|| parameters.isEmpty()) {
 			return null;
 		}
 		StringBuilder builder = new StringBuilder();
@@ -68,4 +52,5 @@ public class HttpParameters {
 				.append(IHttpClient.EQUALS)
 				.append(value.toString());
 	}
+
 }

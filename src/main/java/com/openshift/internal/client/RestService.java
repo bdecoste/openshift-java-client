@@ -53,6 +53,8 @@ public class RestService implements IRestService {
 	private static final String SYSPROPERTY_PROXY_HOST = "proxyHost";
 	private static final String SYSPROPERTY_PROXY_SET = "proxySet";
 
+	private static final String SERVICE_VERSION = "1.0";
+
 	private String baseUrl;
 	private IHttpClient client;
 
@@ -60,6 +62,7 @@ public class RestService implements IRestService {
 		this.baseUrl = baseUrl;
 		this.client = client;
 		client.setUserAgent(new RestServiceProperties().getUseragent(clientId));
+		client.setVersion(SERVICE_VERSION);
 	}
 
 	public RestResponse request(Link link)

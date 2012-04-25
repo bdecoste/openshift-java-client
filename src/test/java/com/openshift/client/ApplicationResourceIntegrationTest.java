@@ -553,7 +553,7 @@ public class ApplicationResourceIntegrationTest {
 		// pre-condition
 		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
 		long startTime = System.currentTimeMillis();
-		long timeout = 120 * 1024;
+		long timeout = 180 * 1024;
 		IApplication application = domain.createApplication("waittest", ICartridge.JBOSSAS_7, null, null);
 
 		// operation

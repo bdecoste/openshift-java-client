@@ -10,14 +10,16 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.MockUtils.anyForm;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -27,11 +29,12 @@ import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.fakes.HttpClientFake;
 import com.openshift.client.fakes.HttpServerFake;
 import com.openshift.client.utils.Base64Coder;
-import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 
@@ -66,22 +69,25 @@ public class HttpClientTest {
 	}
 
 	@Test
-	public void canPost() throws SocketTimeoutException, HttpClientException, MalformedURLException, UnsupportedEncodingException {
+	public void canPost() throws SocketTimeoutException, HttpClientException, MalformedURLException,
+			UnsupportedEncodingException {
 		String response = httpClient.post(new HashMap<String, Object>(), new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("POST"));
 	}
 
 	@Test
-	public void canPut() throws SocketTimeoutException, HttpClientException, MalformedURLException, UnsupportedEncodingException {
+	public void canPut() throws SocketTimeoutException, HttpClientException, MalformedURLException,
+			UnsupportedEncodingException {
 		String response = httpClient.put(new HashMap<String, Object>(), new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("PUT"));
 	}
 
 	@Test
-	public void canDelete() throws SocketTimeoutException, HttpClientException, MalformedURLException, UnsupportedEncodingException {
-		String response = httpClient.delete(anyForm(), new URL(serverFake.getUrl()));
+	public void canDelete() throws SocketTimeoutException, HttpClientException, MalformedURLException,
+			UnsupportedEncodingException {
+		String response = httpClient.delete(new HashMap<String, Object>(), new URL(serverFake.getUrl()));
 		assertNotNull(response);
 		assertTrue(response.startsWith("DELETE"));
 	}
@@ -115,9 +121,10 @@ public class HttpClientTest {
 		assertNotNull(response);
 		assertTrue(response.indexOf(ACCEPT_APPLICATION_JSON) > 0);
 	}
-	
+
 	@Test
-	public void shouldEncodeParametersCorrectly() throws HttpClientException, FileNotFoundException, IOException, OpenShiftException {
+	public void shouldEncodeParametersCorrectly() throws HttpClientException, FileNotFoundException, IOException,
+			OpenShiftException {
 		// pre-conditions
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
 		String key1 = "adietish";
@@ -126,27 +133,11 @@ public class HttpClientTest {
 		String key2 = "xcoulon";
 		String value2 = "redhat";
 		parameters.put(key2, value2);
-		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		
 
-		IHttpClient httpClient = new UrlConnectionHttpClientBuilder.UrlConnectionHttpClient(
-				configuration.getRhlogin(), 
-				configuration.getPassword(), 
-				configuration.getClientId(), 
-				false, 
-				UrlConnectionHttpClientBuilder.ACCEPT_APPLICATION_JSON) {
-			
-			@Override
-			protected String write(String data, String requestMethod, URL url) throws SocketTimeoutException,
-					HttpClientException {
-				return data;
-			}
-			
-		};
-		
+		IHttpClient httpClient = new HttpClientFake("1.0");
 		// operation
 		String response = httpClient.post(parameters, new URL(serverFake.getUrl()));
-		
+
 		// verification
 		String[] entries = response.split(String.valueOf(IHttpClient.AMPERSAND));
 		assertEquals(2, entries.length);
@@ -158,6 +149,35 @@ public class HttpClientTest {
 		assertEquals(2, keyValuePair.length);
 		assertEquals(key2, keyValuePair[0]);
 		assertEquals(value2, keyValuePair[1]);
+	}
+
+	@Ignore("Not supported on PROD/STG yet")
+	@Test
+	public void shouldAddServiceVersionToAcceptHeader() throws FileNotFoundException, IOException, OpenShiftException,
+			HttpClientException {
+		// pre-conditions
+		final String version = "1.0";
+		IHttpClient httpClient = new HttpClientFake(version) {
+
+			@Override
+			protected String write(String data, String requestMethod, URL url)
+					throws SocketTimeoutException, HttpClientException {
+				try {
+					HttpURLConnection connection = createConnection("dummyUser", "dummyPassword", "dummyUserAgent", url);
+					// verification
+					String accept = connection.getRequestProperty(IHttpClient.PROPERTY_ACCEPT);
+					assertThat(accept).contains("; version=" + version);
+					return data;
+				} catch (IOException e) {
+					fail("could not create HttpURLConnection");
+					return null;
+				}
+			}
+		};
+
+		// operation
+		httpClient.get(new URL(serverFake.getUrl()));
+
 	}
 
 }

@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +30,7 @@ import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.utils.HostUtils;
 import com.openshift.client.utils.RFC822DateUtils;
 import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.CartridgeResourceDTO;
@@ -416,35 +417,57 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public boolean waitForAccessible(long timeout) throws OpenShiftException {
 		try {
-			String response = "";
 			long startTime = System.currentTimeMillis();
-			while (!response.startsWith(getHealthCheckSuccessResponse())
-					&& System.currentTimeMillis() < startTime + timeout) {
-				try {
-					Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
-					response = getService().request(healthCheckUrl, HttpMethod.GET, null);
-				} catch (OpenShiftEndpointException e) {
-					// TODO: RestService should throw IOException, no nested
-					// cause check would be needed
-					if (!isUnknownHostException(e)) {
-						throw e;
-					}
-				} catch (OpenShiftException e) {
-				}
-			}
 
-			return response.startsWith(getHealthCheckSuccessResponse());
+			boolean resolved = waitForResolved(timeout, startTime);
+			if (!resolved) {
+				throw new OpenShiftException("Could not reach {0}, host resolution was not successful while waiting for timeout", healthCheckUrl);
+			}
+			
+			return waitForPositiveHealthResponse(timeout, startTime);
 		} catch (InterruptedException e) {
 			return false;
 		} catch (SocketTimeoutException e) {
 			throw new OpenShiftException(e, "Could not reach {0}, connection timeouted", healthCheckUrl);
 		}
-
 	}
 
-	private boolean isUnknownHostException(OpenShiftEndpointException e) {
-		return e.getCause() != null
-				&& e.getCause().getCause() instanceof UnknownHostException;
+	private boolean waitForPositiveHealthResponse(long timeout, long startTime)
+			throws OpenShiftException, InterruptedException, SocketTimeoutException, OpenShiftEndpointException {
+		String response = "";
+		while (!isPositiveHealthResponse(response)
+				&& !isTimeouted(timeout, startTime)) {
+			try {
+				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
+				response = getService().request(healthCheckUrl, HttpMethod.GET, null);
+			} catch (OpenShiftEndpointException e) {
+				throw e;
+			} catch (OpenShiftException e) {
+			}
+		}
+		return isPositiveHealthResponse(response);
+	}
+
+	private boolean isPositiveHealthResponse(String response) throws OpenShiftException {
+		return response.startsWith(getHealthCheckSuccessResponse());
+	}
+
+	private boolean waitForResolved(long timeout, long startTime) throws OpenShiftException, InterruptedException {
+		try {
+			while (!HostUtils.canResolv(healthCheckUrl)
+					&& !isTimeouted(timeout, startTime)) {
+				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
+			}
+			return HostUtils.canResolv(healthCheckUrl);
+		} catch (MalformedURLException e) {
+			throw new OpenShiftException(e,
+					"Could not wait for application {0} to become accessible, it has an invalid URL \"{1}\": {2}",
+					name, healthCheckUrl, e.getMessage());
+		}
+	}
+
+	private boolean isTimeouted(long timeout, long startTime) {
+		return !(System.currentTimeMillis() < (startTime + timeout));
 	}
 
 	public void refresh() throws SocketTimeoutException, OpenShiftException {

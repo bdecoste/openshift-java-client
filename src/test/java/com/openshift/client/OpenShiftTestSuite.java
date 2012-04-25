@@ -17,6 +17,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	ConfigurationTest.class,
+	HttpClientTest.class,
 	RestServiceTest.class,
 	DomainResourceTest.class,
 	ApplicationResourceTest.class,
