@@ -268,6 +268,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		connection.setInstanceFollowRedirects(true);
 		setAcceptHeader(connection);
 		setUserAgent(connection);
+		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, requestMediaType.getType());
 		return connection;
 	}
 
