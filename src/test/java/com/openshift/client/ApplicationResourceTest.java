@@ -18,6 +18,7 @@ import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_APPLICATION_CARTRIDGE;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH1APP_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITHNOAPP_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS;
@@ -663,24 +664,39 @@ public class ApplicationResourceTest {
 	}
 
 	@Test
-	public void shouldWaitForApplication() throws SocketTimeoutException, HttpClientException, Throwable {
+	public void shouldWaitUntilTimeout() throws SocketTimeoutException, HttpClientException, Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications")))
-				.thenReturn(GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample")))
-				.thenReturn(GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				.thenReturn(GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/health")))
-				.thenReturn("0");
-		long startTime = System.currentTimeMillis();
-		long timeout = 2 * 1024;
+				.thenReturn("0"); // return health not ok
 		final IApplication app = domain.getApplicationByName("sample");
-
+		long timeout = 4 * 1024;
+		long startTime = System.currentTimeMillis();
 		
 		// operation
 		boolean successfull = app.waitForAccessible(timeout);
 		
 		assertFalse(successfull);
-		assertTrue(System.currentTimeMillis() >= startTime + timeout);
+		assertTrue(System.currentTimeMillis() >= (startTime + timeout));
+	}
+
+	@Test
+	public void shouldEndBeforeTimeout() throws SocketTimeoutException, HttpClientException, Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications")))
+				.thenReturn(GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/health")))
+				.thenReturn("1"); // return health ok
+		long startTime = System.currentTimeMillis();
+		long timeout = 10 * 1024;
+		final IApplication app = domain.getApplicationByName("sample");
+		
+		// operation
+		boolean successfull = app.waitForAccessible(timeout);
+		
+		assertTrue(successfull);
+		assertTrue(System.currentTimeMillis() < (startTime + timeout));
 	}
 
 }
