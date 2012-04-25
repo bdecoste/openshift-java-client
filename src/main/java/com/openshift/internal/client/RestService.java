@@ -129,7 +129,7 @@ public class RestService implements IRestService {
 
 	private String request(URL url, HttpMethod httpMethod, Map<String, Object> parameters)
 			throws HttpClientException, SocketTimeoutException, OpenShiftException, UnsupportedEncodingException {
-		LOGGER.trace("Requesting {0} on {1}", httpMethod.name(), url);
+		LOGGER.trace("Requesting {} on {}", httpMethod.name(), url);
 		switch (httpMethod) {
 		case GET:
 			return client.get(url);
