@@ -203,7 +203,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	@Override
 	public String toString() {
 		return "Domain ["
-				+ "id=" + id
+				+ "id=" + id + ", "
 				+ "suffix = " + suffix
 				+ "]";
 	}
