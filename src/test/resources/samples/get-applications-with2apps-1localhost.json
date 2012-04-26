@@ -316,7 +316,7 @@
             },
             "domain_id":"foobar",
 			"health_check_path":"health",
-            "app_url":"http://localhost.localdomain/",
+            "app_url":"http://localhost/",
             "links":{
                 "RESTART":{
                     "href":"/domains/foobar/applications/sample/events",
