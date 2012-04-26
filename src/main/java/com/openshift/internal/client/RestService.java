@@ -43,7 +43,7 @@ import com.openshift.internal.client.utils.StringUtils;
  */
 public class RestService implements IRestService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDTOFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestService.class);
 
 	private static final String HTTP = "http";
 	private static final String SERVICE_PATH = "/broker/rest/";
@@ -129,6 +129,7 @@ public class RestService implements IRestService {
 
 	private String request(URL url, HttpMethod httpMethod, Map<String, Object> parameters)
 			throws HttpClientException, SocketTimeoutException, OpenShiftException, UnsupportedEncodingException {
+		LOGGER.trace("Requesting {} on {}", httpMethod.name(), url);
 		switch (httpMethod) {
 		case GET:
 			return client.get(url);

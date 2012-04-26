@@ -34,6 +34,9 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.openshift.client.IHttpClient;
 import com.openshift.client.utils.Base64Coder;
 import com.openshift.internal.client.utils.StreamUtils;
@@ -42,6 +45,8 @@ import com.openshift.internal.client.utils.StreamUtils;
  * @author Andre Dietisheim
  */
 public class UrlConnectionHttpClient implements IHttpClient {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UrlConnectionHttpClient.class);
 
 	private static final String HTTP_METHOD_PUT = "PUT";
 	private static final String HTTP_METHOD_POST = "POST";
@@ -136,6 +141,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 			connection.setRequestMethod(requestMethod);
 			connection.setDoOutput(true);
 			if (data != null) {
+				LOGGER.trace("Sending \"{}\" to {}", data, url);
 				StreamUtils.writeTo(data.getBytes(), connection.getOutputStream());
 			}
 			return StreamUtils.readToString(connection.getInputStream());
@@ -257,6 +263,11 @@ public class UrlConnectionHttpClient implements IHttpClient {
 
 	protected HttpURLConnection createConnection(String username, String password, String userAgent, URL url)
 			throws IOException {
+
+		LOGGER.trace(
+				"creating connection to {} using username \"{}\" and password \"{}\"", new Object[] { url, username,
+						password });
+
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		setSSLChecks(url, connection);
 		setAuthorisation(username, password, connection);
@@ -268,6 +279,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		connection.setInstanceFollowRedirects(true);
 		setAcceptHeader(connection);
 		setUserAgent(connection);
+		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, requestMediaType.getType());
 		return connection;
 	}
 
@@ -280,12 +292,13 @@ public class UrlConnectionHttpClient implements IHttpClient {
 	private void setAcceptHeader(HttpURLConnection connection) {
 		StringBuilder builder =
 				new StringBuilder(acceptedMediaType);
-/* Not supported on PROD/STG yet
-*		if (version != null) {
-*			builder.append(SEMICOLON).append(SPACE)
-*				.append(VERSION).append(EQUALS).append(version);
-*		}
-*/
+		/*
+		 * Not supported on PROD/STG yet
+		 */
+		// if (version != null) {
+		// builder.append(SEMICOLON).append(SPACE)
+		// .append(VERSION).append(EQUALS).append(version); }
+		//
 		connection.setRequestProperty(PROPERTY_ACCEPT, builder.toString());
 	}
 

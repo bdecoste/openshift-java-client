@@ -18,6 +18,7 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
@@ -37,7 +38,9 @@ public class SSHKeyIntegrationTest {
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(
-				configuration.getClientId(), configuration.getRhlogin(), configuration.getPassword(),
+				configuration.getClientId(), 
+				configuration.getRhlogin(), 
+				configuration.getPassword(),
 				configuration.getLibraServer());
 		this.user = connection.getUser();
 	}
@@ -45,7 +48,8 @@ public class SSHKeyIntegrationTest {
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void shouldThrowIfInvalidCredentials() throws Exception {
 		new TestConnectionFactory().getConnection(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();	}
+				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();	
+	}
 	
 	@Test
 	public void shouldReturnExistingKeys() throws HttpClientException, Throwable {
@@ -56,6 +60,7 @@ public class SSHKeyIntegrationTest {
 		assertThat(sshKeys).isNotNull();
 	}
 
+	@Ignore
 	@Test
 	public void shouldAddKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -84,6 +89,7 @@ public class SSHKeyIntegrationTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void shouldUpdatePublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -121,6 +127,7 @@ public class SSHKeyIntegrationTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void shouldReturnKeyForName() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -141,6 +148,7 @@ public class SSHKeyIntegrationTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void shouldReturnKeyForPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -162,7 +170,7 @@ public class SSHKeyIntegrationTest {
 
 	}
 
-	
+	@Ignore
 	@Test
 	public void shouldUpdateKeyTypeAndPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -188,7 +196,8 @@ public class SSHKeyIntegrationTest {
 			SSHKeyTestUtils.silentlyDestroyKey(key);
 		}
 	}
-	
+
+	@Ignore
 	@Test
 	public void shouldRemoveKey() throws IOException, JSchException, OpenShiftException {
 		IOpenShiftSSHKey key = null;
