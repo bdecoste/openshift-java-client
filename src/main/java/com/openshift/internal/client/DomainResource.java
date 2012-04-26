@@ -102,7 +102,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		}
 		ApplicationResourceDTO applicationDTO = 
 				new CreateApplicationRequest().execute(name, cartridge.getName(), (scale != null ? scale.getValue() : null), nodeProfile);
-		ApplicationResource application = new ApplicationResource(applicationDTO, cartridge, this);
+		IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
 		this.applications.add(application);
 		return application;
 	}
@@ -162,7 +162,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
 			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
 				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
-				final ApplicationResource application = 
+				final IApplication application = 
 						new ApplicationResource(applicationDTO, cartridge, this);
 				this.applications.add(application);
 			}
@@ -170,7 +170,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return CollectionUtils.toUnmodifiableCopy(applications);
 	}
 
-	protected void removeApplication(ApplicationResource application) {
+	protected void removeApplication(IApplication application) {
 		// TODO: can this collection be a null ?
 		this.applications.remove(application);
 	}

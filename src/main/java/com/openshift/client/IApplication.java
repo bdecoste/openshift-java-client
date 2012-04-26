@@ -14,6 +14,9 @@ import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.List;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+
 /**
  * @author André Dietisheim
  */
@@ -303,5 +306,51 @@ public interface IApplication {
 	 * @throws OpenShiftException
 	 */
 	public void refresh() throws SocketTimeoutException, OpenShiftException;
+	
+	/**
+	 * Sets the SSH session that this application will use to connect to OpenShift to perform some operations. This SSH
+	 * session must be initialized out of the library, since the user's SSH settings may depend on the runtime
+	 * environment (Eclipse, etc.).
+	 * 
+	 * @param session the SSH session
+	 */
+	public void setSSHSession(Session session);
+	
+	/**
+	 * Returns the SSH session that this application uses to connect to OpenShift.
+	 * @return the SSH session that this application uses to connect to OpenShift.
+	 */
+	public Session getSSHSession();
+	
+	/**
+	 * Returns true if the application was already provided with an SSH session, and this session is still valid (connected).
+	 * @return true if the application was already provided with an SSH session, and this session is still valid (connected).
+	 */
+	public boolean hasSSHSession();
+	
+	/**
+	 * Returns the list of forwardable ports on OpenShift for this application.
+	 * @return the list of forwardable ports on OpenShift for this application.
+	 * @throws OpenShiftSSHOperationException 
+	 */
+	public List<IApplicationPortForwarding> getForwardablePorts() throws OpenShiftSSHOperationException;
+	
+	/**
+	 * Starts the port-forwarding for all ports.
+	 * @return the list of forwardable ports on OpenShift for this application.
+	 * @throws JSchException 
+	 */
+	public List<IApplicationPortForwarding> startPortForwarding() throws OpenShiftSSHOperationException;
+	
+	/**
+	 * Stop the port-forwarding for all ports.
+	 * @return the list of forwardable ports on OpenShift for this application.
+	 * @throws OpenShiftSSHOperationException 
+	 */
+	public List<IApplicationPortForwarding> stopPortForwarding() throws OpenShiftSSHOperationException;
+
+	public List<IApplicationPortForwarding> refreshForwardablePorts() throws OpenShiftSSHOperationException;
+	
+	
 
 }
