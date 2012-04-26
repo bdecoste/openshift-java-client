@@ -48,7 +48,7 @@ public class SSHKeyIntegrationTest {
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void shouldThrowIfInvalidCredentials() throws Exception {
 		new TestConnectionFactory().getConnection(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();	
+				new OpenShiftTestConfiguration().getClientId(), "bogus-password").getUser();	
 	}
 	
 	@Test

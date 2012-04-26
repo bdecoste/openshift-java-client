@@ -43,14 +43,14 @@ public abstract class AbstractOpenshiftConfiguration implements IOpenShiftConfig
 		this(null, null);
 	}
 
-	public AbstractOpenshiftConfiguration(IOpenShiftConfiguration configuration) throws FileNotFoundException,
+	public AbstractOpenshiftConfiguration(IOpenShiftConfiguration parentConfiguration) throws FileNotFoundException,
 			IOException {
-		this(null, configuration);
+		this(null, parentConfiguration);
 	}
 
-	public AbstractOpenshiftConfiguration(File file, IOpenShiftConfiguration configuration)
+	public AbstractOpenshiftConfiguration(File file, IOpenShiftConfiguration parentConfiguration)
 			throws FileNotFoundException, IOException {
-		initProperties(file, configuration == null ? null : configuration.getProperties());
+		initProperties(file, parentConfiguration == null ? null : parentConfiguration.getProperties());
 	}
 
 	protected void initProperties(File file) throws FileNotFoundException, IOException {

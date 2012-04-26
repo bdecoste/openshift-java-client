@@ -45,7 +45,7 @@ public class DomainResourceIntegrationTest {
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void shouldThrowInvalidCredentialsWhenConnectingWithInvalidCredentials() throws Exception {
 		new TestConnectionFactory().getConnection(
-				OpenShiftTestConfiguration.CLIENT_ID, "bogus-password").getUser();
+				new OpenShiftTestConfiguration().getClientId(), "bogus-password").getUser();
 	}
 
 	@Test

@@ -25,7 +25,7 @@ public class SystemConfiguration extends AbstractOpenshiftConfiguration {
 	private static final String CONFIGURATION_FOLDER = File.separatorChar + "etc" + File.separatorChar + "openshift";
 	private static final String CONFIGURATION_FILE = "express.conf";
 
-	public SystemConfiguration(IOpenShiftConfiguration configuration) throws OpenShiftException, IOException {
-		super(new File(CONFIGURATION_FOLDER, CONFIGURATION_FILE), configuration);
+	public SystemConfiguration(IOpenShiftConfiguration parentConfiguration) throws OpenShiftException, IOException {
+		super(new File(CONFIGURATION_FOLDER, CONFIGURATION_FILE), parentConfiguration);
 	}
 }
