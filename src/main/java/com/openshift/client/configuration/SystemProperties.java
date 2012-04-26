@@ -31,6 +31,8 @@ public class SystemProperties extends AbstractOpenshiftConfiguration {
 		copySystemProperty(KEY_LIBRA_DOMAIN, properties);
 		copySystemProperty(KEY_LIBRA_SERVER, properties);
 		copySystemProperty(KEY_RHLOGIN, properties);
+		copySystemProperty(KEY_PASSWORD, properties);
+		copySystemProperty(KEY_CLIENT_ID, properties);
 		return properties;
 	}
 

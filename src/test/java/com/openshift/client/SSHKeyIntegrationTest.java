@@ -18,7 +18,6 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
@@ -60,7 +59,6 @@ public class SSHKeyIntegrationTest {
 		assertThat(sshKeys).isNotNull();
 	}
 
-	@Ignore
 	@Test
 	public void shouldAddKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -89,7 +87,6 @@ public class SSHKeyIntegrationTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void shouldUpdatePublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -127,7 +124,6 @@ public class SSHKeyIntegrationTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void shouldReturnKeyForName() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -148,7 +144,6 @@ public class SSHKeyIntegrationTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void shouldReturnKeyForPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -170,7 +165,6 @@ public class SSHKeyIntegrationTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void shouldUpdateKeyTypeAndPublicKey() throws SocketTimeoutException, HttpClientException, Throwable {
 		IOpenShiftSSHKey key = null;
@@ -197,7 +191,6 @@ public class SSHKeyIntegrationTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void shouldRemoveKey() throws IOException, JSchException, OpenShiftException {
 		IOpenShiftSSHKey key = null;
