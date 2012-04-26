@@ -85,7 +85,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
 			return StreamUtils.readToString(connection.getInputStream());
 		} catch (FileNotFoundException e) {
 			throw new NotFoundException(
-					MessageFormat.format("Could not find resource {0}", url.toString()), e);
+					MessageFormat.format("Could not find resource \"{0}\"", url.toString()), e);
 		} catch (IOException e) {
 			throw createException(e, connection);
 		} finally {

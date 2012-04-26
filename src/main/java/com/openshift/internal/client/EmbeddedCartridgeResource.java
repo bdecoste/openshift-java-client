@@ -13,6 +13,7 @@ package com.openshift.internal.client;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 
+import com.openshift.client.IApplication;
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.Link;
@@ -78,7 +79,7 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	/**
 	 * @return the application
 	 */
-	public final ApplicationResource getApplication() {
+	public final IApplication getApplication() {
 		return application;
 	}
 
