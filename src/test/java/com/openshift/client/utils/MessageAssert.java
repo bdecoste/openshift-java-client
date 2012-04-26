@@ -11,9 +11,11 @@
 package com.openshift.client.utils;
 
 import static org.junit.Assert.assertEquals;
+
 import org.fest.assertions.AssertExtension;
 
 import com.openshift.internal.client.response.Message;
+import com.openshift.internal.client.response.Message.Severity;
 
 /**
  * @author Andre Dietisheim
@@ -27,22 +29,22 @@ public class MessageAssert implements AssertExtension {
 	}
 
 	public MessageAssert hasText(String text) {
-		assertEquals(message.getText(), text);
+		assertEquals(text, message.getText());
 		return this;
 	}
 
-	public MessageAssert hasSeverity(String severity) {
-		assertEquals(message.getSeverity(), severity);
+	public MessageAssert hasSeverity(Severity severity) {
+		assertEquals(severity, message.getSeverity());
 		return this;
 	}
 
 	public MessageAssert hasExitCode(int exitCode) {
-		assertEquals(message.getExitCode(), exitCode);
+		assertEquals(exitCode, message.getExitCode());
 		return this;
 	}
 
 	public MessageAssert hasParameter(String parameter) {
-		assertEquals(message.getParameter(), parameter);
+		assertEquals(parameter, message.getParameter());
 		return this;
 	}
 }

@@ -17,14 +17,30 @@ import java.text.MessageFormat;
  */
 public class Message {
 
+	public enum Severity {
+
+		INFO, WARNING, ERROR, UNKNOWN;
+
+		private static Severity safeValueOf(String severityString) {
+			try {
+				if (severityString == null) {
+					return UNKNOWN;
+				}
+				return valueOf(severityString.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				return UNKNOWN;
+			}
+		}
+	}
+
 	private String text;
-	private String severity;
+	private Severity severity;
 	private String parameter;
 	private int exitCode;
 
 	public Message(String text, String parameter, String severity, int exitCode) {
 		this.text = text;
-		this.severity = severity;
+		this.severity = Severity.safeValueOf(severity);
 		this.parameter = parameter;
 		this.exitCode = exitCode;
 	}
@@ -37,7 +53,7 @@ public class Message {
 		return text;
 	}
 
-	public String getSeverity() {
+	public Severity getSeverity() {
 		return severity;
 	}
 
@@ -47,8 +63,12 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return MessageFormat.format(
-				"Operation failed with a(n) {0} and exit code {1}. Reason: {2}"
-				, severity, exitCode, text);
+		if (severity == Severity.ERROR) {
+			return MessageFormat.format("Operation failed on parameter {0} with exit code {1}. Reason: {2}",
+					parameter, exitCode, text);
+		} else {
+			return MessageFormat.format("Operation succeeded. Additional info supplied: {0}",
+					text);
+		}
 	}
 }
