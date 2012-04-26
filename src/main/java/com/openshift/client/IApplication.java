@@ -329,13 +329,20 @@ public interface IApplication {
 	public boolean hasSSHSession();
 	
 	/**
+	 * Returns true if the port-forwarding has been started, false otherwise.
+	 * @return true if the port-forwarding has been started, false otherwise.
+	 * @throws OpenShiftSSHOperationException 
+	 */
+	public boolean isPortFowardingStarted() throws OpenShiftSSHOperationException;
+	
+	/**
 	 * Returns the list of forwardable ports on OpenShift for this application.
 	 * @return the list of forwardable ports on OpenShift for this application.
 	 * @throws OpenShiftSSHOperationException 
 	 */
 	public List<IApplicationPortForwarding> getForwardablePorts() throws OpenShiftSSHOperationException;
 	
-	/**
+	/**@
 	 * Starts the port-forwarding for all ports.
 	 * @return the list of forwardable ports on OpenShift for this application.
 	 * @throws JSchException 
@@ -349,6 +356,11 @@ public interface IApplication {
 	 */
 	public List<IApplicationPortForwarding> stopPortForwarding() throws OpenShiftSSHOperationException;
 
+	/**
+	 * Refreshes the list of port-forwarding. Started ones are kept as-is.
+	 * @return the list of forwardable ports on OpenShift for this application.
+	 * @throws OpenShiftSSHOperationException 
+	 */
 	public List<IApplicationPortForwarding> refreshForwardablePorts() throws OpenShiftSSHOperationException;
 	
 	

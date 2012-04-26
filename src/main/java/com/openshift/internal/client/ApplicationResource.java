@@ -510,6 +510,14 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	public boolean hasSSHSession() {
 		return this.session != null && this.session.isConnected();
 	}
+	
+	public boolean isPortFowardingStarted() throws OpenShiftSSHOperationException {
+		try {
+			return this.session != null && this.session.isConnected() && this.session.getPortForwardingL().length > 0;
+		} catch (JSchException e) {
+			throw new OpenShiftSSHOperationException(e, "Unable to verify if port-forwarding has been started for application \"{0}\"", this.getName());
+		}
+	}
 
 	public List<IApplicationPortForwarding> refreshForwardablePorts() throws OpenShiftSSHOperationException {
 		this.ports = listPorts();
@@ -555,9 +563,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			}
 			return ports;
 		} catch(JSchException e) {
-			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application '{0}'", this.getName());
+			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"", this.getName());
 		} catch(IOException e) {
-			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application '{0}'", this.getName());
+			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"", this.getName());
 		} finally {
 			if (errorStreamReader != null) {
 				try {
@@ -605,7 +613,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public List<IApplicationPortForwarding> startPortForwarding() throws OpenShiftSSHOperationException {
 		if(!hasSSHSession()) {
-			throw new OpenShiftSSHOperationException("SSH session for application '{0}' is closed or null. Cannot start port forwarding", this.getName());
+			throw new OpenShiftSSHOperationException("SSH session for application \"{0}\" is closed or null. Cannot start port forwarding", this.getName());
 		}
 		for (IApplicationPortForwarding port : ports) {
 			port.start(session);

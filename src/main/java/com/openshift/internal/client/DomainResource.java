@@ -98,7 +98,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			throw new OpenShiftException("Application type is mandatory but none was given.");
 		}
 		if (hasApplicationByName(name)) {
-			throw new OpenShiftException("Application with name '{0}' already exists.", name);
+			throw new OpenShiftException("Application with name \"{0}\" already exists.", name);
 		}
 		ApplicationResourceDTO applicationDTO = 
 				new CreateApplicationRequest().execute(name, cartridge.getName(), (scale != null ? scale.getValue() : null), nodeProfile);
