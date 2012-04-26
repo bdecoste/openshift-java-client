@@ -27,6 +27,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,9 +58,9 @@ public class RestServiceTest {
 		this.clientMock = mock(IHttpClient.class);
 		String jsonResponse = "{}";
 		when(clientMock.get(any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.post(anyForm(), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.put(anyForm(), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.delete(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.post(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.delete(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
 
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 

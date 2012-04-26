@@ -34,6 +34,7 @@ public enum Samples {
 	GET_APPLICATIONS_WITHNOAPP_JSON("get-applications-withnoapp.json"),
 	GET_APPLICATIONS_WITH1APP_JSON("get-applications-with1app.json"),
 	GET_APPLICATIONS_WITH2APPS_JSON("get-applications-with2apps.json"),
+	GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON("get-applications-with2apps-1localhost.json"),
 	GET_APPLICATION_WITH1CARTRIDGE1ALIAS("get-application-1cartridge-1alias.json"),
 	GET_APPLICATION_WITH2CARTRIDGES2ALIASES("get-application-2cartridges-2aliases.json"),
 	REMOVE_APPLICATION_ALIAS("remove-application-alias.json"),

@@ -17,13 +17,14 @@ import java.text.MessageFormat;
 import java.util.Properties;
 
 import com.openshift.internal.client.utils.StreamUtils;
+import com.openshift.internal.client.utils.StringUtils;
 
 /**
  * @author Andre Dietisheim
  */
 public class RestServiceProperties {
 
-	private static final String PROPERTIES_FILE = "/restservice.properties";
+	private static final String PROPERTIES_FILE = "restservice.properties";
 
 	private static final String KEY_USERAGENTPATTERN = "useragent";
 	private static final String KEY_VERSION = "version";
@@ -46,12 +47,19 @@ public class RestServiceProperties {
 		try {
 			return getProperties().getProperty(key);
 		} catch (IOException e) {
-			return "Unknown";
+			return null;
 		}
 	}
 
 	public String getUseragent(String id) {
-		return MessageFormat.format(getUseragentPattern(), getVersion(), id);
+		String version = getVersion();
+		String useragentPattern = getUseragentPattern();
+		if (!StringUtils.isEmpty(id)
+				&& !StringUtils.isEmpty(version)
+				&& !StringUtils.isEmpty(useragentPattern)) {
+			return MessageFormat.format(getUseragentPattern(), getVersion(), id);
+		}
+		return null;
 	}
 
 	protected String getUseragentPattern() {

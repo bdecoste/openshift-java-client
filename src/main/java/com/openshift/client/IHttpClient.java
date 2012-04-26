@@ -22,6 +22,17 @@ import com.openshift.internal.client.httpclient.HttpClientException;
  */
 public interface IHttpClient {
 
+	public static final String PROPERTY_CONTENT_TYPE = "Content-Type";
+	public static final String PROPERTY_AUTHORIZATION = "Authorization";
+	public static final String PROPERTY_ACCEPT = "Accept";
+	public static final String PROPERTY_USER_AGENT = "User-Agent";
+
+	public static final String MEDIATYPE_APPLICATION_JSON = "application/json";
+	public static final String MEDIATYPE_APPLICATION_XML = "application/xml";
+	public static final String MEDIATYPE_APPLICATION_FORMURLENCODED = "application/x-www-form-urlencoded";
+
+	public static final String AUTHORIZATION_BASIC = "Basic";
+
 	public static final int STATUS_OK = 200;
 	public static final int STATUS_INTERNAL_SERVER_ERROR = 200;
 	public static final int STATUS_BAD_REQUEST = 400;
@@ -30,13 +41,16 @@ public interface IHttpClient {
 
 	public static final char SPACE = ' ';
 	public static final char COLON = ':';
+	public static final char SEMICOLON = ';';
 	public static final char AMPERSAND = '&';
 	public static final char EQUALS = '=';
 	
-	public static final String USER_AGENT = "User-Agent"; //$NON-NLS-1$
-
+	public static final String VERSION = "version"; 
+	
 	public void setUserAgent(String userAgent);
 	
+	public void setVersion(String serviceVersion);
+
 	public String get(URL url) throws HttpClientException, SocketTimeoutException;
 
 	public String post(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
@@ -44,4 +58,6 @@ public interface IHttpClient {
 	public String put(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
 
 	public String delete(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
+
+	public String delete(URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
 }
