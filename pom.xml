@@ -50,10 +50,6 @@
 		</license>
 	</licenses>
 
-	<!--scm> <connection>scm:git:git://git@github.com:arquillian/arquillian-core.git</connection> 
-		<developerConnection>scm:git:ssh://github.com/arquillian/arquillian-core.git</developerConnection> 
-		<url>git://github.com/arquillian/arquillian-core.git</url> </scm -->
-
 	<build>
 		<resources>
 			<resource>
@@ -66,8 +62,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<systemPropertyVariables>
-						<PASSWORD>${PASSWORD}</PASSWORD>
-						<RHLOGIN>${RHLOGIN}</RHLOGIN>
+						<libra_server>${libra_server}</libra_server>
+						<default_rhlogin>${default_rhlogin}</default_rhlogin>
+						<rhpassword>${rhpassword}</rhpassword>
 					</systemPropertyVariables>
 					<excludes>
 						<exclude>**/OpenShiftIntegrationTestSuite.java</exclude>
@@ -217,10 +214,9 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<propertyName>PASSWORD</propertyName>
-								<buildDirectory>${PASSWORD}</buildDirectory>
-								<propertyName>RHLOGIN</propertyName>
-								<buildDirectory>${RHLOGIN}</buildDirectory>
+								<libra_server>${libra_server}</libra_server>
+								<default_rhlogin>${default_rhlogin}</default_rhlogin>
+								<rhpassword>${rhpassword}</rhpassword>
 							</systemPropertyVariables>
 							<excludes>
 								<exclude>**/OpenShiftSuite.java</exclude>

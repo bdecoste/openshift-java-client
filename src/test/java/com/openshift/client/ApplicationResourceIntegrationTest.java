@@ -276,7 +276,6 @@ public class ApplicationResourceIntegrationTest {
 		try {
 			// pre-condition
 			IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-			assertThat(application.getName()).isNotEmpty();
 
 			// operation
 			application2 = domain.createApplication(application.getName(), ICartridge.JBOSSAS_7, null, null);

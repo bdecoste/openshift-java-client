@@ -17,6 +17,7 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
 import com.openshift.client.SSHKeyType;
 import com.openshift.internal.client.response.KeyResourceDTO;
+import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
  * @author Andre Dietisheim
@@ -81,7 +82,9 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 		}
 		
 		private KeyResourceDTO execute(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
-			return execute(new ServiceParameter("content", publicKey), new ServiceParameter("type", type.getTypeId()));
+			return execute(
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CONTENT, publicKey), 
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_TYPE, type.getTypeId()));
 		}
 	}
 

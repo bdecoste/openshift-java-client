@@ -25,7 +25,7 @@ public class OpenShiftTestConfiguration extends OpenShiftConfiguration {
 	public static final String LIBRA_SERVER_STG = "http://stg.openshift.redhat.com";
 	public static final String LIBRA_SERVER_PROD = "http://openshift.redhat.com";
 
-	private static final String KEY_PASSWORD = "password";
+	private static final String KEY_PASSWORD = "rhpassword";
 
 	public OpenShiftTestConfiguration() throws FileNotFoundException, IOException, OpenShiftException {
 		super();
