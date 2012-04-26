@@ -29,8 +29,8 @@ import org.junit.Test;
 import com.openshift.client.configuration.DefaultConfiguration;
 import com.openshift.client.configuration.IOpenShiftConfiguration;
 import com.openshift.client.configuration.SystemConfiguration;
-import com.openshift.client.configuration.SystemProperties;
 import com.openshift.client.configuration.UserConfiguration;
+import com.openshift.client.fakes.EmptySystemPropertiesFake;
 import com.openshift.client.fakes.SystemConfigurationFake;
 import com.openshift.client.fakes.UserConfigurationFake;
 import com.openshift.internal.client.RestServiceProperties;
@@ -52,12 +52,12 @@ public class ConfigurationTest {
 	public void versionTest() throws OpenShiftException, IOException {
 		// operation
 		String version = new RestServiceProperties().getVersion();
-	
+
 		// verification
 		assertNotNull(version);
 		assertFalse(version.contains("pom"));
 	}
-	
+
 	@Test
 	public void canReadUsername() throws OpenShiftException, IOException {
 		UserConfigurationFake userConfiguration = new UserConfigurationFake() {
@@ -80,7 +80,7 @@ public class ConfigurationTest {
 			}
 
 		};
-		
+
 		// operation
 		userConfiguration.setRhlogin(ANOTHER_USERNAME);
 		userConfiguration.save();
@@ -121,11 +121,11 @@ public class ConfigurationTest {
 			protected void initFile(File file) {
 			}
 		};
-		
+
 		// verification
 		assertEquals(ANOTHER_USERNAME, userConfiguration2.getRhlogin());
 	}
-	
+
 	@Test
 	public void canReadUsernameIfItsInSystemConfigurationOnly() throws OpenShiftException, IOException {
 		SystemConfiguration systemConfiguration = new SystemConfigurationFake(new DefaultConfiguration()) {
@@ -133,7 +133,7 @@ public class ConfigurationTest {
 			protected void init(Properties properties) {
 				properties.put(KEY_RHLOGIN, USERNAME);
 			}
-			
+
 		};
 		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration);
 		assertEquals(USERNAME, userConfiguration.getRhlogin());
@@ -146,14 +146,14 @@ public class ConfigurationTest {
 			protected void init(Properties properties) {
 				properties.put(KEY_RHLOGIN, USERNAME);
 			}
-			
+
 		};
 		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration) {
 
 			protected void initFile(Writer writer) throws IOException {
 				writer.append(KEY_RHLOGIN).append('=').append(USERNAME2).append('\n');
 			}
-			
+
 		};
 		assertEquals(USERNAME2, userConfiguration.getRhlogin());
 	}
@@ -165,9 +165,9 @@ public class ConfigurationTest {
 			protected void init(Properties properties) {
 				properties.put(KEY_RHLOGIN, USERNAME);
 			}
-			
+
 		};
-		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration);		
+		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration);
 		assertEquals(UserConfiguration.SCHEME_HTTPS + LIBRA_SERVER, userConfiguration.getLibraServer());
 	}
 
@@ -178,9 +178,9 @@ public class ConfigurationTest {
 			protected void init(Properties properties) {
 				properties.put(KEY_RHLOGIN, USERNAME);
 			}
-			
+
 		};
-		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration);		
+		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration);
 		assertEquals(UserConfiguration.SCHEME_HTTPS + LIBRA_SERVER, userConfiguration.getLibraServer());
 	}
 
@@ -189,7 +189,7 @@ public class ConfigurationTest {
 		SystemConfiguration systemConfiguration = new SystemConfigurationFake();
 		assertNull(systemConfiguration.getLibraServer());
 	}
-	
+
 	@Test
 	public void systemPropsOverrideSystemconfig() throws OpenShiftException, IOException {
 		SystemConfiguration systemConfiguration = new SystemConfigurationFake(new DefaultConfiguration()) {
@@ -198,7 +198,7 @@ public class ConfigurationTest {
 			protected void init(Properties properties) {
 				properties.put(KEY_RHLOGIN, USERNAME);
 			}
-			
+
 		};
 		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration) {
 
@@ -206,39 +206,22 @@ public class ConfigurationTest {
 			protected void initFile(Writer writer) throws IOException {
 				writer.append(KEY_RHLOGIN).append('=').append(USERNAME2).append('\n');
 			}
-			
-		};
-		IOpenShiftConfiguration configuration = new SystemProperties(userConfiguration) {
 
-			@Override
-			protected Properties getProperties(File file, Properties defaultProperties) {
-				// save orig rhlogin
-				String originalRhLogin = System.getProperty(KEY_RHLOGIN); 
-				System.setProperty(KEY_RHLOGIN, USERNAME3);
-				Properties properties = super.getProperties(file, defaultProperties);
-				// resore orig rhlogin
-				if (originalRhLogin != null) {
-					System.setProperty(KEY_RHLOGIN, originalRhLogin); 
-				} else {
-					System.clearProperty(KEY_RHLOGIN);
-				}
-				return properties;
-			}
-			
 		};
+		IOpenShiftConfiguration configuration = new EmptySystemPropertiesFake(userConfiguration);
 		configuration.setRhlogin(USERNAME3);
 		assertEquals(USERNAME3, configuration.getRhlogin());
 	}
 
 	@Test
-	public void systemPropertiesDefaultToUserConfig() throws OpenShiftException, IOException {
+	public void emptySystemPropertiesDefaultToUserConfig() throws OpenShiftException, IOException {
 		SystemConfiguration systemConfiguration = new SystemConfigurationFake(new DefaultConfiguration()) {
 
 			@Override
 			protected void init(Properties properties) {
 				properties.put(KEY_RHLOGIN, USERNAME);
 			}
-			
+
 		};
 		UserConfigurationFake userConfiguration = new UserConfigurationFake(systemConfiguration) {
 
@@ -246,16 +229,15 @@ public class ConfigurationTest {
 			protected void initFile(Writer writer) throws IOException {
 				writer.append(KEY_RHLOGIN).append('=').append(USERNAME2).append('\n');
 			}
-			
+
 		};
-		
-		IOpenShiftConfiguration configuration = new SystemProperties(userConfiguration);
+		IOpenShiftConfiguration configuration = new EmptySystemPropertiesFake(userConfiguration);
 		assertEquals(USERNAME2, configuration.getRhlogin());
 	}
 
 	@Test
 	public void fallsBackToDefaultUrl() throws OpenShiftException, IOException {
-		IOpenShiftConfiguration configuration = new SystemProperties(
+		IOpenShiftConfiguration configuration = new EmptySystemPropertiesFake(
 				new UserConfigurationFake(new SystemConfigurationFake(new DefaultConfiguration())));
 		assertNotNull(configuration.getLibraServer());
 		assertTrue(configuration.getLibraServer().contains(DefaultConfiguration.LIBRA_SERVER));
