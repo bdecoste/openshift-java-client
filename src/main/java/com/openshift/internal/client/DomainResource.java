@@ -199,12 +199,12 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return cartridges;
 	}
 
-	public List<GearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException {
-		final List<GearProfile> gearSizes = new ArrayList<GearProfile>();
+	public List<IGearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException {
+		final List<IGearProfile> gearSizes = new ArrayList<IGearProfile>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getOptionalParams()) {
 			if (param.getName().equals(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE)) {
 				for (String option : param.getValidOptions()) {
-					gearSizes.add(GearProfile.safeValueOf(option));
+					gearSizes.add(new GearProfile(option));
 				}
 			}
 		}

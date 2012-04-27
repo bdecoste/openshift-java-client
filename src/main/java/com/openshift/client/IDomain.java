@@ -135,6 +135,6 @@ public interface IDomain {
 	 * @throws SocketTimeoutException
 	 * @throws OpenShiftException
 	 */
-	public List<GearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException;
+	public List<IGearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException;
 
 }

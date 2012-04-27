@@ -33,7 +33,6 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.openshift.client.GearProfile;
 import com.openshift.client.HttpMethod;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
@@ -43,6 +42,7 @@ import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IEmbeddedCartridge;
+import com.openshift.client.IGearProfile;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftSSHOperationException;
@@ -101,7 +101,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final boolean scalable;
 
 	/** The application gear profile. */
-	private final GearProfile gearProfile;
+	private final IGearProfile gearProfile;
 
 	/** The domain this application belongs to. */
 	private final DomainResource domain;
@@ -178,7 +178,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, final String healthCheckPath, final GearProfile gearProfile, final boolean scalable, final ICartridge cartridge,
+			final String applicationUrl, final String gitUrl, final String healthCheckPath, final IGearProfile gearProfile, final boolean scalable, final ICartridge cartridge,
 			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases, links, domain);
 	}
@@ -209,7 +209,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-final List<Message> creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final GearProfile gearProfile, final boolean scalable,
+			final List<Message> creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final IGearProfile gearProfile, final boolean scalable,
 			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
 		super(domain.getService(), links, creationLog);
@@ -236,7 +236,7 @@ final List<Message> creationLog, final String applicationUrl, final String gitUr
 	}
 
 	@Override
-	public GearProfile getGearProfile() {
+	public IGearProfile getGearProfile() {
 		return gearProfile;
 	}
 	

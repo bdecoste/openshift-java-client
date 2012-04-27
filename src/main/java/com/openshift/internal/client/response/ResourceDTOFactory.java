@@ -49,9 +49,10 @@ import org.jboss.dmr.ModelType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.openshift.client.GearProfile;
+import com.openshift.client.IGearProfile;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftRequestException;
+import com.openshift.internal.client.GearProfile;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
@@ -366,7 +367,7 @@ public class ResourceDTOFactory {
 		final String name = getAsString(appNode, PROPERTY_NAME);
 		final String uuid = getAsString(appNode, PROPERTY_UUID);
 		final Boolean scalable = getAsBoolean(appNode, PROPERTY_SCALABLE);
-		final GearProfile gearProfile = GearProfile.safeValueOf(getAsString(appNode, PROPERTY_GEAR_PROFILE));
+		final IGearProfile gearProfile = new GearProfile(getAsString(appNode, PROPERTY_GEAR_PROFILE));
 		final String applicationUrl = getAsString(appNode, PROPERTY_APP_URL);
 		final String gitUrl = getAsString(appNode, PROPERTY_GIT_URL);
 		final String domainId = getAsString(appNode, PROPERTY_DOMAIN_ID);

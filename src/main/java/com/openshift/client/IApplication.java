@@ -60,7 +60,7 @@ public interface IApplication extends IOpenShiftResource {
 	 * Returns true if scaling is enabled on this application (only set at creation time).
 	 * @return true if scaling is enabled on this application (only set at creation time).
 	 */
-	public GearProfile getGearProfile();
+	public IGearProfile getGearProfile();
 	
 	/**
 	 * Returns the url at which this application may be checked for its health state.

@@ -13,7 +13,7 @@ package com.openshift.internal.client.response;
 import java.util.List;
 import java.util.Map;
 
-import com.openshift.client.GearProfile;
+import com.openshift.client.IGearProfile;
 
 /**
  * The Class ApplicationDTO.
@@ -41,7 +41,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	private final boolean scalable;
 
 	/** The application gear profile. */
-	private final GearProfile gearProfile;
+	private final IGearProfile gearProfile;
 
 	/** the application's aliases. */
 	private final List<String> aliases;
@@ -65,8 +65,11 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final GearProfile gearProfile, final boolean scalable, final String uuid, final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases, final Map<String, Link> links, List<Message> creationLog) {
-		super(links, creationLog);
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime,
+			final String name, final IGearProfile gearProfile, final boolean scalable, final String uuid,
+			final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases,
+			final Map<String, Link> links, List<Message> creationLog) {
+	super(links, creationLog);
 		this.framework = framework;
 		this.domainId = domainId;
 		this.creationTime = creationTime;
@@ -126,7 +129,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/**
 	 * @return the gearProfile
 	 */
-	public final GearProfile getGearProfile() {
+	public final IGearProfile getGearProfile() {
 		return gearProfile;
 	}
 

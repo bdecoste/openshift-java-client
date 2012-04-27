@@ -156,7 +156,7 @@ public class ApplicationResourceTest {
 		final IApplication app = domain.createApplication("sample", cartridge, ApplicationScale.NO_SCALE, null);
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
-		assertThat(app.getGearProfile()).isEqualTo(GearProfile.SMALL);
+		assertThat(app.getGearProfile().getName()).isEqualTo("small");
 		assertThat(app.isScalable()).isEqualTo(false);
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");
 		assertThat(app.getCreationTime()).isNotNull();
