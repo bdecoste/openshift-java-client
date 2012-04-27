@@ -34,13 +34,6 @@ public class JenkinsApplication extends ApplicationResource implements IJenkinsA
 				aliases, links, domain);
 	}
 
-	public JenkinsApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable, ICartridge cartridge, List<String> aliases,
-			Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases,
-				links, domain);
-	}
-
 	public String getHealthCheckUrl() {
 		return getApplicationUrl() + "login?from=%2F";
 	}

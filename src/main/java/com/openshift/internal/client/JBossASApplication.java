@@ -27,21 +27,11 @@ import com.openshift.internal.client.response.Message;
  */
 public class JBossASApplication extends ApplicationResource implements IJBossASApplication {
 
-	
-	
-
 	public JBossASApplication(String name, String uuid, String creationTime, List<Message> creationLog,
 			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable,
 			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
 				aliases, links, domain);
-	}
-
-	public JBossASApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable, ICartridge cartridge, List<String> aliases,
-			Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases,
-				links, domain);
 	}
 
 	public String threadDump() throws OpenShiftException {

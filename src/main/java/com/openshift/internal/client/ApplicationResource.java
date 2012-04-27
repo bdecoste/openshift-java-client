@@ -151,37 +151,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 */
 	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
-		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(), dto
+		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getCreationLog(), dto.getApplicationUrl(), dto.getGitUrl(), dto
 				.getHealthCheckPath(), dto.getGearProfile(), dto.getApplicationScale(), cartridge, dto.getAliases(), dto.getLinks(), domain);
-	}
-
-	/**
-	 * Instantiates a new application.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param uuid
-	 *            the uuid
-	 * @param creationTime
-	 *            the creation time
-	 * @param applicationUrl
-	 *            the application url
-	 * @param gitUrl
-	 *            the git url
-	 * @param cartridge
-	 *            the cartridge (type/framework)
-	 * @param aliases
-	 *            the aliases
-	 * @param links
-	 *            the links
-	 * @param domain
-	 *            the domain this application belongs to
-	 * @throws DatatypeConfigurationException
-	 */
-	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, final String healthCheckPath, final IGearProfile gearProfile, final ApplicationScale scale, final ICartridge cartridge,
-			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
-		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, gearProfile, scale, cartridge, aliases, links, domain);
 	}
 
 	/**
