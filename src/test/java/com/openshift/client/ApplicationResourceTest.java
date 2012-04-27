@@ -153,7 +153,7 @@ public class ApplicationResourceTest {
 				ADD_APPLICATION_JSON.getContentAsString());
 		// operation
 		final ICartridge cartridge = new Cartridge("jbossas-7");
-		final IApplication app = domain.createApplication("sample", cartridge, EnumApplicationScale.NO_SCALE, null);
+		final IApplication app = domain.createApplication("sample", cartridge, ApplicationScale.NO_SCALE, null);
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");

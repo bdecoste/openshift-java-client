@@ -15,12 +15,12 @@ package com.openshift.client;
  * @author Xavier Coulon
  *
  */
-public enum EnumApplicationScale {
+public enum ApplicationScale {
 	
 	SCALE("true"), NO_SCALE("false");
 	
 	private final String value;
-	private EnumApplicationScale(final String value) {
+	private ApplicationScale(final String value) {
 		this.value = value;
 	}
 	

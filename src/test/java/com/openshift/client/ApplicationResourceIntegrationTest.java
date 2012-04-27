@@ -100,7 +100,7 @@ public class ApplicationResourceIntegrationTest {
 		String applicationName =
 				ApplicationTestUtils.createRandomApplicationName();
 		IApplication application = domain.createApplication(
-				applicationName, ICartridge.JBOSSAS_7, EnumApplicationScale.SCALE, GearProfile.SMALL);
+				applicationName, ICartridge.JBOSSAS_7, ApplicationScale.SCALE, GearProfile.SMALL);
 		assertThat(new ApplicationAssert(application))
 				.hasName(applicationName)
 				.hasUUID()
@@ -458,7 +458,7 @@ public class ApplicationResourceIntegrationTest {
 		try {
 			// pre-condition
 			application = domain.createApplication(
-					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.NO_SCALE, null);
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, ApplicationScale.NO_SCALE, null);
 
 			// operation
 			application.scaleDown();
@@ -477,7 +477,7 @@ public class ApplicationResourceIntegrationTest {
 		try {
 			// pre-condition
 			application = domain.createApplication(
-					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.NO_SCALE, null);
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, ApplicationScale.NO_SCALE, null);
 
 			// operation
 			application.scaleUp();
