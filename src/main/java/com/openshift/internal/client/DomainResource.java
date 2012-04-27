@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.ApplicationScale;
-import com.openshift.client.GearProfile;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
+import com.openshift.client.IGearProfile;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.ApplicationResourceDTO;
@@ -102,13 +102,13 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return createApplication(name, cartridge, scale, null);
 	}
 
-	public IApplication createApplication(final String name, final ICartridge cartridge, final GearProfile gearProfile)
+	public IApplication createApplication(final String name, final ICartridge cartridge, final IGearProfile gearProfile)
 			throws OpenShiftException, SocketTimeoutException {
 		return createApplication(name, cartridge, null, gearProfile);
 	}
 
 	public IApplication createApplication(final String name, final ICartridge cartridge,
-			final ApplicationScale scale, final GearProfile gearProfile)
+			final ApplicationScale scale, final IGearProfile gearProfile)
 			throws OpenShiftException, SocketTimeoutException {
 		// check that an application with the same does not already exists, and
 		// btw, loads the list of applications if needed (lazy)
@@ -234,7 +234,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		}
 
 		public ApplicationResourceDTO execute(final String name, final String cartridge,
-				final ApplicationScale scale, final GearProfile gearProfile) throws SocketTimeoutException,
+				final ApplicationScale scale, final IGearProfile gearProfile) throws SocketTimeoutException,
 				OpenShiftException {
 			if (scale == null
 					&& gearProfile == null) {
@@ -250,7 +250,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
 						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
 						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_SCALE, scale.getValue()),
-						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getValue()));
+						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getName()));
 			}
 		}
 
@@ -264,12 +264,12 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		}
 
 		public ApplicationResourceDTO execute(final String name, final String cartridge,
-				final GearProfile gearProfile) throws SocketTimeoutException,
+				final IGearProfile gearProfile) throws SocketTimeoutException,
 				OpenShiftException {
 			return super.execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
-					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getValue()));
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getName()));
 		}
 
 		public ApplicationResourceDTO execute(final String name, final String cartridge) throws SocketTimeoutException,
