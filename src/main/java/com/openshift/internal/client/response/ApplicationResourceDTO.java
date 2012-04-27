@@ -57,8 +57,8 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases, final Map<String, Link> links) {
-		super(links);
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases, final Map<String, Link> links, List<Message> creationLog) {
+		super(links, creationLog);
 		this.framework = framework;
 		this.domainId = domainId;
 		this.creationTime = creationTime;

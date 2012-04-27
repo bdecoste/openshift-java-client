@@ -22,7 +22,6 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HEALTH_CHECK_PATH;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ID;
-import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INFO;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INTERNAL_PORT;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
@@ -45,12 +44,11 @@ import java.util.Map;
 
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
-import org.jboss.dmr.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftRequestParameterException;
+import com.openshift.client.OpenShiftRequestException;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 /**
@@ -59,7 +57,7 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
  * @author Xavier Coulon
  */
 public class ResourceDTOFactory {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDTOFactory.class);
 
 	/**
@@ -73,7 +71,7 @@ public class ResourceDTOFactory {
 	 */
 	public static RestResponse get(final String content) throws OpenShiftException {
 		// in case the server answers with 'no-content'
-		if(content == null || content.length() == 0) {
+		if (content == null || content.length() == 0) {
 			return null;
 		}
 		LOGGER.trace("Unmarshalling response\n{}", content);
@@ -84,6 +82,7 @@ public class ResourceDTOFactory {
 
 		final EnumDataType dataType = EnumDataType.safeValueOf(type);
 		// the response is after an error, only the messages are relevant
+
 		if (dataType == null) {
 			return new RestResponse(status, messages, null, null);
 		}
@@ -93,23 +92,23 @@ public class ResourceDTOFactory {
 		case keys:
 			return new RestResponse(status, messages, createKeys(rootNode), dataType);
 		case key:
-			return new RestResponse(status, messages, createKey(rootNode), dataType);
+			return new RestResponse(status, messages, createKey(rootNode, messages), dataType);
 		case links:
 			return new RestResponse(status, messages, createLinks(rootNode), dataType);
 		case domains:
 			return new RestResponse(status, messages, createDomains(rootNode), dataType);
 		case domain:
-			return new RestResponse(status, messages, createDomain(rootNode), dataType);
+			return new RestResponse(status, messages, createDomain(rootNode, messages), dataType);
 		case applications:
 			return new RestResponse(status, messages, createApplications(rootNode), dataType);
 		case application:
-			return new RestResponse(status, messages, createApplication(rootNode), dataType);
+			return new RestResponse(status, messages, createApplication(rootNode, messages), dataType);
 		case gears:
 			return new RestResponse(status, messages, createGears(rootNode), dataType);
 		case cartridges:
 			return new RestResponse(status, messages, createCartridges(rootNode), dataType);
 		case cartridge:
-			return new RestResponse(status, messages, createCartridge(rootNode), dataType);
+			return new RestResponse(status, messages, createCartridge(rootNode, messages), dataType);
 		default:
 			return null;
 		}
@@ -131,7 +130,7 @@ public class ResourceDTOFactory {
 		}
 		return messages;
 	}
-	
+
 	private static Message createMessage(ModelNode messageNode) {
 		String text = getString(messageNode.get(IOpenShiftJsonConstants.PROPERTY_TEXT));
 		String parameter = getString(messageNode.get(IOpenShiftJsonConstants.PROPERTY_FIELD));
@@ -155,7 +154,7 @@ public class ResourceDTOFactory {
 		}
 		return node.asString();
 	}
-	
+
 	/**
 	 * Gets the model node.
 	 * 
@@ -210,7 +209,7 @@ public class ResourceDTOFactory {
 		if (rootNode.has(PROPERTY_DATA)) {
 			for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
 				if (dataNode.getType() == ModelType.OBJECT) {
-					keys.add(createKey(dataNode));
+					keys.add(createKey(dataNode, null));
 				}
 			}
 		}
@@ -225,16 +224,16 @@ public class ResourceDTOFactory {
 	 * @return the key resource dto
 	 * @throws OpenShiftException
 	 */
-	private static KeyResourceDTO createKey(ModelNode keyNode) throws OpenShiftException {
+	private static KeyResourceDTO createKey(ModelNode keyNode, List<Message> creationLog) throws OpenShiftException {
 		if (keyNode.has(PROPERTY_DATA)) {
 			// loop inside 'data' node
-			return createKey(keyNode.get(PROPERTY_DATA));
+			return createKey(keyNode.get(PROPERTY_DATA), creationLog);
 		}
 		final String name = getAsString(keyNode, IOpenShiftJsonConstants.PROPERTY_NAME);
 		final String type = getAsString(keyNode, IOpenShiftJsonConstants.PROPERTY_TYPE);
 		final String content = getAsString(keyNode, IOpenShiftJsonConstants.PROPERTY_CONTENT);
 		final Map<String, Link> links = createLinks(keyNode.get(PROPERTY_LINKS));
-		return new KeyResourceDTO(name, type, content, links);
+		return new KeyResourceDTO(name, type, content, links, creationLog);
 	}
 
 	/**
@@ -282,20 +281,22 @@ public class ResourceDTOFactory {
 	 */
 	private static List<DomainResourceDTO> createDomains(final ModelNode rootNode) throws OpenShiftException {
 		final List<DomainResourceDTO> domains = new ArrayList<DomainResourceDTO>();
-		// temporarily supporting absence of 'data' node in the 'domain' response message
+		// temporarily supporting absence of 'data' node in the 'domain'
+		// response message
 		// FIXME: simplify once openshift response is fixed
 		if (rootNode.has(PROPERTY_DATA)) {
 			for (ModelNode dataNode : rootNode.get(PROPERTY_DATA).asList()) {
 				if (dataNode.getType() == ModelType.OBJECT) {
-					domains.add(createDomain(dataNode));
+					domains.add(createDomain(dataNode, null));
 				} else {
 					throw new OpenShiftException("Unexpected node type: {0}", dataNode.getType());
 				}
 			}
 		} else {
 			final ModelNode domainNode = rootNode.get(PROPERTY_DOMAIN);
-			if (domainNode.isDefined() && domainNode.getType() == ModelType.OBJECT) {
-				domains.add(createDomain(domainNode));
+			if (domainNode.isDefined()
+					&& domainNode.getType() == ModelType.OBJECT) {
+				domains.add(createDomain(domainNode, null));
 			} else {
 				throw new OpenShiftException("Unexpected node type: {0}", domainNode.getType());
 			}
@@ -312,15 +313,16 @@ public class ResourceDTOFactory {
 	 * @return the domain dto
 	 * @throws OpenShiftException
 	 */
-	private static DomainResourceDTO createDomain(final ModelNode domainNode) throws OpenShiftException {
+	private static DomainResourceDTO createDomain(final ModelNode domainNode, List<Message> creationLog)
+			throws OpenShiftException {
 		if (domainNode.has(PROPERTY_DATA)) {
-			// loop inside 'data' node
-			return createDomain(domainNode.get(PROPERTY_DATA));
+			// recurse into "data" node
+			return createDomain(domainNode.get(PROPERTY_DATA), creationLog);
 		}
 		final String namespace = getAsString(domainNode, PROPERTY_ID);
 		final String suffix = getAsString(domainNode, PROPERTY_SUFFIX);
 		final Map<String, Link> links = createLinks(domainNode.get(PROPERTY_LINKS));
-		return new DomainResourceDTO(namespace, suffix, links);
+		return new DomainResourceDTO(namespace, suffix, links, creationLog);
 	}
 
 	/**
@@ -329,14 +331,14 @@ public class ResourceDTOFactory {
 	 * @param rootNode
 	 *            the domain node
 	 * @return the list< application dt o>
-	 * @throws OpenShiftException 
+	 * @throws OpenShiftException
 	 */
 	private static List<ApplicationResourceDTO> createApplications(final ModelNode rootNode)
 			throws OpenShiftException {
 		final List<ApplicationResourceDTO> applicationDTOs = new ArrayList<ApplicationResourceDTO>();
 		if (rootNode.has(PROPERTY_DATA)) {
 			for (ModelNode applicationNode : rootNode.get(PROPERTY_DATA).asList()) {
-				applicationDTOs.add(createApplication(applicationNode));
+				applicationDTOs.add(createApplication(applicationNode, null));
 			}
 		}
 		return applicationDTOs;
@@ -348,13 +350,13 @@ public class ResourceDTOFactory {
 	 * @param appNode
 	 *            the app node
 	 * @return the application dto
-	 * @throws OpenShiftException 
+	 * @throws OpenShiftException
 	 */
-	private static ApplicationResourceDTO createApplication(ModelNode appNode)
+	private static ApplicationResourceDTO createApplication(ModelNode appNode, List<Message> creationLog)
 			throws OpenShiftException {
 		if (appNode.has(PROPERTY_DATA)) {
-			// loop inside 'data' node
-			return createApplication(appNode.get(PROPERTY_DATA));
+			// recurse into 'data' node
+			return createApplication(appNode.get(PROPERTY_DATA), creationLog);
 		}
 		final String framework = getAsString(appNode, PROPERTY_FRAMEWORK);
 		final String creationTime = getAsString(appNode, PROPERTY_CREATION_TIME);
@@ -366,7 +368,8 @@ public class ResourceDTOFactory {
 		final String healthCheckPath = getAsString(appNode, PROPERTY_HEALTH_CHECK_PATH);
 		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS));
 		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES));
-		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, applicationUrl, gitUrl, healthCheckPath, aliases, links);
+		return new ApplicationResourceDTO(
+				framework, domainId, creationTime, name, uuid, applicationUrl, gitUrl, healthCheckPath, aliases, links, creationLog);
 	}
 
 	private static List<GearResourceDTO> createGears(ModelNode gearsNode) {
@@ -375,66 +378,37 @@ public class ResourceDTOFactory {
 			return createGears(gearsNode.get(PROPERTY_DATA));
 		}
 		final List<GearResourceDTO> gears = new ArrayList<GearResourceDTO>();
-		if(gearsNode.getType() == ModelType.LIST) {
-			for(ModelNode childNode : gearsNode.asList()) {
-				gears.add(createGear(childNode));
+		if (gearsNode.getType() == ModelType.LIST) {
+			for (ModelNode childNode : gearsNode.asList()) {
+				gears.add(createGear(childNode, null));
 			}
 		}
 		return gears;
 	}
 
-	private static GearResourceDTO createGear(ModelNode gearNode) {
+	private static GearResourceDTO createGear(ModelNode gearNode, List<Message> creationLog) {
 		if (gearNode.has(PROPERTY_DATA)) {
-			// loop inside 'data' node
-			return createGear(gearNode.get(PROPERTY_DATA));
+			// recurse into 'data' node
+			return createGear(gearNode.get(PROPERTY_DATA), creationLog);
 		}
 		final String uuid = getAsString(gearNode, PROPERTY_UUID);
 		final String gitUrl = getAsString(gearNode, PROPERTY_GIT_URL);
 		final List<GearComponentDTO> components = createGearComponents(gearNode.get(PROPERTY_GEARS_COMPONENTS));
-		return new GearResourceDTO(uuid, gitUrl, components);
+		return new GearResourceDTO(uuid, gitUrl, components, creationLog);
 	}
-	
+
 	private static List<GearComponentDTO> createGearComponents(ModelNode gearsComponentNode) {
 		final List<GearComponentDTO> components = new ArrayList<GearComponentDTO>();
-		if(gearsComponentNode.getType() == ModelType.LIST) {
-			for(ModelNode componentNode : gearsComponentNode.asList()) {
+		if (gearsComponentNode.getType() == ModelType.LIST) {
+			for (ModelNode componentNode : gearsComponentNode.asList()) {
 				final String name = getAsString(componentNode, PROPERTY_NAME);
 				final String internalPort = getAsString(componentNode, PROPERTY_INTERNAL_PORT);
 				final String proxyPort = getAsString(componentNode, PROPERTY_PROXY_PORT);
 				final String proxyHost = getAsString(componentNode, PROPERTY_PROXY_HOST);
-				components.add(new GearComponentDTO(name, internalPort, proxyHost, proxyPort));
+				components.add(new GearComponentDTO(name, internalPort, proxyHost, proxyPort, null));
 			}
 		}
 		return components;
-	}
-
-	/**
-	 * Creates a new ResourceDTO object.
-	 * 
-	 * @param embeddedCartridgeNodes
-	 *            the embedded cartridge nodes
-	 * @return the map< string, string>
-	 */
-	private static Map<String, String> createEmbeddedCartridges(ModelNode embeddedCartridgesNode) {
-		final Map<String, String> embeddedCartridges = new HashMap<String, String>();
-		if (embeddedCartridgesNode != null) {
-			switch (embeddedCartridgesNode.getType()) {
-			case OBJECT:
-			case LIST:
-				for (ModelNode embeddedCartridgeNode : embeddedCartridgesNode.asList()) {
-					if (embeddedCartridgeNode.getType() == ModelType.PROPERTY) {
-						final Property p = embeddedCartridgeNode.asProperty();
-						embeddedCartridges.put(p.getName(), p.getValue().get(PROPERTY_INFO).asString());
-					}
-				}
-				break;
-			case PROPERTY:
-				final Property p = embeddedCartridgesNode.asProperty();
-				embeddedCartridges.put(p.getName(), p.getValue().get(PROPERTY_INFO).asString());
-				break;
-			}
-		}
-		return embeddedCartridges;
 	}
 
 	/**
@@ -449,7 +423,7 @@ public class ResourceDTOFactory {
 		final List<CartridgeResourceDTO> cartridges = new ArrayList<CartridgeResourceDTO>();
 		if (rootNode.has(PROPERTY_DATA)) {
 			for (ModelNode cartridgeNode : rootNode.get(PROPERTY_DATA).asList()) {
-				cartridges.add(createCartridge(cartridgeNode));
+				cartridges.add(createCartridge(cartridgeNode, null));
 			}
 		}
 		return cartridges;
@@ -463,15 +437,16 @@ public class ResourceDTOFactory {
 	 * @return the cartridge resource dto
 	 * @throws OpenShiftException
 	 */
-	private static CartridgeResourceDTO createCartridge(ModelNode cartridgeNode) throws OpenShiftException {
+	private static CartridgeResourceDTO createCartridge(ModelNode cartridgeNode, List<Message> creationLog)
+			throws OpenShiftException {
 		if (cartridgeNode.has(PROPERTY_DATA)) {
-			// loop inside 'data' node
-			return createCartridge(cartridgeNode.get(PROPERTY_DATA));
+			// recurse into 'data' node
+			return createCartridge(cartridgeNode.get(PROPERTY_DATA), creationLog);
 		}
 		final String name = getAsString(cartridgeNode, PROPERTY_NAME);
 		final String type = getAsString(cartridgeNode, PROPERTY_TYPE);
 		final Map<String, Link> links = createLinks(cartridgeNode.get(PROPERTY_LINKS));
-		return new CartridgeResourceDTO(name, type, links);
+		return new CartridgeResourceDTO(name, type, links, creationLog);
 	}
 
 	/**
@@ -502,10 +477,10 @@ public class ResourceDTOFactory {
 	 * @param linkParamNodes
 	 *            the link param nodes
 	 * @return the list< link param>
-	 * @throws OpenShiftRequestParameterException
+	 * @throws OpenShiftRequestException
 	 */
 	private static List<LinkParameter> createLinkParameters(ModelNode linkParamNodes)
-			throws OpenShiftRequestParameterException {
+			throws OpenShiftRequestException {
 		List<LinkParameter> linkParams = new ArrayList<LinkParameter>();
 		if (linkParamNodes.isDefined()) {
 			for (ModelNode linkParamNode : linkParamNodes.asList()) {
@@ -521,9 +496,9 @@ public class ResourceDTOFactory {
 	 * @param linkParamNode
 	 *            the model node that contains the link parameters
 	 * @return the link parameter
-	 * @throws OpenShiftRequestParameterException
+	 * @throws OpenShiftRequestException
 	 */
-	private static LinkParameter createLinkParameter(ModelNode linkParamNode) throws OpenShiftRequestParameterException {
+	private static LinkParameter createLinkParameter(ModelNode linkParamNode) throws OpenShiftRequestException {
 		final String description = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_DESCRIPTION).asString();
 		final String type = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_TYPE).asString();
 		final String defaultValue = linkParamNode.get(IOpenShiftJsonConstants.PROPERTY_DEFAULT_VALUE).asString();
@@ -543,7 +518,8 @@ public class ResourceDTOFactory {
 		final ModelNode validOptionsNode = linkParamNode.get(PROPERTY_VALID_OPTIONS);
 		if (validOptionsNode.isDefined()) {
 			switch (validOptionsNode.getType()) {
-			case STRING: // if there's only one value, it is not serialized as a list, but just a string
+			case STRING: // if there's only one value, it is not serialized as a
+							// list, but just a string
 				validOptions.add(validOptionsNode.asString());
 				break;
 			case LIST:
@@ -559,8 +535,8 @@ public class ResourceDTOFactory {
 	}
 
 	/**
-	 * Returns the property identified by the given name in the given model node, or null if the named property is
-	 * undefined.
+	 * Returns the property identified by the given name in the given model
+	 * node, or null if the named property is undefined.
 	 * 
 	 * @param node
 	 *            the model node

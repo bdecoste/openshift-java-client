@@ -18,7 +18,7 @@ public class UserResourceDTO extends BaseResourceDTO {
 	private final String rhLogin;
 	
 	public UserResourceDTO(final String rhLogin, final Map<String, Link> links) {
-		super(links);
+		super(links, null);
 		this.rhLogin = rhLogin;
 	}
 

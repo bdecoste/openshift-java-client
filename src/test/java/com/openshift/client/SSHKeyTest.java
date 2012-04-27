@@ -50,9 +50,9 @@ public class SSHKeyTest {
 	public void setUp() throws SocketTimeoutException, HttpClientException, Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API.getContentAsString());
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
-				Samples.GET_USER.getContentAsString());
+				Samples.GET_USER_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		this.service = new RestService("http://mock",
 				"clientId", mockClient);

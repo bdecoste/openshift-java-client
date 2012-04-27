@@ -10,52 +10,18 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import static com.openshift.client.utils.MockUtils.anyForm;
-import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS;
-import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE;
-import static com.openshift.client.utils.Samples.ADD_APPLICATION_JSON;
-import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
-import static com.openshift.client.utils.Samples.DELETE_APPLICATION_CARTRIDGE;
-import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH1APP_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITHNOAPP_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH1ELEMENT;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH2ELEMENTS;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH2CARTRIDGES2ALIASES;
-import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
-import static com.openshift.client.utils.Samples.REMOVE_APPLICATION_ALIAS;
-import static com.openshift.client.utils.Samples.START_APPLICATION;
-import static com.openshift.client.utils.Samples.STOP_APPLICATION;
-import static com.openshift.client.utils.Samples.STOP_FORCE_APPLICATION;
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.List;
 
-import org.fest.assertions.Condition;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.openshift.client.utils.Samples;
-import com.openshift.internal.client.Cartridge;
-import com.openshift.internal.client.EmbeddedCartridgeResource;
-import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
-import com.openshift.internal.client.httpclient.HttpClientException;
-import com.openshift.internal.client.httpclient.InternalServerErrorException;
-import com.openshift.internal.client.httpclient.UnauthorizedException;
 
 /**
  * @author Xavier Coulon
@@ -71,7 +37,7 @@ public class CartridgesResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API.getContentAsString());
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/cartridges"))).thenReturn(
 				Samples.GET_CARTRIDGES.getContentAsString());
 		connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
