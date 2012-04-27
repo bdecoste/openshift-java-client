@@ -20,6 +20,14 @@ public enum ApplicationScale {
 	SCALE("true"), NO_SCALE("false");
 	
 	private final String value;
+	
+	public static ApplicationScale safeValueOf(final String value) {
+		if(value == null || !"TRUE".equals(value.toUpperCase())) {
+			return NO_SCALE;
+		}
+		return SCALE;
+	}
+	
 	private ApplicationScale(final String value) {
 		this.value = value;
 	}

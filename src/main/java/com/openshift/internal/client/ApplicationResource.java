@@ -33,6 +33,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.openshift.client.ApplicationScale;
 import com.openshift.client.HttpMethod;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
@@ -98,7 +99,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final ICartridge cartridge;
 	
 	/** The scalability enablement. */
-	private final boolean scalable;
+	private final ApplicationScale scale;
 
 	/** The application gear profile. */
 	private final IGearProfile gearProfile;
@@ -150,9 +151,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 */
 	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
-		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getCreationLog(), dto.getApplicationUrl(), dto.getGitUrl(),
-				dto.getHealthCheckPath(), dto.getGearProfile(), dto.isScalable(), cartridge, dto.getAliases(),
-				dto.getLinks(), domain);
+		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getCreationLog(), dto.getApplicationUrl(), dto.getGitUrl(), dto
+				.getHealthCheckPath(), dto.getGearProfile(), dto.getApplicationScale(), cartridge, dto.getAliases(), dto.getLinks(), domain);
 	}
 
 	/**
@@ -181,15 +181,14 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final List<Message> creationLog, final String applicationUrl, final String gitUrl,
-			final String healthCheckPath, final IGearProfile gearProfile, final boolean scalable,
+			final List<Message> creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final IGearProfile gearProfile, final ApplicationScale scale,
 			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
 		super(domain.getService(), links, creationLog);
 		this.name = name;
 		this.uuid = uuid;
 		this.creationTime = RFC822DateUtils.safeGetDate(creationTime);
-		this.scalable = scalable;
+		this.scale = scale;
 		this.gearProfile = gearProfile;
 		this.cartridge = cartridge;
 		this.applicationUrl = applicationUrl;
@@ -204,8 +203,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	@Override
-	public Boolean isScalable() {
-		return scalable;
+	public ApplicationScale getApplicationScale() {
+		return scale;
 	}
 
 	@Override

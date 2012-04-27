@@ -54,7 +54,7 @@ public interface IApplication extends IOpenShiftResource {
 	 * Returns true if scaling is enabled on this application (only set at creation time).
 	 * @return true if scaling is enabled on this application (only set at creation time).
 	 */
-	public Boolean isScalable();
+	public ApplicationScale getApplicationScale();
 	
 	/**
 	 * Returns true if scaling is enabled on this application (only set at creation time).
