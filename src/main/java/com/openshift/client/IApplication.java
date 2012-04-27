@@ -20,7 +20,7 @@ import com.jcraft.jsch.Session;
 /**
  * @author André Dietisheim
  */
-public interface IApplication {
+public interface IApplication extends IOpenShiftResource {
 
 	/**
 	 * Returns the name of this application.
@@ -60,7 +60,7 @@ public interface IApplication {
 	 * Returns true if scaling is enabled on this application (only set at creation time).
 	 * @return true if scaling is enabled on this application (only set at creation time).
 	 */
-	public String getGearProfile();
+	public GearProfile getGearProfile();
 	
 	/**
 	 * Returns the url at which this application may be checked for its health state.
@@ -227,13 +227,6 @@ public interface IApplication {
 	 * @throws SocketTimeoutException
 	 */
 	public void stop(boolean force) throws OpenShiftException, SocketTimeoutException;
-
-	/**
-	 * Gets the log that was created when the application was created.
-	 * 
-	 * @return the log which reported the creation of this app
-	 */
-	public String getCreationLog();
 
 	/**
 	 * Waits for this application to become accessible on its public url.

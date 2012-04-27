@@ -11,26 +11,26 @@
 package com.openshift.client;
 
 import static com.openshift.client.utils.MockUtils.anyForm;
-import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS;
-import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE;
+import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS_JSON;
+import static com.openshift.client.utils.Samples.ADD_APPLICATION_CARTRIDGE_JSON;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_JSON;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
-import static com.openshift.client.utils.Samples.DELETE_APPLICATION_CARTRIDGE;
+import static com.openshift.client.utils.Samples.DELETE_APPLICATION_CARTRIDGE_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH1APP_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITHNOAPP_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH1ELEMENT;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH2ELEMENTS;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH2CARTRIDGES2ALIASES;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH1ELEMENT_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH2ELEMENTS_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH2CARTRIDGES2ALIASES_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
-import static com.openshift.client.utils.Samples.REMOVE_APPLICATION_ALIAS;
-import static com.openshift.client.utils.Samples.START_APPLICATION;
-import static com.openshift.client.utils.Samples.STOP_APPLICATION;
-import static com.openshift.client.utils.Samples.STOP_FORCE_APPLICATION;
+import static com.openshift.client.utils.Samples.REMOVE_APPLICATION_ALIAS_JSON;
+import static com.openshift.client.utils.Samples.START_APPLICATION_JSON;
+import static com.openshift.client.utils.Samples.STOP_APPLICATION_JSON;
+import static com.openshift.client.utils.Samples.STOP_FORCE_APPLICATION_JSON;
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -73,9 +73,9 @@ public class ApplicationResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-				.thenReturn(Samples.GET_REST_API.getContentAsString());
+				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
-				Samples.GET_USER.getContentAsString());
+				Samples.GET_USER_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService(
 				"http://mock",
@@ -153,10 +153,10 @@ public class ApplicationResourceTest {
 				ADD_APPLICATION_JSON.getContentAsString());
 		// operation
 		final ICartridge cartridge = new Cartridge("jbossas-7");
-		final IApplication app = domain.createApplication("sample", cartridge, EnumApplicationScale.DEFAULT, null);
+		final IApplication app = domain.createApplication("sample", cartridge, ApplicationScale.NO_SCALE, null);
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
-		assertThat(app.getGearProfile()).isEqualTo("small");
+		assertThat(app.getGearProfile()).isEqualTo(GearProfile.SMALL);
 		assertThat(app.isScalable()).isEqualTo(false);
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");
 		assertThat(app.getCreationTime()).isNotNull();
@@ -228,7 +228,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events"))).thenReturn(
-				STOP_APPLICATION.getContentAsString());
+				STOP_APPLICATION_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
 		app.stop();
@@ -242,7 +242,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events"))).thenReturn(
-				STOP_FORCE_APPLICATION.getContentAsString());
+				STOP_FORCE_APPLICATION_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
 		app.stop(true);
@@ -256,7 +256,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events"))).thenReturn(
-				START_APPLICATION.getContentAsString());
+				START_APPLICATION_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
 		app.start();
@@ -270,7 +270,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events"))).thenReturn(
-				STOP_APPLICATION.getContentAsString());
+				STOP_APPLICATION_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
 		app.restart();
@@ -365,9 +365,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events"))).thenReturn(
-				ADD_APPLICATION_ALIAS.getContentAsString());
+				ADD_APPLICATION_ALIAS_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getAliases()).hasSize(1).contains("an_alias");
 		// operation
@@ -383,7 +383,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events")))
 				.thenThrow(
 						new InternalServerErrorException(
@@ -408,9 +408,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events"))).thenReturn(
-				REMOVE_APPLICATION_ALIAS.getContentAsString());
+				REMOVE_APPLICATION_ALIAS_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getAliases()).hasSize(1).contains("an_alias");
 		// operation
@@ -426,7 +426,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/events")))
 				.thenThrow(
 						new InternalServerErrorException(
@@ -451,9 +451,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH2CARTRIDGES2ALIASES.getContentAsString());
+				GET_APPLICATION_WITH2CARTRIDGES2ALIASES_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
 		final List<IEmbeddedCartridge> embeddedCartridges = app.getEmbeddedCartridges();
@@ -467,15 +467,15 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// simulate new content on openshift, that should be grabbed while doing
 		// a refresh()
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON.getContentAsString());
 		// operation
 		app.refresh();
 		assertThat(app.getEmbeddedCartridges()).hasSize(2);
@@ -498,11 +498,11 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				ADD_APPLICATION_CARTRIDGE.getContentAsString());
+				ADD_APPLICATION_CARTRIDGE_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		//assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
@@ -525,9 +525,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON.getContentAsString());
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenThrow(
 				new SocketTimeoutException("mock..."));
 		final IApplication app = domain.getApplicationByName("sample");
@@ -551,12 +551,12 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON.getContentAsString());
 		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1")))
 				.thenReturn(
-						DELETE_APPLICATION_CARTRIDGE.getContentAsString());
+						DELETE_APPLICATION_CARTRIDGE_JSON.getContentAsString());
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 		// operation
@@ -574,9 +574,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
-				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS.getContentAsString());
+				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON.getContentAsString());
 		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1")))
 				.thenThrow(
 						new SocketTimeoutException("mock..."));
@@ -603,9 +603,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH2CARTRIDGES2ALIASES.getContentAsString());
+				GET_APPLICATION_WITH2CARTRIDGES2ALIASES_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/gears"))).thenReturn(
-				GET_APPLICATION_GEARS_WITH2ELEMENTS.getContentAsString());
+				GET_APPLICATION_GEARS_WITH2ELEMENTS_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		// operation
 		final List<IApplicationGear> gears = app.getGears();
@@ -626,15 +626,15 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample"))).thenReturn(
-				GET_APPLICATION_WITH1CARTRIDGE1ALIAS.getContentAsString());
+				GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/gears"))).thenReturn(
-				GET_APPLICATION_GEARS_WITH1ELEMENT.getContentAsString());
+				GET_APPLICATION_GEARS_WITH1ELEMENT_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
 		assertThat(app.getGears()).hasSize(1);
 		// simulate new content on openshift, that should be grabbed while doing
 		// a refresh()
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/gears"))).thenReturn(
-				GET_APPLICATION_GEARS_WITH2ELEMENTS.getContentAsString());
+				GET_APPLICATION_GEARS_WITH2ELEMENTS_JSON.getContentAsString());
 		// operation
 		app.refresh();
 		assertThat(app.getGears()).hasSize(2);

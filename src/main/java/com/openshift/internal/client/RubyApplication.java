@@ -14,10 +14,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.GearProfile;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IRubyApplication;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.Message;
 
 /**
  * @author William DeCoste
@@ -26,18 +28,20 @@ import com.openshift.internal.client.response.Link;
 public class RubyApplication extends ApplicationResource implements IRubyApplication {
 
 	
+	public RubyApplication(String name, String uuid, String creationTime, List<Message> creationLog,
+			String applicationUrl, String gitUrl, String healthCheckPath, GearProfile gearProfile, boolean scalable,
+			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
+				aliases, links, domain);
+		// TODO Auto-generated constructor stub
+	}
+
 	public RubyApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String healthCheckPath, String gearProfile, boolean scalable, ICartridge cartridge, List<String> aliases,
+			String healthCheckPath, GearProfile gearProfile, boolean scalable, ICartridge cartridge, List<String> aliases,
 			Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases,
 				links, domain);
-	}
-
-	public RubyApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
-			String gitUrl, String healthCheckPath, String gearProfile, boolean scalable, ICartridge cartridge,
-			List<String> aliases, Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
-				aliases, links, domain);
+		// TODO Auto-generated constructor stub
 	}
 
 	public String threadDump() throws OpenShiftException {

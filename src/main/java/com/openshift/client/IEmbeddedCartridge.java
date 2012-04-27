@@ -13,18 +13,15 @@ package com.openshift.client;
 import java.net.SocketTimeoutException;
 
 
+
 /**
  * Interface to designate a cartridge that has been added and configured
  * @author André Dietisheim
  */
-public interface IEmbeddedCartridge extends IEmbeddableCartridge {
+public interface IEmbeddedCartridge extends IOpenShiftResource, IEmbeddableCartridge {
 
 	public String getUrl() throws OpenShiftException;
-	
-	public String getCreationLog();
-	
-	public void setCreationLog(String creationLog);
-	
+			
 	/**
 	 * Destroys this cartridge (and removes it from the list of existing cartridges)
 	 * 

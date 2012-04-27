@@ -40,7 +40,7 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	private List<SSHKeyResource> sshKeys;
 
 	public UserResource(final APIResource api, final UserResourceDTO dto, final String password) {
-		super(api.getService(), dto.getLinks());
+		super(api.getService(), dto.getLinks(), dto.getCreationLog());
 		this.api = api;
 		this.rhLogin = dto.getRhLogin();
 		this.password = password;

@@ -12,7 +12,7 @@ package com.openshift.internal.client.response;
 
 import java.util.List;
 
-import com.openshift.client.OpenShiftRequestParameterException;
+import com.openshift.client.OpenShiftRequestException;
 
 
 /**
@@ -28,12 +28,12 @@ public class LinkParameter {
 	protected final List<String> validOptions;
 
 	public LinkParameter(final String name, final String type, final String defaultValue, final String description,
-			final List<String> validOptions) throws OpenShiftRequestParameterException {
+			final List<String> validOptions) throws OpenShiftRequestException {
 		this(name, LinkParameterType.valueOfIgnoreCase(type), defaultValue, description, validOptions);
 	}
 
 	public LinkParameter(final String name, final LinkParameterType type, final String defaultValue, final String description,
-			final List<String> validOptions) throws OpenShiftRequestParameterException {
+			final List<String> validOptions) throws OpenShiftRequestException {
 		this.name = name;
 		this.type = type;
 		this.description = description;

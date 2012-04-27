@@ -33,6 +33,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.openshift.client.GearProfile;
 import com.openshift.client.HttpMethod;
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
@@ -52,6 +53,7 @@ import com.openshift.internal.client.response.CartridgeResourceDTO;
 import com.openshift.internal.client.response.GearComponentDTO;
 import com.openshift.internal.client.response.GearResourceDTO;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.Message;
 import com.openshift.internal.client.ssh.ApplicationPortForwarding;
 import com.openshift.internal.client.utils.CollectionUtils;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
@@ -99,10 +101,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final boolean scalable;
 
 	/** The application gear profile. */
-	private final String gearProfile;
-
-	/** The creation log. */
-	private final String creationLog;
+	private final GearProfile gearProfile;
 
 	/** The domain this application belongs to. */
 	private final DomainResource domain;
@@ -120,7 +119,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final List<String> aliases;
 
 	/**
-	 * List of configured embedded cartridges. <code>null</code> means list if not loaded yet.
+	 * List of configured embedded cartridges. <code>null</code> means list if
+	 * not loaded yet.
 	 */
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IEmbeddedCartridge> embeddedCartridges = null;
@@ -137,7 +137,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private List<IApplicationPortForwarding> ports = null;
 
 	/**
-	 * SSH Session used to perform port-forwarding and other ssh-based operations.
+	 * SSH Session used to perform port-forwarding and other ssh-based
+	 * operations.
 	 */
 	private Session session;
 
@@ -177,7 +178,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, final String healthCheckPath, final String gearProfile, final boolean scalable, final ICartridge cartridge,
+			final String applicationUrl, final String gitUrl, final String healthCheckPath, final GearProfile gearProfile, final boolean scalable, final ICartridge cartridge,
 			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
 		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases, links, domain);
 	}
@@ -208,14 +209,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final String gearProfile, final boolean scalable,
+final List<Message> creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final GearProfile gearProfile, final boolean scalable,
 			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
-		super(domain.getService(), links);
+		super(domain.getService(), links, creationLog);
 		this.name = name;
 		this.uuid = uuid;
 		this.creationTime = RFC822DateUtils.safeGetDate(creationTime);
-		this.creationLog = creationLog;
 		this.scalable = scalable;
 		this.gearProfile = gearProfile;
 		this.cartridge = cartridge;
@@ -236,7 +236,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	@Override
-	public String getGearProfile() {
+	public GearProfile getGearProfile() {
 		return gearProfile;
 	}
 	
@@ -250,10 +250,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	public Date getCreationTime() {
 		return creationTime;
-	}
-
-	public String getCreationLog() {
-		return creationLog;
 	}
 
 	public IDomain getDomain() {
@@ -354,14 +350,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * Adds the given embedded cartridge to this application.
 	 * 
 	 * @param cartridge
-	 *            the embeddable cartridge that shall be added to this application
+	 *            the embeddable cartridge that shall be added to this
+	 *            application
 	 */
 	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException,
 			SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(cartridge.getName());
-		final EmbeddedCartridgeResource embeddedCartridge = new EmbeddedCartridgeResource(
-				embeddedCartridgeDTO.getName(), embeddedCartridgeDTO.getType(), embeddedCartridgeDTO.getLinks(), this);
+		final EmbeddedCartridgeResource embeddedCartridge =
+				new EmbeddedCartridgeResource(embeddedCartridgeDTO, this);
 		doGetEmbeddedCartridges().add(embeddedCartridge);
 		return embeddedCartridge;
 	}
@@ -393,9 +390,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
 			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddedCartridge embeddableCartridge = new EmbeddedCartridgeResource(
-						embeddableCartridgeDTO.getName(), embeddableCartridgeDTO.getType(),
-						embeddableCartridgeDTO.getLinks(), this);
+				IEmbeddedCartridge embeddableCartridge = 
+						new EmbeddedCartridgeResource(embeddableCartridgeDTO, this);
 				this.embeddedCartridges.add(embeddableCartridge);
 			}
 		}
@@ -462,9 +458,11 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 			boolean resolved = waitForResolved(timeout, startTime);
 			if (!resolved) {
-				throw new OpenShiftException("Could not reach {0}, host resolution was not successful while waiting for timeout", healthCheckUrl);
+				throw new OpenShiftException(
+						"Could not reach {0}, host resolution was not successful while waiting for timeout",
+						healthCheckUrl);
 			}
-			
+
 			return waitForPositiveHealthResponse(timeout, startTime);
 		} catch (InterruptedException e) {
 			return false;
@@ -528,12 +526,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	public boolean hasSSHSession() {
 		return this.session != null && this.session.isConnected();
 	}
-	
+
 	public boolean isPortFowardingStarted() throws OpenShiftSSHOperationException {
 		try {
 			return this.session != null && this.session.isConnected() && this.session.getPortForwardingL().length > 0;
 		} catch (JSchException e) {
-			throw new OpenShiftSSHOperationException(e, "Unable to verify if port-forwarding has been started for application \"{0}\"", this.getName());
+			throw new OpenShiftSSHOperationException(e,
+					"Unable to verify if port-forwarding has been started for application \"{0}\"", this.getName());
 		}
 	}
 
@@ -580,10 +579,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 				ports.add(port);
 			}
 			return ports;
-		} catch(JSchException e) {
-			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"", this.getName());
-		} catch(IOException e) {
-			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"", this.getName());
+		} catch (JSchException e) {
+			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"",
+					this.getName());
+		} catch (IOException e) {
+			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"",
+					this.getName());
 		} finally {
 			if (errorStreamReader != null) {
 				try {
@@ -608,7 +609,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	/**
-	 * Extract the named forwardable port from the 'rhc-list-ports' command result line, with the following format:
+	 * Extract the named forwardable port from the 'rhc-list-ports' command
+	 * result line, with the following format:
 	 * <code>java -> 127.10.187.1:4447</code>.
 	 * 
 	 * @param portValue
@@ -630,8 +632,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public List<IApplicationPortForwarding> startPortForwarding() throws OpenShiftSSHOperationException {
-		if(!hasSSHSession()) {
-			throw new OpenShiftSSHOperationException("SSH session for application \"{0}\" is closed or null. Cannot start port forwarding", this.getName());
+		if (!hasSSHSession()) {
+			throw new OpenShiftSSHOperationException(
+					"SSH session for application \"{0}\" is closed or null. Cannot start port forwarding",
+					this.getName());
 		}
 		for (IApplicationPortForwarding port : ports) {
 			port.start(session);

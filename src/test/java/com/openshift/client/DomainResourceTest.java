@@ -67,9 +67,9 @@ public class DomainResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API.getContentAsString());
+		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
-				Samples.GET_USER.getContentAsString());
+				Samples.GET_USER_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
 				"clientId", mockClient), "foo@redhat.com", "bar");
@@ -196,9 +196,9 @@ public class DomainResourceTest {
 				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		List<String> availableGearSizes = domain.getAvailableGearProfiles();
+		List<GearProfile> availableGearSizes = domain.getAvailableGearProfiles();
 		// verifications
-		assertThat(availableGearSizes).contains("small", "micro", "medium", "large", "exlarge", "jumbo");
+		assertThat(availableGearSizes).contains(GearProfile.SMALL, GearProfile.MICRO, GearProfile.MEDIUM, GearProfile.LARGE, GearProfile.EXLARGE, GearProfile.JUMBO);
 	}
 
 	@Test

@@ -19,7 +19,7 @@ public class Message {
 
 	public enum Severity {
 
-		INFO, WARNING, ERROR, UNKNOWN;
+		INFO, ERROR, UNKNOWN;
 
 		private static Severity safeValueOf(String severityString) {
 			try {
@@ -63,12 +63,21 @@ public class Message {
 
 	@Override
 	public String toString() {
-		if (severity == Severity.ERROR) {
-			return MessageFormat.format("Operation failed on parameter {0} with exit code {1}. Reason: {2}",
+		switch (severity) {
+		case ERROR:
+			return MessageFormat.format(
+					"Operation failed on parameter {0} with exit code {1}. Reason: {2}",
 					parameter, exitCode, text);
-		} else {
-			return MessageFormat.format("Operation succeeded. Additional info supplied: {0}",
+		case INFO:
+			return MessageFormat.format(
+					"Operation succeeded. Additional info supplied: {0}",
 					text);
+		case UNKNOWN:
+		default:
+			return MessageFormat.format(
+					"Operation state is UNKNOWN. Additional info supplied: {0}, parameter \"{1}\", severity \"{2}\"",
+					text, parameter, severity);
+
 		}
 	}
 }

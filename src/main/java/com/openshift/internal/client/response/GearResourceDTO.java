@@ -36,8 +36,8 @@ public class GearResourceDTO extends BaseResourceDTO {
 	 * @param components the components
 	 * @param gitUrl the git url
 	 */
-	public GearResourceDTO(final String uuid, final String gitUrl, final List<GearComponentDTO> components) {
-		super(new HashMap<String, Link>());
+	public GearResourceDTO(final String uuid, final String gitUrl, final List<GearComponentDTO> components, final List<Message> creationLog) {
+		super(new HashMap<String, Link>(), creationLog);
 		this.uuid = uuid;
 		this.components = components;
 		this.gitUrl = gitUrl;

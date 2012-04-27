@@ -11,45 +11,43 @@
 package com.openshift.internal.client.response;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class GearComponentDTO extends BaseResourceDTO {
 
 	/** the component name. */
 	private final String name;
-	
+
 	/** the component internal port. */
 	private final String internalPort;
-	
+
 	/** the component proxy host. */
 	private final String proxyHost;
-	
+
 	/** the component proxy port. */
 	private final String proxyPort;
 
 	/**
 	 * Instantiates a new gear component dto.
-	 *
-	 * @param name the name
-	 * @param internalPort the internal port
-	 * @param proxyPort the proxy port
-	 * @param proxyHost the proxy host
+	 * 
+	 * @param name
+	 *            the name
+	 * @param internalPort
+	 *            the internal port
+	 * @param proxyPort
+	 *            the proxy port
+	 * @param proxyHost
+	 *            the proxy host
 	 */
-	public GearComponentDTO(final String name, final String internalPort, final String proxyHost, final String proxyPort) {
-		super(new HashMap<String, Link>());
+	public GearComponentDTO(final String name, final String internalPort, final String proxyHost,
+			final String proxyPort, final List<Message> creationLog) {
+		super(new HashMap<String, Link>(), creationLog);
 		this.name = name;
 		this.internalPort = internalPort;
 		this.proxyHost = proxyHost;
 		this.proxyPort = proxyPort;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "GearsComponent [name=" + name + ", internalPort=" + internalPort + ", proxyHost=" + proxyHost
-				+ ", proxyPort=" + proxyPort + "]";
-	}
 
 	/**
 	 * @return the name
@@ -78,10 +76,7 @@ public class GearComponentDTO extends BaseResourceDTO {
 	public final String getProxyPort() {
 		return proxyPort;
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,9 +88,6 @@ public class GearComponentDTO extends BaseResourceDTO {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -137,5 +129,15 @@ public class GearComponentDTO extends BaseResourceDTO {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "GearsComponent [ " +
+				"name=" + name + ", "
+				+ "internalPort=" + internalPort + ", "
+				+ "proxyHost=" + proxyHost + ", "
+				+ "proxyPort=" + proxyPort
+				+ " ]";
 	}
 }

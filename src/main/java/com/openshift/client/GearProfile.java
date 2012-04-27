@@ -8,27 +8,27 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.internal.client.response;
+package com.openshift.client;
 
-import java.util.Map;
+/**
+ * @author Andre Dietisheim
+ */
+public enum GearProfile {
 
-public class UserResourceDTO extends BaseResourceDTO {
-
-	/** the user's login on rhcloud. */
-	private final String rhLogin;
+	JUMBO, EXLARGE, LARGE, MEDIUM, MICRO, SMALL;
 	
-	public UserResourceDTO(final String rhLogin, final Map<String, Link> links) {
-		super(links, null);
-		this.rhLogin = rhLogin;
+	public static GearProfile safeValueOf(String gearProfile) {
+		try {
+			if (gearProfile == null) {
+				return null;
+			}
+			return valueOf(gearProfile.toUpperCase());
+		} catch(IllegalArgumentException e) {
+			return null;
+		}
 	}
-
-	/**
-	 * @return the rhLogin
-	 */
-	public String getRhLogin() {
-		return rhLogin;
+	
+	public String getValue() {
+		return name().toLowerCase();
 	}
-	
-	
-
 }

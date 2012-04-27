@@ -13,14 +13,18 @@ package com.openshift.client;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.openshift.internal.client.response.ResourceDTOFactoryTest;
+
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	ConfigurationTest.class,
 	HttpClientTest.class,
 	RestServiceTest.class,
+	ResourceDTOFactoryTest.class,
 	DomainResourceTest.class,
 	ApplicationResourceTest.class,
+	CartridgesResourceTest.class,
 	UserTest.class,
 	SSHKeyTest.class
 })

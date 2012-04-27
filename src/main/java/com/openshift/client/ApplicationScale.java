@@ -10,16 +10,22 @@
  ******************************************************************************/
 package com.openshift.client;
 
-
 /**
- * @author Andre Dietisheim
+ * Enum to indicate the support for scalability when creating a new application
+ * @author Xavier Coulon
+ *
  */
-public class OpenShiftRequestParameterException extends OpenShiftException {
-
-	private static final long serialVersionUID = 1L;
-
-	public OpenShiftRequestParameterException(String message, Object... arguments) {
-		super(message, arguments);
+public enum ApplicationScale {
+	
+	SCALE("true"), NO_SCALE("false");
+	
+	private final String value;
+	private ApplicationScale(final String value) {
+		this.value = value;
+	}
+	
+	public String getValue() {
+		return this.value;
 	}
 
 }

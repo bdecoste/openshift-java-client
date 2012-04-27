@@ -26,7 +26,7 @@ import com.openshift.client.InvalidCredentialsOpenShiftException;
 import com.openshift.client.NotFoundOpenShiftException;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftRequestParameterException;
+import com.openshift.client.OpenShiftRequestException;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
@@ -165,7 +165,7 @@ public class RestService implements IRestService {
 	}
 
 	private void validateParameters(Map<String, Object> parameters, Link link)
-			throws OpenShiftRequestParameterException {
+			throws OpenShiftRequestException {
 		if (link.getRequiredParams() != null) {
 			for (LinkParameter requiredParameter : link.getRequiredParams()) {
 				validateRequiredParameter(requiredParameter, parameters, link);
@@ -179,10 +179,10 @@ public class RestService implements IRestService {
 	}
 
 	private void validateRequiredParameter(LinkParameter parameter, Map<String, Object> parameters, Link link)
-			throws OpenShiftRequestParameterException {
+			throws OpenShiftRequestException {
 		if (parameters == null
 				|| !parameters.containsKey(parameter.getName())) {
-			throw new OpenShiftRequestParameterException(
+			throw new OpenShiftRequestException(
 					"Requesting {0}: required request parameter \"{1}\" is missing", link.getHref(),
 					parameter.getName());
 		}
@@ -190,7 +190,7 @@ public class RestService implements IRestService {
 		Object parameterValue = parameters.get(parameter.getName());
 		if (parameterValue == null
 				|| isEmptyString(parameter, parameterValue)) {
-			throw new OpenShiftRequestParameterException("Requesting {0}: required request parameter \"{1}\" is empty",
+			throw new OpenShiftRequestException("Requesting {0}: required request parameter \"{1}\" is empty",
 					link.getHref(), parameter.getName());
 		}
 		// TODO: check valid options (still reported in a very incosistent way)
