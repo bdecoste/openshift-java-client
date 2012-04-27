@@ -52,7 +52,7 @@
                         ]
                     },
                     {
-                        "name":"node_profile",
+                        "name":"gear_profile",
                         "description":"The size of the gear",
                         "type":"string",
                         "default_value":"small",

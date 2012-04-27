@@ -82,7 +82,7 @@
                         },
                         {
                             "default_value":"small",
-                            "name":"node_profile",
+                            "name":"gear_profile",
                             "valid_options":[
                                 "small",
                                 "micro",

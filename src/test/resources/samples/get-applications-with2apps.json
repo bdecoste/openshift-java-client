@@ -23,7 +23,9 @@
             "domain_id":"foobar",
             "app_url":"http://scalable-foobar.stg.rhcloud.com/",
 			"health_check_path":"health",
-            "links":{
+            "gear_profile":"small",
+        	"scalable":null,
+        	"links":{
                 "RESTART":{
                     "href":"/domains/foobar/applications/scalable/events",
                     "rel":"Restart application",
@@ -306,7 +308,9 @@
             "aliases":[
                 "an_alias"
             ],
-            "framework":"jbossas-7",
+            "gear_profile":"small",
+        	"scalable":null,
+        	"framework":"jbossas-7",
             "creation_time":"2012-04-11T07:57:11-04:00",
             "git_url":"ssh://355be2eff0e645bdb0501947232e93c1@sample-foobar.stg.rhcloud.com/~/git/sample.git/",
             "embedded":{
