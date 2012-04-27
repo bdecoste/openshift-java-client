@@ -639,14 +639,24 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 					this.getName());
 		}
 		for (IApplicationPortForwarding port : ports) {
-			port.start(session);
+			try {
+				port.start(session);
+			} catch (OpenShiftSSHOperationException oss) {
+				// ignore for now
+				// FIXME: should store this error on the forward to let user know why it could not start/stop
+			}
 		}
 		return ports;
 	}
 
 	public List<IApplicationPortForwarding> stopPortForwarding() throws OpenShiftSSHOperationException {
 		for (IApplicationPortForwarding port : ports) {
-			port.stop(session);
+			try {
+				port.stop(session);
+			} catch (OpenShiftSSHOperationException oss) {
+				// ignore for now
+				// should store this error on the forward to let user know why it could not start/stop
+			}
 		}
 		// make sure port forwarding is stopped by closing session...
 		session.disconnect();
