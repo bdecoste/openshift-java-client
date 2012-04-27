@@ -17,6 +17,7 @@ import com.openshift.client.ICartridge;
 import com.openshift.client.IJenkinsApplication;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.Message;
 
 /**
  * @author William DeCoste
@@ -31,7 +32,7 @@ public class JenkinsApplication extends ApplicationResource implements IJenkinsA
 		// TODO Auto-generated constructor stub
 	}
 
-	public JenkinsApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
+	public JenkinsApplication(String name, String uuid, String creationTime, List<Message> creationLog, String applicationUrl,
 			String gitUrl, String healthCheckPath, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases,
 				links, domain);

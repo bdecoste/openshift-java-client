@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.EnumApplicationScale;
+import com.openshift.client.GearProfile;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
@@ -46,7 +47,8 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 
-	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final List<Message> creationLog,
+	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links,
+			final List<Message> creationLog,
 			final APIResource api) {
 		super(api.getService(), links, creationLog);
 		this.id = namespace;
@@ -90,23 +92,38 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		// return accessible;
 	}
 
+	public IApplication createApplication(final String name, final ICartridge cartridge)
+			throws OpenShiftException, SocketTimeoutException {
+		return createApplication(name, cartridge, null, null);
+	}
+
+	public IApplication createApplication(final String name, final ICartridge cartridge, final EnumApplicationScale scale)
+			throws OpenShiftException, SocketTimeoutException {
+		return createApplication(name, cartridge, scale, null);
+	}
+
+	public IApplication createApplication(final String name, final ICartridge cartridge, final GearProfile gearProfile)
+			throws OpenShiftException, SocketTimeoutException {
+		return createApplication(name, cartridge, null, gearProfile);
+	}
+
 	public IApplication createApplication(final String name, final ICartridge cartridge,
-			final EnumApplicationScale scale, final String nodeProfile)
+			final EnumApplicationScale scale, final GearProfile gearProfile)
 			throws OpenShiftException, SocketTimeoutException {
 		// check that an application with the same does not already exists, and
 		// btw, loads the list of applications if needed (lazy)
-		if (name == null) {
-			throw new OpenShiftException("Application name is mandatory but none was given.");
-		}
 		if (cartridge == null) {
 			throw new OpenShiftException("Application type is mandatory but none was given.");
+		}
+		if (name == null) {
+			throw new OpenShiftException("Application name is mandatory but none was given.");
 		}
 		if (hasApplicationByName(name)) {
 			throw new OpenShiftException("Application with name \"{0}\" already exists.", name);
 		}
+
 		ApplicationResourceDTO applicationDTO =
-				new CreateApplicationRequest().execute(name, cartridge.getName(), (scale != null ? scale.getValue()
-						: null), nodeProfile);
+				new CreateApplicationRequest().execute(name, cartridge.getName(), scale, gearProfile);
 		IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
 		this.applications.add(application);
 		return application;
@@ -216,13 +233,50 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			super(LINK_ADD_APPLICATION);
 		}
 
-		public ApplicationResourceDTO execute(final String name, final String cartridge, final String scale,
-				final String nodeProfile) throws SocketTimeoutException, OpenShiftException {
+		public ApplicationResourceDTO execute(final String name, final String cartridge,
+				final EnumApplicationScale scale, final GearProfile gearProfile) throws SocketTimeoutException,
+				OpenShiftException {
+			if (scale == null
+					&& gearProfile == null) {
+				return execute(name, cartridge);
+			} else if (scale != null
+					&& gearProfile == null) {
+				return execute(name, cartridge, scale);
+			} else if (scale == null
+					&& gearProfile != null) {
+				return execute(name, cartridge, gearProfile);
+			} else {
+				return super.execute(
+						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
+						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
+						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_SCALE, scale.getValue()),
+						new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getValue()));
+			}
+		}
+
+		public ApplicationResourceDTO execute(final String name, final String cartridge,
+				final EnumApplicationScale scale) throws SocketTimeoutException,
+				OpenShiftException {
 			return super.execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
-					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_SCALE, scale),
-					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, nodeProfile));
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_SCALE, scale.getValue()));
+		}
+
+		public ApplicationResourceDTO execute(final String name, final String cartridge,
+				final GearProfile gearProfile) throws SocketTimeoutException,
+				OpenShiftException {
+			return super.execute(
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getValue()));
+		}
+
+		public ApplicationResourceDTO execute(final String name, final String cartridge) throws SocketTimeoutException,
+				OpenShiftException {
+			return super.execute(
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge));
 		}
 
 	}

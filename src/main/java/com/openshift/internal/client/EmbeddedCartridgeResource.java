@@ -11,12 +11,15 @@
 package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
+import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.IApplication;
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.response.CartridgeResourceDTO;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.Message;
 
 /**
  * A cartridge that may be embedded into an application. This class is no enum
@@ -25,9 +28,9 @@ import com.openshift.internal.client.response.Link;
  * @author André Dietisheim
  */
 public class EmbeddedCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
-	
+
 	public static final String EMBEDDED_TYPE = "embedded";
-	
+
 	protected static final String JENKINS_CLIENT = "jenkins-client";
 	protected static final String MYSQL = "mysql";
 	protected static final String PHPMYADMIN = "phpmyadmin";
@@ -43,18 +46,22 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	private final String name;
 	private final String info; // not supported yet
 	private final String type;
-	private String creationLog;
 	private String url;
 	private final ApplicationResource application;
-	
-	public EmbeddedCartridgeResource(final String name, final String type, final Map<String, Link> links, final ApplicationResource application) {
-		super(application.getService(), links);
+
+	public EmbeddedCartridgeResource(final CartridgeResourceDTO dto, final ApplicationResource application) {
+		this(dto.getName(), dto.getType(), dto.getLinks(), dto.getCreationLog(), application);
+	}
+
+	public EmbeddedCartridgeResource(final String name, final String type, final Map<String, Link> links,
+			final List<Message> creationLog, final ApplicationResource application) {
+		super(application.getService(), links, creationLog);
 		this.name = name;
 		this.type = type;
-		this.info = null; // FIXME: see bugzilla 
+		this.info = null; // FIXME: see bugzilla
 		this.application = application;
 	}
-	
+
 	/**
 	 * @return the name
 	 */
@@ -87,22 +94,11 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		return url;
 	}
 
-	public void setCreationLog(String creationLog) {
-		this.creationLog = creationLog;
-	}
-
-	public String getCreationLog() {
-		return creationLog;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.openshift.client.IApplication#destroy()
-	 */
 	public void destroy() throws OpenShiftException, SocketTimeoutException {
 		new DeleteCartridgeRequest().execute();
 		application.removeEmbeddedCartridge(this);
 	}
-	
+
 	/**
 	 * The Class DeleteApplicationRequest.
 	 */
@@ -116,9 +112,5 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		}
 
 	}
-
-
-	
-	
 
 }

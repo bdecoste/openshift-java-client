@@ -11,11 +11,14 @@
 package com.openshift.internal.client;
 
 import java.net.SocketTimeoutException;
+import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.IOpenShiftResource;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftRequestException;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.Message;
 import com.openshift.internal.client.response.RestResponse;
 
 /**
@@ -24,13 +27,15 @@ import com.openshift.internal.client.response.RestResponse;
  * @author Xavier Coulon
  * @author Andre Dietisheim
  */
-public abstract class AbstractOpenShiftResource {
+public abstract class AbstractOpenShiftResource implements IOpenShiftResource {
 
 	/** The links. Null means collection is not loaded yet. */
 	private Map<String, Link> links;
 
 	/** The service. */
 	private final IRestService service;
+
+	private List<Message> creationLog;
 
 	/**
 	 * Instantiates a new abstract open shift resource.
@@ -39,7 +44,7 @@ public abstract class AbstractOpenShiftResource {
 	 *            the service
 	 */
 	public AbstractOpenShiftResource(final IRestService service) {
-		this(service, null);
+		this(service, null, null);
 	}
 
 	/**
@@ -50,9 +55,10 @@ public abstract class AbstractOpenShiftResource {
 	 * @param links
 	 *            the links
 	 */
-	public AbstractOpenShiftResource(final IRestService service, final Map<String, Link> links) {
+	public AbstractOpenShiftResource(final IRestService service, final Map<String, Link> links, final List<Message> creationLog) {
 		this.service = service;
 		this.links = links;
+		this.creationLog = creationLog;
 	}
 
 	/**
@@ -156,4 +162,20 @@ public abstract class AbstractOpenShiftResource {
 
 	}
 
+	public String getCreationLog() {
+		if (!hasCreationLog()) {
+			return null;
+		}
+		StringBuilder builder = new StringBuilder();
+		for (Message message : creationLog) {
+			builder.append(message.toString());
+		}
+		return builder.toString();
+	}
+
+	public boolean hasCreationLog() {
+		return creationLog != null
+				&& creationLog.size() > 0;
+	}
+	
 }

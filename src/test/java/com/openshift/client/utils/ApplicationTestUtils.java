@@ -52,6 +52,21 @@ public class ApplicationTestUtils {
 		}
 	}
 
+	public static void silentlyDestroy1Application(IDomain domain) {
+		if (domain == null) {
+			return;
+		}
+		
+		try {
+			Iterator<IApplication> it = domain.getApplications().iterator();
+			if (it.hasNext()) {
+				it.next().destroy();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static IApplication getOrCreateApplication(IDomain domain) throws SocketTimeoutException, OpenShiftException {
 		return getOrCreateApplication(domain, ICartridge.JBOSSAS_7);
 	}

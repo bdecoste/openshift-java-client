@@ -18,6 +18,7 @@ import com.openshift.client.ICartridge;
 import com.openshift.client.IRubyApplication;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.Link;
+import com.openshift.internal.client.response.Message;
 
 /**
  * @author William DeCoste
@@ -32,7 +33,7 @@ public class RubyApplication extends ApplicationResource implements IRubyApplica
 		// TODO Auto-generated constructor stub
 	}
 
-	public RubyApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
+	public RubyApplication(String name, String uuid, String creationTime, List<Message> creationLog, String applicationUrl,
 			String gitUrl, String healthCheckPath, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
 		// TODO Auto-generated constructor stub

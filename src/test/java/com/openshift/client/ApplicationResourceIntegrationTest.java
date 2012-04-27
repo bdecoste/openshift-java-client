@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2007 Red Hat, Inc. 
+ * Copyright (c) 2012 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -20,8 +20,8 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -50,17 +50,18 @@ public class ApplicationResourceIntegrationTest {
 		domain = DomainTestUtils.getFirstDomainOrCreate(user);
 	}
 
-	@BeforeClass
-	public static void init() {
+	@AfterClass
+	public static void cleanup() {
 		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
 	}
-
+	
 	@Test
-	public void shouldCreateApplication() throws Exception {
+	public void shouldCreateNonScalableApplication() throws Exception {
+		ApplicationTestUtils.silentlyDestroy1Application(domain);
 		String applicationName =
 				ApplicationTestUtils.createRandomApplicationName();
 		IApplication application = domain.createApplication(
-				applicationName, ICartridge.JBOSSAS_7, null, null);
+				applicationName, ICartridge.JBOSSAS_7);
 		assertThat(new ApplicationAssert(application))
 				.hasName(applicationName)
 				.hasUUID()
@@ -74,31 +75,42 @@ public class ApplicationResourceIntegrationTest {
 	}
 
 	@Test
-	public void shouldListEmbeddedCartridges() throws SocketTimeoutException, OpenShiftException {
-		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-		assertThat(application.getEmbeddedCartridges()).isNotNull();
+	public void shouldCreateNonScalableApplicationWithSmallGear() throws Exception {
+		ApplicationTestUtils.silentlyDestroy1Application(domain);
+		String applicationName =
+				ApplicationTestUtils.createRandomApplicationName();
+		IApplication application = domain.createApplication(
+				applicationName, ICartridge.JBOSSAS_7, GearProfile.SMALL);
+		assertThat(new ApplicationAssert(application))
+				.hasName(applicationName)
+				.hasUUID()
+				.hasCreationTime()
+				.hasCartridge(ICartridge.JBOSSAS_7)
+				.hasValidApplicationUrl()
+				.hasValidGitUrl()
+				.hasValidHealthCheckUrl()
+				.hasEmbeddableCartridges()
+				.hasAlias();
 	}
 
+	@Ignore("need larger application quota")
 	@Test
-	public void shouldAddEmbeddedCartridge() throws SocketTimeoutException, OpenShiftException {
-		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-		String mySqlName = "mysql-5.1";
-		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
-		assertNotNull(application.getEmbeddedCartridges());
-		assertTrue(application.getEmbeddedCartridges().size() > 1);
-		assertTrue(containsEmbeddedCartridge(mySqlName, application.getEmbeddedCartridges()));
-	}
-
-	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {
-		boolean found = false;
-		for (IEmbeddedCartridge cartridge : embeddedCartridges) {
-			if (cartridge != null
-					&& name.equals(cartridge.getName())) {
-				found = true;
-				break;
-			}
-		}
-		return found;
+	public void shouldCreateScalableApplication() throws Exception {
+		ApplicationTestUtils.silentlyDestroyAllApplications(domain);
+		String applicationName =
+				ApplicationTestUtils.createRandomApplicationName();
+		IApplication application = domain.createApplication(
+				applicationName, ICartridge.JBOSSAS_7, EnumApplicationScale.SCALE, GearProfile.SMALL);
+		assertThat(new ApplicationAssert(application))
+				.hasName(applicationName)
+				.hasUUID()
+				.hasCreationTime()
+				.hasCartridge(ICartridge.JBOSSAS_7)
+				.hasValidApplicationUrl()
+				.hasValidGitUrl()
+				.hasValidHealthCheckUrl()
+				.hasEmbeddableCartridges()
+				.hasAlias();
 	}
 
 	@Test
@@ -255,6 +267,37 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
+	@Test
+	public void shouldListEmbeddedCartridges() throws SocketTimeoutException, OpenShiftException {
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		assertThat(application.getEmbeddedCartridges()).isNotNull();
+	}
+
+	@Ignore
+	@Test
+	public void shouldAddEmbeddedCartridge() throws SocketTimeoutException, OpenShiftException {
+		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
+		String mySqlName = "mysql-5.1";
+		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
+		assertNotNull(application.getEmbeddedCartridges());
+		assertTrue(application.getEmbeddedCartridges().size() > 1);
+		assertTrue(containsEmbeddedCartridge(mySqlName, application.getEmbeddedCartridges()));
+	}
+
+	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {
+		boolean found = false;
+		for (IEmbeddedCartridge cartridge : embeddedCartridges) {
+			if (cartridge != null
+					&& name.equals(cartridge.getName())) {
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+	
+	@Ignore
 	@Test
 	public void shouldDestroyApplication() throws Exception {
 		// pre-condition
@@ -284,6 +327,7 @@ public class ApplicationResourceIntegrationTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void shouldStopApplication() throws Exception {
 		// pre-condition
@@ -293,6 +337,7 @@ public class ApplicationResourceIntegrationTest {
 		application.stop();
 	}
 
+	@Ignore
 	@Test
 	public void shouldStartStoppedApplication() throws Exception {
 		// pre-condition
@@ -303,6 +348,7 @@ public class ApplicationResourceIntegrationTest {
 		application.start();
 	}
 
+	@Ignore
 	@Test
 	public void shouldStartStartedApplication() throws Exception {
 		// pre-condition
@@ -316,6 +362,7 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
+	@Ignore
 	@Test
 	public void shouldStopStoppedApplication() throws Exception {
 		// pre-condition
@@ -329,6 +376,7 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
+	@Ignore
 	@Test
 	public void shouldRestartStartedApplication() throws Exception {
 		// pre-condition
@@ -342,6 +390,7 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
+	@Ignore
 	@Test
 	public void shouldRestartStoppedApplication() throws Exception {
 		// pre-condition
@@ -355,8 +404,8 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Test
 	@Ignore("OpenShiftEndpointException: nnode execution failure")
+	@Test
 	public void shouldConcealPortApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
@@ -369,8 +418,8 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Test
 	@Ignore("OpenShiftEndpointException: nnode execution failure")
+	@Test
 	public void shouldExposePortApplication() throws Exception {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
@@ -383,14 +432,14 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Test
 	@Ignore("Unused feature")
+	@Test
 	public void shouldGetApplicationDescriptor() throws Throwable {
 
 	}
 
-	@Test
 	@Ignore("Need higher quotas on stg")
+	@Test
 	public void shouldScaleDownApplication() throws Throwable {
 		// pre-condition
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
@@ -402,13 +451,14 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
+	@Ignore
 	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotScaleDownApplication() throws Throwable {
 		IApplication application = null;
 		try {
 			// pre-condition
 			application = domain.createApplication(
-					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.DEFAULT, null);
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.NO_SCALE, null);
 
 			// operation
 			application.scaleDown();
@@ -420,13 +470,14 @@ public class ApplicationResourceIntegrationTest {
 		}
 	}
 
+	@Ignore
 	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotScaleUpApplication() throws Throwable {
 		IApplication application = null;
 		try {
 			// pre-condition
 			application = domain.createApplication(
-					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.DEFAULT, null);
+					DomainTestUtils.createRandomName(), ICartridge.JBOSSAS_7, EnumApplicationScale.NO_SCALE, null);
 
 			// operation
 			application.scaleUp();
@@ -438,6 +489,7 @@ public class ApplicationResourceIntegrationTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void shouldAddAliasToApplication() throws Throwable {
 		// pre-condition
@@ -451,6 +503,7 @@ public class ApplicationResourceIntegrationTest {
 		assertThat(application.getAliases()).contains(alias);
 	}
 
+	@Ignore
 	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotAddExistingAliasToApplication() throws Throwable {
 		// pre-condition
@@ -547,6 +600,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldWaitForApplication() throws OpenShiftException, MalformedURLException, IOException {
 		// pre-condition

@@ -20,7 +20,7 @@ import com.jcraft.jsch.Session;
 /**
  * @author André Dietisheim
  */
-public interface IApplication {
+public interface IApplication extends IOpenShiftResource {
 
 	/**
 	 * Returns the name of this application.
@@ -215,13 +215,6 @@ public interface IApplication {
 	 * @throws SocketTimeoutException
 	 */
 	public void stop(boolean force) throws OpenShiftException, SocketTimeoutException;
-
-	/**
-	 * Gets the log that was created when the application was created.
-	 * 
-	 * @return the log which reported the creation of this app
-	 */
-	public String getCreationLog();
 
 	/**
 	 * Waits for this application to become accessible on its public url.

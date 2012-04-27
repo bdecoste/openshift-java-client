@@ -11,21 +11,24 @@
 package com.openshift.client;
 
 /**
- * Enum to indicate the support for scalability when creating a new application
- * @author Xavier Coulon
- *
+ * @author Andre Dietisheim
  */
-public enum EnumApplicationScale {
+public enum GearProfile {
+
+	JUMBO, EXLARGE, LARGE, MEDIUM, MICRO, SMALL;
 	
-	SCALE("true"), NO_SCALE("false");
-	
-	private final String value;
-	private EnumApplicationScale(final String value) {
-		this.value = value;
+	public static GearProfile safeValueOf(String gearProfile) {
+		try {
+			if (gearProfile == null) {
+				return null;
+			}
+			return valueOf(gearProfile.toUpperCase());
+		} catch(IllegalArgumentException e) {
+			return null;
+		}
 	}
 	
 	public String getValue() {
-		return this.value;
+		return name().toLowerCase();
 	}
-
 }

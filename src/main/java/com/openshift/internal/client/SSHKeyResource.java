@@ -30,7 +30,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 	private UserResource user;
 
 	protected SSHKeyResource(KeyResourceDTO dto, UserResource user) throws OpenShiftUnknonwSSHKeyTypeException {
-		super(user.getService(), dto.getLinks());
+		super(user.getService(), dto.getLinks(), dto.getCreationLog());
 		this.name = dto.getName();
 		this.type = SSHKeyType.getByTypeId(dto.getType());
 		this.publicKey = dto.getContent();
