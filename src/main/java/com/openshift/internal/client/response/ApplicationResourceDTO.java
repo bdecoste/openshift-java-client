@@ -13,6 +13,7 @@ package com.openshift.internal.client.response;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.ApplicationScale;
 import com.openshift.client.IGearProfile;
 
 /**
@@ -38,7 +39,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	private final String uuid;
 	
 	/** The scalability enablement. */
-	private final boolean scalable;
+	private final ApplicationScale scale;
 
 	/** The application gear profile. */
 	private final IGearProfile gearProfile;
@@ -66,7 +67,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param links the links
 	 */
 	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime,
-			final String name, final IGearProfile gearProfile, final boolean scalable, final String uuid,
+			final String name, final IGearProfile gearProfile, final ApplicationScale scale, final String uuid,
 			final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases,
 			final Map<String, Link> links, List<Message> creationLog) {
 	super(links, creationLog);
@@ -76,7 +77,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 		this.name = name;
 		this.uuid = uuid;
 		this.gearProfile = gearProfile;
-		this.scalable = scalable;
+		this.scale = scale;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
 		this.healthCheckPath = healthCheckPath;
@@ -122,8 +123,8 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/**
 	 * @return the scalable
 	 */
-	public final boolean isScalable() {
-		return scalable;
+	public final ApplicationScale getApplicationScale() {
+		return scale;
 	}
 
 	/**

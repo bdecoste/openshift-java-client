@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.client.ApplicationScale;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IRubyApplication;
@@ -29,7 +30,7 @@ public class RubyApplication extends ApplicationResource implements IRubyApplica
 
 	
 	public RubyApplication(String name, String uuid, String creationTime, List<Message> creationLog,
-			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile, boolean scalable,
+			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable,
 			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
 				aliases, links, domain);
@@ -37,7 +38,7 @@ public class RubyApplication extends ApplicationResource implements IRubyApplica
 	}
 
 	public RubyApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String healthCheckPath, IGearProfile gearProfile, boolean scalable, ICartridge cartridge, List<String> aliases,
+			String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable, ICartridge cartridge, List<String> aliases,
 			Map<String, Link> links, DomainResource domain) {
 		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases,
 				links, domain);

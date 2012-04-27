@@ -157,7 +157,7 @@ public class ApplicationResourceTest {
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
 		assertThat(app.getGearProfile().getName()).isEqualTo("small");
-		assertThat(app.isScalable()).isEqualTo(false);
+		assertThat(app.getApplicationScale()).isEqualTo(ApplicationScale.NO_SCALE);
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");
 		assertThat(app.getCreationTime()).isNotNull();
 		assertThat(app.getGitUrl()).isNotNull().startsWith("ssh://")
