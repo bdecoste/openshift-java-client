@@ -29,6 +29,7 @@ import com.openshift.client.utils.ApplicationAssert;
 import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
+import com.openshift.internal.client.GearProfile;
 
 /**
  * @author André Dietisheim
@@ -80,7 +81,7 @@ public class ApplicationResourceIntegrationTest {
 		String applicationName =
 				ApplicationTestUtils.createRandomApplicationName();
 		IApplication application = domain.createApplication(
-				applicationName, ICartridge.JBOSSAS_7, GearProfile.SMALL);
+				applicationName, ICartridge.JBOSSAS_7, IGearProfile.SMALL);
 		assertThat(new ApplicationAssert(application))
 				.hasName(applicationName)
 				.hasUUID()

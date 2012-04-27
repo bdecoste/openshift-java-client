@@ -10,25 +10,20 @@
  ******************************************************************************/
 package com.openshift.client;
 
+import com.openshift.internal.client.GearProfile;
+
 /**
  * @author Andre Dietisheim
  */
-public enum GearProfile {
+public interface IGearProfile {
 
-	JUMBO, EXLARGE, LARGE, MEDIUM, MICRO, SMALL;
+	public static final IGearProfile JUMBO = new GearProfile("jumbo");
+	public static final IGearProfile EXLARGE = new GearProfile("exlarge");
+	public static final IGearProfile LARGE = new GearProfile("large");
+	public static final IGearProfile MEDIUM = new GearProfile("medium");
+	public static final IGearProfile MICRO = new GearProfile("micro");
+	public static final IGearProfile SMALL = new GearProfile("small");
 	
-	public static GearProfile safeValueOf(String gearProfile) {
-		try {
-			if (gearProfile == null) {
-				return null;
-			}
-			return valueOf(gearProfile.toUpperCase());
-		} catch(IllegalArgumentException e) {
-			return null;
-		}
-	}
+	public String getName();
 	
-	public String getValue() {
-		return name().toLowerCase();
-	}
 }

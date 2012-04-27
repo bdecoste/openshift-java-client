@@ -89,11 +89,11 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException 
 	 */
-	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale, final GearProfile gearProfile) throws OpenShiftException, SocketTimeoutException;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale, final IGearProfile gearProfile) throws OpenShiftException, SocketTimeoutException;
 
 	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale) throws OpenShiftException, SocketTimeoutException ;
 
-	public IApplication createApplication(final String name, final ICartridge cartridge, final GearProfile gearProfile) throws OpenShiftException, SocketTimeoutException;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final IGearProfile gearProfile) throws OpenShiftException, SocketTimeoutException;
 
 	public IApplication createApplication(final String name, final ICartridge cartridge) throws OpenShiftException, SocketTimeoutException ;
 
