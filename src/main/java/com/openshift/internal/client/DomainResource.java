@@ -25,6 +25,7 @@ import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.DomainResourceDTO;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.LinkParameter;
+import com.openshift.internal.client.response.Message;
 import com.openshift.internal.client.utils.CollectionUtils;
 import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
@@ -45,16 +46,16 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 
-	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links,
+	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links, final List<Message> creationLog,
 			final APIResource api) {
-		super(api.getService(), links);
+		super(api.getService(), links, creationLog);
 		this.id = namespace;
 		this.suffix = suffix;
 		this.connectionResource = api;
 	}
 
 	protected DomainResource(DomainResourceDTO domainDTO, final APIResource api) {
-		this(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), api);
+		this(domainDTO.getNamespace(), domainDTO.getSuffix(), domainDTO.getLinks(), domainDTO.getCreationLog(), api);
 	}
 
 	public String getId() {
@@ -138,17 +139,6 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 
 	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException {
 		return getApplicationsByCartridge(cartridge.getName()).size() > 0;
-	}
-
-	protected void add(IApplication application) {
-		throw new UnsupportedOperationException();
-		// applications.add(application);
-	}
-
-	protected void remove(IApplication application) {
-		throw new UnsupportedOperationException();
-		// applications.remove(application);
-		// this.userInfo.removeApplicationInfo(application.getName());
 	}
 
 	public void destroy() throws OpenShiftException, SocketTimeoutException {
