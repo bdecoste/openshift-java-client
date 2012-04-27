@@ -189,10 +189,10 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	
-	public List<String> getAvailableGearSizes() throws SocketTimeoutException, OpenShiftException {
+	public List<String> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException {
 		final List<String> gearSizes = new ArrayList<String>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getOptionalParams()) {
-			if (param.getName().equals(IOpenShiftJsonConstants.PROPERTY_NODE_PROFILE)) {
+			if (param.getName().equals(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE)) {
 				for(String option : param.getValidOptions()) {
 					gearSizes.add(option);
 				}
@@ -230,7 +230,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge), new ServiceParameter(
 							IOpenShiftJsonConstants.PROPERTY_SCALE, scale),
 					// was "nodeProfile", looks like naming is not consistent
-					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NODE_PROFILE, nodeProfile));
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, nodeProfile));
 		}
 
 	}

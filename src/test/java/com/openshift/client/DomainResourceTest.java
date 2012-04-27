@@ -196,7 +196,7 @@ public class DomainResourceTest {
 				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
-		List<String> availableGearSizes = domain.getAvailableGearSizes();
+		List<String> availableGearSizes = domain.getAvailableGearProfiles();
 		// verifications
 		assertThat(availableGearSizes).contains("small", "micro", "medium", "large", "exlarge", "jumbo");
 	}
