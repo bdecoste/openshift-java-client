@@ -168,7 +168,7 @@ public abstract class AbstractOpenShiftResource implements IOpenShiftResource {
 		}
 		StringBuilder builder = new StringBuilder();
 		for (Message message : creationLog) {
-			builder.append(message.toString());
+			builder.append(message.getText());
 		}
 		return builder.toString();
 	}
