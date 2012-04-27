@@ -1,6 +1,5 @@
 package com.openshift.client;
 
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public interface IApplicationPortForwarding {
@@ -39,18 +38,18 @@ public interface IApplicationPortForwarding {
 	 * @param localAddress
 	 *            the localAddress to set
 	 */
-	public abstract void setLocalAddress(String localAddress);
+	public abstract void setLocalAddress(final String localAddress);
 
 	/**
 	 * @return the localPort
 	 */
-	public abstract String getLocalPort();
+	public abstract int getLocalPort();
 
 	/**
 	 * @param localPort
 	 *            the localPort to set
 	 */
-	public abstract void setLocalPort(String localPort);
+	public abstract void setLocalPort(final int localPort);
 
 	/**
 	 * @return the remoteIp
@@ -60,6 +59,6 @@ public interface IApplicationPortForwarding {
 	/**
 	 * @return the remotePort
 	 */
-	public abstract String getRemotePort();
+	public abstract int getRemotePort();
 
 }

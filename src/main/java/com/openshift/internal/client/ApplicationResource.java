@@ -603,7 +603,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			final String name = nameTokenizer.nextToken().trim();
 			final StringTokenizer ipPortTokenizer = new StringTokenizer(nameTokenizer.nextToken(), ":");
 			final String remoteIp = ipPortTokenizer.nextToken().trim();
-			final String remotePort = ipPortTokenizer.nextToken().trim();
+			final int remotePort = Integer.parseInt(ipPortTokenizer.nextToken().trim());
 			return new ApplicationPortForwarding(application, name, remoteIp, remotePort);
 		} catch (NoSuchElementException e) {
 			LOGGER.error("Failed to parse remote port: " + portValue, e);

@@ -20,16 +20,16 @@ public class ApplicationPortForwarding implements IApplicationPortForwarding {
 	private final String remoteAddress;
 
 	/** the remote binding port number. */
-	private final String remotePort;
+	private final int remotePort;
 
 	/** the local binding address, or null if not configured yet. */
 	private String localAddress;
 
 	/** the local binding port number, or null if not configured yet. */
-	private String localPort;
+	private int localPort = -1;
 
 	public ApplicationPortForwarding(final IApplication application, final String name, final String remoteAddress,
-			final String remotePort) {
+			final int remotePort) {
 		super();
 		this.application = application;
 		this.name = name;
@@ -44,14 +44,13 @@ public class ApplicationPortForwarding implements IApplicationPortForwarding {
 		if (localAddress == null || localAddress.isEmpty()) {
 			throw new IllegalArgumentException("Cannot enable port-forwarding from an undefined local address");
 		}
-		if (localPort == null || localPort.isEmpty()) {
-			throw new IllegalArgumentException("Cannot enable port-forwarding from an undefined local address");
+		if (localPort == -1 ) {
+			throw new IllegalArgumentException("Cannot enable port-forwarding from an undefined local port");
 		}
 		// don't start it twice
 		if (!isStarted(session)) {
 			try {
-				session.setPortForwardingL(localAddress, Integer.parseInt(this.localPort), this.remoteAddress,
-						Integer.parseInt(this.remotePort));
+				session.setPortForwardingL(localAddress, this.localPort, this.remoteAddress, this.remotePort);
 			} catch (Exception e) {
 				throw new OpenShiftSSHOperationException(e, "Failed to start port forwarding on {0}:{1}",
 						this.localAddress, this.localPort);
@@ -65,7 +64,7 @@ public class ApplicationPortForwarding implements IApplicationPortForwarding {
 	public void stop(final Session session) throws OpenShiftSSHOperationException {
 		if (isStarted(session)) {
 			try {
-				session.delPortForwardingL(localAddress, Integer.parseInt(localPort));
+				session.delPortForwardingL(localAddress, localPort);
 			} catch (Exception e) {
 				throw new OpenShiftSSHOperationException(e, "Failed to stop port forwarding on {0}:{1}",
 						this.localAddress, this.localPort);
@@ -123,35 +122,19 @@ public class ApplicationPortForwarding implements IApplicationPortForwarding {
 		this.localAddress = localAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.internal.client.ssh.IApplicationPortForwarding#getLocalPort()
-	 */
-	public final String getLocalPort() {
+	public final int getLocalPort() {
 		return localPort;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.internal.client.ssh.IApplicationPortForwarding#setLocalPort(java.lang.String)
-	 */
-	public final void setLocalPort(String localPort) {
+	public final void setLocalPort(final int localPort) {
 		this.localPort = localPort;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.internal.client.ssh.IApplicationPortForwarding#getRemoteAddress()
-	 */
 	public final String getRemoteAddress() {
 		return remoteAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.openshift.internal.client.ssh.IApplicationPortForwarding#getRemotePort()
-	 */
-	public final String getRemotePort() {
+	public final int getRemotePort() {
 		return remotePort;
 	}
 
