@@ -16,9 +16,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	SSHKeyIntegrationTest.class
-//	DomainResourceIntegrationTest.class,
-//	ApplicationResourceIntegrationTest.class
+	SSHKeyIntegrationTest.class,
+	DomainResourceIntegrationTest.class,
+	ApplicationResourceIntegrationTest.class
 })
 /**
  * @author André Dietisheim

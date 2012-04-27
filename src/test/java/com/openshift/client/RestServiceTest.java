@@ -44,6 +44,7 @@ import com.openshift.internal.client.response.LinkParameter;
 import com.openshift.internal.client.response.LinkParameterType;
 import com.openshift.internal.client.response.Message;
 import com.openshift.internal.client.response.RestResponse;
+import com.openshift.internal.client.response.Message.Severity;
 
 /**
  * @author Andre Dietisheim
@@ -186,7 +187,7 @@ public class RestServiceTest {
 			assertThat(message).isNotNull();
 			assertThat(new MessageAssert(message))
 					.hasText("User already has a domain associated. Update the domain to modify.")
-					.hasSeverity("error")
+					.hasSeverity(Severity.ERROR)
 					.hasExitCode(102)
 					.hasParameter(null);
 		}
