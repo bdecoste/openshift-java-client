@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.openshift.internal.client.response;
 
-import com.openshift.client.OpenShiftRequestParameterException;
+import com.openshift.client.OpenShiftRequestException;
 
 
 /**
@@ -19,15 +19,15 @@ import com.openshift.client.OpenShiftRequestParameterException;
 public enum LinkParameterType {
 	STRING, BOOLEAN;
 	
-	public static LinkParameterType valueOfIgnoreCase(String name) throws OpenShiftRequestParameterException {
+	public static LinkParameterType valueOfIgnoreCase(String name) throws OpenShiftRequestException {
 		if (name == null) {
 			// no type provided (this is valid, not an error)
 			return null;
 		}
 		try {
-			return			valueOf(name.toUpperCase());
+			return	valueOf(name.toUpperCase());
 		} catch(IllegalArgumentException e) {
-			throw new OpenShiftRequestParameterException("Unknow request parameter type {0}", name);
+			throw new OpenShiftRequestException("Unknow request parameter type {0}", name);
 		}
 	}
 }

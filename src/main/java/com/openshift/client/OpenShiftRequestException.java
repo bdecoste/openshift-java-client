@@ -14,11 +14,11 @@ package com.openshift.client;
 /**
  * @author Andre Dietisheim
  */
-public class OpenShiftRequestParameterException extends OpenShiftException {
+public class OpenShiftRequestException extends OpenShiftException {
 
 	private static final long serialVersionUID = 1L;
 
-	public OpenShiftRequestParameterException(String message, Object... arguments) {
+	public OpenShiftRequestException(String message, Object... arguments) {
 		super(message, arguments);
 	}
 
