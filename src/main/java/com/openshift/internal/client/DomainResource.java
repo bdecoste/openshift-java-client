@@ -188,16 +188,17 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return cartridges;
 	}
 
-	public List<String> getAvailableNodeProfiles() throws OpenShiftException, SocketTimeoutException {
-		final List<String> nodeProfiles = new ArrayList<String>();
+	
+	public List<String> getAvailableGearSizes() throws SocketTimeoutException, OpenShiftException {
+		final List<String> gearSizes = new ArrayList<String>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getOptionalParams()) {
-			if (param.getName().equals("node_profile")) {
+			if (param.getName().equals(IOpenShiftJsonConstants.PROPERTY_NODE_PROFILE)) {
 				for(String option : param.getValidOptions()) {
-					nodeProfiles.add(option);
+					gearSizes.add(option);
 				}
 			}
 		}
-		return nodeProfiles;
+		return gearSizes;
 	}
 	
 	@Override

@@ -102,20 +102,33 @@ public interface IDomain {
 	public List<String> getAvailableCartridgeNames() throws OpenShiftException, SocketTimeoutException;
 
 	/**
-	 * Returns the list of node profiles that can be used to create a new application.
-	 * @return the list of node profiles that can be used to create a new application.
+	 * Returns the application identified by the given name.
+	 * @param name
+	 * @return
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public List<String> getAvailableNodeProfiles() throws OpenShiftException, SocketTimeoutException;
-	
-	
 	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
+	/**
+	 * Returns true if the application identified by the given name exists in the domain.
+	 * @param name
+	 * @return
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
 	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
 	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException;
 
 	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException;
+	
+	/**
+	 * Returns the list of available gear size that the user can choose when creating a new application (application's gear size can't be changed after creation).
+	 * @return
+	 * @throws SocketTimeoutException
+	 * @throws OpenShiftException
+	 */
+	public List<String> getAvailableGearSizes() throws SocketTimeoutException, OpenShiftException;
 
 }

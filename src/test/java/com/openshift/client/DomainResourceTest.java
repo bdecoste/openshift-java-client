@@ -187,6 +187,19 @@ public class DomainResourceTest {
 		assertThat(LinkRetriever.retrieveLink(updatedDomain, "UPDATE").getHref()).contains("/foobarbaz");
 		verify(mockClient, times(1)).put(anyMapOf(String.class, Object.class), any(URL.class));
 	}
+	
+	@Test
+	public void shouldListAvailableGearSizes() throws Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
+				UPDATE_DOMAIN_ID.getContentAsString());
+		final IDomain domain = user.getDomain("foobar");
+		// operation
+		List<String> availableGearSizes = domain.getAvailableGearSizes();
+		// verifications
+		assertThat(availableGearSizes).contains("small", "micro", "medium", "large", "exlarge", "jumbo");
+	}
 
 	@Test
 	@Ignore
