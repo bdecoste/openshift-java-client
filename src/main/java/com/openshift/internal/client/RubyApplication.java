@@ -36,14 +36,6 @@ public class RubyApplication extends ApplicationResource implements IRubyApplica
 		// TODO Auto-generated constructor stub
 	}
 
-	public RubyApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String healthCheckPath, IGearProfile gearProfile, boolean scalable, ICartridge cartridge, List<String> aliases,
-			Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases,
-				links, domain);
-		// TODO Auto-generated constructor stub
-	}
-
 	public String threadDump() throws OpenShiftException {
 		throw new UnsupportedOperationException();
 //		service.threadDumpApplication(name, cartridge, getInternalUser());
