@@ -51,6 +51,18 @@ public interface IApplication {
 	public String getApplicationUrl();
 
 	/**
+	 * Returns true if scaling is enabled on this application (only set at creation time).
+	 * @return true if scaling is enabled on this application (only set at creation time).
+	 */
+	public Boolean isScalable();
+	
+	/**
+	 * Returns true if scaling is enabled on this application (only set at creation time).
+	 * @return true if scaling is enabled on this application (only set at creation time).
+	 */
+	public String getGearProfile();
+	
+	/**
 	 * Returns the url at which this application may be checked for its health state.
 	 * 
 	 * @return the url at which the health state may be queried.

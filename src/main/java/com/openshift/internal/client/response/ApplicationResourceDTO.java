@@ -35,6 +35,12 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/** the application's UUID. */
 	private final String uuid;
 	
+	/** The scalability enablement. */
+	private final boolean scalable;
+
+	/** The application gear profile. */
+	private final String gearProfile;
+
 	/** the application's aliases. */
 	private final List<String> aliases;
 	
@@ -57,13 +63,15 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 * @param uuid the uuid
 	 * @param links the links
 	 */
-	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String uuid, final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases, final Map<String, Link> links) {
+	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime, final String name, final String gearProfile, final boolean scalable, final String uuid, final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases, final Map<String, Link> links) {
 		super(links);
 		this.framework = framework;
 		this.domainId = domainId;
 		this.creationTime = creationTime;
 		this.name = name;
 		this.uuid = uuid;
+		this.gearProfile = gearProfile;
+		this.scalable = scalable;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
 		this.healthCheckPath = healthCheckPath;
@@ -104,6 +112,20 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	 */
 	public final String getName() {
 		return name;
+	}
+
+	/**
+	 * @return the scalable
+	 */
+	public final boolean isScalable() {
+		return scalable;
+	}
+
+	/**
+	 * @return the gearProfile
+	 */
+	public final String getGearProfile() {
+		return gearProfile;
 	}
 
 	/**

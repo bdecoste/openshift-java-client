@@ -10,7 +10,9 @@
             "uuid":"78337de0b54047e0a8577b0697ace5d6",
 			"health_check_path":"health",
             "app_url":"http://sample-foobar.stg.rhcloud.com/",
-            "links":{
+            "gear_profile":"small",
+        	"scalable":null,
+        	"links":{
                 "GET":{
                     "href":"/domains/foobar/applications/sample/gears",
                     "required_params":[

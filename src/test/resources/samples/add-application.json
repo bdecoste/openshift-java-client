@@ -17,6 +17,8 @@
         "app_url":"http://sample-foobar.stg.rhcloud.com/",
         "domain_id":"foobar",
         "name":"sample",
+        "gear_profile":"small",
+        "scalable":null,
         "aliases":[
             
         ],

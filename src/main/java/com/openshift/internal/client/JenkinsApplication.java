@@ -24,18 +24,20 @@ import com.openshift.internal.client.response.Link;
  */
 public class JenkinsApplication extends ApplicationResource implements IJenkinsApplication {
 
+	
+
 	public JenkinsApplication(String name, String uuid, String creationTime, String applicationUrl, String gitUrl,
-			String healthCheckPath, ICartridge cartridge, List<String> aliases, Map<String, Link> links,
-			DomainResource domain) {
-		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
-		// TODO Auto-generated constructor stub
+			String healthCheckPath, String gearProfile, boolean scalable, ICartridge cartridge, List<String> aliases,
+			Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases,
+				links, domain);
 	}
 
 	public JenkinsApplication(String name, String uuid, String creationTime, String creationLog, String applicationUrl,
-			String gitUrl, String healthCheckPath, ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases,
-				links, domain);
-		// TODO Auto-generated constructor stub
+			String gitUrl, String healthCheckPath, String gearProfile, boolean scalable, ICartridge cartridge,
+			List<String> aliases, Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
+				aliases, links, domain);
 	}
 
 	public String getHealthCheckUrl() {

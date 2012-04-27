@@ -59,6 +59,7 @@ public class IOpenShiftJsonConstants {
 	public static final String PROPERTY_PROXY_HOST = "proxy_host";
 	public static final String PROPERTY_SUFFIX = "suffix";
 	public static final String PROPERTY_GEAR_PROFILE = "gear_profile";
+	public static final String PROPERTY_SCALABLE = "scalable";
 	public static final String PROPERTY_OPTIONAL_PARAMS = "optional_params";
 	public static final String PROPERTY_REL = "rel";
 	public static final String PROPERTY_REQUIRED_PARAMS = "required_params";

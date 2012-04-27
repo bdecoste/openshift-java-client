@@ -156,6 +156,8 @@ public class ApplicationResourceTest {
 		final IApplication app = domain.createApplication("sample", cartridge, EnumApplicationScale.DEFAULT, null);
 		// verifications
 		assertThat(app.getName()).isEqualTo("sample");
+		assertThat(app.getGearProfile()).isEqualTo("small");
+		assertThat(app.isScalable()).isEqualTo(false);
 		assertThat(app.getApplicationUrl()).isEqualTo("http://sample-foobar.stg.rhcloud.com/");
 		assertThat(app.getCreationTime()).isNotNull();
 		assertThat(app.getGitUrl()).isNotNull().startsWith("ssh://")

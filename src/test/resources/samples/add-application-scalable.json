@@ -1,270 +1,73 @@
 {
-    "type":"application",
-    "messages":[
-        {
-            "field":null,
-            "severity":"info",
-            "exit_code":null,
-            "text":"Application scalable was created."
-        }
-    ],
     "version":"1.0",
+    "type":"application",
     "data":{
-        "creation_time":"2012-04-11T05:35:27-04:00",
+        "framework":"jbossas-7",
         "embedded":{
             "haproxy-1.4":{
                 "info":""
             }
         },
-        "app_url":"http://scalable-foobar.stg.rhcloud.com/",
-        "domain_id":"foobar",
-        "name":"scalable",
         "aliases":[
             
         ],
-        "framework":"jbossas-7",
+        "scalable":null,
+        "name":"test5",
+        "app_url":"http://test5-xcoulon.rhcloud.com/",
+        "uuid":"3e0809ee2a3546c7ad03aec76bd0141a",
         "links":{
-            "GET_DESCRIPTOR":{
-                "optional_params":[
-                    
-                ],
-                "method":"GET",
-                "required_params":[
-                    
-                ],
-                "href":"/domains/foobar/applications/scalable/descriptor",
-                "rel":"Get application descriptor"
-            },
             "GET":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5",
                 "optional_params":[
                     
                 ],
+                "rel":"Get application",
                 "method":"GET",
                 "required_params":[
                     
-                ],
-                "href":"/domains/foobar/applications/scalable",
-                "rel":"Get application"
-            },
-            "RESTART":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"restart"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Restart application"
-            },
-            "CONCEAL_PORT":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"conceal-port"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Conceal port"
-            },
-            "ADD_ALIAS":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"add-alias"
-                    },
-                    {
-                        "name":"alias",
-                        "type":"string",
-                        "description":"The server alias for the application",
-                        "valid_options":[
-                            
-                        ]
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Add application alias"
-            },
-            "GET_GEARS":{
-                "optional_params":[
-                    
-                ],
-                "method":"GET",
-                "required_params":[
-                    
-                ],
-                "href":"/domains/foobar/applications/scalable/gears",
-                "rel":"Get application gears"
-            },
-            "DELETE":{
-                "optional_params":[
-                    
-                ],
-                "method":"DELETE",
-                "required_params":[
-                    
-                ],
-                "href":"/domains/foobar/applications/scalable",
-                "rel":"Delete application"
-            },
-            "FORCE_STOP":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"force-stop"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Force stop application"
-            },
-            "EXPOSE_PORT":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"expose-port"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Expose port"
-            },
-            "SHOW_PORT":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"show-port"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Show port"
-            },
-            "REMOVE_ALIAS":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"remove-alias"
-                    },
-                    {
-                        "name":"alias",
-                        "type":"string",
-                        "description":"The application alias to be removed",
-                        "valid_options":[
-                            
-                        ]
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Remove application alias"
-            },
-            "SCALE_DOWN":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"scale-down"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Scale down application"
-            },
-            "LIST_CARTRIDGES":{
-                "optional_params":[
-                    
-                ],
-                "method":"GET",
-                "required_params":[
-                    
-                ],
-                "href":"/domains/foobar/applications/scalable/cartridges",
-                "rel":"List embedded cartridges"
-            },
-            "START":{
-                "optional_params":[
-                    
-                ],
-                "method":"POST",
-                "required_params":[
-                    {
-                        "name":"event",
-                        "type":"string",
-                        "description":"event",
-                        "valid_options":"start"
-                    }
-                ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Start application"
+                ]
             },
             "STOP":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
                 "optional_params":[
                     
                 ],
+                "rel":"Stop application",
                 "method":"POST",
                 "required_params":[
                     {
+                        "valid_options":"stop",
                         "name":"event",
-                        "type":"string",
                         "description":"event",
-                        "valid_options":"stop"
+                        "type":"string"
                     }
+                ]
+            },
+            "SCALE_UP":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
                 ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Stop application"
+                "rel":"Scale up application",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"scale-up",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
             },
             "ADD_CARTRIDGE":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/cartridges",
                 "optional_params":[
                     
                 ],
+                "rel":"Add embedded cartridge",
                 "method":"POST",
                 "required_params":[
                     {
-                        "name":"cartridge",
-                        "type":"string",
-                        "description":"framework-type, e.g.: mysql-5.1",
                         "valid_options":[
                             "mongodb-2.0",
                             "cron-1.4",
@@ -276,31 +79,226 @@
                             "metrics-0.1",
                             "rockmongo-1.1",
                             "jenkins-client-1.4"
-                        ]
+                        ],
+                        "name":"cartridge",
+                        "description":"framework-type, e.g.: mysql-5.1",
+                        "type":"string"
                     }
-                ],
-                "href":"/domains/foobar/applications/scalable/cartridges",
-                "rel":"Add embedded cartridge"
+                ]
             },
-            "SCALE_UP":{
+            "RESTART":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
                 "optional_params":[
                     
                 ],
+                "rel":"Restart application",
                 "method":"POST",
                 "required_params":[
                     {
+                        "valid_options":"restart",
                         "name":"event",
-                        "type":"string",
                         "description":"event",
-                        "valid_options":"scale-up"
+                        "type":"string"
                     }
+                ]
+            },
+            "LIST_CARTRIDGES":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/cartridges",
+                "optional_params":[
+                    
                 ],
-                "href":"/domains/foobar/applications/scalable/events",
-                "rel":"Scale up application"
+                "rel":"List embedded cartridges",
+                "method":"GET",
+                "required_params":[
+                    
+                ]
+            },
+            "DELETE":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5",
+                "optional_params":[
+                    
+                ],
+                "rel":"Delete application",
+                "method":"DELETE",
+                "required_params":[
+                    
+                ]
+            },
+            "START":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Start application",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"start",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
+            },
+            "EXPOSE_PORT":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Expose port",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"expose-port",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
+            },
+            "ADD_ALIAS":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Add application alias",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"add-alias",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    },
+                    {
+                        "valid_options":[
+                            
+                        ],
+                        "name":"alias",
+                        "description":"The server alias for the application",
+                        "type":"string"
+                    }
+                ]
+            },
+            "SHOW_PORT":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Show port",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"show-port",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
+            },
+            "REMOVE_ALIAS":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Remove application alias",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"remove-alias",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    },
+                    {
+                        "valid_options":[
+                            
+                        ],
+                        "name":"alias",
+                        "description":"The application alias to be removed",
+                        "type":"string"
+                    }
+                ]
+            },
+            "FORCE_STOP":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Force stop application",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"force-stop",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
+            },
+            "CONCEAL_PORT":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Conceal port",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"conceal-port",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
+            },
+            "GET_GEARS":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/gears",
+                "optional_params":[
+                    
+                ],
+                "rel":"Get application gears",
+                "method":"GET",
+                "required_params":[
+                    
+                ]
+            },
+            "SCALE_DOWN":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/events",
+                "optional_params":[
+                    
+                ],
+                "rel":"Scale down application",
+                "method":"POST",
+                "required_params":[
+                    {
+                        "valid_options":"scale-down",
+                        "name":"event",
+                        "description":"event",
+                        "type":"string"
+                    }
+                ]
+            },
+            "GET_DESCRIPTOR":{
+                "href":"https://openshift.redhat.com/broker/rest/domains/xcoulon/applications/test5/descriptor",
+                "optional_params":[
+                    
+                ],
+                "rel":"Get application descriptor",
+                "method":"GET",
+                "required_params":[
+                    
+                ]
             }
         },
-        "uuid":"b5ec2197966d469896104e849d584925",
-        "git_url":"ssh://b5ec2197966d469896104e849d584925@scalable-foobar.stg.rhcloud.com/~/git/scalable.git/"
+        "health_check_path":"health",
+        "git_url":"ssh://3e0809ee2a3546c7ad03aec76bd0141a@test5-xcoulon.rhcloud.com/~/git/test5.git/",
+        "domain_id":"xcoulon",
+        "gear_profile":"small",
+        "creation_time":"2012-04-27T11:30:00-04:00"
     },
-    "status":"created"
+    "status":"ok",
+    "messages":[
+        
+    ]
 }

@@ -94,6 +94,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	/** The cartridge (application type/framework) of this application. */
 	private final ICartridge cartridge;
+	
+	/** The scalability enablement. */
+	private final boolean scalable;
+
+	/** The application gear profile. */
+	private final String gearProfile;
 
 	/** The creation log. */
 	private final String creationLog;
@@ -144,7 +150,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 */
 	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
 		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getApplicationUrl(), dto.getGitUrl(), dto
-				.getHealthCheckPath(), cartridge, dto.getAliases(), dto.getLinks(), domain);
+				.getHealthCheckPath(), dto.getGearProfile(), dto.isScalable(), cartridge, dto.getAliases(), dto.getLinks(), domain);
 	}
 
 	/**
@@ -171,9 +177,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String applicationUrl, final String gitUrl, final String healthCheckPath, final ICartridge cartridge,
+			final String applicationUrl, final String gitUrl, final String healthCheckPath, final String gearProfile, final boolean scalable, final ICartridge cartridge,
 			final List<String> aliases, final Map<String, Link> links, final DomainResource domain) {
-		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, cartridge, aliases, links, domain);
+		this(name, uuid, creationTime, null, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge, aliases, links, domain);
 	}
 
 	/**
@@ -202,7 +208,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath,
+			final String creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final String gearProfile, final boolean scalable,
 			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
 		super(domain.getService(), links);
@@ -210,6 +216,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.uuid = uuid;
 		this.creationTime = RFC822DateUtils.safeGetDate(creationTime);
 		this.creationLog = creationLog;
+		this.scalable = scalable;
+		this.gearProfile = gearProfile;
 		this.cartridge = cartridge;
 		this.applicationUrl = applicationUrl;
 		this.gitUrl = gitUrl;
@@ -222,6 +230,16 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return name;
 	}
 
+	@Override
+	public Boolean isScalable() {
+		return scalable;
+	}
+
+	@Override
+	public String getGearProfile() {
+		return gearProfile;
+	}
+	
 	public String getUUID() {
 		return uuid;
 	}

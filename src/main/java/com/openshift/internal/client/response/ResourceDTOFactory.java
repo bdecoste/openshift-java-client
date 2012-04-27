@@ -18,6 +18,7 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN_ID;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_FRAMEWORK;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEARS_COMPONENTS;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GIT_URL;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HEALTH_CHECK_PATH;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
@@ -33,6 +34,7 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_PROXY_PORT;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REL;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_REQUIRED_PARAMS;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_SCALABLE;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_SUFFIX;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_TYPE;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_UUID;
@@ -360,13 +362,15 @@ public class ResourceDTOFactory {
 		final String creationTime = getAsString(appNode, PROPERTY_CREATION_TIME);
 		final String name = getAsString(appNode, PROPERTY_NAME);
 		final String uuid = getAsString(appNode, PROPERTY_UUID);
+		final Boolean scalable = getAsBoolean(appNode, PROPERTY_SCALABLE);
+		final String gearProfile = getAsString(appNode, PROPERTY_GEAR_PROFILE);
 		final String applicationUrl = getAsString(appNode, PROPERTY_APP_URL);
 		final String gitUrl = getAsString(appNode, PROPERTY_GIT_URL);
 		final String domainId = getAsString(appNode, PROPERTY_DOMAIN_ID);
 		final String healthCheckPath = getAsString(appNode, PROPERTY_HEALTH_CHECK_PATH);
 		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS));
 		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES));
-		return new ApplicationResourceDTO(framework, domainId, creationTime, name, uuid, applicationUrl, gitUrl, healthCheckPath, aliases, links);
+		return new ApplicationResourceDTO(framework, domainId, creationTime, name, gearProfile, scalable, uuid, applicationUrl, gitUrl, healthCheckPath, aliases, links);
 	}
 
 	private static List<GearResourceDTO> createGears(ModelNode gearsNode) {
@@ -571,5 +575,20 @@ public class ResourceDTOFactory {
 	private static String getAsString(final ModelNode node, String propertyName) {
 		final ModelNode propertyNode = node.get(propertyName);
 		return propertyNode.isDefined() ? propertyNode.asString() : null;
+	}
+	
+	/**
+	 * Returns the property identified by the given name in the given model node, or null if the named property is
+	 * undefined.
+	 * 
+	 * @param node
+	 *            the model node
+	 * @param propertyName
+	 *            the name of the property
+	 * @return the property as a String
+	 */
+	private static Boolean getAsBoolean(final ModelNode node, String propertyName) {
+		final ModelNode propertyNode = node.get(propertyName);
+		return propertyNode.isDefined() ? propertyNode.asBoolean() : Boolean.FALSE;
 	}
 }

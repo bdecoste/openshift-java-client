@@ -12,6 +12,8 @@
             "an_alias",
             "another_alias"
         ],
+        "gear_profile":"small",
+        "scalable":null,
         "framework":"jbossas-7",
         "creation_time":"2012-04-11T07:57:11-04:00",
         "git_url":"ssh://355be2eff0e645bdb0501947232e93c1@sample-foobar.stg.rhcloud.com/~/git/sample.git/",
