@@ -368,6 +368,14 @@ public interface IApplication extends IOpenShiftResource {
 	 */
 	public List<IApplicationPortForwarding> refreshForwardablePorts() throws OpenShiftSSHOperationException;
 	
+	/**
+	 * Retrieves the list of environment properties.
+	 * @return he list of environment properties.
+	 * @throws OpenShiftSSHOperationException 
+	 */
+	public List<String> getEnvironmentProperties() throws OpenShiftSSHOperationException;
+	
+	
 	
 
 }
