@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.IApplication;
+import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.CartridgeResourceDTO;
@@ -110,7 +111,36 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		protected DeleteCartridgeRequest() {
 			super(LINK_DELETE_CARTRIDGE);
 		}
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	/**
+	 * TODO: implement fully correct #equals and #hashcode. The current
+	 * implementation only ensures that {@link EmbeddedCartridgeResource} may be
+	 * compared to {@link EmbeddableCartridge}.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(IEmbeddableCartridge.class.isAssignableFrom(obj.getClass())))
+			return false;
+		IEmbeddableCartridge other = (IEmbeddableCartridge) obj;
+		if (name == null) {
+			if (other.getName() != null)
+				return false;
+		} else if (!name.equals(other.getName()))
+			return false;
+		return true;
 	}
 
 }
