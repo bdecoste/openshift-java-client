@@ -97,7 +97,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	/** The cartridge (application type/framework) of this application. */
 	private final ICartridge cartridge;
-	
+
 	/** The scalability enablement. */
 	private final ApplicationScale scale;
 
@@ -120,8 +120,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final List<String> aliases;
 
 	/**
-	 * List of configured embedded cartridges. <code>null</code> means list if
-	 * not loaded yet.
+	 * List of configured embedded cartridges. <code>null</code> means list if not loaded yet.
 	 */
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IEmbeddedCartridge> embeddedCartridges = null;
@@ -138,8 +137,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private List<IApplicationPortForwarding> ports = null;
 
 	/**
-	 * SSH Session used to perform port-forwarding and other ssh-based
-	 * operations.
+	 * SSH Session used to perform port-forwarding and other ssh-based operations.
 	 */
 	private Session session;
 
@@ -151,8 +149,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @param domain
 	 */
 	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
-		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getCreationLog(), dto.getApplicationUrl(), dto.getGitUrl(), dto
-				.getHealthCheckPath(), dto.getGearProfile(), dto.getApplicationScale(), cartridge, dto.getAliases(), dto.getLinks(), domain);
+		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getCreationLog(), dto.getApplicationUrl(), dto
+				.getGitUrl(), dto.getHealthCheckPath(), dto.getGearProfile(), dto.getApplicationScale(), cartridge, dto
+				.getAliases(), dto.getLinks(), domain);
 	}
 
 	/**
@@ -181,7 +180,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws DatatypeConfigurationException
 	 */
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
-			final List<Message> creationLog, final String applicationUrl, final String gitUrl, final String healthCheckPath, final IGearProfile gearProfile, final ApplicationScale scale,
+			final List<Message> creationLog, final String applicationUrl, final String gitUrl,
+			final String healthCheckPath, final IGearProfile gearProfile, final ApplicationScale scale,
 			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
 			final DomainResource domain) {
 		super(domain.getService(), links, creationLog);
@@ -211,7 +211,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	public IGearProfile getGearProfile() {
 		return gearProfile;
 	}
-	
+
 	public String getUUID() {
 		return uuid;
 	}
@@ -322,15 +322,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * Adds the given embedded cartridge to this application.
 	 * 
 	 * @param cartridge
-	 *            the embeddable cartridge that shall be added to this
-	 *            application
+	 *            the embeddable cartridge that shall be added to this application
 	 */
 	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException,
 			SocketTimeoutException {
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(cartridge.getName());
-		final EmbeddedCartridgeResource embeddedCartridge =
-				new EmbeddedCartridgeResource(embeddedCartridgeDTO, this);
+		final EmbeddedCartridgeResource embeddedCartridge = new EmbeddedCartridgeResource(embeddedCartridgeDTO, this);
 		doGetEmbeddedCartridges().add(embeddedCartridge);
 		return embeddedCartridge;
 	}
@@ -362,8 +360,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
 			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddedCartridge embeddableCartridge = 
-						new EmbeddedCartridgeResource(embeddableCartridgeDTO, this);
+				IEmbeddedCartridge embeddableCartridge = new EmbeddedCartridgeResource(embeddableCartridgeDTO, this);
 				this.embeddedCartridges.add(embeddableCartridge);
 			}
 		}
@@ -443,11 +440,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-	private boolean waitForPositiveHealthResponse(long timeout, long startTime)
-			throws OpenShiftException, InterruptedException, SocketTimeoutException, OpenShiftEndpointException {
+	private boolean waitForPositiveHealthResponse(long timeout, long startTime) throws OpenShiftException,
+			InterruptedException, SocketTimeoutException, OpenShiftEndpointException {
 		String response = "";
-		while (!isPositiveHealthResponse(response)
-				&& !isTimeouted(timeout, startTime)) {
+		while (!isPositiveHealthResponse(response) && !isTimeouted(timeout, startTime)) {
 			try {
 				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
 				response = getService().request(healthCheckUrl, HttpMethod.GET, null);
@@ -465,8 +461,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	private boolean waitForResolved(long timeout, long startTime) throws OpenShiftException, InterruptedException {
 		try {
-			while (!HostUtils.canResolv(healthCheckUrl)
-					&& !isTimeouted(timeout, startTime)) {
+			while (!HostUtils.canResolv(healthCheckUrl) && !isTimeouted(timeout, startTime)) {
 				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
 			}
 			return HostUtils.canResolv(healthCheckUrl);
@@ -520,6 +515,18 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return ports;
 	}
 
+	@Override
+	public List<String> getEnvironmentProperties() throws OpenShiftSSHOperationException {
+		List<String> openshiftProps = new ArrayList<String>();
+		List<String> allEnvProps = sshExecCmd("set", EnumSshStream.INPUT);
+		for (String line : allEnvProps) {
+			if (line.startsWith("OPENSHIFT_")) {
+				openshiftProps.add(line);
+			}
+		}
+		return openshiftProps;
+	}
+
 	/**
 	 * List all forwardable ports for a given application.
 	 * 
@@ -529,28 +536,54 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws OpenShiftSSHOperationException
 	 */
 	private List<IApplicationPortForwarding> listPorts() throws OpenShiftSSHOperationException {
-		List<IApplicationPortForwarding> ports = new ArrayList<IApplicationPortForwarding>();
+		List<IApplicationPortForwarding> result = new ArrayList<IApplicationPortForwarding>();
+		List<String> lines = sshExecCmd("rhc-list-ports", EnumSshStream.EXT_INPUT);
+		for (String line : lines) {
+			ApplicationPortForwarding port = extractForwardablePortFrom(this, line);
+			if (port != null) {
+				result.add(port);
+			}
+		}
+		return result;
+	}
+
+	private enum EnumSshStream {
+		EXT_INPUT, INPUT;
+	}
+	
+	/**
+	 * 
+	 * @param command
+	 * @return
+	 * @throws OpenShiftSSHOperationException
+	 */
+	private List<String> sshExecCmd(final String command, final EnumSshStream streamToUse) throws OpenShiftSSHOperationException {
 		final Session session = getSSHSession();
-		final String command = "rhc-list-ports";
 		Channel channel = null;
-		InputStream errorStream = null;
-		BufferedReader errorStreamReader = null;
+		BufferedReader reader = null;
 		try {
 			session.openChannel("exec");
 			channel = session.openChannel("exec");
 			((ChannelExec) channel).setCommand(command);
 			channel.connect();
-
+			List<String> lines = new ArrayList<String>();
 			String line;
-			// Read File Line By Line
-			errorStream = channel.getExtInputStream();
-			errorStreamReader = new BufferedReader(new InputStreamReader(errorStream));
-			// Read File Line By Line
-			while ((line = errorStreamReader.readLine()) != null) {
-				ApplicationPortForwarding port = extractForwardablePortFrom(this, line);
-				ports.add(port);
+			// Read File Line By Line, but from only one of the 2 inputstreams (the other one blocks..)
+			switch(streamToUse) {
+			case EXT_INPUT:
+				reader = new BufferedReader(new InputStreamReader(channel.getExtInputStream()));
+				break;
+			case INPUT:
+				reader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+				break;
 			}
-			return ports;
+			// Read File Line By Line
+			while ((line = reader.readLine()) != null) {
+				lines.add(line);
+			}
+			
+			
+			return lines;
 		} catch (JSchException e) {
 			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"",
 					this.getName());
@@ -558,19 +591,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"",
 					this.getName());
 		} finally {
-			if (errorStreamReader != null) {
+			
+			if (reader != null) {
 				try {
-					errorStreamReader.close();
+					reader.close();
 				} catch (IOException e) {
 					LOGGER.error("Failed to close SSH error stream reader", e);
-				}
-			}
-
-			if (errorStream != null) {
-				try {
-					errorStream.close();
-				} catch (IOException e) {
-					LOGGER.error("Failed to close SSH error stream", e);
 				}
 			}
 
@@ -580,9 +606,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
+	
 	/**
-	 * Extract the named forwardable port from the 'rhc-list-ports' command
-	 * result line, with the following format:
+	 * Extract the named forwardable port from the 'rhc-list-ports' command result line, with the following format:
 	 * <code>java -> 127.10.187.1:4447</code>.
 	 * 
 	 * @param portValue
@@ -590,17 +616,20 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 */
 	private static ApplicationPortForwarding extractForwardablePortFrom(final IApplication application,
 			final String portValue) {
-		try {
-			final StringTokenizer nameTokenizer = new StringTokenizer(portValue, "->");
-			final String name = nameTokenizer.nextToken().trim();
-			final StringTokenizer ipPortTokenizer = new StringTokenizer(nameTokenizer.nextToken(), ":");
-			final String remoteIp = ipPortTokenizer.nextToken().trim();
-			final int remotePort = Integer.parseInt(ipPortTokenizer.nextToken().trim());
-			return new ApplicationPortForwarding(application, name, remoteIp, remotePort);
-		} catch (NoSuchElementException e) {
-			LOGGER.error("Failed to parse remote port: " + portValue, e);
-			throw e;
+		if (portValue.contains("->")) {
+			try {
+				final StringTokenizer nameTokenizer = new StringTokenizer(portValue, "->");
+				final String name = nameTokenizer.nextToken().trim();
+				final StringTokenizer ipPortTokenizer = new StringTokenizer(nameTokenizer.nextToken(), ":");
+				final String remoteIp = ipPortTokenizer.nextToken().trim();
+				final int remotePort = Integer.parseInt(ipPortTokenizer.nextToken().trim());
+				return new ApplicationPortForwarding(application, name, remoteIp, remotePort);
+			} catch (NoSuchElementException e) {
+				LOGGER.error("Failed to parse remote port: " + portValue, e);
+				throw e;
+			}
 		}
+		return null;
 	}
 
 	public List<IApplicationPortForwarding> startPortForwarding() throws OpenShiftSSHOperationException {
