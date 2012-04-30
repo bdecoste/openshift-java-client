@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -32,6 +32,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.IHttpClient;
+import com.openshift.client.OpenShiftException;
 import com.openshift.client.fakes.HttpClientFake;
 import com.openshift.client.fakes.HttpServerFake;
 import com.openshift.client.utils.Base64Coder;

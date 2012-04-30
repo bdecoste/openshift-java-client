@@ -42,7 +42,7 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 	private final List<IEmbeddableCartridge> embeddedCartridgeNames = new ArrayList<IEmbeddableCartridge>();
 	
 	
-	public APIResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
+	protected APIResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
 		super(service, links, null);
 		this.login = login;
 		this.password = password;

@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static com.openshift.client.utils.FileUtils.createRandomTempFile;
 import static org.fest.assertions.Assertions.assertThat;
@@ -21,6 +21,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IOpenShiftSSHKey;
+import com.openshift.client.ISSHPublicKey;
+import com.openshift.client.IUser;
+import com.openshift.client.InvalidCredentialsOpenShiftException;
+import com.openshift.client.OpenShiftConnectionFactory;
+import com.openshift.client.OpenShiftException;
+import com.openshift.client.SSHKeyPair;
+import com.openshift.client.SSHKeyType;
+import com.openshift.client.SSHPublicKey;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.TestConnectionFactory;

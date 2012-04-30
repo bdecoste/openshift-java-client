@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
@@ -39,8 +39,16 @@ import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openshift.client.IDomain;
+import com.openshift.client.IGearProfile;
+import com.openshift.client.IHttpClient;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IUser;
+import com.openshift.client.InvalidCredentialsOpenShiftException;
+import com.openshift.client.OpenShiftConnectionFactory;
+import com.openshift.client.OpenShiftEndpointException;
+import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.Samples;
-import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.BadRequestException;
 import com.openshift.internal.client.httpclient.HttpClientException;

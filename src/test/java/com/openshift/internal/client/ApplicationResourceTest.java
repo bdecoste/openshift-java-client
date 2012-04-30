@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_APPLICATION_ALIAS_JSON;
@@ -51,10 +51,23 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.ApplicationScale;
+import com.openshift.client.IApplication;
+import com.openshift.client.IApplicationGear;
+import com.openshift.client.ICartridge;
+import com.openshift.client.IDomain;
+import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
+import com.openshift.client.IHttpClient;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IUser;
+import com.openshift.client.InvalidCredentialsOpenShiftException;
+import com.openshift.client.OpenShiftConnectionFactory;
+import com.openshift.client.OpenShiftEndpointException;
+import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.Cartridge;
 import com.openshift.internal.client.EmbeddedCartridgeResource;
-import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.InternalServerErrorException;

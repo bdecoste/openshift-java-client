@@ -47,7 +47,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	// TODO: replace by a map indexed by application names ?
 	private List<IApplication> applications = null;
 
-	public DomainResource(final String namespace, final String suffix, final Map<String, Link> links,
+	protected DomainResource(final String namespace, final String suffix, final Map<String, Link> links,
 			final List<Message> creationLog,
 			final APIResource api) {
 		super(api.getService(), links, creationLog);

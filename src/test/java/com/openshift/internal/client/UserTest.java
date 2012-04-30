@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.fest.assertions.Assertions.assertThat;
@@ -26,8 +26,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.IApplication;
+import com.openshift.client.IDomain;
+import com.openshift.client.IHttpClient;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IUser;
+import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.utils.Samples;
-import com.openshift.internal.client.LinkRetriever;
 import com.openshift.internal.client.RestService;
 
 /**

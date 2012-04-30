@@ -50,11 +50,11 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	private String url;
 	private final ApplicationResource application;
 
-	public EmbeddedCartridgeResource(final CartridgeResourceDTO dto, final ApplicationResource application) {
+	protected EmbeddedCartridgeResource(final CartridgeResourceDTO dto, final ApplicationResource application) {
 		this(dto.getName(), dto.getType(), dto.getLinks(), dto.getCreationLog(), application);
 	}
 
-	public EmbeddedCartridgeResource(final String name, final String type, final Map<String, Link> links,
+	protected EmbeddedCartridgeResource(final String name, final String type, final Map<String, Link> links,
 			final List<Message> creationLog, final ApplicationResource application) {
 		super(application.getService(), links, creationLog);
 		this.name = name;

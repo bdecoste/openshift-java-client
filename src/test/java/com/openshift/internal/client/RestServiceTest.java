@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static org.fest.assertions.Assertions.assertThat;
@@ -32,6 +32,10 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.HttpMethod;
+import com.openshift.client.IHttpClient;
+import com.openshift.client.OpenShiftEndpointException;
+import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.MessageAssert;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;

@@ -12,16 +12,13 @@ package com.openshift.client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Map;
 
 import com.openshift.client.configuration.IOpenShiftConfiguration;
 import com.openshift.client.configuration.OpenShiftConfiguration;
-import com.openshift.internal.client.APIResource;
+import com.openshift.internal.client.AbstractOpenShiftConnectionFactory;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
-import com.openshift.internal.client.response.Link;
-import com.openshift.internal.client.response.RestResponse;
 
 /**
  * Connection Factory, used to establish a connection and retrieve a user.
@@ -30,7 +27,7 @@ import com.openshift.internal.client.response.RestResponse;
  * @author Andre Dietisheim
  * 
  */
-public class OpenShiftConnectionFactory {
+public class OpenShiftConnectionFactory extends AbstractOpenShiftConnectionFactory {
 
 	/**
 	 * Establish a connection with the clientId along with user's password.
@@ -79,14 +76,4 @@ public class OpenShiftConnectionFactory {
 		final IRestService service = new RestService(serverUrl, clientId, httpClient);
 		return getConnection(service, login, password);
 	}
-	
-	@SuppressWarnings("unchecked")
-	protected IOpenShiftConnection getConnection(IRestService service, final String login, final String password) throws FileNotFoundException, IOException, OpenShiftException {
-		RestResponse response =
-				(RestResponse) service.request(new Link("Get API", "/api", HttpMethod.GET));
-		return new APIResource(login, password, service, (Map<String, Link>) response.getData());
-	}
-
-	
-	
 }

@@ -36,7 +36,7 @@ public class ApplicationGearResource extends AbstractOpenShiftResource implement
 	/** the enclosing applicationResource. */
 	private final ApplicationResource applicationResource;
 	
-	public ApplicationGearResource(final String uuid, final String gitUrl, final List<IApplicationGearComponent> components, final ApplicationResource applicationResource) {
+	protected ApplicationGearResource(final String uuid, final String gitUrl, final List<IApplicationGearComponent> components, final ApplicationResource applicationResource) {
 		super(applicationResource.getService());
 		this.uuid = uuid;
 		this.gitUrl = gitUrl;
@@ -44,7 +44,7 @@ public class ApplicationGearResource extends AbstractOpenShiftResource implement
 		this.applicationResource = applicationResource;
 	}
 
-	public ApplicationGearResource(GearResourceDTO gearDTO, List<IApplicationGearComponent> components,
+	protected ApplicationGearResource(GearResourceDTO gearDTO, List<IApplicationGearComponent> components,
 			ApplicationResource applicationResource) {
 		this(gearDTO.getUuid(), gearDTO.getGitUrl(), components, applicationResource);
 	}

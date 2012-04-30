@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +25,18 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.openshift.client.ApplicationScale;
+import com.openshift.client.IApplication;
+import com.openshift.client.ICartridge;
+import com.openshift.client.IDomain;
+import com.openshift.client.IEmbeddableCartridge;
+import com.openshift.client.IEmbeddedCartridge;
+import com.openshift.client.IGearProfile;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IUser;
+import com.openshift.client.OpenShiftConnectionFactory;
+import com.openshift.client.OpenShiftEndpointException;
+import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.ApplicationAssert;
 import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
@@ -279,11 +291,10 @@ public class ApplicationResourceIntegrationTest {
 	@Test
 	public void shouldAddEmbeddedCartridge() throws SocketTimeoutException, OpenShiftException {
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-		String mySqlName = "mysql-5.1";
 		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 		assertNotNull(application.getEmbeddedCartridges());
 		assertTrue(application.getEmbeddedCartridges().size() > 1);
-		assertTrue(containsEmbeddedCartridge(mySqlName, application.getEmbeddedCartridges()));
+		assertTrue(containsEmbeddedCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges()));
 	}
 
 	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {

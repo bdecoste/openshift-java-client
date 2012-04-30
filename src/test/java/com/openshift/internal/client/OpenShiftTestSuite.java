@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/ 
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
+import com.openshift.client.OpenShiftException;
 import com.openshift.client.configuration.DefaultConfiguration;
 import com.openshift.client.configuration.IOpenShiftConfiguration;
 import com.openshift.client.configuration.SystemConfiguration;

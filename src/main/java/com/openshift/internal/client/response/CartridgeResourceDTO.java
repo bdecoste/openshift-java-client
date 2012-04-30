@@ -19,8 +19,8 @@ import java.util.Map;
  */
 public class CartridgeResourceDTO extends BaseResourceDTO {
 
+	
 	private final String name;
-
 	private final String type;
 
 	public CartridgeResourceDTO(final String name, final String type, final Map<String, Link> links,

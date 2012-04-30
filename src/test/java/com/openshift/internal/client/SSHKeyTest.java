@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package com.openshift.client;
+package com.openshift.internal.client;
 
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static com.openshift.client.utils.FileUtils.createRandomTempFile;
@@ -31,6 +31,17 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.IHttpClient;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IOpenShiftSSHKey;
+import com.openshift.client.ISSHPublicKey;
+import com.openshift.client.IUser;
+import com.openshift.client.OpenShiftConnectionFactory;
+import com.openshift.client.OpenShiftSSHKeyException;
+import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
+import com.openshift.client.SSHKeyPair;
+import com.openshift.client.SSHKeyType;
+import com.openshift.client.SSHPublicKey;
 import com.openshift.client.utils.SSHKeyTestUtils;
 import com.openshift.client.utils.SSHKeyTestUtils.SSHPublicKeyAssertion;
 import com.openshift.client.utils.Samples;
