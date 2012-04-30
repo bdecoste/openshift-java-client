@@ -26,7 +26,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
@@ -36,23 +35,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.openshift.client.IDomain;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IHttpClient;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
-import com.openshift.client.InvalidCredentialsOpenShiftException;
 import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.Samples;
-import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.BadRequestException;
-import com.openshift.internal.client.httpclient.HttpClientException;
-import com.openshift.internal.client.httpclient.UnauthorizedException;
 
 /**
  * @author Xavier Coulon
@@ -104,20 +97,6 @@ public class DomainResourceTest {
 		assertThat(domains).hasSize(1);
 		// 3 calls: /API + /API/user + /API/domains
 		verify(mockClient, times(3)).get(any(URL.class));
-	}
-
-	@Test
-	@Ignore("Can't happen: user is already loaded with his credentials")
-	public void shouldNotLoadDomainsWithInvalidCredentials() throws OpenShiftException, SocketTimeoutException,
-			HttpClientException {
-		// pre-conditions
-		when(mockClient.get(urlEndsWith("/api")))
-				.thenThrow(new UnauthorizedException("invalid mock credentials", null));
-		expectedException.expect(InvalidCredentialsOpenShiftException.class);
-		// operation
-		user.getDomains();
-		// verifications
-		// expect an exception
 	}
 
 	@Test
