@@ -19,10 +19,13 @@ public enum ApplicationScale {
 	
 	SCALE("true"), NO_SCALE("false");
 	
+	private static final String SCALING_TRUE = "TRUE";
+
 	private final String value;
 	
 	public static ApplicationScale safeValueOf(final String value) {
-		if(value == null || !"TRUE".equals(value.toUpperCase())) {
+		if(value == null 
+				|| !SCALING_TRUE.equals(value.toUpperCase())) {
 			return NO_SCALE;
 		}
 		return SCALE;
