@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.openshift.client.IHttpClient;
@@ -153,7 +152,7 @@ public class HttpClientTest {
 		assertEquals(value2, keyValuePair[1]);
 	}
 
-	@Ignore("Not supported on PROD/STG yet")
+//	@Ignore("Not supported on PROD/STG yet")
 	@Test
 	public void shouldAddServiceVersionToAcceptHeader() throws FileNotFoundException, IOException, OpenShiftException,
 			HttpClientException {

@@ -295,10 +295,11 @@ public class UrlConnectionHttpClient implements IHttpClient {
 		/*
 		 * Not supported on PROD/STG yet
 		 */
-		// if (version != null) {
-		// builder.append(SEMICOLON).append(SPACE)
-		// .append(VERSION).append(EQUALS).append(version); }
-		//
+		if (version != null) {
+			builder.append(SEMICOLON).append(SPACE)
+					.append(VERSION).append(EQUALS).append(version);
+		}
+
 		connection.setRequestProperty(PROPERTY_ACCEPT, builder.toString());
 	}
 
