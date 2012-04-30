@@ -66,12 +66,13 @@ public class DomainResourceTest {
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
-				Samples.GET_USER_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
-				"clientId", mockClient), "foo@redhat.com", "bar");
+				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/user")))
+				.thenReturn(Samples.GET_USER_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains")))
+				.thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(
+				new RestService("http://mock", "clientId", mockClient), "foo@redhat.com", "bar");
 		this.user = connection.getUser();
 	}
 
@@ -128,7 +129,8 @@ public class DomainResourceTest {
 	public void shouldDestroyDomain() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenReturn(DELETE_DOMAIN_JSON.getContentAsString());
+		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenReturn(
+				DELETE_DOMAIN_JSON.getContentAsString());
 		// operation
 		final IDomain domain = user.getDomain("foobar");
 		domain.destroy();
@@ -149,7 +151,7 @@ public class DomainResourceTest {
 		try {
 			domain.destroy();
 			fail("Expected an exception here..");
-		} catch(OpenShiftEndpointException e) {
+		} catch (OpenShiftEndpointException e) {
 			assertThat(e.getCause()).isInstanceOf(BadRequestException.class);
 		}
 		// verifications
@@ -172,7 +174,7 @@ public class DomainResourceTest {
 		assertThat(LinkRetriever.retrieveLink(updatedDomain, "UPDATE").getHref()).contains("/foobarbaz");
 		verify(mockClient, times(1)).put(anyMapOf(String.class, Object.class), any(URL.class));
 	}
-	
+
 	@Test
 	public void shouldListAvailableGearSizes() throws Throwable {
 		// pre-conditions
@@ -183,7 +185,8 @@ public class DomainResourceTest {
 		// operation
 		List<IGearProfile> availableGearSizes = domain.getAvailableGearProfiles();
 		// verifications
-		assertThat(availableGearSizes).onProperty("name").contains("small", "micro", "medium", "large", "exlarge", "jumbo");
+		assertThat(availableGearSizes).onProperty("name").contains("small", "micro", "medium", "large", "exlarge",
+				"jumbo");
 	}
 
 	@Test
