@@ -30,33 +30,29 @@ import com.openshift.internal.client.RestService;
 public class CartridgesResourceTest {
 
 	private IHttpClient mockClient;
-	
+
 	private IOpenShiftConnection connection;
 
 	@Before
 	public void setup() throws Throwable {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
-		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/cartridges"))).thenReturn(
-				Samples.GET_CARTRIDGES.getContentAsString());
-		connection = new OpenShiftConnectionFactory().getConnection(new RestService("http://mock",
-				"clientId", mockClient), "foo@redhat.com", "bar");
+				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/cartridges")))
+				.thenReturn(Samples.GET_CARTRIDGES.getContentAsString());
+		connection = new OpenShiftConnectionFactory()
+				.getConnection(new RestService("http://mock", "clientId", mockClient), "foo@redhat.com", "bar");
 	}
-		
 
-	/**
-	 * Syntactic sugar.
-	 * 
-	 * @return
-	 */
 	@Test
 	public void shouldLoadListOfStandaloneCartridges() throws Throwable {
 		// pre-conditions
 		// operation
 		final List<ICartridge> cartridges = connection.getStandaloneCartridges();
 		// verifications
-		assertThat(cartridges).hasSize(8).onProperty("name").contains("nodejs-0.6", "jbossas-7").excludes("mongodb-2.0", "mysql-5.1");
+		assertThat(cartridges)
+				.hasSize(8)
+				.onProperty("name").contains("nodejs-0.6", "jbossas-7").excludes("mongodb-2.0", "mysql-5.1");
 	}
 
 	@Test
@@ -65,6 +61,8 @@ public class CartridgesResourceTest {
 		// operation
 		final List<IEmbeddableCartridge> cartridges = connection.getEmbeddableCartridges();
 		// verifications
-		assertThat(cartridges).hasSize(10).onProperty("name").contains("mongodb-2.0", "mysql-5.1").excludes("nodejs-0.6", "jbossas-7");
+		assertThat(cartridges)
+				.hasSize(10)
+				.onProperty("name").contains("mongodb-2.0", "mysql-5.1").excludes("nodejs-0.6", "jbossas-7");
 	}
 }
