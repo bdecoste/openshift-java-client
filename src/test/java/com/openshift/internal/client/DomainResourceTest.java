@@ -60,8 +60,6 @@ import com.openshift.internal.client.httpclient.UnauthorizedException;
  */
 public class DomainResourceTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DomainResourceTest.class);
-
 	private IUser user;
 	private IHttpClient mockClient;
 
