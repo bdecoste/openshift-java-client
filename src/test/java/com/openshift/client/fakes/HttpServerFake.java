@@ -37,7 +37,7 @@ import com.openshift.internal.client.utils.StreamUtils;
  */
 public class HttpServerFake {
 
-	public static final int DEFAULT_PORT = 8181;
+	public static final int DEFAULT_PORT = 1234;
 
 	private ExecutorService executor;
 	private int port;
