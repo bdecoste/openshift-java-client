@@ -13,7 +13,6 @@ package com.openshift.internal.client;
 import static org.junit.Assert.fail;
 
 import java.net.SocketTimeoutException;
-import java.util.List;
 import java.util.Map;
 
 import com.openshift.client.OpenShiftException;
