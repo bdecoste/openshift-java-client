@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,7 +29,6 @@ import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
 import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
@@ -40,8 +38,8 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.ApplicationAssert;
 import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
+import com.openshift.client.utils.EmbeddableCartridgeAsserts;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
-import com.openshift.internal.client.GearProfile;
 
 /**
  * @author André Dietisheim
@@ -287,29 +285,28 @@ public class ApplicationResourceIntegrationTest {
 		assertThat(application.getEmbeddedCartridges()).isNotNull();
 	}
 
-	@Ignore
 	@Test
 	public void shouldAddEmbeddedCartridge() throws SocketTimeoutException, OpenShiftException {
 		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
 		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 		assertNotNull(application.getEmbeddedCartridges());
 		assertTrue(application.getEmbeddedCartridges().size() > 1);
-		assertTrue(containsEmbeddedCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges()));
+//		assertTrue(containsEmbeddedCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges()));
+		EmbeddableCartridgeAsserts.assertThatContainsCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges());
 	}
 
-	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {
-		boolean found = false;
-		for (IEmbeddedCartridge cartridge : embeddedCartridges) {
-			if (cartridge != null
-					&& name.equals(cartridge.getName())) {
-				found = true;
-				break;
-			}
-		}
-		return found;
-	}
+//	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {
+//		boolean found = false;
+//		for (IEmbeddedCartridge cartridge : embeddedCartridges) {
+//			if (cartridge != null
+//					&& name.equals(cartridge.getName())) {
+//				found = true;
+//				break;
+//			}
+//		}
+//		return found;
+//	}
 	
-	@Ignore
 	@Test
 	public void shouldDestroyApplication() throws Exception {
 		// pre-condition
@@ -324,7 +321,6 @@ public class ApplicationResourceIntegrationTest {
 
 	}
 
-	@Ignore
 	@Test(expected = OpenShiftException.class)
 	public void createDuplicateApplicationThrowsException() throws Exception {
 		IApplication application2 = null;
@@ -339,7 +335,6 @@ public class ApplicationResourceIntegrationTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void shouldStopApplication() throws Exception {
 		// pre-condition
@@ -349,7 +344,6 @@ public class ApplicationResourceIntegrationTest {
 		application.stop();
 	}
 
-	@Ignore
 	@Test
 	public void shouldStartStoppedApplication() throws Exception {
 		// pre-condition
@@ -360,7 +354,6 @@ public class ApplicationResourceIntegrationTest {
 		application.start();
 	}
 
-	@Ignore
 	@Test
 	public void shouldStartStartedApplication() throws Exception {
 		// pre-condition
@@ -374,7 +367,6 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Ignore
 	@Test
 	public void shouldStopStoppedApplication() throws Exception {
 		// pre-condition
@@ -388,7 +380,6 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Ignore
 	@Test
 	public void shouldRestartStartedApplication() throws Exception {
 		// pre-condition
@@ -402,7 +393,6 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Ignore
 	@Test
 	public void shouldRestartStoppedApplication() throws Exception {
 		// pre-condition
@@ -416,7 +406,7 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Ignore("OpenShiftEndpointException: nnode execution failure")
+//	@Ignore("OpenShiftEndpointException: node execution failure")
 	@Test
 	public void shouldConcealPortApplication() throws Exception {
 		// pre-condition
@@ -430,7 +420,7 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Ignore("OpenShiftEndpointException: nnode execution failure")
+//	@Ignore("OpenShiftEndpointException: nnode execution failure")
 	@Test
 	public void shouldExposePortApplication() throws Exception {
 		// pre-condition
@@ -463,7 +453,6 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-	@Ignore
 	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotScaleDownApplication() throws Throwable {
 		IApplication application = null;
@@ -482,7 +471,6 @@ public class ApplicationResourceIntegrationTest {
 		}
 	}
 
-	@Ignore
 	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotScaleUpApplication() throws Throwable {
 		IApplication application = null;
@@ -501,7 +489,6 @@ public class ApplicationResourceIntegrationTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void shouldAddAliasToApplication() throws Throwable {
 		// pre-condition
@@ -515,7 +502,6 @@ public class ApplicationResourceIntegrationTest {
 		assertThat(application.getAliases()).contains(alias);
 	}
 
-	@Ignore
 	@Test(expected = OpenShiftEndpointException.class)
 	public void shouldNotAddExistingAliasToApplication() throws Throwable {
 		// pre-condition
@@ -612,7 +598,6 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
-	@Ignore
 	@Test
 	public void shouldWaitForApplication() throws OpenShiftException, MalformedURLException, IOException {
 		// pre-condition
