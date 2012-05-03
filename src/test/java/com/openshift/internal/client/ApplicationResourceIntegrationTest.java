@@ -291,22 +291,9 @@ public class ApplicationResourceIntegrationTest {
 		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 		assertNotNull(application.getEmbeddedCartridges());
 		assertTrue(application.getEmbeddedCartridges().size() > 1);
-//		assertTrue(containsEmbeddedCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges()));
 		EmbeddableCartridgeAsserts.assertThatContainsCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges());
 	}
 
-//	private boolean containsEmbeddedCartridge(String name, List<IEmbeddedCartridge> embeddedCartridges) {
-//		boolean found = false;
-//		for (IEmbeddedCartridge cartridge : embeddedCartridges) {
-//			if (cartridge != null
-//					&& name.equals(cartridge.getName())) {
-//				found = true;
-//				break;
-//			}
-//		}
-//		return found;
-//	}
-	
 	@Test
 	public void shouldDestroyApplication() throws Exception {
 		// pre-condition
