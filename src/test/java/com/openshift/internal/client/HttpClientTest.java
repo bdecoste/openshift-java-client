@@ -39,6 +39,9 @@ import com.openshift.client.utils.Base64Coder;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.UrlConnectionHttpClientBuilder;
 
+/**
+ * @author Andre Dietisheim
+ */
 public class HttpClientTest {
 
 	private static final String ACCEPT_APPLICATION_JSON = "Accept: application/json";
