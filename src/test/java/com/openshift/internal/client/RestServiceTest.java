@@ -27,7 +27,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,16 +38,14 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.MessageAssert;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.Samples;
-import com.openshift.internal.client.IRestService;
-import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.LinkParameter;
 import com.openshift.internal.client.response.LinkParameterType;
 import com.openshift.internal.client.response.Message;
-import com.openshift.internal.client.response.RestResponse;
 import com.openshift.internal.client.response.Message.Severity;
+import com.openshift.internal.client.response.RestResponse;
 
 /**
  * @author Andre Dietisheim
@@ -63,9 +60,9 @@ public class RestServiceTest {
 		this.clientMock = mock(IHttpClient.class);
 		String jsonResponse = "{}";
 		when(clientMock.get(any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.post(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.put(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
-		when(clientMock.delete(any(Map.class), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.post(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.put(anyForm(), any(URL.class))).thenReturn(jsonResponse);
+		when(clientMock.delete(anyForm(), any(URL.class))).thenReturn(jsonResponse);
 
 		OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
 
