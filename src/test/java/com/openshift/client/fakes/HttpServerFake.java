@@ -102,7 +102,9 @@ public class HttpServerFake {
 
 		public void shutdown() {
 			try {
-				this.serverSocket.close();
+				if (serverSocket != null) {
+					this.serverSocket.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
