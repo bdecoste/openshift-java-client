@@ -66,19 +66,8 @@ public class Message {
 
 	@Override
 	public String toString() {
-		switch (severity) {
-		case ERROR:
-			return buildMessage("Operation failed", parameter,  severity, exitCode, text);
-		case INFO:
-			return buildMessage("Operation succeeded", parameter, severity, exitCode, text);
-		case UNKNOWN:
-		default:
-			return buildMessage("Operation state is unknown", parameter, severity, exitCode, text);
-		}
-	}
-	
-	private String buildMessage(String prefix, String parameter, Severity severity, int exitCode, String text) {
-		StringBuilder builder = new StringBuilder(prefix);
+		StringBuilder builder = new StringBuilder(getOperationState());
+
 		if (!StringUtils.isEmpty(parameter)) {
 			builder.append(" on parameter \"{0}\"");
 			if (severity != null) {
@@ -92,6 +81,19 @@ public class Message {
 		if (!StringUtils.isEmpty(text)) {
 			builder.append("Reason given: \"{3}\"");
 		}
+
 		return MessageFormat.format(builder.toString(), parameter, severity, exitCode, text);
+	}
+
+	private String getOperationState() {
+		switch (severity) {
+		case ERROR:
+			return "Operation failed";
+		case INFO:
+			return "Operation succeeded";
+		case UNKNOWN:
+		default:
+			return "Operation state is unknown";
+		}
 	}
 }
