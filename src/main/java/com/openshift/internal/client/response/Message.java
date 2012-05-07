@@ -12,6 +12,9 @@ package com.openshift.internal.client.response;
 
 import java.text.MessageFormat;
 
+import com.openshift.internal.client.utils.StringUtils;
+
+
 /**
  * @author Andre Dietisheim
  */
@@ -65,19 +68,30 @@ public class Message {
 	public String toString() {
 		switch (severity) {
 		case ERROR:
-			return MessageFormat.format(
-					"Operation failed on parameter {0} with exit code {1}. Reason: {2}",
-					parameter, exitCode, text);
+			return buildMessage("Operation failed", parameter,  severity, exitCode, text);
 		case INFO:
-			return MessageFormat.format(
-					"Operation succeeded. Additional info supplied: {0}",
-					text);
+			return buildMessage("Operation succeeded", parameter, severity, exitCode, text);
 		case UNKNOWN:
 		default:
-			return MessageFormat.format(
-					"Operation state is UNKNOWN. Additional info supplied: {0}, parameter \"{1}\", severity \"{2}\"",
-					text, parameter, severity);
-
+			return buildMessage("Operation state is unknown", parameter, severity, exitCode, text);
 		}
+	}
+	
+	private String buildMessage(String prefix, String parameter, Severity severity, int exitCode, String text) {
+		StringBuilder builder = new StringBuilder(prefix);
+		if (!StringUtils.isEmpty(parameter)) {
+			builder.append(" on parameter \"{0}\"");
+			if (severity != null) {
+				builder.append(", sevirty \"{1}\"");
+			}
+		}
+		if (exitCode != -1) {
+			builder.append(" with exit code \"{2}\"");
+		}
+		builder.append('.');
+		if (!StringUtils.isEmpty(text)) {
+			builder.append("Reason given: \"{3}\"");
+		}
+		return MessageFormat.format(builder.toString(), parameter, severity, exitCode, text);
 	}
 }
