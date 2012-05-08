@@ -52,7 +52,7 @@ public class HttpClientTest {
 	private IHttpClient httpClient;
 
 	@Before
-	public void setUp() throws MalformedURLException {
+	public void setUp() throws IOException {
 		this.serverFake = new HttpServerFake();
 		serverFake.start();
 		this.httpClient = new UrlConnectionHttpClientBuilder()

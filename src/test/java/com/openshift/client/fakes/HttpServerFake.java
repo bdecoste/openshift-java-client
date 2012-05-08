@@ -42,7 +42,7 @@ public class HttpServerFake {
 	private ExecutorService executor;
 	private int port;
 	private String response;
-	private ServerFakeSocket serverSocket;
+	private ServerSocket serverSocket;
 
 	public HttpServerFake(int port) {
 		this(port, null);
@@ -70,10 +70,10 @@ public class HttpServerFake {
 		this.response = response;
 	}
 
-	public void start() {
+	public void start() throws IOException {
 		executor = Executors.newFixedThreadPool(1);
-		this.serverSocket = new ServerFakeSocket(port, response);
-		executor.submit(serverSocket);
+		this.serverSocket = new ServerSocket(port);
+		executor.submit(new ServerFakeSocket(response, serverSocket));
 	}
 
 	public String getUrl() {
@@ -82,32 +82,27 @@ public class HttpServerFake {
 
 	public void stop() {
 		executor.shutdownNow();
-		serverSocket.shutdown();
+		silentlyClose(serverSocket);
 	}
 
-	private class ServerFakeSocket implements Runnable {
-		private String response;
-		private ServerSocket serverSocket;
-
-		private ServerFakeSocket(int port, String response) {
-
-			this.response = response;
-
+	public void silentlyClose(ServerSocket serverSocket) {
+		if (serverSocket != null) {
 			try {
-				this.serverSocket = new ServerSocket(port);
+				serverSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
 
-		public void shutdown() {
-			try {
-				if (serverSocket != null) {
-					this.serverSocket.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	
+	private class ServerFakeSocket implements Runnable {
+		private String response;
+		private ServerSocket serverSocket;
+
+		private ServerFakeSocket(String response, ServerSocket serverSocket) {
+			this.response = response;
+			this.serverSocket = serverSocket;
 		}
 
 		public void run() {
@@ -119,11 +114,11 @@ public class HttpServerFake {
 				outputStream = socket.getOutputStream();
 				outputStream.write(response.getBytes());
 				outputStream.flush();
-				socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-				// we should not close the connection, let the client close the connection
+				// we should not close the connection, let the client close the
+				// connection
 				StreamUtils.quietlyClose(outputStream);
 			}
 		}
