@@ -12,7 +12,6 @@ package com.openshift.internal.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -520,7 +519,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		List<String> openshiftProps = new ArrayList<String>();
 		List<String> allEnvProps = sshExecCmd("set", EnumSshStream.INPUT);
 		for (String line : allEnvProps) {
-			if (line.startsWith("OPENSHIFT_")) {
+			if (line.startsWith("OPENSHIFT_") || line.startsWith("JENKINS_")) {
 				openshiftProps.add(line);
 			}
 		}
