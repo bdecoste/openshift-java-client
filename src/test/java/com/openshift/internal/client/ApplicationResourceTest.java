@@ -517,7 +517,6 @@ public class ApplicationResourceTest {
 		when(mockClient.post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				ADD_APPLICATION_CARTRIDGE_JSON.getContentAsString());
 		final IApplication app = domain.getApplicationByName("sample");
-		//assertThat(app.getEmbeddedCartridges()).hasSize(1);
 		// operation
 		app.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 		// verifications

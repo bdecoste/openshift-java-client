@@ -78,12 +78,12 @@ public class CartridgesResourceTest {
 		// pre-conditions
 		IEmbeddableCartridge jenkinsEmbeddableCartridge = IEmbeddableCartridge.JENKINS_14;
 		ApplicationResource applicationMock = mock(ApplicationResource.class);
-		when(applicationMock.getService()).thenReturn(null);
+
+		// operation
 		EmbeddedCartridgeResource jenkinsEmbeddedCartridgeResource =
 				new EmbeddedCartridgeResource(
-						jenkinsEmbeddableCartridge.getName(), "type", Collections.<String, Link> emptyMap(), null,
+						jenkinsEmbeddableCartridge.getName(), CartridgeType.EMBEDDED, Collections.<String, Link> emptyMap(), null,
 						applicationMock);
-		// operation
 
 		// verifications
 		assertTrue(jenkinsEmbeddableCartridge.equals(jenkinsEmbeddedCartridgeResource));
@@ -94,15 +94,15 @@ public class CartridgesResourceTest {
 		// pre-conditions
 		IEmbeddableCartridge jenkinsEmbeddableCartridge = IEmbeddableCartridge.JENKINS_14;
 		ApplicationResource applicationMock = mock(ApplicationResource.class);
-		when(applicationMock.getService()).thenReturn(null);
+	
+		// operation
 		EmbeddedCartridgeResource jenkinsEmbeddedCartridgeResource =
 				new EmbeddedCartridgeResource(
-						jenkinsEmbeddableCartridge.getName(), "type", Collections.<String, Link> emptyMap(), null,
+						jenkinsEmbeddableCartridge.getName(), CartridgeType.EMBEDDED, Collections.<String, Link> emptyMap(), null,
 						applicationMock);
-		// operation
 
 		// verifications
-		assertTrue(jenkinsEmbeddedCartridgeResource.equals(jenkinsEmbeddedCartridgeResource));
+		assertTrue(jenkinsEmbeddedCartridgeResource.equals(jenkinsEmbeddableCartridge));
 	}
 
 }

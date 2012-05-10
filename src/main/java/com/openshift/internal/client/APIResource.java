@@ -40,9 +40,9 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 	private UserResource user;
 	private final List<ICartridge> standaloneCartridgeNames = new ArrayList<ICartridge>();
 	private final List<IEmbeddableCartridge> embeddedCartridgeNames = new ArrayList<IEmbeddableCartridge>();
-	
-	
-	protected APIResource(final String login, final String password, final IRestService service, final Map<String, Link> links) {
+
+	protected APIResource(final String login, final String password, final IRestService service,
+			final Map<String, Link> links) {
 		super(service, links, null);
 		this.login = login;
 		this.password = password;
@@ -68,7 +68,7 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		}
 		return this.user;
 	}
-	
+
 	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
 		if (this.domains == null) {
 			this.domains = loadDomains();
@@ -83,7 +83,7 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		}
 		return domains;
 	}
-	
+
 	public IDomain getDomain(String id) throws OpenShiftException, SocketTimeoutException {
 		for (IDomain domain : getDomains()) {
 			if (domain.getId().equals(id)) {
@@ -103,16 +103,16 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 		this.domains.add(domain);
 		return domain;
 	}
-	
+
 	public List<ICartridge> getStandaloneCartridges() throws OpenShiftException, SocketTimeoutException {
-		if(standaloneCartridgeNames.isEmpty()) {
+		if (standaloneCartridgeNames.isEmpty()) {
 			retrieveCartridges();
 		}
 		return standaloneCartridgeNames;
 	}
 
 	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException, SocketTimeoutException {
-		if(embeddedCartridgeNames.isEmpty()) {
+		if (embeddedCartridgeNames.isEmpty()) {
 			retrieveCartridges();
 		}
 		return CollectionUtils.toUnmodifiableCopy(embeddedCartridgeNames);
@@ -120,20 +120,25 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 
 	private void retrieveCartridges() throws SocketTimeoutException, OpenShiftException {
 		final List<CartridgeResourceDTO> cartridgeDTOs = new GetCartridgesRequest().execute();
-		for(CartridgeResourceDTO cartridgeDTO : cartridgeDTOs) {
+		for (CartridgeResourceDTO cartridgeDTO : cartridgeDTOs) {
 			// TODO replace by enum (standalone, embedded)
-			if("standalone".equals(cartridgeDTO.getType())) {
+			switch (cartridgeDTO.getType()) {
+			case STANDALONE:
 				this.standaloneCartridgeNames.add(new Cartridge(cartridgeDTO.getName()));
-			} else if("embedded".equals(cartridgeDTO.getType())) {
+				break;
+			case EMBEDDED:
 				this.embeddedCartridgeNames.add(new EmbeddableCartridge(cartridgeDTO.getName()));
+				break;
+			default:
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Called after a domain has been destroyed
-	 * @param domain the domain to remove from the API's domains list.
+	 * 
+	 * @param domain
+	 *            the domain to remove from the API's domains list.
 	 */
 	protected void removeDomain(final IDomain domain) {
 		this.domains.remove(domain);
@@ -153,7 +158,7 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 			return execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_ID, namespace));
 		}
 	}
-	
+
 	private class ListDomainsRequest extends ServiceRequest {
 
 		public ListDomainsRequest() throws SocketTimeoutException, OpenShiftException {

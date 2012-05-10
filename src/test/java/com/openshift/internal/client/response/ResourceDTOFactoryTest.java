@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.openshift.client.HttpMethod;
 import com.openshift.client.utils.Samples;
+import com.openshift.internal.client.CartridgeType;
 
 public class ResourceDTOFactoryTest {
 
@@ -232,7 +233,7 @@ public class ResourceDTOFactoryTest {
 		assertThat(response.getDataType()).isEqualTo(EnumDataType.cartridge);
 		final CartridgeResourceDTO cartridge = response.getData();
 		assertThat(cartridge.getName()).isEqualTo("mysql-5.1");
-		assertThat(cartridge.getType()).isEqualTo("embedded");
+		assertThat(cartridge.getType()).isEqualTo(CartridgeType.EMBEDDED);
 		assertThat(cartridge.getLinks()).hasSize(6);
 
 	}

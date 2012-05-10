@@ -13,28 +13,29 @@ package com.openshift.internal.client.response;
 import java.util.List;
 import java.util.Map;
 
+import com.openshift.internal.client.CartridgeType;
+
 /**
  * @author Xavier Coulon
  * 
  */
 public class CartridgeResourceDTO extends BaseResourceDTO {
 
-	
 	private final String name;
-	private final String type;
+	private final CartridgeType type;
 
 	public CartridgeResourceDTO(final String name, final String type, final Map<String, Link> links,
 			final List<Message> creationLog) {
 		super(links, creationLog);
 		this.name = name;
-		this.type = type;
+		this.type = CartridgeType.safeValueOf(type);
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public String getType() {
+	public CartridgeType getType() {
 		return type;
 	}
 

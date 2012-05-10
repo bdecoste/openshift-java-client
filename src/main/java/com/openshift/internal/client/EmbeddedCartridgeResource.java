@@ -30,8 +30,6 @@ import com.openshift.internal.client.response.Message;
  */
 public class EmbeddedCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
 
-	public static final String EMBEDDED_TYPE = "embedded";
-
 	protected static final String JENKINS_CLIENT = "jenkins-client";
 	protected static final String MYSQL = "mysql";
 	protected static final String PHPMYADMIN = "phpmyadmin";
@@ -46,7 +44,7 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 
 	private final String name;
 	private final String info; // not supported yet
-	private final String type;
+	private final CartridgeType type;
 	private String url;
 	private final ApplicationResource application;
 
@@ -54,7 +52,7 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		this(dto.getName(), dto.getType(), dto.getLinks(), dto.getCreationLog(), application);
 	}
 
-	protected EmbeddedCartridgeResource(final String name, final String type, final Map<String, Link> links,
+	protected EmbeddedCartridgeResource(final String name, final CartridgeType type, final Map<String, Link> links,
 			final List<Message> creationLog, final ApplicationResource application) {
 		super(application.getService(), links, creationLog);
 		this.name = name;
@@ -73,7 +71,7 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	/**
 	 * @return the type
 	 */
-	protected final String getType() {
+	protected final CartridgeType getType() {
 		return type;
 	}
 

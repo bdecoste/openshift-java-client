@@ -81,8 +81,8 @@ public class HttpServerFake {
 	}
 
 	public void stop() {
-		executor.shutdownNow();
 		silentlyClose(serverSocket);
+		executor.shutdownNow();
 	}
 
 	public void silentlyClose(ServerSocket serverSocket) {
