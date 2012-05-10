@@ -12,7 +12,6 @@ package com.openshift.internal.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -395,6 +394,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return null;
 	}
 
+	public void removeEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException, SocketTimeoutException {
+		IEmbeddedCartridge embeddedCartridge = getEmbeddedCartridge(cartridge);
+		if (embeddedCartridge != null) {
+			embeddedCartridge.destroy();
+		}
+	}
+
+
+	
 	/**
 	 * Returns the gears that this application is running on.
 	 * 

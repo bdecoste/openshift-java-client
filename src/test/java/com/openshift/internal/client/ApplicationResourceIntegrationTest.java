@@ -11,13 +11,11 @@
 package com.openshift.internal.client;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,7 +26,6 @@ import com.openshift.client.ApplicationScale;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
-import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
@@ -38,7 +35,6 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.ApplicationAssert;
 import com.openshift.client.utils.ApplicationTestUtils;
 import com.openshift.client.utils.DomainTestUtils;
-import com.openshift.client.utils.EmbeddableCartridgeAsserts;
 import com.openshift.client.utils.OpenShiftTestConfiguration;
 
 /**
@@ -71,8 +67,8 @@ public class ApplicationResourceIntegrationTest {
 		ApplicationTestUtils.silentlyDestroy1Application(domain);
 		String applicationName =
 				ApplicationTestUtils.createRandomApplicationName();
-		IApplication application = domain.createApplication(
-				applicationName, ICartridge.JBOSSAS_7);
+		IApplication application = 
+				domain.createApplication(applicationName, ICartridge.JBOSSAS_7);
 		assertThat(new ApplicationAssert(application))
 				.hasName(applicationName)
 				.hasUUID()
@@ -124,6 +120,7 @@ public class ApplicationResourceIntegrationTest {
 				.hasAlias();
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreateRubyApplication() throws Exception {
 		// String applicationName =
@@ -143,6 +140,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreateHAProxyApplication() throws Exception {
 		// String applicationName =
@@ -163,6 +161,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldRawProxyApplication() throws Exception {
 		// String applicationName =
@@ -182,6 +181,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreatePythonApplication() throws Exception {
 		// String applicationName =
@@ -201,6 +201,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreatePHPApplication() throws Exception {
 		// String applicationName =
@@ -220,6 +221,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreatePerlApplication() throws Exception {
 		// String applicationName =
@@ -239,6 +241,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreateNodeJSApplication() throws Exception {
 		// String applicationName =
@@ -258,6 +261,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldCreateJenkinsApplication() throws Exception {
 		// String applicationName =
@@ -276,22 +280,6 @@ public class ApplicationResourceIntegrationTest {
 		// ApplicationTestUtils.silentlyDestroyApplication(applicationName,
 		// application.getCartridge(), user, service);
 		// }
-	}
-
-	@Ignore
-	@Test
-	public void shouldListEmbeddedCartridges() throws SocketTimeoutException, OpenShiftException {
-		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-		assertThat(application.getEmbeddedCartridges()).isNotNull();
-	}
-
-	@Test
-	public void shouldAddEmbeddedCartridge() throws SocketTimeoutException, OpenShiftException {
-		IApplication application = ApplicationTestUtils.getOrCreateApplication(domain);
-		application.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
-		assertNotNull(application.getEmbeddedCartridges());
-		assertTrue(application.getEmbeddedCartridges().size() > 1);
-		EmbeddableCartridgeAsserts.assertThatContainsCartridge(IEmbeddableCartridge.MYSQL_51.getName(), application.getEmbeddedCartridges());
 	}
 
 	@Test
@@ -393,7 +381,6 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-//	@Ignore("OpenShiftEndpointException: node execution failure")
 	@Test
 	public void shouldConcealPortApplication() throws Exception {
 		// pre-condition
@@ -407,7 +394,6 @@ public class ApplicationResourceIntegrationTest {
 		// there's currently no API to verify the application state
 	}
 
-//	@Ignore("OpenShiftEndpointException: nnode execution failure")
 	@Test
 	public void shouldExposePortApplication() throws Exception {
 		// pre-condition
@@ -502,6 +488,7 @@ public class ApplicationResourceIntegrationTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void shouldThreadDumpJBossApplication() throws Exception {
 		// String applicationName =
@@ -535,6 +522,7 @@ public class ApplicationResourceIntegrationTest {
 		// }
 	}
 
+	@Ignore
 	@Test
 	public void shouldThreadDumpRackApplication() throws Exception {
 		// String applicationName =

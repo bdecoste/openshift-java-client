@@ -12,6 +12,7 @@ package com.openshift.client.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.text.MessageFormat;
@@ -41,6 +42,10 @@ public class EmbeddableCartridgeAsserts {
 
 	public static void assertThatContainsCartridge(String applicationName, List<IEmbeddedCartridge> cartridges) {
 		assertNotNull(getEmbeddableCartridge(applicationName, cartridges));
+	}
+
+	public static void assertThatDoesntContainsCartridge(String applicationName, List<IEmbeddedCartridge> cartridges) {
+		assertNull(getEmbeddableCartridge(applicationName, cartridges));
 	}
 
 	private static IEmbeddedCartridge getEmbeddableCartridge(String name, List<IEmbeddedCartridge> cartridges) {
