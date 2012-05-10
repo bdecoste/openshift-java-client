@@ -34,7 +34,7 @@ import com.openshift.internal.client.response.Link;
  * @author Xavier Coulon
  * @author Andre Dietisheim
  */
-public class CartridgesResourceTest {
+public class CartridgesTest {
 
 	private IHttpClient mockClient;
 
@@ -63,7 +63,7 @@ public class CartridgesResourceTest {
 	}
 
 	@Test
-	public void shouldLoadListOfEmbeddedCartridges() throws Throwable {
+	public void shouldListEmbeddableCartridges() throws Throwable {
 		// pre-conditions
 		// operation
 		final List<IEmbeddableCartridge> cartridges = connection.getEmbeddableCartridges();

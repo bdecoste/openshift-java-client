@@ -19,6 +19,7 @@ import org.junit.runners.Suite;
 	SSHKeyIntegrationTest.class,
 	DomainResourceIntegrationTest.class,
 	ApplicationResourceIntegrationTest.class,
+	CartridgesIntegrationTest.class,
 	EmbeddedCartridgeResourceIntegrationTest.class
 })
 /**
