@@ -528,7 +528,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		List<String> openshiftProps = new ArrayList<String>();
 		List<String> allEnvProps = sshExecCmd("set", EnumSshStream.INPUT);
 		for (String line : allEnvProps) {
-			if (line.startsWith("OPENSHIFT_")) {
+			if (line.startsWith("OPENSHIFT_") || line.startsWith("JENKINS_")) {
 				openshiftProps.add(line);
 			}
 		}
