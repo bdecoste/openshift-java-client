@@ -13,16 +13,19 @@ package com.openshift.internal.client;
 import com.openshift.client.IEmbeddableCartridge;
 
 /**
- * An interface that designate a cartridge that can be embedded into an application.
+ * An interface that designate a cartridge that can be embedded into an
+ * application.
+ * 
  * @author Xavier Coulon
- *
- * @see IEmbeddableCartridge for cartridges that have already been added and configured to an application.
+ * 
+ * @see IEmbeddableCartridge for cartridges that have already been added and
+ *      configured to an application.
  */
 public class EmbeddableCartridge implements IEmbeddableCartridge {
 
-	/** the embeddable cartridge name.*/
+	/** the embeddable cartridge name. */
 	private final String name;
-	
+
 	public EmbeddableCartridge(final String name) {
 		this.name = name;
 	}
@@ -31,7 +34,9 @@ public class EmbeddableCartridge implements IEmbeddableCartridge {
 		return this.name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -43,8 +48,9 @@ public class EmbeddableCartridge implements IEmbeddableCartridge {
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 * equals support comparison between EmbeddedCartridges and EmbeddableCartridges (ie, removed 'class' comparison from generated equals() implementation)
+	 * @see java.lang.Object#equals(java.lang.Object) equals support comparison
+	 *      between EmbeddedCartridges and EmbeddableCartridges (ie, removed
+	 *      'class' comparison from generated equals() implementation)
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -67,7 +73,12 @@ public class EmbeddableCartridge implements IEmbeddableCartridge {
 		}
 		return true;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "EmbeddableCartridge [" +
+				"name=" + name +
+				"]";
+	}
 
 }
