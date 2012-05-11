@@ -145,7 +145,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return getApplicationByName(name) != null;
 	}
 
-	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException {
+	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
 		List<IApplication> matchingApplications = new ArrayList<IApplication>();
 		for (IApplication application : this.applications) {
 			if (cartridge.equals(application.getCartridge())) {
@@ -156,7 +156,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException {
-		return getApplicationsByCartridge(cartridge.getName()).size() > 0;
+		return getApplicationsByCartridge(cartridge).size() > 0;
 	}
 
 	public void destroy() throws OpenShiftException, SocketTimeoutException {

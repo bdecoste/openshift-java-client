@@ -125,7 +125,7 @@ public interface IDomain extends IOpenShiftResource {
 	 */
 	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
 
-	public List<IApplication> getApplicationsByCartridge(String cartridge) throws OpenShiftException;
+	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
 
 	public boolean hasApplicationByCartridge(ICartridge cartridge) throws OpenShiftException;
 	

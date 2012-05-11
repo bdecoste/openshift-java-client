@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +54,8 @@ public class HttpClientTest {
 
 	@Before
 	public void setUp() throws IOException {
-		this.serverFake = new HttpServerFake();
+		int port = new Random().nextInt(9 * 1024) + 1024;
+		this.serverFake = new HttpServerFake(port);
 		serverFake.start();
 		this.httpClient = new UrlConnectionHttpClientBuilder()
 				.setUserAgent("com.openshift.client.test")
