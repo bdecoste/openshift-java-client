@@ -241,11 +241,20 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 				+ "]";
 	}
 
-	
 	private class GetDomainRequest extends ServiceRequest {
 		public GetDomainRequest() throws SocketTimeoutException, OpenShiftException {
 			super(LINK_GET);
 		}
+
+		protected DomainResourceDTO execute() throws OpenShiftException, SocketTimeoutException {
+			List<DomainResourceDTO> result = super.execute();
+			if (result.size() > 0) {
+				return result.get(0);
+			}
+			return null;
+		}
+		
+		
 	}
 	
 	private class ListApplicationsRequest extends ServiceRequest {

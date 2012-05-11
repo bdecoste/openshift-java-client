@@ -13,6 +13,10 @@ package com.openshift.internal.client;
 import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
 import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_ID;
@@ -36,6 +40,7 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
+import com.openshift.client.IApplication;
 import com.openshift.client.IDomain;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IHttpClient;
@@ -67,12 +72,10 @@ public class DomainResourceTest {
 		mockClient = mock(IHttpClient.class);
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
 				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/user")))
-				.thenReturn(Samples.GET_USER_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/domains")))
-				.thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(
-				new RestService("http://mock", "clientId", mockClient), "foo@redhat.com", "bar");
+		when(mockClient.get(urlEndsWith("/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService(
+				"http://mock", "clientId", mockClient), "foo@redhat.com", "bar");
 		this.user = connection.getUser();
 	}
 
@@ -189,6 +192,36 @@ public class DomainResourceTest {
 				"jumbo");
 	}
 
+	@Test
+	public void shouldRefreshDomainAndReloadApplications() throws Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains/foobar"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
+				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
+		final IDomain domain = user.getDomain("foobar");
+		domain.getApplications();
+		// operation
+		domain.refresh();
+		// verifications
+		verify(mockClient, times(1)).get(urlEndsWith("/domains/foobar")); // explicit refresh on this location
+		verify(mockClient, times(2)).get(urlEndsWith("/domains/foobar/applications")); // two calls, before and while refresh
+	}
+
+	@Test
+	public void shouldRefreshDomainAndNotReloadApplications() throws Throwable {
+		// pre-conditions
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
+				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
+		final IDomain domain = user.getDomain("foobar");
+		// operation
+		domain.refresh();
+		// verifications
+		verify(mockClient, times(2)).get(urlEndsWith("/domains")); // explicit refresh on this location
+		verify(mockClient, times(0)).get(urlEndsWith("/domains/foobar/applications")); // no call, neither before and while refresh
+	}
+
+	
 	@Test
 	@Ignore
 	public void shouldRefreshDomain() throws Throwable {
