@@ -29,6 +29,8 @@ public interface IEmbeddableCartridge {
 
 	public static final IEmbeddableCartridge ROCKMONGO_11 = new EmbeddableCartridge("rockmongo-1.1");
 	
+	public static final IEmbeddableCartridge _10GEN_MMS_AGENT_01 = new EmbeddableCartridge("10gen-mms-agent-0.1");
+	
 	public static final IEmbeddableCartridge JENKINS_14 = new EmbeddableCartridge("jenkins-client-1.4");
 
 	public static final IEmbeddableCartridge METRICS_01 = new EmbeddableCartridge("metrics-0.1");
