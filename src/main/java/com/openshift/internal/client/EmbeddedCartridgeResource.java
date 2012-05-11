@@ -145,4 +145,14 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "EmbeddedCartridgeResource [" +
+				"name=" + name  
+				+ ", info=" + info  
+				+ ", type=" + type + ", url=" + url
+				+ ", application=" + application 
+				+ "]";
+	}
+
 }
