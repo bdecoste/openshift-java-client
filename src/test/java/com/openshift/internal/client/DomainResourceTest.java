@@ -210,14 +210,14 @@ public class DomainResourceTest {
 	@Test
 	public void shouldRefreshDomainAndNotReloadApplications() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains/foobar"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
 		// operation
 		domain.refresh();
 		// verifications
-		verify(mockClient, times(2)).get(urlEndsWith("/domains")); // explicit refresh on this location
+		verify(mockClient, times(1)).get(urlEndsWith("/domains")); // explicit refresh on this location
 		verify(mockClient, times(0)).get(urlEndsWith("/domains/foobar/applications")); // no call, neither before and while refresh
 	}
 
