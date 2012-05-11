@@ -23,7 +23,6 @@ import com.openshift.client.IEmbeddableCartridge;
  */
 public class EmbeddableCartridge implements IEmbeddableCartridge {
 
-	/** the embeddable cartridge name. */
 	private final String name;
 
 	public EmbeddableCartridge(final String name) {
@@ -34,11 +33,6 @@ public class EmbeddableCartridge implements IEmbeddableCartridge {
 		return this.name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
