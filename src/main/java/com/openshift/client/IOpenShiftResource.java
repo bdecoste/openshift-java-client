@@ -1,5 +1,7 @@
 package com.openshift.client;
 
+import java.net.SocketTimeoutException;
+
 
 public interface IOpenShiftResource {
 
@@ -19,5 +21,12 @@ public interface IOpenShiftResource {
 	 * @return true if there's cretion log for this resource
 	 */
 	public boolean hasCreationLog();
+	
+	/**
+	 * Refresh the resource and its list of children resources that were previously loaded
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	public void refresh() throws OpenShiftException, SocketTimeoutException;
 
 }

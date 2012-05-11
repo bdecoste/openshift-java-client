@@ -524,7 +524,7 @@ public class ApplicationResourceTest {
 			@Override
 			public boolean matches(Object value) {
 				final EmbeddedCartridgeResource cartridge = (EmbeddedCartridgeResource) value;
-				return cartridge.getName() != null && !LinkRetriever.retrieveLinks(cartridge).isEmpty();
+				return cartridge != null && cartridge.getName() != null && !LinkRetriever.retrieveLinks(cartridge).isEmpty();
 			}
 		});
 		verify(mockClient, times(1)).post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges"));

@@ -92,9 +92,13 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return (api.getDomains().size() > 0);
 	}
 
-	public void refresh() throws OpenShiftException {
-		// TODO Auto-generated method stub
-
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
+		if(this.sshKeys != null) {
+			this.sshKeys = null;
+			loadKeys();
+		}
+		DomainResource defaultDomain = (DomainResource) getDefaultDomain();
+		defaultDomain.refresh();
 	}
 
 	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,

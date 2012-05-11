@@ -35,6 +35,7 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
  */
 public class DomainResource extends AbstractOpenShiftResource implements IDomain {
 
+	private static final String LINK_GET = "GET";
 	private static final String LINK_LIST_APPLICATIONS = "LIST_APPLICATIONS";
 	private static final String LINK_ADD_APPLICATION = "ADD_APPLICATION";
 	private static final String LINK_UPDATE = "UPDATE";
@@ -169,16 +170,25 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 
 	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
 		if (this.applications == null) {
-			this.applications = new ArrayList<IApplication>();
-			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
-			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
-				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
-				final IApplication application =
-						new ApplicationResource(applicationDTO, cartridge, this);
-				this.applications.add(application);
-			}
+			this.applications = loadApplications();
 		}
 		return CollectionUtils.toUnmodifiableCopy(applications);
+	}
+
+	/**
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	private List<IApplication> loadApplications() throws OpenShiftException, SocketTimeoutException {
+		List<IApplication> apps = new ArrayList<IApplication>();
+		List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
+		for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
+			final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
+			final IApplication application =
+					new ApplicationResource(applicationDTO, cartridge, this);
+			apps.add(application);
+		}
+		return apps;
 	}
 
 	protected void removeApplication(IApplication application) {
@@ -210,6 +220,18 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		}
 		return gearSizes;
 	}
+	
+	
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
+		final DomainResourceDTO domainResourceDTO =  new GetDomainRequest().execute();
+		this.id = domainResourceDTO.getNamespace();
+		this.suffix = domainResourceDTO.getSuffix();
+		if(this.applications != null) {
+			this.applications = null;
+			loadApplications();
+		}
+		
+	}
 
 	@Override
 	public String toString() {
@@ -219,6 +241,13 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 				+ "]";
 	}
 
+	
+	private class GetDomainRequest extends ServiceRequest {
+		public GetDomainRequest() throws SocketTimeoutException, OpenShiftException {
+			super(LINK_GET);
+		}
+	}
+	
 	private class ListApplicationsRequest extends ServiceRequest {
 
 		public ListApplicationsRequest() throws SocketTimeoutException, OpenShiftException {

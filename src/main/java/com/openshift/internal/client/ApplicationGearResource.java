@@ -10,12 +10,14 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import java.net.SocketTimeoutException;
 import java.util.Collections;
 import java.util.List;
 
 import com.openshift.client.IApplication;
 import com.openshift.client.IApplicationGear;
 import com.openshift.client.IApplicationGearComponent;
+import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.GearResourceDTO;
 
 /**
@@ -76,6 +78,9 @@ public class ApplicationGearResource extends AbstractOpenShiftResource implement
 	public final IApplication getApplication() {
 		return applicationResource;
 	}
-
+	
+	@Override
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	}
 
 }

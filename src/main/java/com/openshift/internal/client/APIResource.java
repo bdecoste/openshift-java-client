@@ -133,6 +133,10 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 			}
 		}
 	}
+	
+	@Override
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	}
 
 	/**
 	 * Called after a domain has been destroyed
@@ -191,4 +195,5 @@ public class APIResource extends AbstractOpenShiftResource implements IOpenShift
 			return super.execute();
 		}
 	}
+
 }

@@ -59,6 +59,10 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 		return publicKey;
 	}
 
+	@Override
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	}
+	
 	public void destroy() throws SocketTimeoutException, OpenShiftException {
 		new DeleteKeyRequest().execute();
 		user.removeSSHKey(this);

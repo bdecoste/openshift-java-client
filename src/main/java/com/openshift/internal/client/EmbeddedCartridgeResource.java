@@ -93,6 +93,10 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		return url;
 	}
 
+	@Override
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	}
+	
 	public void destroy() throws OpenShiftException, SocketTimeoutException {
 		new DeleteCartridgeRequest().execute();
 		application.removeEmbeddedCartridge(this);

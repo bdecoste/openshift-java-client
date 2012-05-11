@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author André Dietisheim
  */
-public interface IUser {
+public interface IUser extends IOpenShiftResource {
 
 	public static final String ID = "com.openshift.client";
 
@@ -52,7 +52,5 @@ public interface IUser {
 	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 	
 	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
-
-	public void refresh() throws OpenShiftException;
 
 }

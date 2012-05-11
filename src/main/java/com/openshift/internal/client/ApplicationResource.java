@@ -328,7 +328,10 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
 				.execute(cartridge.getName());
 		final EmbeddedCartridgeResource embeddedCartridge = new EmbeddedCartridgeResource(embeddedCartridgeDTO, this);
-		doGetEmbeddedCartridges().add(embeddedCartridge);
+		if(this.embeddedCartridges == null) {
+			loadEmbeddedCartridges();
+		}
+		this.embeddedCartridges.add(embeddedCartridge);
 		return embeddedCartridge;
 	}
 
@@ -353,21 +356,22 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.embeddedCartridges.remove(embeddedCartridge);
 	}
 
-	protected List<IEmbeddedCartridge> doGetEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
+	private List<IEmbeddedCartridge> loadEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
 		// load collection if necessary
-		if (embeddedCartridges == null) {
-			this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
-			List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
-			for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-				IEmbeddedCartridge embeddableCartridge = new EmbeddedCartridgeResource(embeddableCartridgeDTO, this);
-				this.embeddedCartridges.add(embeddableCartridge);
-			}
+		this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
+		List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
+		for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
+			IEmbeddedCartridge embeddableCartridge = new EmbeddedCartridgeResource(embeddableCartridgeDTO, this);
+			embeddedCartridges.add(embeddableCartridge);
 		}
 		return embeddedCartridges;
 	}
 
 	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException {
-		return CollectionUtils.toUnmodifiableCopy(doGetEmbeddedCartridges());
+		if(this.embeddedCartridges == null) {
+			this.embeddedCartridges = loadEmbeddedCartridges();
+		}
+		return CollectionUtils.toUnmodifiableCopy(this.embeddedCartridges);
 	}
 
 	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException {
@@ -415,16 +419,26 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	public List<IApplicationGear> getGears() throws SocketTimeoutException, OpenShiftException {
 		// load collection if necessary
 		if (gears == null) {
-			this.gears = new ArrayList<IApplicationGear>();
-			List<GearResourceDTO> gearDTOs = new ListGearsRequest().execute();
-			for (GearResourceDTO gearDTO : gearDTOs) {
-				final List<IApplicationGearComponent> components = new ArrayList<IApplicationGearComponent>();
-				for (GearComponentDTO gearComponentDTO : gearDTO.getComponents()) {
-					components.add(new ApplicationGearComponentResource(gearComponentDTO));
-				}
-				IApplicationGear gear = new ApplicationGearResource(gearDTO, components, this);
-				this.gears.add(gear);
+			this.gears = loadGears();
+		}
+		return Collections.unmodifiableList(gears);
+	}
+
+	/**
+	 * @return
+	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException
+	 */
+	private List<IApplicationGear> loadGears() throws OpenShiftException, SocketTimeoutException {
+		this.gears = new ArrayList<IApplicationGear>();
+		List<GearResourceDTO> gearDTOs = new ListGearsRequest().execute();
+		for (GearResourceDTO gearDTO : gearDTOs) {
+			final List<IApplicationGearComponent> components = new ArrayList<IApplicationGearComponent>();
+			for (GearComponentDTO gearComponentDTO : gearDTO.getComponents()) {
+				components.add(new ApplicationGearComponentResource(gearComponentDTO));
 			}
+			IApplicationGear gear = new ApplicationGearResource(gearDTO, components, this);
+			gears.add(gear);
 		}
 		return gears;
 	}
@@ -485,9 +499,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public void refresh() throws SocketTimeoutException, OpenShiftException {
-		this.embeddedCartridges = null;
-		this.gears = null;
-		this.ports = null;
+		if (this.embeddedCartridges != null) {
+			this.embeddedCartridges = loadEmbeddedCartridges();
+		}
+		if (this.gears != null) {
+			this.gears = loadGears();
+		}
+		if (this.ports != null) {
+			this.ports = loadPorts();
+		}
 	}
 
 	public void setSSHSession(final Session session) {
@@ -512,13 +532,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	}
 
 	public List<IApplicationPortForwarding> refreshForwardablePorts() throws OpenShiftSSHOperationException {
-		this.ports = listPorts();
+		this.ports = loadPorts();
 		return this.ports;
 	}
 
 	public List<IApplicationPortForwarding> getForwardablePorts() throws OpenShiftSSHOperationException {
 		if (ports == null) {
-			this.ports = listPorts();
+			this.ports = loadPorts();
 		}
 		return ports;
 	}
@@ -543,16 +563,16 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @throws JSchException
 	 * @throws OpenShiftSSHOperationException
 	 */
-	private List<IApplicationPortForwarding> listPorts() throws OpenShiftSSHOperationException {
-		List<IApplicationPortForwarding> result = new ArrayList<IApplicationPortForwarding>();
+	private List<IApplicationPortForwarding> loadPorts() throws OpenShiftSSHOperationException {
+		this.ports = new ArrayList<IApplicationPortForwarding>();
 		List<String> lines = sshExecCmd("rhc-list-ports", EnumSshStream.EXT_INPUT);
 		for (String line : lines) {
 			ApplicationPortForwarding port = extractForwardablePortFrom(this, line);
 			if (port != null) {
-				result.add(port);
+				ports.add(port);
 			}
 		}
-		return result;
+		return ports;
 	}
 
 	private enum EnumSshStream {

@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
+import java.net.SocketTimeoutException;
+
 import com.openshift.client.IApplicationGearComponent;
+import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.GearComponentDTO;
 
 public class ApplicationGearComponentResource extends AbstractOpenShiftResource implements IApplicationGearComponent {
@@ -78,6 +81,10 @@ public class ApplicationGearComponentResource extends AbstractOpenShiftResource 
 	 */
 	protected final String getProxyPort() {
 		return proxyPort;
+	}
+	
+	@Override
+	public void refresh() throws OpenShiftException, SocketTimeoutException {
 	}
 
 	@Override

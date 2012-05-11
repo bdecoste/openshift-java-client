@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author André Dietisheim
  */
-public interface IDomain {
+public interface IDomain extends IOpenShiftResource {
 	
 	/**
 	 * @return the domain id (formerly known as 'namespace'). A unique litteral identifier on OpenShift.
@@ -136,5 +136,5 @@ public interface IDomain {
 	 * @throws OpenShiftException
 	 */
 	public List<IGearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException;
-
+	
 }
