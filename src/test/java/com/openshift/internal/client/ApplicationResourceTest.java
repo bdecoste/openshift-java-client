@@ -26,7 +26,7 @@ import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH1ELEM
 import static com.openshift.client.utils.Samples.GET_APPLICATION_GEARS_WITH2ELEMENTS_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH2CARTRIDGES2ALIASES_JSON;
-import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
+import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING;
 import static com.openshift.client.utils.Samples.REMOVE_APPLICATION_ALIAS_JSON;
 import static com.openshift.client.utils.Samples.START_APPLICATION_JSON;
 import static com.openshift.client.utils.Samples.STOP_APPLICATION_JSON;
@@ -89,7 +89,7 @@ public class ApplicationResourceTest {
 				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService(
 				"http://mock",
 				"clientId", mockClient), "foo@redhat.com", "bar");

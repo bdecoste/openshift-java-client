@@ -67,7 +67,7 @@ public class UserTest {
 	public void shouldUpdateDomainNamespace() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+				Samples.GET_DOMAINS_1EXISTING.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
 				Samples.UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
@@ -85,7 +85,7 @@ public class UserTest {
 	public void shouldLoadEmptyListOfApplications() throws Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(
-				Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+				Samples.GET_DOMAINS_1EXISTING.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				Samples.GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		// operation

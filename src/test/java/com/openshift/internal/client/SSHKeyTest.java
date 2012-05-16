@@ -12,7 +12,7 @@ package com.openshift.internal.client;
 
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static com.openshift.client.utils.FileUtils.createRandomTempFile;
-import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
+import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -64,7 +64,7 @@ public class SSHKeyTest {
 		.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		this.service = new RestService("http://mock",
 				"clientId", mockClient);
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(service, "foo@redhat.com", "bar");

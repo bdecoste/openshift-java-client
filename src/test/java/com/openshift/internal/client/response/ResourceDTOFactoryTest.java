@@ -120,7 +120,7 @@ public class ResourceDTOFactoryTest {
 	@Test
 	public void shouldUnmarshallGetDomainsWith1ExistingResponseBody() throws Throwable {
 		// pre-conditions
-		String content = Samples.GET_DOMAINS_1EXISTING_JSON.getContentAsString();
+		String content = Samples.GET_DOMAINS_1EXISTING.getContentAsString();
 		assertNotNull(content);
 		// operation
 		RestResponse response = ResourceDTOFactory.get(content);
@@ -157,7 +157,7 @@ public class ResourceDTOFactoryTest {
 	@Test
 	public void shouldUnmarshallGetDomainResponseBody() throws Throwable {
 		// pre-conditions
-		String content = Samples.GET_DOMAIN_JSON.getContentAsString();
+		String content = Samples.GET_DOMAIN.getContentAsString();
 		assertNotNull(content);
 		// operation
 		RestResponse response = ResourceDTOFactory.get(content);

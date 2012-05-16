@@ -14,10 +14,8 @@ import static com.openshift.client.utils.MockUtils.anyForm;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATION_WITH1CARTRIDGE1ALIAS_JSON;
-import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING_JSON;
+import static com.openshift.client.utils.Samples.GET_DOMAIN;
+import static com.openshift.client.utils.Samples.GET_DOMAINS_1EXISTING;
 import static com.openshift.client.utils.Samples.GET_DOMAINS_NOEXISTING_JSON;
 import static com.openshift.client.utils.Samples.UPDATE_DOMAIN_ID;
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
@@ -40,7 +38,6 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
-import com.openshift.client.IApplication;
 import com.openshift.client.IDomain;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IHttpClient;
@@ -73,7 +70,7 @@ public class DomainResourceTest {
 		when(mockClient.get(urlEndsWith("/broker/rest/api")))
 				.thenReturn(Samples.GET_REST_API_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(Samples.GET_USER_JSON.getContentAsString());
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService(
 				"http://mock", "clientId", mockClient), "foo@redhat.com", "bar");
 		this.user = connection.getUser();
@@ -94,7 +91,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldLoadSingleUserDomain() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		// operation
 		final List<IDomain> domains = user.getDomains();
 		// verifications
@@ -119,7 +116,7 @@ public class DomainResourceTest {
 	@Test(expected = OpenShiftException.class)
 	public void shouldNotRecreateExistingDomain() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		when(mockClient.post(anyMapOf(String.class, Object.class), urlEndsWith("/domains"))).thenReturn(
 				ADD_DOMAIN_JSON.getContentAsString());
 		// operation
@@ -131,7 +128,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldDestroyDomain() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenReturn(
 				DELETE_DOMAIN_JSON.getContentAsString());
 		// operation
@@ -145,7 +142,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldNotDestroyDomainWithApp() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		final BadRequestException badRequestException = new BadRequestException(
 				"Domain contains applications. Delete applications first or set force to true.", null);
 		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar"))).thenThrow(badRequestException);
@@ -165,7 +162,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldUpdateDomainId() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
 				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
@@ -181,7 +178,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldListAvailableGearSizes() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
 		when(mockClient.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/foobar"))).thenReturn(
 				UPDATE_DOMAIN_ID.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
@@ -195,7 +192,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldRefreshDomainAndReloadApplications() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains/foobar"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains/foobar"))).thenReturn(GET_DOMAIN.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
@@ -210,7 +207,7 @@ public class DomainResourceTest {
 	@Test
 	public void shouldRefreshDomainAndNotReloadApplications() throws Throwable {
 		// pre-conditions
-		when(mockClient.get(urlEndsWith("/domains/foobar"))).thenReturn(GET_DOMAINS_1EXISTING_JSON.getContentAsString());
+		when(mockClient.get(urlEndsWith("/domains/foobar"))).thenReturn(GET_DOMAIN.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenReturn(
 				GET_APPLICATIONS_WITH2APPS_JSON.getContentAsString());
 		final IDomain domain = user.getDomain("foobar");
