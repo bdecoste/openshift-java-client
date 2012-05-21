@@ -93,12 +93,14 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	}
 
 	public void refresh() throws OpenShiftException, SocketTimeoutException {
-		if(this.sshKeys != null) {
+		if (this.sshKeys != null) {
 			this.sshKeys = null;
 			loadKeys();
 		}
 		DomainResource defaultDomain = (DomainResource) getDefaultDomain();
-		defaultDomain.refresh();
+		if (defaultDomain != null) {
+			defaultDomain.refresh();
+		}
 	}
 
 	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
@@ -169,9 +171,8 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	}
 
 	/**
-	 * Adds the given ssh key with the given name. Key names and public keys
-	 * have to be unique. Throws OpenShiftSSHKeyException if either the key name
-	 * or the public key are already used.
+	 * Adds the given ssh key with the given name. Key names and public keys have to be unique. Throws
+	 * OpenShiftSSHKeyException if either the key name or the public key are already used.
 	 * 
 	 * @param name
 	 *            the name to identify the key
@@ -223,12 +224,11 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 			super("ADD_KEY");
 		}
 
-		public KeyResourceDTO execute(SSHKeyType type, String name, String content)
-				throws SocketTimeoutException, OpenShiftException {
-			return super.execute(
-					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_TYPE, type.getTypeId())
-					, new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name)
-					, new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CONTENT, content));
+		public KeyResourceDTO execute(SSHKeyType type, String name, String content) throws SocketTimeoutException,
+				OpenShiftException {
+			return super.execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_TYPE, type.getTypeId()),
+					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name), new ServiceParameter(
+							IOpenShiftJsonConstants.PROPERTY_CONTENT, content));
 		}
 	}
 
