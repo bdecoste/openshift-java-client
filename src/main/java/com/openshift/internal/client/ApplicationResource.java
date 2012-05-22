@@ -587,6 +587,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 */
 	private List<String> sshExecCmd(final String command, final EnumSshStream streamToUse) throws OpenShiftSSHOperationException {
 		final Session session = getSSHSession();
+		if(session == null) {
+			throw new OpenShiftSSHOperationException("No SSH session available for application ''{0}''", this.getName());
+		}
 		Channel channel = null;
 		BufferedReader reader = null;
 		try {
