@@ -447,43 +447,43 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		try {
 			long startTime = System.currentTimeMillis();
 
-			boolean resolved = waitForResolved(timeout, startTime);
-			if (!resolved) {
-				throw new OpenShiftException(
-						"Could not reach {0}, host resolution was not successful while waiting for timeout",
-						healthCheckUrl);
+			if (!waitForResolved(timeout, startTime)) {
+				return false;
 			}
 
 			return waitForPositiveHealthResponse(timeout, startTime);
 		} catch (InterruptedException e) {
 			return false;
 		} catch (SocketTimeoutException e) {
-			throw new OpenShiftException(e, "Could not reach {0}, connection timeouted", healthCheckUrl);
-		}
+			return false;
+		} 
 	}
 
 	private boolean waitForPositiveHealthResponse(long timeout, long startTime) throws OpenShiftException,
-			InterruptedException, SocketTimeoutException, OpenShiftEndpointException {
-		String response = "";
-		while (!isPositiveHealthResponse(response) && !isTimeouted(timeout, startTime)) {
+			InterruptedException, OpenShiftEndpointException, SocketTimeoutException {
+		String response = null;
+		while (!isPositiveHealthResponse(response) 
+				&& !isTimeouted(timeout, startTime)) {
 			try {
 				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
 				response = getService().request(healthCheckUrl, HttpMethod.GET, null);
 			} catch (OpenShiftEndpointException e) {
 				throw e;
 			} catch (OpenShiftException e) {
-			}
+			}			
 		}
 		return isPositiveHealthResponse(response);
 	}
 
 	private boolean isPositiveHealthResponse(String response) throws OpenShiftException {
-		return response.startsWith(getHealthCheckSuccessResponse());
+		return response != null
+				&& response.startsWith(getHealthCheckSuccessResponse());
 	}
 
 	private boolean waitForResolved(long timeout, long startTime) throws OpenShiftException, InterruptedException {
 		try {
-			while (!HostUtils.canResolv(healthCheckUrl) && !isTimeouted(timeout, startTime)) {
+			while (!HostUtils.canResolv(healthCheckUrl) 
+					&& !isTimeouted(timeout, startTime)) {
 				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
 			}
 			return HostUtils.canResolv(healthCheckUrl);

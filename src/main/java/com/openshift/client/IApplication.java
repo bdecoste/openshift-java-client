@@ -262,6 +262,7 @@ public interface IApplication extends IOpenShiftResource {
 	 * @param timeout
 	 * @return
 	 * @throws OpenShiftException
+	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IApplication#getApplicationUrl()
 	 */

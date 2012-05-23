@@ -22,6 +22,7 @@ import com.openshift.client.IDomain;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.OpenShiftTimeoutException;
 import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.DomainResourceDTO;
 import com.openshift.internal.client.response.Link;
@@ -130,7 +131,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return application;
 	}
 
-	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException {
+	public IApplication getApplicationByName(String name) throws OpenShiftException {
 		IApplication matchingApplication = null;
 		for (IApplication application : getApplications()) {
 			if (application.getName().equals(name)) {
@@ -141,13 +142,13 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return matchingApplication;
 	}
 
-	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException {
+	public boolean hasApplicationByName(String name) throws OpenShiftException {
 		return getApplicationByName(name) != null;
 	}
 
 	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException {
 		List<IApplication> matchingApplications = new ArrayList<IApplication>();
-		for (IApplication application : this.applications) {
+		for (IApplication application : getApplications()) {
 			if (cartridge.equals(application.getCartridge())) {
 				matchingApplications.add(application);
 			}
@@ -168,7 +169,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		connectionResource.removeDomain(this);
 	}
 
-	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException {
+	public List<IApplication> getApplications() throws OpenShiftException {
 		if (this.applications == null) {
 			this.applications = loadApplications();
 		}
@@ -179,16 +180,21 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	private List<IApplication> loadApplications() throws OpenShiftException, SocketTimeoutException {
+	private List<IApplication> loadApplications() throws OpenShiftException {
 		List<IApplication> apps = new ArrayList<IApplication>();
-		List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
-		for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
-			final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
-			final IApplication application =
-					new ApplicationResource(applicationDTO, cartridge, this);
-			apps.add(application);
+		try {
+			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
+			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
+				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
+				final IApplication application =
+						new ApplicationResource(applicationDTO, cartridge, this);
+				apps.add(application);
+			}
+			return apps;
+		} catch (SocketTimeoutException e) {
+			// TODO: wrap all socket timeout exception so that user code does not have to catch 2x
+			throw new OpenShiftTimeoutException(e, "Could not get applications for domain {0}. Connection timeouted.", getId());
 		}
-		return apps;
 	}
 
 	protected void removeApplication(IApplication application) {

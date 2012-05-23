@@ -97,7 +97,7 @@ public interface IDomain extends IOpenShiftResource {
 
 	public IApplication createApplication(final String name, final ICartridge cartridge) throws OpenShiftException, SocketTimeoutException ;
 
-	public List<IApplication> getApplications() throws OpenShiftException, SocketTimeoutException;
+	public List<IApplication> getApplications() throws OpenShiftException;
 	
 	/**
 	 * Returns the list of cartridges that can be used to create a new application.
@@ -114,7 +114,7 @@ public interface IDomain extends IOpenShiftResource {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public IApplication getApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
+	public IApplication getApplicationByName(String name) throws OpenShiftException;
 
 	/**
 	 * Returns true if the application identified by the given name exists in the domain.
@@ -123,7 +123,7 @@ public interface IDomain extends IOpenShiftResource {
 	 * @throws OpenShiftException
 	 * @throws SocketTimeoutException
 	 */
-	public boolean hasApplicationByName(String name) throws OpenShiftException, SocketTimeoutException;
+	public boolean hasApplicationByName(String name) throws OpenShiftException;
 
 	public List<IApplication> getApplicationsByCartridge(ICartridge cartridge) throws OpenShiftException;
 

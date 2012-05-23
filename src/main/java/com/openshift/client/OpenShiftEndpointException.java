@@ -60,7 +60,10 @@ public class OpenShiftEndpointException extends OpenShiftException {
 			return ResourceDTOFactory.get(response).getMessages();
 		} catch (OpenShiftException e) {
 			LOGGER.error("Unable to parse the response", e);
+		} catch (IllegalArgumentException e) {
+			LOGGER.error("Unable to parse the response", e);
 		}
+		
 		return null;
 	}
 	
