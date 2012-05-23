@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import java.net.SocketTimeoutException;
 import java.util.List;
 
 /**
@@ -34,26 +33,23 @@ public interface IDomain extends IOpenShiftResource {
 	 * Rename the current domain with the given id....
 	 * @param id
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void rename(String id) throws OpenShiftException, SocketTimeoutException;
+	public void rename(String id) throws OpenShiftException;
 	
 	/**
 	 * Returns the currently connected user that manages this domain.
 	 * 
 	 * @return
 	 * @throws OpenShiftException 
-	 * @throws SocketTimeoutException 
 	 */
-	public IUser getUser() throws SocketTimeoutException, OpenShiftException;
+	public IUser getUser() throws OpenShiftException;
 
 	
 	/**
 	 * Destroys the current domain. This method works only if it has not application.
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void destroy() throws OpenShiftException, SocketTimeoutException;
+	public void destroy() throws OpenShiftException;
 
 	/**
 	 * Destroys the current domain, using the 'force' parameter to also destroy the domain applications. The domain cannot
@@ -61,9 +57,8 @@ public interface IDomain extends IOpenShiftResource {
 	 * 
 	 * @param force
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void destroy(final boolean force) throws OpenShiftException, SocketTimeoutException;
+	public void destroy(final boolean force) throws OpenShiftException;
 
 	/**
 	 * Waits for the domain to become accessible. A domain is considered as accessible as soon as at least 1 application
@@ -87,15 +82,14 @@ public interface IDomain extends IOpenShiftResource {
 	 *            'small')
 	 * @return
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException 
 	 */
-	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale, final IGearProfile gearProfile) throws OpenShiftException, SocketTimeoutException;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale, final IGearProfile gearProfile) throws OpenShiftException;
 
-	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale) throws OpenShiftException, SocketTimeoutException ;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale) throws OpenShiftException ;
 
-	public IApplication createApplication(final String name, final ICartridge cartridge, final IGearProfile gearProfile) throws OpenShiftException, SocketTimeoutException;
+	public IApplication createApplication(final String name, final ICartridge cartridge, final IGearProfile gearProfile) throws OpenShiftException;
 
-	public IApplication createApplication(final String name, final ICartridge cartridge) throws OpenShiftException, SocketTimeoutException ;
+	public IApplication createApplication(final String name, final ICartridge cartridge) throws OpenShiftException ;
 
 	public List<IApplication> getApplications() throws OpenShiftException;
 	
@@ -103,16 +97,14 @@ public interface IDomain extends IOpenShiftResource {
 	 * Returns the list of cartridges that can be used to create a new application.
 	 * @return the list of cartridges that can be used to create a new application.
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public List<String> getAvailableCartridgeNames() throws OpenShiftException, SocketTimeoutException;
+	public List<String> getAvailableCartridgeNames() throws OpenShiftException;
 
 	/**
 	 * Returns the application identified by the given name.
 	 * @param name
 	 * @return
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
 	public IApplication getApplicationByName(String name) throws OpenShiftException;
 
@@ -121,7 +113,6 @@ public interface IDomain extends IOpenShiftResource {
 	 * @param name
 	 * @return
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
 	public boolean hasApplicationByName(String name) throws OpenShiftException;
 
@@ -132,9 +123,8 @@ public interface IDomain extends IOpenShiftResource {
 	/**
 	 * Returns the list of available gear size that the user can choose when creating a new application (application's gear size can't be changed after creation).
 	 * @return
-	 * @throws SocketTimeoutException
 	 * @throws OpenShiftException
 	 */
-	public List<IGearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException;
+	public List<IGearProfile> getAvailableGearProfiles() throws OpenShiftException;
 	
 }

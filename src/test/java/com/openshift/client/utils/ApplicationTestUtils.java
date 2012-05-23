@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client.utils;
 
-import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 import com.openshift.client.IApplication;
@@ -67,12 +66,12 @@ public class ApplicationTestUtils {
 		}
 	}
 
-	public static IApplication getOrCreateApplication(IDomain domain) throws SocketTimeoutException, OpenShiftException {
+	public static IApplication getOrCreateApplication(IDomain domain) throws OpenShiftException {
 		return getOrCreateApplication(domain, ICartridge.JBOSSAS_7);
 	}
 
 	public static IApplication getOrCreateApplication(IDomain domain, ICartridge cartridge)
-			throws SocketTimeoutException, OpenShiftException {
+			throws OpenShiftException {
 		for (Iterator<IApplication> it = domain.getApplications().iterator(); it.hasNext();) {
 			IApplication application = it.next();
 			if (cartridge.equals(application.getCartridge())) {

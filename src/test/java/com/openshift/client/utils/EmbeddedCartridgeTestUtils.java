@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.openshift.client.utils;
 
-import java.net.SocketTimeoutException;
-
 import com.openshift.client.IApplication;
 import com.openshift.client.IEmbeddableCartridge;
 import com.openshift.client.IEmbeddedCartridge;
@@ -53,7 +51,7 @@ public class EmbeddedCartridgeTestUtils {
 	}
 
 	public static void ensureHasEmbeddedCartridges(IEmbeddedCartridge cartridge, IApplication application)
-			throws SocketTimeoutException, OpenShiftException {
+			throws OpenShiftException {
 		if (cartridge == null
 				|| application == null) {
 			return;

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client.utils;
 
-import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 import com.openshift.client.IDomain;
@@ -46,7 +45,7 @@ public class DomainTestUtils {
 		}
 	}
 
-	public static IDomain getFirstDomainOrCreate(IUser user) throws SocketTimeoutException, OpenShiftException {
+	public static IDomain getFirstDomainOrCreate(IUser user) throws OpenShiftException {
 		IDomain domain = null;
 		domain = getFirstDomain(user);
 
@@ -57,7 +56,7 @@ public class DomainTestUtils {
 		return domain;
 	}
 
-	public static IDomain getFirstDomain(IUser user) throws OpenShiftException, SocketTimeoutException {
+	public static IDomain getFirstDomain(IUser user) throws OpenShiftException {
 		IDomain domain = null;
 		Iterator<IDomain> domainIterator = user.getDomains().iterator(); 
 		if (domainIterator.hasNext()) {

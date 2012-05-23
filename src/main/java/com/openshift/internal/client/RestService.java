@@ -27,6 +27,7 @@ import com.openshift.client.NotFoundOpenShiftException;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftRequestException;
+import com.openshift.client.OpenShiftTimeoutException;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.NotFoundException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
@@ -65,13 +66,11 @@ public class RestService implements IRestService {
 		client.setVersion(SERVICE_VERSION);
 	}
 
-	public RestResponse request(Link link)
-			throws OpenShiftException, SocketTimeoutException {
+	public RestResponse request(Link link) throws OpenShiftException {
 		return request(link, (Map<String, Object>) null);
 	}
 
-	public RestResponse request(Link link, ServiceParameter... serviceParameters) throws SocketTimeoutException,
-			OpenShiftException {
+	public RestResponse request(Link link, ServiceParameter... serviceParameters) throws OpenShiftException {
 		return request(link, toMap(serviceParameters));
 	}
 
@@ -84,14 +83,14 @@ public class RestService implements IRestService {
 	}
 
 	public RestResponse request(Link link, Map<String, Object> parameters)
-			throws OpenShiftException, SocketTimeoutException {
+			throws OpenShiftException {
 		validateParameters(parameters, link);
 		HttpMethod httpMethod = link.getHttpMethod();
 		String response = request(link.getHref(), httpMethod, parameters);
 		return ResourceDTOFactory.get(response);
 	}
 
-	public String request(String url, HttpMethod httpMethod, Map<String, Object> parameters) throws SocketTimeoutException, OpenShiftException {
+	public String request(String url, HttpMethod httpMethod, Map<String, Object> parameters) throws OpenShiftException {
 		try {
 			return request(getUrl(url), httpMethod, parameters);
 		} catch (UnauthorizedException e) {
@@ -106,6 +105,8 @@ public class RestService implements IRestService {
 			throw new OpenShiftException(e, e.getMessage());
 		} catch (MalformedURLException e) {
 			throw new OpenShiftException(e, e.getMessage());
+		} catch (SocketTimeoutException e) {
+			throw new OpenShiftTimeoutException("Could not request url {0}, connection timed out", url);
 		}
 	}
 

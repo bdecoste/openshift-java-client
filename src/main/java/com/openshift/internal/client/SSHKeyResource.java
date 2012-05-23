@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.SocketTimeoutException;
-
 import com.openshift.client.IOpenShiftSSHKey;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.OpenShiftUnknonwSSHKeyTypeException;
@@ -37,7 +35,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 		this.user = user;
 	}
 
-	public void setKeyType(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
+	public void setKeyType(SSHKeyType type, String publicKey) throws OpenShiftException {
 		KeyResourceDTO dto = new UpdateKeyRequest().execute(type, publicKey);
 		update(dto);
 	}
@@ -50,7 +48,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 		return type;
 	}
 
-	public void setPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftException {
+	public void setPublicKey(String publicKey) throws OpenShiftException {
 		KeyResourceDTO dto = new UpdateKeyRequest().execute(getKeyType(), publicKey);
 		update(dto);
 	}
@@ -60,10 +58,10 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 	}
 
 	@Override
-	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	public void refresh() throws OpenShiftException {
 	}
 	
-	public void destroy() throws SocketTimeoutException, OpenShiftException {
+	public void destroy() throws OpenShiftException {
 		new DeleteKeyRequest().execute();
 		user.removeSSHKey(this);
 		this.name = null;
@@ -85,7 +83,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 			super("UPDATE");
 		}
 		
-		private KeyResourceDTO execute(SSHKeyType type, String publicKey) throws SocketTimeoutException, OpenShiftException {
+		private KeyResourceDTO execute(SSHKeyType type, String publicKey) throws OpenShiftException {
 			return execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CONTENT, publicKey), 
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_TYPE, type.getTypeId()));
@@ -107,7 +105,7 @@ public class SSHKeyResource extends AbstractOpenShiftResource implements IOpenSh
 			super("DELETE");
 		}
 		
-		private void execute() throws SocketTimeoutException, OpenShiftException {
+		private void execute() throws OpenShiftException {
 			super.execute();
 		}
 	}

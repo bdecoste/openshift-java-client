@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import java.net.SocketTimeoutException;
 import java.util.List;
 
 
@@ -31,26 +30,26 @@ public interface IUser extends IOpenShiftResource {
 	
 	public IOpenShiftConnection getConnection();
 
-	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException;
+	public IDomain createDomain(String name) throws OpenShiftException;
 
-	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
+	public List<IDomain> getDomains() throws OpenShiftException;
 	
-	public IDomain getDefaultDomain() throws OpenShiftException, SocketTimeoutException;
+	public IDomain getDefaultDomain() throws OpenShiftException;
 	
-	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException;
+	public IDomain getDomain(String namespace) throws OpenShiftException;
 	
-	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException;
+	public boolean hasDomain() throws OpenShiftException;
 
-	public List<IOpenShiftSSHKey> getSSHKeys() throws OpenShiftException, SocketTimeoutException;
+	public List<IOpenShiftSSHKey> getSSHKeys() throws OpenShiftException;
 
-	public IOpenShiftSSHKey putSSHKey(String name, ISSHPublicKey key) throws OpenShiftException, SocketTimeoutException;
+	public IOpenShiftSSHKey putSSHKey(String name, ISSHPublicKey key) throws OpenShiftException;
 
-	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	public IOpenShiftSSHKey getSSHKeyByName(String name) throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 	
-	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 
-	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	public boolean hasSSHKeyName(String name) throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 	
-	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
+	public boolean hasSSHPublicKey(String publicKey) throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException;
 
 }

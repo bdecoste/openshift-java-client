@@ -27,13 +27,13 @@ public interface IRestService {
 			throws OpenShiftException, SocketTimeoutException;
 
 	public RestResponse request(Link link, ServiceParameter... serviceParameters)
-			throws SocketTimeoutException, OpenShiftException;
+			throws OpenShiftException;
 
 	public abstract RestResponse request(Link link, Map<String, Object> parameters)
-			throws OpenShiftException, SocketTimeoutException;
+			throws OpenShiftException;
 
 	public abstract String request(String url, HttpMethod httpMethod, Map<String, Object> parameters)
-			throws OpenShiftException, SocketTimeoutException;
+			throws OpenShiftException;
 
 	public abstract void setProxySet(boolean proxySet);
 

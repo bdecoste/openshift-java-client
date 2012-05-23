@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
 
@@ -94,10 +93,10 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	}
 
 	@Override
-	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	public void refresh() throws OpenShiftException {
 	}
 	
-	public void destroy() throws OpenShiftException, SocketTimeoutException {
+	public void destroy() throws OpenShiftException {
 		new DeleteCartridgeRequest().execute();
 		application.removeEmbeddedCartridge(this);
 	}

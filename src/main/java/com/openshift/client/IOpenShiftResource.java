@@ -1,6 +1,5 @@
 package com.openshift.client;
 
-import java.net.SocketTimeoutException;
 
 
 public interface IOpenShiftResource {
@@ -25,8 +24,7 @@ public interface IOpenShiftResource {
 	/**
 	 * Refresh the resource and its list of children resources that were previously loaded
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void refresh() throws OpenShiftException, SocketTimeoutException;
+	public void refresh() throws OpenShiftException;
 
 }

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import java.net.SocketTimeoutException;
 import java.util.List;
 
 /**
@@ -23,32 +22,28 @@ public interface IOpenShiftConnection {
 	 * Returns the user associated with the current OpenShift connection.
 	 * @return the user
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public IUser getUser() throws OpenShiftException, SocketTimeoutException;
+	public IUser getUser() throws OpenShiftException;
 	
 	/**
 	 * Returns the domains associated with the current OpenShift connection.
 	 * @return the domains
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException;
+	public List<IDomain> getDomains() throws OpenShiftException;
 	
 	/**
 	 * Returns the available standalone cartridges associated with the current OpenShift connection.
 	 * @return the available standalone cartridges
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public List<ICartridge> getStandaloneCartridges() throws OpenShiftException, SocketTimeoutException;
+	public List<ICartridge> getStandaloneCartridges() throws OpenShiftException;
 	
 	/**
 	 * Returns the available embeddable cartridges associated with the current OpenShift connection.
 	 * @return the available embeddable cartridges 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException, SocketTimeoutException;
+	public List<IEmbeddableCartridge> getEmbeddableCartridges() throws OpenShiftException;
 
 }

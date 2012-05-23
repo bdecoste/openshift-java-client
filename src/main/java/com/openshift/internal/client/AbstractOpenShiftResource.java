@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
 
@@ -66,9 +65,8 @@ public abstract class AbstractOpenShiftResource implements IOpenShiftResource {
 	 * 
 	 * @return the links
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	Map<String, Link> getLinks() throws SocketTimeoutException, OpenShiftException {
+	Map<String, Link> getLinks() throws OpenShiftException {
 		return links;
 	}
 
@@ -95,10 +93,8 @@ public abstract class AbstractOpenShiftResource implements IOpenShiftResource {
 	 * @return the link
 	 * @throws OpenShiftException
 	 *             the open shift exception
-	 * @throws SocketTimeoutException
-	 *             the socket timeout exception
 	 */
-	protected Link getLink(String linkName) throws SocketTimeoutException, OpenShiftException {
+	protected Link getLink(String linkName) throws OpenShiftException {
 		Link link = null;
 		if (getLinks() != null) {
 			link = getLinks().get(linkName);
@@ -122,19 +118,6 @@ public abstract class AbstractOpenShiftResource implements IOpenShiftResource {
 	 * @return the t
 	 * @throws OpenShiftException
 	 *             the open shift exception
-	 * @throws SocketTimeoutException
-	 *             the socket timeout exception <T> T execute(Link link,
-	 *             ServiceParameter... parameters) throws OpenShiftException,
-	 *             SocketTimeoutException { assert link != null; // avoid
-	 *             concurrency issues, to prevent reading the links map while it
-	 *             is still being retrieved try { RestResponse response =
-	 *             service.execute(link, parameters); return response.getData();
-	 *             } catch (MalformedURLException e) { throw new
-	 *             OpenShiftException(e, "Failed to execute {0} {1}",
-	 *             link.getHttpMethod().name(), link.getHref()); } catch
-	 *             (UnsupportedEncodingException e) { throw new
-	 *             OpenShiftException(e, "Failed to execute {0} {1}",
-	 *             link.getHttpMethod().name(), link.getHref()); } }
 	 */
 
 	protected boolean areLinksLoaded() {
@@ -149,7 +132,7 @@ public abstract class AbstractOpenShiftResource implements IOpenShiftResource {
 			this.linkName = linkName;
 		}
 
-		protected <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException {
+		protected <DTO> DTO execute(ServiceParameter... parameters) throws OpenShiftException {
 			Link link = getLink(linkName);
 			RestResponse response = getService().request(link, parameters);
 			// in some cases, there is not response body, just a return code to

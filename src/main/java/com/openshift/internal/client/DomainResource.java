@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import com.openshift.client.IDomain;
 import com.openshift.client.IGearProfile;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftException;
-import com.openshift.client.OpenShiftTimeoutException;
 import com.openshift.internal.client.response.ApplicationResourceDTO;
 import com.openshift.internal.client.response.DomainResourceDTO;
 import com.openshift.internal.client.response.Link;
@@ -70,7 +68,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return suffix;
 	}
 
-	public void rename(String id) throws OpenShiftException, SocketTimeoutException {
+	public void rename(String id) throws OpenShiftException {
 		DomainResourceDTO domainDTO = new UpdateDomainRequest().execute(id);
 		this.id = domainDTO.getNamespace();
 		this.suffix = domainDTO.getSuffix();
@@ -78,7 +76,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		this.getLinks().putAll(domainDTO.getLinks());
 	}
 
-	public IUser getUser() throws SocketTimeoutException, OpenShiftException {
+	public IUser getUser() throws OpenShiftException {
 		return connectionResource.getUser();
 	}
 
@@ -95,23 +93,23 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	public IApplication createApplication(final String name, final ICartridge cartridge)
-			throws OpenShiftException, SocketTimeoutException {
+			throws OpenShiftException {
 		return createApplication(name, cartridge, null, null);
 	}
 
 	public IApplication createApplication(final String name, final ICartridge cartridge, final ApplicationScale scale)
-			throws OpenShiftException, SocketTimeoutException {
+			throws OpenShiftException {
 		return createApplication(name, cartridge, scale, null);
 	}
 
 	public IApplication createApplication(final String name, final ICartridge cartridge, final IGearProfile gearProfile)
-			throws OpenShiftException, SocketTimeoutException {
+			throws OpenShiftException {
 		return createApplication(name, cartridge, null, gearProfile);
 	}
 
 	public IApplication createApplication(final String name, final ICartridge cartridge,
 			final ApplicationScale scale, final IGearProfile gearProfile)
-			throws OpenShiftException, SocketTimeoutException {
+			throws OpenShiftException {
 		// check that an application with the same does not already exists, and
 		// btw, loads the list of applications if needed (lazy)
 		if (cartridge == null) {
@@ -124,11 +122,11 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			throw new OpenShiftException("Application with name \"{0}\" already exists.", name);
 		}
 
-		ApplicationResourceDTO applicationDTO =
-				new CreateApplicationRequest().execute(name, cartridge.getName(), scale, gearProfile);
-		IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
-		this.applications.add(application);
-		return application;
+			ApplicationResourceDTO applicationDTO = 
+					new CreateApplicationRequest().execute(name, cartridge.getName(),scale, gearProfile);
+			IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
+			this.applications.add(application);
+			return application;
 	}
 
 	public IApplication getApplicationByName(String name) throws OpenShiftException {
@@ -160,11 +158,11 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return getApplicationsByCartridge(cartridge).size() > 0;
 	}
 
-	public void destroy() throws OpenShiftException, SocketTimeoutException {
+	public void destroy() throws OpenShiftException {
 		destroy(false);
 	}
 
-	public void destroy(boolean force) throws OpenShiftException, SocketTimeoutException {
+	public void destroy(boolean force) throws OpenShiftException {
 		new DeleteDomainRequest().execute(force);
 		connectionResource.removeDomain(this);
 	}
@@ -178,23 +176,17 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 
 	/**
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
 	private List<IApplication> loadApplications() throws OpenShiftException {
 		List<IApplication> apps = new ArrayList<IApplication>();
-		try {
-			List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
-			for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
-				final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
-				final IApplication application =
-						new ApplicationResource(applicationDTO, cartridge, this);
-				apps.add(application);
-			}
-			return apps;
-		} catch (SocketTimeoutException e) {
-			// TODO: wrap all socket timeout exception so that user code does not have to catch 2x
-			throw new OpenShiftTimeoutException(e, "Could not get applications for domain {0}. Connection timeouted.", getId());
+		List<ApplicationResourceDTO> applicationDTOs = new ListApplicationsRequest().execute();
+		for (ApplicationResourceDTO applicationDTO : applicationDTOs) {
+			final ICartridge cartridge = new Cartridge(applicationDTO.getFramework());
+			final IApplication application =
+					new ApplicationResource(applicationDTO, cartridge, this);
+			apps.add(application);
 		}
+		return apps;
 	}
 
 	protected void removeApplication(IApplication application) {
@@ -202,7 +194,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		this.applications.remove(application);
 	}
 
-	public List<String> getAvailableCartridgeNames() throws OpenShiftException, SocketTimeoutException {
+	public List<String> getAvailableCartridgeNames() throws OpenShiftException {
 		final List<String> cartridges = new ArrayList<String>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getRequiredParams()) {
 			// TODO: extract "cartridge" to constant
@@ -215,7 +207,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return cartridges;
 	}
 
-	public List<IGearProfile> getAvailableGearProfiles() throws SocketTimeoutException, OpenShiftException {
+	public List<IGearProfile> getAvailableGearProfiles() throws OpenShiftException {
 		final List<IGearProfile> gearSizes = new ArrayList<IGearProfile>();
 		for (LinkParameter param : getLink(LINK_ADD_APPLICATION).getOptionalParams()) {
 			if (param.getName().equals(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE)) {
@@ -228,7 +220,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 	
 	
-	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	public void refresh() throws OpenShiftException {
 		final DomainResourceDTO domainResourceDTO =  new GetDomainRequest().execute();
 		this.id = domainResourceDTO.getNamespace();
 		this.suffix = domainResourceDTO.getSuffix();
@@ -248,11 +240,11 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	}
 
 	private class GetDomainRequest extends ServiceRequest {
-		public GetDomainRequest() throws SocketTimeoutException, OpenShiftException {
+		public GetDomainRequest() throws OpenShiftException {
 			super(LINK_GET);
 		}
 
-		protected DomainResourceDTO execute() throws OpenShiftException, SocketTimeoutException {
+		protected DomainResourceDTO execute() throws OpenShiftException {
 			return (DomainResourceDTO)(super.execute());
 		}
 		
@@ -261,7 +253,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 	
 	private class ListApplicationsRequest extends ServiceRequest {
 
-		public ListApplicationsRequest() throws SocketTimeoutException, OpenShiftException {
+		public ListApplicationsRequest() throws OpenShiftException {
 			super(LINK_LIST_APPLICATIONS);
 		}
 
@@ -269,13 +261,12 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 
 	private class CreateApplicationRequest extends ServiceRequest {
 
-		public CreateApplicationRequest() throws SocketTimeoutException, OpenShiftException {
+		public CreateApplicationRequest() throws OpenShiftException {
 			super(LINK_ADD_APPLICATION);
 		}
 
 		public ApplicationResourceDTO execute(final String name, final String cartridge,
-				final ApplicationScale scale, final IGearProfile gearProfile) throws SocketTimeoutException,
-				OpenShiftException {
+				final ApplicationScale scale, final IGearProfile gearProfile) throws OpenShiftException {
 			if (scale == null
 					&& gearProfile == null) {
 				return execute(name, cartridge);
@@ -295,8 +286,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		}
 
 		public ApplicationResourceDTO execute(final String name, final String cartridge,
-				final ApplicationScale scale) throws SocketTimeoutException,
-				OpenShiftException {
+				final ApplicationScale scale) throws OpenShiftException {
 			return super.execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
@@ -304,16 +294,14 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		}
 
 		public ApplicationResourceDTO execute(final String name, final String cartridge,
-				final IGearProfile gearProfile) throws SocketTimeoutException,
-				OpenShiftException {
+				final IGearProfile gearProfile) throws OpenShiftException {
 			return super.execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getName()));
 		}
 
-		public ApplicationResourceDTO execute(final String name, final String cartridge) throws SocketTimeoutException,
-				OpenShiftException {
+		public ApplicationResourceDTO execute(final String name, final String cartridge) throws OpenShiftException {
 			return super.execute(
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_CARTRIDGE, cartridge));
@@ -323,21 +311,21 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 
 	private class UpdateDomainRequest extends ServiceRequest {
 
-		public UpdateDomainRequest() throws SocketTimeoutException, OpenShiftException {
+		public UpdateDomainRequest() throws OpenShiftException {
 			super(LINK_UPDATE);
 		}
 
-		public DomainResourceDTO execute(String namespace) throws SocketTimeoutException, OpenShiftException {
+		public DomainResourceDTO execute(String namespace) throws OpenShiftException {
 			return super.execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_ID, namespace));
 		}
 	}
 
 	private class DeleteDomainRequest extends ServiceRequest {
-		public DeleteDomainRequest() throws SocketTimeoutException, OpenShiftException {
+		public DeleteDomainRequest() throws OpenShiftException {
 			super(LINK_DELETE);
 		}
 
-		public void execute(boolean force) throws SocketTimeoutException, OpenShiftException {
+		public void execute(boolean force) throws OpenShiftException {
 			super.execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_FORCE, force));
 		}
 	}

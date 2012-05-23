@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.client;
 
-import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.List;
 
@@ -90,36 +89,32 @@ public interface IApplication extends IOpenShiftResource {
 	 * 
 	 * @param cartridge
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException,
-			SocketTimeoutException;
+	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException;
 
 	/**
 	 * Adds all given embedded cartridges from this app, given their names.
 	 * 
 	 * @param embeddedCartridges
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 * 
 	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
 	public List<IEmbeddedCartridge> addEmbeddableCartridges(List<IEmbeddableCartridge> cartridge)
-			throws OpenShiftException, SocketTimeoutException;
+			throws OpenShiftException;
 
 	/**
 	 * Returns all embedded cartridges.
 	 * 
 	 * @return all embedded cartridges.
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 * 
 	 * @see IEmbeddedCartridge
 	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
-	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException, SocketTimeoutException;
+	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException;
 
 	/**
 	 * Returns <code>true</code> if this application has an embedded cartridge.
@@ -129,14 +124,12 @@ public interface IApplication extends IOpenShiftResource {
 	 *            name of the cartridge to look for
 	 * @return true if there's an embedded cartridge with the given name
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 * 
 	 * @see IEmbeddedCartridge
 	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
-	public boolean hasEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException,
-			SocketTimeoutException;
+	public boolean hasEmbeddedCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException;
 
 	/**
 	 * Returns <code>true</code> if this application has an embedded cartridge.
@@ -146,13 +139,12 @@ public interface IApplication extends IOpenShiftResource {
 	 *            name of the cartridge to look for
 	 * @return true if there's an embedded cartridge with the given name
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 * 
 	 * @see IEmbeddedCartridge
 	 * @see #addEmbeddableCartridge(IEmbeddedCartridge)
 	 * @see #removeEmbeddedCartridge(IEmbeddedCartridge)
 	 */
-	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException, SocketTimeoutException;
+	public boolean hasEmbeddedCartridge(String cartridgeName) throws OpenShiftException;
 
 	/**
 	 * Returns the embedded cartridge given its name. Returns <code>null</code>
@@ -161,10 +153,9 @@ public interface IApplication extends IOpenShiftResource {
 	 * @param cartridgeName
 	 * @return the embedded cartridge with the given name
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
 	public IEmbeddedCartridge getEmbeddedCartridge(String cartridgeName)
-			throws OpenShiftException, SocketTimeoutException;
+			throws OpenShiftException;
 
 	/**
 	 * Returns the embedded cartridge. Returns <code>null</code> if none was
@@ -173,10 +164,10 @@ public interface IApplication extends IOpenShiftResource {
 	 * @param cartridge
 	 * @return the embedded cartridge
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
+
 	public IEmbeddedCartridge getEmbeddedCartridge(IEmbeddableCartridge cartridge)
-			throws OpenShiftException, SocketTimeoutException;
+			throws OpenShiftException;
 
 	/**
 	 * Removes the embedded cartridge in this cartridges that equals to the
@@ -185,21 +176,19 @@ public interface IApplication extends IOpenShiftResource {
 	 * 
 	 * @param cartridge
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
 	public void removeEmbeddedCartridge(IEmbeddableCartridge cartridge) 
-			throws OpenShiftException,SocketTimeoutException;
+			throws OpenShiftException;
 
 	/**
 	 * Returns all gears.
 	 * 
 	 * @return all gears.
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 * 
 	 * @see IApplicationGear
 	 */
-	public List<IApplicationGear> getGears() throws OpenShiftException, SocketTimeoutException;
+	public List<IApplicationGear> getGears() throws OpenShiftException;
 
 	/**
 	 * Returns the timestamp at which this app was created.
@@ -215,35 +204,31 @@ public interface IApplication extends IOpenShiftResource {
 	 * applications)
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 * 
 	 * @see IUser#getApplications()
 	 */
-	public void destroy() throws OpenShiftException, SocketTimeoutException;
+	public void destroy() throws OpenShiftException;
 
 	/**
 	 * Starts this application. Has no effect if this app is already running.
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void start() throws OpenShiftException, SocketTimeoutException;
+	public void start() throws OpenShiftException;
 
 	/**
 	 * Restarts this application.
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void restart() throws OpenShiftException, SocketTimeoutException;
+	public void restart() throws OpenShiftException;
 
 	/**
 	 * Stops this application.
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void stop() throws OpenShiftException, SocketTimeoutException;
+	public void stop() throws OpenShiftException;
 
 	/**
 	 * Stops this application
@@ -252,9 +237,8 @@ public interface IApplication extends IOpenShiftResource {
 	 *            : true to force stop, false otherwise
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void stop(boolean force) throws OpenShiftException, SocketTimeoutException;
+	public void stop(boolean force) throws OpenShiftException;
 
 	/**
 	 * Waits for this application to become accessible on its public url.
@@ -262,7 +246,6 @@ public interface IApplication extends IOpenShiftResource {
 	 * @param timeout
 	 * @return
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException 
 	 * 
 	 * @see IApplication#getApplicationUrl()
 	 */
@@ -279,49 +262,43 @@ public interface IApplication extends IOpenShiftResource {
 	 * Expose application port
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void exposePort() throws SocketTimeoutException, OpenShiftException;
+	public void exposePort() throws  OpenShiftException;
 
 	/**
 	 * Conceal application port
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void concealPort() throws SocketTimeoutException, OpenShiftException;
+	public void concealPort() throws  OpenShiftException;
 
 	/**
 	 * Show application port
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void showPort() throws SocketTimeoutException, OpenShiftException;
+	public void showPort() throws  OpenShiftException;
 
 	/**
 	 * Scale down application
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void scaleDown() throws SocketTimeoutException, OpenShiftException;
+	public void scaleDown() throws  OpenShiftException;
 
 	/**
 	 * Scale up application
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void scaleUp() throws SocketTimeoutException, OpenShiftException;
+	public void scaleUp() throws  OpenShiftException;
 
 	/**
 	 * Add application alias
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void addAlias(String string) throws SocketTimeoutException, OpenShiftException;
+	public void addAlias(String string) throws  OpenShiftException;
 
 	/**
 	 * Retrieve all application aliases
@@ -336,19 +313,17 @@ public interface IApplication extends IOpenShiftResource {
 	 * Remove application alias
 	 * 
 	 * @throws OpenShiftException
-	 * @throws SocketTimeoutException
 	 */
-	public void removeAlias(String alias) throws SocketTimeoutException, OpenShiftException;
+	public void removeAlias(String alias) throws  OpenShiftException;
 
 	/**
 	 * Refresh the application but reloading its content from OpenShift. At the
 	 * same time, this operation automatically set the embedded cartridges back
 	 * to an 'unloaded' state.
 	 * 
-	 * @throws SocketTimeoutException
 	 * @throws OpenShiftException
 	 */
-	public void refresh() throws SocketTimeoutException, OpenShiftException;
+	public void refresh() throws  OpenShiftException;
 
 	/**
 	 * Sets the SSH session that this application will use to connect to

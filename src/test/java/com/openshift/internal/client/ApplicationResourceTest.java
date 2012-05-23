@@ -17,8 +17,8 @@ import static com.openshift.client.utils.Samples.ADD_APPLICATION_JSON;
 import static com.openshift.client.utils.Samples.ADD_DOMAIN_JSON;
 import static com.openshift.client.utils.Samples.DELETE_APPLICATION_CARTRIDGE_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH1APP_JSON;
-import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON;
+import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITH2APPS_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATIONS_WITHNOAPP_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH1ELEMENT_JSON;
 import static com.openshift.client.utils.Samples.GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON;
@@ -65,10 +65,8 @@ import com.openshift.client.InvalidCredentialsOpenShiftException;
 import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.OpenShiftTimeoutException;
 import com.openshift.client.utils.Samples;
-import com.openshift.internal.client.Cartridge;
-import com.openshift.internal.client.EmbeddedCartridgeResource;
-import com.openshift.internal.client.RestService;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import com.openshift.internal.client.httpclient.InternalServerErrorException;
 import com.openshift.internal.client.httpclient.UnauthorizedException;
@@ -147,7 +145,7 @@ public class ApplicationResourceTest {
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
 	public void shouldNotLoadListOfApplicationsWithInvalidCredentials() throws OpenShiftException,
-			SocketTimeoutException, HttpClientException {
+			HttpClientException, SocketTimeoutException {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications"))).thenThrow(
 				new UnauthorizedException("invalid credentials (mock)", null));
@@ -548,7 +546,7 @@ public class ApplicationResourceTest {
 		try {
 			app.addEmbeddableCartridge(IEmbeddableCartridge.MYSQL_51);
 			fail("Expected an exception here...");
-		} catch (SocketTimeoutException e) {
+		} catch (OpenShiftTimeoutException e) {
 			// ok
 		}
 		// verifications
@@ -590,8 +588,7 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications/sample/cartridges"))).thenReturn(
 				GET_APPLICATION_CARTRIDGES_WITH2ELEMENTS_JSON.getContentAsString());
 		when(mockClient.delete(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges/mysql-5.1")))
-				.thenThrow(
-						new SocketTimeoutException("mock..."));
+				.thenThrow(new SocketTimeoutException("mock..."));
 		final IApplication application = domain.getApplicationByName("sample");
 		assertThat(application.getEmbeddedCartridges()).hasSize(2);
 		// operation
@@ -599,7 +596,7 @@ public class ApplicationResourceTest {
 		try {
 			embeddedCartridge.destroy();
 			fail("Expected an exception here..");
-		} catch (SocketTimeoutException e) {
+		} catch (OpenShiftTimeoutException e) {
 			// ok
 		}
 		// verifications
@@ -678,7 +675,7 @@ public class ApplicationResourceTest {
 	}
 
 	@Test
-	public void shouldWaitUntilTimeout() throws SocketTimeoutException, HttpClientException, Throwable {
+	public void shouldWaitUntilTimeout() throws HttpClientException, Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications")))
 				.thenReturn(GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON.getContentAsString());
@@ -696,7 +693,7 @@ public class ApplicationResourceTest {
 	}
 
 	@Test
-	public void shouldEndBeforeTimeout() throws SocketTimeoutException, HttpClientException, Throwable {
+	public void shouldEndBeforeTimeout() throws HttpClientException, Throwable {
 		// pre-conditions
 		when(mockClient.get(urlEndsWith("/domains/foobar/applications")))
 				.thenReturn(GET_APPLICATIONS_WITH2APPS_1LOCALHOST_JSON.getContentAsString());

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,15 +67,15 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return null;
 	}
 
-	public IDomain createDomain(String name) throws OpenShiftException, SocketTimeoutException {
+	public IDomain createDomain(String name) throws OpenShiftException {
 		return api.createDomain(name);
 	}
 
-	public List<IDomain> getDomains() throws OpenShiftException, SocketTimeoutException {
+	public List<IDomain> getDomains() throws OpenShiftException {
 		return api.getDomains();
 	}
 
-	public IDomain getDefaultDomain() throws OpenShiftException, SocketTimeoutException {
+	public IDomain getDefaultDomain() throws OpenShiftException {
 		final List<IDomain> domains = api.getDomains();
 		if (domains.size() > 0) {
 			return domains.get(0);
@@ -84,15 +83,15 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return null;
 	}
 
-	public IDomain getDomain(String namespace) throws OpenShiftException, SocketTimeoutException {
+	public IDomain getDomain(String namespace) throws OpenShiftException {
 		return api.getDomain(namespace);
 	}
 
-	public boolean hasDomain() throws OpenShiftException, SocketTimeoutException {
+	public boolean hasDomain() throws OpenShiftException {
 		return (api.getDomains().size() > 0);
 	}
 
-	public void refresh() throws OpenShiftException, SocketTimeoutException {
+	public void refresh() throws OpenShiftException {
 		if (this.sshKeys != null) {
 			this.sshKeys = null;
 			loadKeys();
@@ -103,14 +102,14 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		}
 	}
 
-	public List<IOpenShiftSSHKey> getSSHKeys() throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
+	public List<IOpenShiftSSHKey> getSSHKeys() throws OpenShiftUnknonwSSHKeyTypeException,
 			OpenShiftException {
 		List<IOpenShiftSSHKey> keys = new ArrayList<IOpenShiftSSHKey>();
 		keys.addAll(getCachedOrLoadSSHKeys());
 		return CollectionUtils.toUnmodifiableCopy(keys);
 	}
 
-	private List<SSHKeyResource> getCachedOrLoadSSHKeys() throws SocketTimeoutException, OpenShiftException,
+	private List<SSHKeyResource> getCachedOrLoadSSHKeys() throws OpenShiftException,
 			OpenShiftUnknonwSSHKeyTypeException {
 		if (sshKeys == null) {
 			this.sshKeys = loadKeys();
@@ -118,7 +117,7 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return sshKeys;
 	}
 
-	private List<SSHKeyResource> loadKeys() throws SocketTimeoutException, OpenShiftException,
+	private List<SSHKeyResource> loadKeys() throws OpenShiftException,
 			OpenShiftUnknonwSSHKeyTypeException {
 		List<SSHKeyResource> keys = new ArrayList<SSHKeyResource>();
 		List<KeyResourceDTO> keyDTOs = new GetSShKeysRequest().execute();
@@ -128,8 +127,8 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return keys;
 	}
 
-	public IOpenShiftSSHKey getSSHKeyByName(String name) throws SocketTimeoutException,
-			OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public IOpenShiftSSHKey getSSHKeyByName(String name) 
+			throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		IOpenShiftSSHKey matchingKey = null;
 		if (name == null) {
 			return null;
@@ -144,8 +143,8 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return matchingKey;
 	}
 
-	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey) throws SocketTimeoutException,
-			OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public IOpenShiftSSHKey getSSHKeyByPublicKey(String publicKey)
+			throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		IOpenShiftSSHKey matchingKey = null;
 		if (publicKey == null) {
 			return null;
@@ -160,13 +159,13 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 		return matchingKey;
 	}
 
-	public boolean hasSSHKeyName(String name) throws SocketTimeoutException, OpenShiftUnknonwSSHKeyTypeException,
+	public boolean hasSSHKeyName(String name) throws OpenShiftUnknonwSSHKeyTypeException,
 			OpenShiftException {
 		return getSSHKeyByName(name) != null;
 	}
 
-	public boolean hasSSHPublicKey(String publicKey) throws SocketTimeoutException,
-			OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
+	public boolean hasSSHPublicKey(String publicKey)
+			throws OpenShiftUnknonwSSHKeyTypeException, OpenShiftException {
 		return getSSHKeyByPublicKey(publicKey) != null;
 	}
 
@@ -179,10 +178,9 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 	 * @param key
 	 *            the key to add
 	 * @return
-	 * @throws SocketTimeoutException
 	 * @throws OpenShiftException
 	 */
-	public IOpenShiftSSHKey putSSHKey(String name, ISSHPublicKey key) throws SocketTimeoutException, OpenShiftException {
+	public IOpenShiftSSHKey putSSHKey(String name, ISSHPublicKey key) throws OpenShiftException {
 		if (hasSSHKeyName(name)) {
 			throw new OpenShiftSSHKeyException(
 					"Could not add new key {0} with the name {1}. There already is a key for this name, key names must be unique.",
@@ -209,23 +207,22 @@ public class UserResource extends AbstractOpenShiftResource implements IUser {
 
 	private class GetSShKeysRequest extends ServiceRequest {
 
-		public GetSShKeysRequest() throws SocketTimeoutException, OpenShiftException {
+		public GetSShKeysRequest() throws OpenShiftException {
 			super("LIST_KEYS");
 		}
 
-		public List<KeyResourceDTO> execute() throws SocketTimeoutException, OpenShiftException {
+		public List<KeyResourceDTO> execute() throws OpenShiftException {
 			return super.execute();
 		}
 	}
 
 	private class AddSShKeyRequest extends ServiceRequest {
 
-		public AddSShKeyRequest() throws SocketTimeoutException, OpenShiftException {
+		public AddSShKeyRequest() throws OpenShiftException {
 			super("ADD_KEY");
 		}
 
-		public KeyResourceDTO execute(SSHKeyType type, String name, String content) throws SocketTimeoutException,
-				OpenShiftException {
+		public KeyResourceDTO execute(SSHKeyType type, String name, String content) throws OpenShiftException {
 			return super.execute(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_TYPE, type.getTypeId()),
 					new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_NAME, name), new ServiceParameter(
 							IOpenShiftJsonConstants.PROPERTY_CONTENT, content));

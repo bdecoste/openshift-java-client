@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.openshift.internal.client;
 
-import java.net.SocketTimeoutException;
-
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.RestResponse;
@@ -39,7 +37,7 @@ public class ServiceRequest {
 		this.resource = resource;
 	}
 
-	Link getLink() throws SocketTimeoutException, OpenShiftException {
+	Link getLink() throws OpenShiftException {
 		if (link != null) {
 			return link;
 		} else {
@@ -50,7 +48,7 @@ public class ServiceRequest {
 		}
 	}
 	
-	public <DTO> DTO execute(final ServiceParameter... parameters) throws OpenShiftException, SocketTimeoutException  {
+	public <DTO> DTO execute(final ServiceParameter... parameters) throws OpenShiftException {
 		final Link link = getLink();
 		if (link == null) {
 			throw new OpenShiftException("Could not request resource, no link present");

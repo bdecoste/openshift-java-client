@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.net.SocketTimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,8 +122,7 @@ public class ApplicationAssert implements AssertExtension {
 		return this;
 	}
 	
-	public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws SocketTimeoutException,
-			OpenShiftException {
+	public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {
 		if (embeddableCartridgeNames.length == 0) {
 			assertEquals(0, application.getEmbeddedCartridges().size());
 		}

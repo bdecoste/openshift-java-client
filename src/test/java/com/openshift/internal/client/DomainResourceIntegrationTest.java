@@ -56,14 +56,14 @@ public class DomainResourceIntegrationTest {
 	}
 
 	@Test
-	public void shouldReturnDomains() throws SocketTimeoutException, OpenShiftException {
+	public void shouldReturnDomains() throws OpenShiftException {
 		// operation
 		List<IDomain> domains = user.getDomains();
 		assertThat(domains).isNotNull();
 	}
 
 	@Test
-	public void shouldCreateDomain() throws SocketTimeoutException, OpenShiftException {
+	public void shouldCreateDomain() throws OpenShiftException {
 		IDomain domain = null;
 		try {
 			// pre-condition
@@ -81,7 +81,7 @@ public class DomainResourceIntegrationTest {
 	}
 
 	@Test
-	public void shouldReturnDomainByName() throws SocketTimeoutException, OpenShiftException {
+	public void shouldReturnDomainByName() throws OpenShiftException {
 		IDomain domain = null;
 		try {
 			// pre-condition
