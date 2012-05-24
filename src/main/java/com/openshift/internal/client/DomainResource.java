@@ -122,11 +122,11 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			throw new OpenShiftException("Application with name \"{0}\" already exists.", name);
 		}
 
-			ApplicationResourceDTO applicationDTO = 
-					new CreateApplicationRequest().execute(name, cartridge.getName(),scale, gearProfile);
-			IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
-			this.applications.add(application);
-			return application;
+		ApplicationResourceDTO applicationDTO = 
+				new CreateApplicationRequest().execute(name, cartridge.getName(),scale, gearProfile);
+		IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
+		this.applications.add(application);
+		return application;
 	}
 
 	public IApplication getApplicationByName(String name) throws OpenShiftException {
