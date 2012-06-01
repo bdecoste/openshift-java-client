@@ -28,10 +28,11 @@ import com.openshift.internal.client.response.Message;
 public class JenkinsApplication extends ApplicationResource implements IJenkinsApplication {
 
 	public JenkinsApplication(String name, String uuid, String creationTime, List<Message> creationLog,
-			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable,
-			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
-				aliases, links, domain);
+			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile,
+			ApplicationScale scalable, ICartridge cartridge, List<String> aliases,
+			Map<String, String> embeddedCartridgesInfos, Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable,
+				cartridge, aliases, embeddedCartridgesInfos, links, domain);
 	}
 
 	public String getHealthCheckUrl() {

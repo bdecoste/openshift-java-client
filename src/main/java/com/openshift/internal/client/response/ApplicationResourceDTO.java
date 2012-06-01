@@ -56,6 +56,8 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	/** the path at which this application may be queried for its health **/
 	private final String healthCheckPath;
 
+	private Map<String, String> embeddedCartridgeInfos;
+
 	/**
 	 * Instantiates a new application dto.
 	 *
@@ -69,7 +71,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 	public ApplicationResourceDTO(final String framework, final String domainId, final String creationTime,
 			final String name, final IGearProfile gearProfile, final ApplicationScale scale, final String uuid,
 			final String applicationUrl, final String gitUrl, final String healthCheckPath, final List<String> aliases,
-			final Map<String, Link> links, List<Message> creationLog) {
+			final Map<String, String> embeddedCartridgeInfos, final Map<String, Link> links, List<Message> creationLog) {
 	super(links, creationLog);
 		this.framework = framework;
 		this.domainId = domainId;
@@ -82,6 +84,7 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 		this.gitUrl = gitUrl;
 		this.healthCheckPath = healthCheckPath;
 		this.aliases = aliases;
+		this.embeddedCartridgeInfos = embeddedCartridgeInfos;
 	}
 
 	/**
@@ -171,9 +174,10 @@ public class ApplicationResourceDTO extends BaseResourceDTO {
 		return aliases;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	public Map<String, String> getEmbeddedCartridgeInfos() {
+		return embeddedCartridgeInfos;
+	}
+	
 	@Override
 	public String toString() {
 		return "ApplicationResourceDTO [name=" + name + ", framework=" + framework + "]";

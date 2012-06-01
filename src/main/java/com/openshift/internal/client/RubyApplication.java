@@ -28,39 +28,38 @@ import com.openshift.internal.client.response.Message;
  */
 public class RubyApplication extends ApplicationResource implements IRubyApplication {
 
-	
 	public RubyApplication(String name, String uuid, String creationTime, List<Message> creationLog,
-			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable,
-			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
-				aliases, links, domain);
+			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile,
+			ApplicationScale scalable, ICartridge cartridge, List<String> aliases,
+			Map<String, String> embeddedCartridgesInfos, Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable,
+				cartridge, aliases, embeddedCartridgesInfos, links, domain);
 	}
-	
+
 	public String threadDump() throws OpenShiftException {
 		throw new UnsupportedOperationException();
-//		service.threadDumpApplication(name, cartridge, getInternalUser());
-//		
-//		return getRackLogFile();
+		// service.threadDumpApplication(name, cartridge, getInternalUser());
+		//
+		// return getRackLogFile();
 	}
-	
+
 	private String getRackLogFile() {
 		Calendar cal = Calendar.getInstance();
-		
+
 		String month = null;
 		if (cal.get(Calendar.MONTH) > 8)
 			month = String.valueOf(cal.get(Calendar.MONTH) + 1);
 		else
 			month = "0" + String.valueOf(cal.get(Calendar.MONTH) + 1);
-		
+
 		String day = null;
 		if (cal.get(Calendar.DAY_OF_MONTH) > 9)
 			day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
 		else
 			day = "0" + String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-		
-		
+
 		String logFile = "logs/error_log-" + cal.get(Calendar.YEAR) + month + day + "-000000-EST";
-		
+
 		return logFile;
 	}
 

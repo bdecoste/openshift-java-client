@@ -118,7 +118,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private final List<String> aliases;
 
 	/**
-	 * List of configured embedded cartridges. <code>null</code> means list if not loaded yet.
+	 * List of configured embedded cartridges. <code>null</code> means list if
+	 * not loaded yet.
 	 */
 	// TODO: replace by a map indexed by cartridge names ?
 	private List<IEmbeddedCartridge> embeddedCartridges = null;
@@ -135,9 +136,12 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private List<IApplicationPortForwarding> ports = null;
 
 	/**
-	 * SSH Session used to perform port-forwarding and other ssh-based operations.
+	 * SSH Session used to perform port-forwarding and other ssh-based
+	 * operations.
 	 */
 	private Session session;
+
+	private Map<String, String> embeddedCartridgesInfos;
 
 	/**
 	 * Constructor...
@@ -149,7 +153,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	protected ApplicationResource(ApplicationResourceDTO dto, ICartridge cartridge, DomainResource domain) {
 		this(dto.getName(), dto.getUuid(), dto.getCreationTime(), dto.getCreationLog(), dto.getApplicationUrl(), dto
 				.getGitUrl(), dto.getHealthCheckPath(), dto.getGearProfile(), dto.getApplicationScale(), cartridge, dto
-				.getAliases(), dto.getLinks(), domain);
+				.getAliases(), dto.getEmbeddedCartridgeInfos(), dto.getLinks(), domain);
 	}
 
 	/**
@@ -180,8 +184,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	protected ApplicationResource(final String name, final String uuid, final String creationTime,
 			final List<Message> creationLog, final String applicationUrl, final String gitUrl,
 			final String healthCheckPath, final IGearProfile gearProfile, final ApplicationScale scale,
-			final ICartridge cartridge, final List<String> aliases, final Map<String, Link> links,
-			final DomainResource domain) {
+			final ICartridge cartridge, final List<String> aliases, final Map<String, String> embeddedCartridgesInfos,
+			final Map<String, Link> links, final DomainResource domain) {
 		super(domain.getService(), links, creationLog);
 		this.name = name;
 		this.uuid = uuid;
@@ -194,6 +198,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.healthCheckUrl = applicationUrl + healthCheckPath;
 		this.domain = domain;
 		this.aliases = aliases;
+		// TODO: fix this workaround once
+		// https://bugzilla.redhat.com/show_bug.cgi?id=812046 is fixed
+		this.embeddedCartridgesInfos = embeddedCartridgesInfos;
 	}
 
 	public String getName() {
@@ -252,15 +259,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-	public void exposePort() throws  OpenShiftException {
+	public void exposePort() throws OpenShiftException {
 		new ExposePortRequest().execute();
 	}
 
-	public void concealPort() throws  OpenShiftException {
+	public void concealPort() throws OpenShiftException {
 		new ConcealPortRequest().execute();
 	}
 
-	public void showPort() throws  OpenShiftException {
+	public void showPort() throws OpenShiftException {
 		new ShowPortRequest().execute();
 	}
 
@@ -268,15 +275,15 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		throw new UnsupportedOperationException();
 	}
 
-	public void scaleDown() throws  OpenShiftException {
+	public void scaleDown() throws OpenShiftException {
 		new ScaleDownRequest().execute();
 	}
 
-	public void scaleUp() throws  OpenShiftException {
+	public void scaleUp() throws OpenShiftException {
 		new ScaleUpRequest().execute();
 	}
 
-	public void addAlias(String alias) throws  OpenShiftException {
+	public void addAlias(String alias) throws OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new AddAliasRequest().execute(alias);
 		updateAliases(applicationDTO);
 
@@ -295,7 +302,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		return aliases.contains(name);
 	}
 
-	public void removeAlias(String alias) throws  OpenShiftException {
+	public void removeAlias(String alias) throws OpenShiftException {
 		ApplicationResourceDTO applicationDTO = new RemoveAliasRequest().execute(alias);
 		updateAliases(applicationDTO);
 	}
@@ -320,15 +327,19 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * Adds the given embedded cartridge to this application.
 	 * 
 	 * @param cartridge
-	 *            the embeddable cartridge that shall be added to this application
+	 *            the embeddable cartridge that shall be added to this
+	 *            application
 	 */
 	public IEmbeddedCartridge addEmbeddableCartridge(IEmbeddableCartridge cartridge) throws OpenShiftException {
-		final CartridgeResourceDTO embeddedCartridgeDTO = new AddEmbeddedCartridgeRequest()
-				.execute(cartridge.getName());
-		final EmbeddedCartridgeResource embeddedCartridge = new EmbeddedCartridgeResource(embeddedCartridgeDTO, this);
-		if(this.embeddedCartridges == null) {
+		if (this.embeddedCartridges == null) {
 			loadEmbeddedCartridges();
 		}
+		final CartridgeResourceDTO embeddedCartridgeDTO =
+				new AddEmbeddedCartridgeRequest().execute(cartridge.getName());
+		final EmbeddedCartridgeResource embeddedCartridge =
+				new EmbeddedCartridgeResource(
+						embeddedCartridgesInfos.get(embeddedCartridgeDTO.getName()),
+						embeddedCartridgeDTO, this);
 		this.embeddedCartridges.add(embeddedCartridge);
 		return embeddedCartridge;
 	}
@@ -359,14 +370,17 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		this.embeddedCartridges = new ArrayList<IEmbeddedCartridge>();
 		List<CartridgeResourceDTO> embeddableCartridgeDTOs = new ListEmbeddableCartridgesRequest().execute();
 		for (CartridgeResourceDTO embeddableCartridgeDTO : embeddableCartridgeDTOs) {
-			IEmbeddedCartridge embeddableCartridge = new EmbeddedCartridgeResource(embeddableCartridgeDTO, this);
+			IEmbeddedCartridge embeddableCartridge =
+					new EmbeddedCartridgeResource(
+							embeddedCartridgesInfos.get(embeddableCartridgeDTO.getName()),
+							embeddableCartridgeDTO, this);
 			embeddedCartridges.add(embeddableCartridge);
 		}
 		return embeddedCartridges;
 	}
 
 	public List<IEmbeddedCartridge> getEmbeddedCartridges() throws OpenShiftException {
-		if(this.embeddedCartridges == null) {
+		if (this.embeddedCartridges == null) {
 			this.embeddedCartridges = loadEmbeddedCartridges();
 		}
 		return CollectionUtils.toUnmodifiableCopy(this.embeddedCartridges);
@@ -400,8 +414,6 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-
-	
 	/**
 	 * Returns the gears that this application is running on.
 	 * 
@@ -410,7 +422,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	 * @return the gears
 	 * @throws OpenShiftException
 	 */
-	public List<IApplicationGear> getGears() throws  OpenShiftException {
+	public List<IApplicationGear> getGears() throws OpenShiftException {
 		// load collection if necessary
 		if (gears == null) {
 			this.gears = loadGears();
@@ -453,7 +465,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private boolean waitForPositiveHealthResponse(long timeout, long startTime) throws OpenShiftException,
 			InterruptedException, OpenShiftEndpointException {
 		String response = null;
-		while (!isPositiveHealthResponse(response) 
+		while (!isPositiveHealthResponse(response)
 				&& !isTimeouted(timeout, startTime)) {
 			try {
 				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
@@ -461,7 +473,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			} catch (OpenShiftEndpointException e) {
 				throw e;
 			} catch (OpenShiftException e) {
-			}			
+			}
 		}
 		return isPositiveHealthResponse(response);
 	}
@@ -473,7 +485,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	private boolean waitForResolved(long timeout, long startTime) throws OpenShiftException, InterruptedException {
 		try {
-			while (!HostUtils.canResolv(healthCheckUrl) 
+			while (!HostUtils.canResolv(healthCheckUrl)
 					&& !isTimeouted(timeout, startTime)) {
 				Thread.sleep(APPLICATION_WAIT_RETRY_DELAY);
 			}
@@ -569,16 +581,17 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	private enum EnumSshStream {
 		EXT_INPUT, INPUT;
 	}
-	
+
 	/**
 	 * 
 	 * @param command
 	 * @return
 	 * @throws OpenShiftSSHOperationException
 	 */
-	private List<String> sshExecCmd(final String command, final EnumSshStream streamToUse) throws OpenShiftSSHOperationException {
+	private List<String> sshExecCmd(final String command, final EnumSshStream streamToUse)
+			throws OpenShiftSSHOperationException {
 		final Session session = getSSHSession();
-		if(session == null) {
+		if (session == null) {
 			throw new OpenShiftSSHOperationException("No SSH session available for application ''{0}''", this.getName());
 		}
 		Channel channel = null;
@@ -590,8 +603,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			channel.connect();
 			List<String> lines = new ArrayList<String>();
 			String line;
-			// Read File Line By Line, but from only one of the 2 inputstreams (the other one blocks..)
-			switch(streamToUse) {
+			// Read File Line By Line, but from only one of the 2 inputstreams
+			// (the other one blocks..)
+			switch (streamToUse) {
 			case EXT_INPUT:
 				reader = new BufferedReader(new InputStreamReader(channel.getExtInputStream()));
 				break;
@@ -603,8 +617,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			while ((line = reader.readLine()) != null) {
 				lines.add(line);
 			}
-			
-			
+
 			return lines;
 		} catch (JSchException e) {
 			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"",
@@ -613,7 +626,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 			throw new OpenShiftSSHOperationException(e, "Failed to list forwardable ports for application \"{0}\"",
 					this.getName());
 		} finally {
-			
+
 			if (reader != null) {
 				try {
 					reader.close();
@@ -628,9 +641,9 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 		}
 	}
 
-	
 	/**
-	 * Extract the named forwardable port from the 'rhc-list-ports' command result line, with the following format:
+	 * Extract the named forwardable port from the 'rhc-list-ports' command
+	 * result line, with the following format:
 	 * <code>java -> 127.10.187.1:4447</code>.
 	 * 
 	 * @param portValue
@@ -665,7 +678,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 				port.start(session);
 			} catch (OpenShiftSSHOperationException oss) {
 				// ignore for now
-				// FIXME: should store this error on the forward to let user know why it could not start/stop
+				// FIXME: should store this error on the forward to let user
+				// know why it could not start/stop
 			}
 		}
 		return ports;
@@ -677,7 +691,8 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 				port.stop(session);
 			} catch (OpenShiftSSHOperationException oss) {
 				// ignore for now
-				// should store this error on the forward to let user know why it could not start/stop
+				// should store this error on the forward to let user know why
+				// it could not start/stop
 			}
 		}
 		// make sure port forwarding is stopped by closing session...

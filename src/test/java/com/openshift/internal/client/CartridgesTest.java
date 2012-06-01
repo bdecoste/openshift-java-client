@@ -81,8 +81,8 @@ public class CartridgesTest {
 
 		// operation
 		EmbeddedCartridgeResource jenkinsEmbeddedCartridgeResource =
-				new EmbeddedCartridgeResource(
-						jenkinsEmbeddableCartridge.getName(), CartridgeType.EMBEDDED, Collections.<String, Link> emptyMap(), null,
+				new EmbeddedCartridgeResource( 
+						jenkinsEmbeddableCartridge.getName(), CartridgeType.EMBEDDED, "embedded-info", Collections.<String, Link> emptyMap(), null,
 						applicationMock);
 
 		// verifications
@@ -98,7 +98,7 @@ public class CartridgesTest {
 		// operation
 		EmbeddedCartridgeResource jenkinsEmbeddedCartridgeResource =
 				new EmbeddedCartridgeResource(
-						jenkinsEmbeddableCartridge.getName(), CartridgeType.EMBEDDED, Collections.<String, Link> emptyMap(), null,
+						jenkinsEmbeddableCartridge.getName(), CartridgeType.EMBEDDED, "embedded-info", Collections.<String, Link> emptyMap(), null,
 						applicationMock);
 
 		// verifications

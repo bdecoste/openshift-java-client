@@ -12,6 +12,8 @@ package com.openshift.internal.client;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.openshift.client.IApplication;
 import com.openshift.client.IEmbeddableCartridge;
@@ -29,6 +31,8 @@ import com.openshift.internal.client.response.Message;
  */
 public class EmbeddedCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
 
+	private static final Pattern INFO_URL_PATTERN = Pattern.compile("Connection URL: (.+)\\n*");
+
 	protected static final String JENKINS_CLIENT = "jenkins-client";
 	protected static final String MYSQL = "mysql";
 	protected static final String PHPMYADMIN = "phpmyadmin";
@@ -42,24 +46,25 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	private static final String LINK_DELETE_CARTRIDGE = "DELETE";
 
 	private final String name;
-	private final String info; // not supported yet
 	private final CartridgeType type;
 	private String url;
 	private final ApplicationResource application;
 
-	protected EmbeddedCartridgeResource(final CartridgeResourceDTO dto, final ApplicationResource application) {
-		this(dto.getName(), dto.getType(), dto.getLinks(), dto.getCreationLog(), application);
+	protected EmbeddedCartridgeResource(String info, final CartridgeResourceDTO dto, final ApplicationResource application) {
+		this(dto.getName(), dto.getType(), info, dto.getLinks(), dto.getCreationLog(), application);
 	}
 
-	protected EmbeddedCartridgeResource(final String name, final CartridgeType type, final Map<String, Link> links,
+	protected EmbeddedCartridgeResource(final String name, final CartridgeType type, String info, final Map<String, Link> links,
 			final List<Message> creationLog, final ApplicationResource application) {
 		super(application.getService(), links, creationLog);
 		this.name = name;
 		this.type = type;
-		this.info = null; // FIXME: see bugzilla
+		// TODO: fix this workaround once
+		// https://bugzilla.redhat.com/show_bug.cgi?id=812046 is fixed
+		this.url = extractUrl(info);
 		this.application = application;
 	}
-
+	
 	/**
 	 * @return the name
 	 */
@@ -75,19 +80,25 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	}
 
 	/**
-	 * @return the info
-	 */
-	public final String getInfo() {
-		return info;
-	}
-
-	/**
 	 * @return the application
 	 */
 	public final IApplication getApplication() {
 		return application;
 	}
 
+	private String extractUrl(String info) {
+		if (info == null) {
+			return null;
+		}
+		Matcher matcher = INFO_URL_PATTERN.matcher(info);
+		if (!matcher.find()
+				|| matcher.groupCount() < 1) {
+			return null;
+		}
+		
+		return matcher.group(1);
+	}
+	
 	public String getUrl() throws OpenShiftException {
 		return url;
 	}
@@ -101,14 +112,8 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		application.removeEmbeddedCartridge(this);
 	}
 
-	/**
-	 * The Class DeleteApplicationRequest.
-	 */
 	private class DeleteCartridgeRequest extends ServiceRequest {
 
-		/**
-		 * Instantiates a new delete application request.
-		 */
 		protected DeleteCartridgeRequest() {
 			super(LINK_DELETE_CARTRIDGE);
 		}
@@ -148,7 +153,7 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 	public String toString() {
 		return "EmbeddedCartridgeResource [" +
 				"name=" + name  
-				+ ", info=" + info  
+				+ ", url=" + url 
 				+ ", type=" + type + ", url=" + url
 				+ ", application=" + application 
 				+ "]";

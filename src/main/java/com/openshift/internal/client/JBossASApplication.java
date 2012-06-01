@@ -28,19 +28,20 @@ import com.openshift.internal.client.response.Message;
 public class JBossASApplication extends ApplicationResource implements IJBossASApplication {
 
 	public JBossASApplication(String name, String uuid, String creationTime, List<Message> creationLog,
-			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile, ApplicationScale scalable,
-			ICartridge cartridge, List<String> aliases, Map<String, Link> links, DomainResource domain) {
-		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable, cartridge,
-				aliases, links, domain);
+			String applicationUrl, String gitUrl, String healthCheckPath, IGearProfile gearProfile,
+			ApplicationScale scalable, ICartridge cartridge, List<String> aliases,
+			Map<String, String> embeddedCartridgesInfos, Map<String, Link> links, DomainResource domain) {
+		super(name, uuid, creationTime, creationLog, applicationUrl, gitUrl, healthCheckPath, gearProfile, scalable,
+				cartridge, aliases, embeddedCartridgesInfos, links, domain);
 	}
 
 	public String threadDump() throws OpenShiftException {
 		throw new UnsupportedOperationException();
-//		service.threadDumpApplication(name, cartridge, getInternalUser());
-//		
-//		return "stdout.log";
+		// service.threadDumpApplication(name, cartridge, getInternalUser());
+		//
+		// return "stdout.log";
 	}
-		
+
 	public String getHealthCheckSuccessResponse() throws OpenShiftException {
 		return "1";
 	}

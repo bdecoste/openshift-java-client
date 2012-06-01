@@ -88,9 +88,9 @@ public class ApplicationResourceTest {
 		when(mockClient.get(urlEndsWith("/user"))).thenReturn(
 				Samples.GET_USER_JSON.getContentAsString());
 		when(mockClient.get(urlEndsWith("/domains"))).thenReturn(GET_DOMAINS_1EXISTING.getContentAsString());
-		final IOpenShiftConnection connection = new OpenShiftConnectionFactory().getConnection(new RestService(
-				"http://mock",
-				"clientId", mockClient), "foo@redhat.com", "bar");
+		final IOpenShiftConnection connection =
+				new OpenShiftConnectionFactory().getConnection(
+						new RestService("http://mock", "clientId", mockClient), "foo@redhat.com", "bar");
 		IUser user = connection.getUser();
 		this.domain = user.getDomain("foobar");
 	}
@@ -522,7 +522,8 @@ public class ApplicationResourceTest {
 			@Override
 			public boolean matches(Object value) {
 				final EmbeddedCartridgeResource cartridge = (EmbeddedCartridgeResource) value;
-				return cartridge != null && cartridge.getName() != null && !LinkRetriever.retrieveLinks(cartridge).isEmpty();
+				return cartridge != null && cartridge.getName() != null
+						&& !LinkRetriever.retrieveLinks(cartridge).isEmpty();
 			}
 		});
 		verify(mockClient, times(1)).post(anyForm(), urlEndsWith("/domains/foobar/applications/sample/cartridges"));
@@ -684,10 +685,10 @@ public class ApplicationResourceTest {
 		final IApplication app = domain.getApplicationByName("sample");
 		long timeout = 4 * 1024;
 		long startTime = System.currentTimeMillis();
-		
+
 		// operation
 		boolean successfull = app.waitForAccessible(timeout);
-		
+
 		assertFalse(successfull);
 		assertTrue(System.currentTimeMillis() >= (startTime + timeout));
 	}
@@ -702,10 +703,10 @@ public class ApplicationResourceTest {
 		long startTime = System.currentTimeMillis();
 		long timeout = 10 * 1024;
 		final IApplication app = domain.getApplicationByName("sample");
-		
+
 		// operation
 		boolean successfull = app.waitForAccessible(timeout);
-		
+
 		assertTrue(successfull);
 		assertTrue(System.currentTimeMillis() < (startTime + timeout));
 	}

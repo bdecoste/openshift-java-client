@@ -16,6 +16,7 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DATA;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_DOMAIN_ID;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_EMBEDDED;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_FRAMEWORK;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEARS_COMPONENTS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE;
@@ -23,6 +24,7 @@ import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPER
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HEALTH_CHECK_PATH;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_HREF;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_ID;
+import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INFO;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_INTERNAL_PORT;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LINKS;
 import static com.openshift.internal.client.utils.IOpenShiftJsonConstants.PROPERTY_LOGIN;
@@ -46,6 +48,7 @@ import java.util.Map;
 
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
+import org.jboss.dmr.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -375,7 +378,46 @@ public class ResourceDTOFactory {
 		final String healthCheckPath = getAsString(appNode, PROPERTY_HEALTH_CHECK_PATH);
 		final Map<String, Link> links = createLinks(appNode.get(PROPERTY_LINKS));
 		final List<String> aliases = createAliases(appNode.get(PROPERTY_ALIASES));
-		return new ApplicationResourceDTO(framework, domainId, creationTime, name, gearProfile, scalable, uuid, applicationUrl, gitUrl, healthCheckPath, aliases, links, creationLog);
+		final Map<String, String> embeddedCartridgesInfos = createEmbeddedCartridgesInfos(appNode.get(PROPERTY_EMBEDDED));
+		return new ApplicationResourceDTO(
+				framework, 
+				domainId, 
+				creationTime, 
+				name, 
+				gearProfile, 
+				scalable, 
+				uuid, 
+				applicationUrl, 
+				gitUrl, 
+				healthCheckPath, 
+				aliases, 
+				embeddedCartridgesInfos, 
+				links, 
+				creationLog);
+	}
+
+	/**
+	 * TODO: fix this workaround once
+	 * https://bugzilla.redhat.com/show_bug.cgi?id=812046 is fixed
+	 */
+	private static Map<String, String> createEmbeddedCartridgesInfos(ModelNode embeddedNode) {
+		HashMap<String, String> infos = new HashMap<String, String>();
+		for (Property embeddedCartridgeProperty : embeddedNode.asPropertyList()) {
+			String embeddedCartridgeInfo = getEmbeddedCartridgeInfo(embeddedCartridgeProperty.getValue());
+			if (embeddedCartridgeInfo != null) {
+				infos.put(embeddedCartridgeProperty.getName(), embeddedCartridgeInfo);
+			}
+		}
+		return infos;
+	}
+
+	private static String getEmbeddedCartridgeInfo(ModelNode embeddedCartridgeNode) {
+		if (embeddedCartridgeNode == null
+				|| !embeddedCartridgeNode.has(PROPERTY_INFO)
+				|| !embeddedCartridgeNode.get(PROPERTY_INFO).isDefined()) {
+			return null;
+		}
+		return embeddedCartridgeNode.get(PROPERTY_INFO).asString();
 	}
 
 	private static List<GearResourceDTO> createGears(ModelNode gearsNode) {
