@@ -31,7 +31,7 @@ import com.openshift.internal.client.response.Message;
  */
 public class EmbeddedCartridgeResource extends AbstractOpenShiftResource implements IEmbeddedCartridge {
 
-	private static final Pattern INFO_URL_PATTERN = Pattern.compile("Connection URL: (.+)\\n*");
+	private static final Pattern INFO_URL_PATTERN = Pattern.compile("URL: (.+)\\n*");
 
 	protected static final String JENKINS_CLIENT = "jenkins-client";
 	protected static final String MYSQL = "mysql";
@@ -61,7 +61,7 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		this.type = type;
 		// TODO: fix this workaround once
 		// https://bugzilla.redhat.com/show_bug.cgi?id=812046 is fixed
-		this.url = extractUrl(info);
+		this.url = extractUrl(info, creationLog);
 		this.application = application;
 	}
 	
@@ -86,11 +86,19 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		return application;
 	}
 
-	private String extractUrl(String info) {
-		if (info == null) {
+	private String extractUrl(String info, List<Message> messages) {
+		if (info != null) {
+			return extractUrl(info);
+		} else {
+			return extractUrl(messages);
+		}
+	}
+	
+	private String extractUrl(String string) {
+		if (string == null) {
 			return null;
 		}
-		Matcher matcher = INFO_URL_PATTERN.matcher(info);
+		Matcher matcher = INFO_URL_PATTERN.matcher(string);
 		if (!matcher.find()
 				|| matcher.groupCount() < 1) {
 			return null;
@@ -99,6 +107,19 @@ public class EmbeddedCartridgeResource extends AbstractOpenShiftResource impleme
 		return matcher.group(1);
 	}
 	
+	private String extractUrl(List<Message> messages) {
+		if (messages == null) {
+			return null;
+		}
+		for (Message message : messages) {
+			String url = extractUrl(message.getText());
+			if (url != null) {
+				return url;
+			}
+		}
+		return null;
+	}
+
 	public String getUrl() throws OpenShiftException {
 		return url;
 	}

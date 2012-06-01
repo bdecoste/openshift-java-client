@@ -68,6 +68,7 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 
 	private static final long APPLICATION_WAIT_RETRY_DELAY = 2 * 1024;
 
+	private static final String LINK_GET_APPLICATION = "GET";
 	private static final String LINK_DELETE_APPLICATION = "DELETE";
 	private static final String LINK_START_APPLICATION = "START";
 	private static final String LINK_STOP_APPLICATION = "STOP";
@@ -728,6 +729,13 @@ public class ApplicationResource extends AbstractOpenShiftResource implements IA
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	private class RefreshApplicationRequest extends ServiceRequest {
+
+		protected RefreshApplicationRequest() {
+			super(LINK_GET_APPLICATION);
+		}
 	}
 
 	private class DeleteApplicationRequest extends ServiceRequest {
