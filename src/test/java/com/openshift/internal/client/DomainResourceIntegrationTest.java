@@ -11,8 +11,10 @@
 package com.openshift.internal.client;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
@@ -20,11 +22,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
-import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
 import com.openshift.client.InvalidCredentialsOpenShiftException;
-import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftEndpointException;
 import com.openshift.client.OpenShiftException;
 import com.openshift.client.utils.ApplicationTestUtils;
@@ -42,14 +43,7 @@ public class DomainResourceIntegrationTest {
 
 	@Before
 	public void setUp() throws OpenShiftException, IOException {
-		final OpenShiftTestConfiguration configuration = new OpenShiftTestConfiguration();
-		final IOpenShiftConnection connection =
-				new OpenShiftConnectionFactory().getConnection(
-						configuration.getClientId(),
-						configuration.getRhlogin(),
-						configuration.getPassword(),
-						configuration.getLibraServer());
-		this.user = connection.getUser();
+		this.user = new TestConnectionFactory().getConnection().getUser();
 	}
 
 	@Test(expected = InvalidCredentialsOpenShiftException.class)
@@ -161,4 +155,5 @@ public class DomainResourceIntegrationTest {
 		assertThat(domain).isNotIn(user.getDomains());
 		domain = null;
 	}
+
 }
