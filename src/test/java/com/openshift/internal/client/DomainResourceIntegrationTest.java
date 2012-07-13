@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2007 Red Hat, Inc. 
+ * Copyright (c) 2012 Red Hat, Inc. 
  * Distributed under license by Red Hat, Inc. All rights reserved. 
  * This program is made available under the terms of the 
  * Eclipse Public License v1.0 which accompanies this distribution, 
@@ -33,6 +33,9 @@ import com.openshift.client.utils.OpenShiftTestConfiguration;
 import com.openshift.client.utils.StringUtils;
 import com.openshift.client.utils.TestConnectionFactory;
 
+/**
+ * @author Andre Dietisheim
+ */
 public class DomainResourceIntegrationTest {
 
 	private IUser user;
@@ -64,58 +67,43 @@ public class DomainResourceIntegrationTest {
 
 	@Test
 	public void shouldCreateDomain() throws OpenShiftException {
-		IDomain domain = null;
-		try {
-			// pre-condition
-			DomainTestUtils.silentlyDestroyAllDomains(user);
+		// pre-condition
+		DomainTestUtils.silentlyDestroyAllDomains(user);
 
-			// operation
-			String id = StringUtils.createRandomString();
-			domain = user.createDomain(id);
+		// operation
+		String id = StringUtils.createRandomString();
+		IDomain domain = user.createDomain(id);
 
-			// verification
-			assertThat(domain.getId()).isEqualTo(id);
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
-		}
+		// verification
+		assertThat(domain.getId()).isEqualTo(id);
 	}
 
 	@Test
 	public void shouldReturnDomainByName() throws OpenShiftException {
-		IDomain domain = null;
-		try {
-			// pre-condition
-			DomainTestUtils.silentlyDestroyAllDomains(user);
+		// pre-condition
+		DomainTestUtils.silentlyDestroyAllDomains(user);
 
-			// operation
-			String id = StringUtils.createRandomString();
-			domain = user.createDomain(id);
+		// operation
+		String id = StringUtils.createRandomString();
+		user.createDomain(id);
 
-			// verification
-			IDomain domainByNamespace = user.getDomain(id);
-			assertThat(domainByNamespace.getId()).isEqualTo(id);
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
-		}
+		// verification
+		IDomain domainByNamespace = user.getDomain(id);
+		assertThat(domainByNamespace.getId()).isEqualTo(id);
 	}
 
 	@Test
 	public void shouldSetNamespace() throws Exception {
-		IDomain domain = null;
-		try {
-			// pre-condition
-			domain = DomainTestUtils.getFirstDomainOrCreate(user);
+		// pre-condition
+		IDomain domain = DomainTestUtils.getFirstDomainOrCreate(user);
 
-			// operation
-			String namespace = StringUtils.createRandomString();
-			domain.rename(namespace);
+		// operation
+		String namespace = StringUtils.createRandomString();
+		domain.rename(namespace);
 
-			// verification
-			IDomain domainByNamespace = user.getDomain(namespace);
-			assertThat(domainByNamespace.getId()).isEqualTo(namespace);
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
-		}
+		// verification
+		IDomain domainByNamespace = user.getDomain(namespace);
+		assertThat(domainByNamespace.getId()).isEqualTo(namespace);
 	}
 
 	@Test
@@ -157,26 +145,20 @@ public class DomainResourceIntegrationTest {
 		} catch (OpenShiftEndpointException e) {
 			// verification
 			assertThat(e.getRestResponse().getMessages().get(0).getExitCode()).isEqualTo(128);
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
 		}
 	}
 
 	@Test
 	public void shouldDeleteDomainWithApplications() throws OpenShiftException, SocketTimeoutException {
-		IDomain domain = null;
-		try {
-			// pre-condition
-			domain = DomainTestUtils.getFirstDomainOrCreate(user);
-			ApplicationTestUtils.getOrCreateApplication(domain);
+		// pre-condition
+		IDomain domain = DomainTestUtils.getFirstDomainOrCreate(user);
+		ApplicationTestUtils.getOrCreateApplication(domain);
 
-			// operation
-			domain.destroy(true);
-			assertThat(domain).isNotIn(user.getDomains());
-			domain = null;
-		} finally {
-			DomainTestUtils.silentlyDestroy(domain);
-		}
+		// operation
+		domain.destroy(true);
+
+		// verification
+		assertThat(domain).isNotIn(user.getDomains());
+		domain = null;
 	}
-
 }
