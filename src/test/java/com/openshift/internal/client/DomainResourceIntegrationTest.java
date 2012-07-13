@@ -51,7 +51,7 @@ public class DomainResourceIntegrationTest {
 		new TestConnectionFactory().getConnection(
 				new OpenShiftTestConfiguration().getClientId(), "bogus-password").getUser();
 	}
-
+	
 	@Test
 	public void shouldReturnDomains() throws OpenShiftException {
 		// operation
@@ -156,4 +156,23 @@ public class DomainResourceIntegrationTest {
 		domain = null;
 	}
 
+	@Test
+	public void shouldSeeNewApplicationAfterRefresh() throws OpenShiftException, FileNotFoundException, IOException {
+		// pre-condition
+		IDomain domain = DomainTestUtils.getFirstDomainOrCreate(user);
+		int numOfApplications = domain.getApplications().size();
+
+		IUser otherUser = new TestConnectionFactory().getConnection().getUser();
+		IDomain otherDomain = otherUser.getDomain(domain.getId());
+		assertNotNull(otherDomain);
+
+		// operation
+		String applicationName = StringUtils.createRandomString();
+		otherDomain.createApplication(applicationName, ICartridge.PHP_53);
+		assertThat(domain.getApplications().size()).isEqualTo(numOfApplications);
+		domain.refresh();
+
+		// verification
+		assertThat(domain.getApplications().size()).isEqualTo(numOfApplications + 1);
+	}
 }
